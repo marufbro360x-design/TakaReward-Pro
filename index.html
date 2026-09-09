@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>TakaReward Pro - Top Micro Task & Earning App</title>
   <link rel="icon" href="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg">
+  <link rel="manifest" href="./manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -86,10 +87,12 @@
       </header>
 
       <!-- Scrollable Main Content -->
-      <main class="flex-1 p-4 overflow-y-auto hide-scrollbar">
+      <main class="flex-1 p-4 overflow-y-auto hide-scrollbar space-y-4">
 
-        <!-- ================= TAB 1: OFFER ================= -->
-        <section id="tab-content-offer" class="space-y-3">
+        <!-- ================= TAB 1: OFFER (With Custom Tasks + CPAlead Offerwall) ================= -->
+        <section id="tab-content-offer" class="space-y-4">
+          
+          <!-- Daily Reward Strip -->
           <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-2.5">
               <span class="text-2xl">🎁</span>
@@ -103,15 +106,38 @@
             </button>
           </div>
 
-          <div class="flex items-center gap-2 pt-1 text-xs">
-            <span class="bg-white border border-slate-200 px-3 py-1 rounded-full font-bold text-slate-700">All Types ▾</span>
-            <span class="bg-white border border-slate-200 px-3 py-1 rounded-full font-bold text-slate-700">All Tags ▾</span>
-            <span id="task-badge-count" class="ml-auto text-emerald-600 font-bold text-xs bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-              ০টি নতুন কাজ
-            </span>
+          <!-- Section 1: Admin Verified Custom Tasks -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between pt-1">
+              <h2 class="font-extrabold text-slate-900 text-sm flex items-center gap-1.5">
+                <span>🔥</span> স্পেশাল ভেরিফাইড টাস্ক
+              </h2>
+              <span id="task-badge-count" class="text-[11px] bg-emerald-50 border border-emerald-200 text-emerald-600 font-bold px-2.5 py-0.5 rounded-full">
+                ০টি নতুন কাজ
+              </span>
+            </div>
+
+            <!-- Dynamic Tasks Container -->
+            <div id="tasks-list" class="space-y-2.5"></div>
           </div>
 
-          <div id="tasks-list" class="space-y-2.5 pt-1"></div>
+          <!-- Section 2: CPAlead Auto Offerwall (Your Exact Code Embedded) -->
+          <div class="space-y-2 pt-2 border-t border-slate-200/80">
+            <div class="flex items-center justify-between">
+              <h2 class="font-extrabold text-slate-900 text-sm flex items-center gap-1.5">
+                <span>🌐</span> ইনস্ট্যান্ট অটো অফারওয়াল (CPAlead)
+              </h2>
+              <span class="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-full">
+                আনলিমিটেড কাজ
+              </span>
+            </div>
+
+            <!-- CPAlead Iframe Card -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+              <iframe sandbox='allow-popups allow-same-origin allow-scripts allow-forms allow-top-navigation-by-user-activation allow-popups-to-escape-sandbox' referrerpolicy='no-referrer' src='https://www.cdnflair.com/wall/4l0gJHv' style='width:100%; height:690px; border:none;' frameborder='0'></iframe>
+            </div>
+          </div>
+
         </section>
 
         <!-- ================= TAB 2: MY OFFERS ================= -->
@@ -123,7 +149,7 @@
           <div id="my-offers-container" class="space-y-2.5"></div>
         </section>
 
-        <!-- ================= TAB 3: REFER (1st Cashout Rule) ================= -->
+        <!-- ================= TAB 3: REFER ================= -->
         <section id="tab-content-refer" class="space-y-4 hidden">
           <div class="bg-gradient-to-b from-emerald-100/90 to-emerald-50 rounded-3xl p-5 border border-emerald-200 text-center relative overflow-hidden">
             <h2 class="text-2xl font-black text-slate-900">Refer Friends & Earn</h2>
@@ -237,6 +263,7 @@
             </button>
           </div>
 
+          <!-- Dynamic 2x2 Amount Grid Cards -->
           <div class="grid grid-cols-2 gap-3 pt-1">
             <div onclick="selectWithdrawCard(105, 1000000, this)" class="w-card cursor-pointer bg-white border-2 border-emerald-500 rounded-2xl p-4 shadow-sm relative flex flex-col justify-between">
               <div class="flex items-center justify-between">
@@ -807,8 +834,8 @@
 
       if (unattemptedTasks.length === 0) {
         container.innerHTML = `
-          <div class="text-center py-8 text-slate-400 text-xs bg-white rounded-2xl border p-4">
-            🎉 আপনার জন্য বর্তমানে সব কাজ সম্পন্ন! নতুন কাজ যোগ হলে এখানে দেখতে পাবেন। (জমা দেওয়া কাজের স্ট্যাটাস দেখতে <strong>My offers</strong> ট্যাবে যান)।
+          <div class="text-center py-6 text-slate-400 text-xs bg-white rounded-2xl border p-4">
+            🎉 আপনার জন্য স্পেশাল কাজ সম্পন্ন! নিচের অটোমেটিক অফারওয়াল থেকে আনলিমিটেড কাজ করুন।
           </div>
         `;
         return;
@@ -1195,7 +1222,7 @@
           box.innerHTML += `
             <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center justify-between shadow-xs">
               <div class="flex items-center gap-2.5">
-                <img src="${logoSrc}" class="w-7 h-7 rounded-full object-cover" />
+                <img src="${logoSrc}" class="w-8 h-8 rounded-full object-cover shadow-xs" />
                 <div>
                   <strong class="text-slate-900 block text-xs">${w.userName}</strong>
                   <div class="text-emerald-700 font-extrabold text-xs mt-0.5">৳${w.taka} • ${w.method}</div>
