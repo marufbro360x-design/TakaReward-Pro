@@ -1,12 +1,19 @@
 {
   "name": "TakaReward Pro",
   "short_name": "TakaReward",
+  "description": "Top Micro Task and CPA Earning Platform in Bangladesh",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#00c244",
   "orientation": "portrait",
   "icons": [
+    {
+      "src": "https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
     {
       "src": "https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg",
       "sizes": "512x512",
