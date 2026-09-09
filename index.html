@@ -89,7 +89,7 @@
       <!-- Scrollable Main Content -->
       <main class="flex-1 p-4 overflow-y-auto hide-scrollbar space-y-4">
 
-        <!-- ================= TAB 1: OFFER (With Custom Tasks + CPAlead Offerwall) ================= -->
+        <!-- ================= TAB 1: OFFER ================= -->
         <section id="tab-content-offer" class="space-y-4">
           
           <!-- Daily Reward Strip -->
@@ -121,7 +121,7 @@
             <div id="tasks-list" class="space-y-2.5"></div>
           </div>
 
-          <!-- Section 2: CPAlead Auto Offerwall (Your Exact Code Embedded) -->
+          <!-- Section 2: CPAlead Auto Offerwall -->
           <div class="space-y-2 pt-2 border-t border-slate-200/80">
             <div class="flex items-center justify-between">
               <h2 class="font-extrabold text-slate-900 text-sm flex items-center gap-1.5">
@@ -132,7 +132,6 @@
               </span>
             </div>
 
-            <!-- CPAlead Iframe Card -->
             <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
               <iframe sandbox='allow-popups allow-same-origin allow-scripts allow-forms allow-top-navigation-by-user-activation allow-popups-to-escape-sandbox' referrerpolicy='no-referrer' src='https://www.cdnflair.com/wall/4l0gJHv' style='width:100%; height:690px; border:none;' frameborder='0'></iframe>
             </div>
@@ -500,7 +499,7 @@
               </div>
               <div>
                 <label class="text-[11px] font-bold text-slate-600">রিওয়ার্ড টাকা (৳):</label>
-                <input id="admin-taka" type="number" placeholder="যেমন: 21" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+                <input id="admin-taka" type="number" placeholder="যেমন: 21" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none" />
               </div>
             </div>
             <div>
@@ -571,6 +570,7 @@
     let activeModalTask = null;
     let userSubmissions = {};
     let allAvailableTasks = [];
+    let adminSubmissionsMap = {};
 
     function getDeviceId() {
       let dId = localStorage.getItem('tr_device_id');
@@ -825,6 +825,13 @@
       });
     }
 
+    // Completely Safe Earn Trigger: ID based lookup (Prevents SyntaxErrors from quotes/emojis/newlines!)
+    window.handleOpenTask = function(taskId) {
+      const task = allAvailableTasks.find(item => item.id === taskId);
+      if (!task) return;
+      openProofModal(task.id, task.title, task.rewardTaka, task.link, task.desc, task.videoLink || '');
+    };
+
     function renderOfferTabTasks() {
       const container = document.getElementById('tasks-list');
       container.innerHTML = '';
@@ -865,7 +872,8 @@
                 </div>
               </div>
             </div>
-            <button onclick="openProofModal('${t.id}', '${t.title}', ${t.rewardTaka}, '${t.link}', '${t.desc}', '${t.videoLink || ''}')" class="emerald-primary text-white font-extrabold text-xs px-5 py-2.5 rounded-full shadow-sm shrink-0">
+            <!-- Completely Safe Earn Button Call -->
+            <button onclick="handleOpenTask('${t.id}')" class="emerald-primary text-white font-extrabold text-xs px-5 py-2.5 rounded-full shadow-sm shrink-0">
               Earn
             </button>
           </div>
@@ -898,9 +906,12 @@
       document.getElementById('proof-modal').classList.add('hidden');
     };
 
-    window.openScreenshotPreview = function(base64Data) {
-      document.getElementById('enlarged-screenshot').src = base64Data;
-      document.getElementById('image-viewer-modal').classList.remove('hidden');
+    window.previewAdminImage = function(subId) {
+      const sub = adminSubmissionsMap[subId];
+      if (sub && sub.proofImage) {
+        document.getElementById('enlarged-screenshot').src = sub.proofImage;
+        document.getElementById('image-viewer-modal').classList.remove('hidden');
+      }
     };
 
     window.closeImageViewer = function() {
@@ -1076,9 +1087,13 @@
           return;
         }
         box.innerHTML = '';
+        adminSubmissionsMap = {};
+
         snapshot.forEach((docItem) => {
           const sub = docItem.data();
           const subId = docItem.id;
+          adminSubmissionsMap[subId] = sub;
+
           box.innerHTML += `
             <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl space-y-2.5">
               <div class="flex justify-between items-start">
@@ -1092,7 +1107,7 @@
                 <strong class="text-slate-900">প্রুফ নোট:</strong> ${sub.proofNotes}
               </div>
               ${sub.proofImage ? `
-                <button type="button" onclick="openScreenshotPreview('${sub.proofImage}')" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-bold px-3 py-1.5 rounded-xl text-[11px] w-full flex items-center justify-center gap-1 transition">
+                <button type="button" onclick="previewAdminImage('${subId}')" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-bold px-3 py-1.5 rounded-xl text-[11px] w-full flex items-center justify-center gap-1 transition">
                   🔍 স্ক্রিনশট বড় করে দেখুন
                 </button>
               ` : ''}
@@ -1238,7 +1253,6 @@
       });
     }
 
-    // Trigger Referral Bonus (৳10) on Friend's 1st Successful Withdrawal!
     window.adminMarkPaid = async function(wId, userId) {
       if (confirm("এই নম্বরে টাকা পাঠিয়ে দিয়েছেন? পেমেন্ট সম্পন্ন হিসেবে চিহ্নিত করতে চান?")) {
         await updateDoc(doc(db, "withdrawals", wId), { status: "Paid" });
@@ -1253,7 +1267,7 @@
               onSnapshot(q, (rSnap) => {
                 rSnap.forEach(async (rDoc) => {
                   await updateDoc(doc(db, "users", rDoc.id), {
-                    coins: increment(100000) // 100,000 Coins = ৳10
+                    coins: increment(100000)
                   });
                   await updateDoc(uRef, { referralBonusAwarded: true });
                 });
