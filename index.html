@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>TakaReward Pro - Top Micro Task & Earning App</title>
-  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" href="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
@@ -33,12 +33,11 @@
         </h1>
       </div>
 
+      <!-- Real Official App Icon -->
       <div class="my-auto py-4">
-        <div class="w-48 h-48 bg-emerald-50 rounded-full mx-auto flex flex-col items-center justify-center relative border-2 border-emerald-100 shadow-inner">
-          <span class="text-5xl">📱</span>
-          <span class="bg-emerald-500 text-white font-extrabold text-[11px] px-3 py-1 rounded-full uppercase mt-2 shadow-sm">TASK & EARN</span>
-          <span class="absolute top-2 right-4 text-2xl">💰</span>
-          <span class="absolute bottom-2 left-4 text-2xl">💵</span>
+        <div class="relative w-44 h-44 mx-auto flex items-center justify-center">
+          <div class="absolute inset-0 bg-emerald-400/25 rounded-3xl blur-xl animate-pulse"></div>
+          <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Official Logo" class="relative z-10 w-40 h-40 rounded-3xl object-cover shadow-2xl border-4 border-white" />
         </div>
       </div>
 
@@ -124,7 +123,7 @@
           <div id="my-offers-container" class="space-y-2.5"></div>
         </section>
 
-        <!-- ================= TAB 3: REFER (With Updated 1st Withdrawal Rule) ================= -->
+        <!-- ================= TAB 3: REFER (1st Cashout Rule) ================= -->
         <section id="tab-content-refer" class="space-y-4 hidden">
           <div class="bg-gradient-to-b from-emerald-100/90 to-emerald-50 rounded-3xl p-5 border border-emerald-200 text-center relative overflow-hidden">
             <h2 class="text-2xl font-black text-slate-900">Refer Friends & Earn</h2>
@@ -238,7 +237,6 @@
             </button>
           </div>
 
-          <!-- Dynamic 2x2 Amount Grid Cards -->
           <div class="grid grid-cols-2 gap-3 pt-1">
             <div onclick="selectWithdrawCard(105, 1000000, this)" class="w-card cursor-pointer bg-white border-2 border-emerald-500 rounded-2xl p-4 shadow-sm relative flex flex-col justify-between">
               <div class="flex items-center justify-between">
@@ -343,7 +341,6 @@
           <button onclick="closeWithdrawHistoryModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
         </div>
 
-        <!-- Live Blue Notice Strip -->
         <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3 text-xs text-blue-900 space-y-1 leading-relaxed shadow-xs">
           <div class="font-extrabold flex items-center gap-1 text-blue-700">
             <span>ℹ️</span> পেমেন্ট প্রসেসিং লাইভ নোটিশ
@@ -354,7 +351,7 @@
         </div>
 
         <div id="user-withdraw-history-list" class="flex-1 overflow-y-auto space-y-2 py-1 hide-scrollbar">
-          <p class="text-slate-400 text-center py-6 text-xs">লোড হচ্ছে...</p>
+          <p class="text-slate-400 text-center py-4 text-xs">হিস্ট্রি লোড হচ্ছে...</p>
         </div>
 
         <button onclick="closeWithdrawHistoryModal()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">
@@ -416,11 +413,10 @@
       </div>
     </div>
 
-    <!-- ================= 6. PRO ADMIN MODAL (Clean Tabbed Architecture) ================= -->
+    <!-- ================= 6. PRO TABBED ADMIN MODAL ================= -->
     <div id="admin-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
       <div class="bg-white rounded-3xl w-full max-w-md p-5 max-h-[92vh] flex flex-col justify-between shadow-2xl text-slate-900">
         
-        <!-- Header -->
         <div class="flex items-center justify-between border-b pb-3 shrink-0">
           <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-1.5">
             <span>⚙️</span> মাস্টার অ্যাডমিন ড্যাশবোর্ড
@@ -428,7 +424,7 @@
           <button onclick="toggleAdminModal()" class="text-slate-400 hover:text-slate-800 text-xl font-bold">✕</button>
         </div>
 
-        <!-- 4 Modern Admin Tabs -->
+        <!-- 4 Tabs Menu -->
         <div class="flex bg-slate-100 p-1 rounded-2xl my-3 gap-1 shrink-0 text-xs font-bold">
           <button onclick="switchAdminTab('proofs')" id="atab-btn-proofs" class="flex-1 py-2 rounded-xl bg-white text-emerald-700 shadow-xs flex items-center justify-center gap-1 transition">
             <span>📸 প্রুফ</span>
@@ -446,15 +442,13 @@
           </button>
         </div>
 
-        <!-- Admin Content Views Area -->
         <div class="flex-1 overflow-y-auto hide-scrollbar space-y-3">
-          
-          <!-- TAB 1: PENDING TASK PROOFS -->
+          <!-- TAB 1: PENDING PROOFS -->
           <div id="admin-view-proofs" class="space-y-2.5">
             <div id="admin-submissions-list" class="space-y-2.5 text-xs"></div>
           </div>
 
-          <!-- TAB 2: ADD NEW TASK FORM -->
+          <!-- TAB 2: ADD NEW TASK -->
           <div id="admin-view-add" class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 space-y-3 hidden">
             <h4 class="font-extrabold text-xs uppercase tracking-wider text-emerald-700">➕ নতুন CPA টাস্ক যোগ করুন</h4>
             <div>
@@ -479,23 +473,23 @@
               </div>
               <div>
                 <label class="text-[11px] font-bold text-slate-600">রিওয়ার্ড টাকা (৳):</label>
-                <input id="admin-taka" type="number" placeholder="যেমন: 21" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+                <input id="admin-taka" type="number" placeholder="যেমন: 21" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none" />
               </div>
             </div>
             <div>
               <label class="text-[11px] font-bold text-slate-600">CPA অফার লিংক:</label>
-              <input id="admin-link" type="url" placeholder="https://singingfiles.com/..." class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+              <input id="admin-link" type="url" placeholder="https://singingfiles.com/..." class="w-full border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none" />
             </div>
             <div>
               <label class="text-[11px] font-bold text-slate-600">কাজের সহজ নির্দেশনা:</label>
-              <input id="admin-desc" type="text" placeholder="লিংকে গিয়ে ইমেইল দিয়ে সাইন-আপ সম্পন্ন করুন" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+              <input id="admin-desc" type="text" placeholder="লিংকে গিয়ে ইমেইল দিয়ে সাইন-আপ সম্পন্ন করুন" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none" />
             </div>
             <button onclick="adminPublishTask()" id="admin-publish-btn" class="w-full emerald-primary text-white font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider shadow">
               পাবলিশ করুন
             </button>
           </div>
 
-          <!-- TAB 3: MANAGE / DELETE TASKS -->
+          <!-- TAB 3: MANAGE TASKS -->
           <div id="admin-view-manage" class="space-y-2 hidden">
             <h4 class="font-bold text-xs uppercase text-slate-500">বর্তমানে চালু থাকা টাস্ক তালিকা:</h4>
             <div id="admin-task-list" class="space-y-2 text-xs"></div>
@@ -506,7 +500,6 @@
             <h4 class="font-bold text-xs uppercase text-slate-500">পেন্ডিং ক্যাশআউট তালিকা:</h4>
             <div id="admin-withdraw-list" class="space-y-2 text-xs"></div>
           </div>
-
         </div>
 
         <button onclick="toggleAdminModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-xs mt-3 shrink-0">
@@ -561,7 +554,6 @@
       return dId;
     }
 
-    // Google Sign-In
     window.loginWithGoogleSmart = async function() {
       const inviteCode = document.getElementById('input-invite-code').value.trim().toUpperCase();
       if (inviteCode) {
@@ -1046,7 +1038,6 @@
       setInterval(updateTicker, 60000);
     }
 
-    // Admin Submissions Listener
     function loadAdminSubmissions() {
       if (currentUser?.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
       const q = query(collection(db, "submissions"), where("status", "==", "Pending"));
@@ -1092,7 +1083,6 @@
       });
     }
 
-    // Admin: Approve Submission
     window.approveSubmission = async function(subId, userId, coins) {
       if (confirm("টাস্কটি অনুমোদন করে ইউজারের অ্যাকাউন্টে কয়েন যোগ করতে চান?")) {
         await updateDoc(doc(db, "submissions", subId), { status: "Approved" });
@@ -1114,7 +1104,6 @@
       }
     };
 
-    // Cashout Logic
     window.selectWithdrawCard = function(taka, coins, el) {
       selectedTaka = taka;
       selectedCoins = coins;
@@ -1182,7 +1171,6 @@
       document.getElementById('withdraw-number').value = '';
     };
 
-    // Admin: Live Withdrawal Requests + 1st Withdrawal Referral Bonus Trigger!
     function loadAdminWithdrawals() {
       if (currentUser?.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
       const q = query(collection(db, "withdrawals"), where("status", "==", "Pending"));
@@ -1207,7 +1195,7 @@
           box.innerHTML += `
             <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center justify-between shadow-xs">
               <div class="flex items-center gap-2.5">
-                <img src="${logoSrc}" class="w-8 h-8 rounded-full object-cover shadow-xs" />
+                <img src="${logoSrc}" class="w-7 h-7 rounded-full object-cover" />
                 <div>
                   <strong class="text-slate-900 block text-xs">${w.userName}</strong>
                   <div class="text-emerald-700 font-extrabold text-xs mt-0.5">৳${w.taka} • ${w.method}</div>
@@ -1223,12 +1211,11 @@
       });
     }
 
-    // Admin Marks Paid -> Automatically triggers ৳10 bonus if friend's 1st withdrawal!
+    // Trigger Referral Bonus (৳10) on Friend's 1st Successful Withdrawal!
     window.adminMarkPaid = async function(wId, userId) {
       if (confirm("এই নম্বরে টাকা পাঠিয়ে দিয়েছেন? পেমেন্ট সম্পন্ন হিসেবে চিহ্নিত করতে চান?")) {
         await updateDoc(doc(db, "withdrawals", wId), { status: "Paid" });
 
-        // Trigger Referral Bonus (৳10) on Friend's 1st Successful Withdrawal!
         if (userId) {
           const uRef = doc(db, "users", userId);
           const uSnap = await getDoc(uRef);
@@ -1252,7 +1239,6 @@
       }
     };
 
-    // Admin: Publish Task
     window.adminPublishTask = async function() {
       const title = document.getElementById('admin-title').value.trim();
       const cat = document.getElementById('admin-cat').value.trim() || 'Sign In';
@@ -1290,7 +1276,7 @@
         publishBtn.innerText = 'পাবলিশ করুন';
         publishBtn.disabled = false;
         alert("টাস্ক সফলভাবে পাবলিশ হয়েছে!");
-        switchAdminTab('manage'); // Switch to list view
+        switchAdminTab('manage');
       };
 
       if (imageFileInput.files && imageFileInput.files[0]) {
@@ -1310,7 +1296,6 @@
       }
     };
 
-    // Admin Modal Tabs Switcher
     window.switchAdminTab = function(tab) {
       document.getElementById('admin-view-proofs').classList.add('hidden');
       document.getElementById('admin-view-add').classList.add('hidden');
@@ -1341,7 +1326,6 @@
       }
     };
 
-    // Helpers
     window.copyInviteCode = function() {
       const c = document.getElementById('my-invite-code').innerText;
       navigator.clipboard.writeText(c);
