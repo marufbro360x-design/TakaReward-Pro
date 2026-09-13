@@ -4,6 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>TakaReward Pro - Top Micro Task & Earning App</title>
+
+  <!-- Open Graph Meta Tags for Facebook, WhatsApp, Telegram Sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://takarewardpro.com/" />
+  <meta property="og:title" content="TakaReward Pro - সেরা মাইক্রো টাস্ক ও আর্নিং প্ল্যাটফর্ম" />
+  <meta property="og:description" content="প্রতিদিন সহজ কাজ ও অফার সম্পন্ন করে সরাসরি বিকাশ ও নগদে টাকা উত্তোলন করুন!" />
+  <meta property="og:image" content="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TakaReward Pro" />
+  <meta name="twitter:description" content="প্রতিদিন সহজ কাজ ও অফার সম্পন্ন করে সরাসরি বিকাশ ও নগদে টাকা উত্তোলন করুন!" />
+  <meta name="twitter:image" content="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" />
+
   <link rel="icon" href="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg">
   <link rel="manifest" href="./manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -51,13 +63,13 @@
         </button>
 
         <p class="text-slate-400 text-xs pt-2">
-          Continuing means that you accept our privacy policy.
+          Continuing means that you accept our <button type="button" onclick="openPrivacyModal()" class="text-emerald-600 font-bold underline">privacy policy & rules</button>.
         </p>
       </div>
     </div>
 
     <!-- ================= 2. MAIN APP VIEW ================= -->
-    <div id="screen-app" class="flex-1 flex flex-col justify-between hidden pb-16 bg-pastel">
+    <div id="screen-app" class="flex-1 flex flex-col justify-between hidden pb-16 bg-pastel relative">
 
       <!-- Header -->
       <header class="bg-white px-4 py-2.5 border-b border-slate-200/80 sticky top-0 z-30 flex items-center justify-between shadow-xs">
@@ -85,6 +97,14 @@
           </div>
         </div>
       </header>
+
+      <!-- Live Scrolling Announcement Banner -->
+      <div class="bg-amber-50 border-b border-amber-200/80 px-3 py-1.5 flex items-center gap-2 text-[11px] text-amber-900 overflow-hidden shrink-0">
+        <span class="bg-amber-500 text-white font-extrabold text-[9px] px-1.5 py-0.5 rounded uppercase shrink-0">নোটিশ</span>
+        <marquee class="font-bold text-amber-800" scrollamount="4">
+          📢 স্বাগতম TakaReward Pro-তে! সবাই নিয়ম মেনে সঠিক তথ্য দিয়ে কাজ করুন। ভুল বা ফেক তথ্য দিলে আইডি ব্যান হবে। যেকোনো প্রয়োজনে আমাদের অফিসিয়াল টেলিগ্রাম সাপোর্টে যোগাযোগ করুন: @RewardProAdmin
+        </marquee>
+      </div>
 
       <!-- Scrollable Main Content -->
       <main class="flex-1 p-4 overflow-y-auto hide-scrollbar space-y-4">
@@ -334,6 +354,12 @@
 
       </main>
 
+      <!-- Floating Telegram Support Button (Always Visible) -->
+      <a href="https://t.me/RewardProAdmin" target="_blank" class="fixed bottom-20 right-4 z-40 bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs px-3.5 py-2.5 rounded-full shadow-lg shadow-sky-500/40 flex items-center gap-1.5 border-2 border-white transition transform hover:scale-105 active:scale-95">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.965z"/></svg>
+        <span>সাপোর্ট</span>
+      </a>
+
       <!-- Bottom Nav -->
       <nav class="fixed bottom-0 w-full max-w-md bg-white border-t border-slate-200/80 py-2 px-4 flex justify-around items-center z-20 shadow-lg">
         <button onclick="switchAppTab('offer')" id="nav-btn-offer" class="flex flex-col items-center gap-1 text-emerald-primary font-bold text-xs">
@@ -357,7 +383,45 @@
 
     </div>
 
-    <!-- ================= 3. WITHDRAW HISTORY MODAL ================= -->
+    <!-- ================= 3. PRIVACY POLICY & RULES MODAL ================= -->
+    <div id="privacy-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+      <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3 shadow-2xl text-slate-900 max-h-[85vh] flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h3 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+            <span>🛡️</span> প্রাইভেসি পলিসি ও অ্যাপের নিয়মাবলি
+          </h3>
+          <button onclick="closePrivacyModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto space-y-2.5 text-xs text-slate-700 leading-relaxed pr-1 hide-scrollbar">
+          <div class="bg-slate-50 p-2.5 rounded-xl border">
+            <strong class="text-slate-900 block mb-1">১. এক ফোন এক অ্যাকাউন্ট:</strong>
+            একটি ডিভাইসে শুধুমাত্র একটি অ্যাকাউন্ট চালানো যাবে। ফেক রেফারেল বা একাধিক আইডি ব্যবহার করলে কোনো পূর্ব নোটিশ ছাড়াই অ্যাকাউন্ট ব্যান হবে।
+          </div>
+
+          <div class="bg-slate-50 p-2.5 rounded-xl border">
+            <strong class="text-slate-900 block mb-1">২. টাস্ক ভেরিফিকেশন:</strong>
+            কাজের শর্ত অনুযায়ী সঠিক স্ক্রিনশট ও তথ্য জমা দিতে হবে। ফেক বা এডিটেড ছবি দিলে টাস্ক রিজেক্ট হবে।
+          </div>
+
+          <div class="bg-slate-50 p-2.5 rounded-xl border">
+            <strong class="text-slate-900 block mb-1">৩. পেমেন্ট শর্ত:</strong>
+            উইথড্র শুধুমাত্র পার্সোনাল বিকাশ ও নগদ নম্বরে প্রযোজ্য। রিকোয়েস্ট পাঠানোর সর্বোচ্চ ২৪ ঘণ্টার মধ্যে পেমেন্ট প্রসেস করা হয়।
+          </div>
+
+          <div class="bg-slate-50 p-2.5 rounded-xl border">
+            <strong class="text-slate-900 block mb-1">৪. হেল্প ও সাপোর্ট:</strong>
+            যেকোনো সহায়তার জন্য আমাদের অফিসিয়াল টেলিগ্রাম সাপোর্টে যোগাযোগ করুন: <code class="text-sky-600 font-bold">@RewardProAdmin</code>
+          </div>
+        </div>
+
+        <button onclick="closePrivacyModal()" class="w-full emerald-primary text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">
+          আমি সম্মত (Agree)
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= 4. WITHDRAW HISTORY MODAL ================= -->
     <div id="withdraw-history-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3.5 shadow-2xl text-slate-900 max-h-[85vh] flex flex-col justify-between">
         <div class="flex items-center justify-between border-b pb-2.5">
@@ -386,7 +450,7 @@
       </div>
     </div>
 
-    <!-- ================= 4. PROOF SUBMISSION MODAL ================= -->
+    <!-- ================= 5. PROOF SUBMISSION MODAL ================= -->
     <div id="proof-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3.5 shadow-2xl text-slate-900">
         <div class="flex items-center justify-between border-b pb-2">
@@ -428,7 +492,7 @@
       </div>
     </div>
 
-    <!-- ================= 5. IN-APP SCREENSHOT VIEWER MODAL ================= -->
+    <!-- ================= 6. IN-APP SCREENSHOT VIEWER MODAL ================= -->
     <div id="image-viewer-modal" class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4 hidden backdrop-blur-md">
       <div class="w-full max-w-sm flex justify-between items-center text-white mb-2">
         <span class="text-xs font-bold">স্ক্রিনশট প্রুফ প্রিভিউ</span>
@@ -439,7 +503,7 @@
       </div>
     </div>
 
-    <!-- ================= 6. PRO TABBED ADMIN MODAL ================= -->
+    <!-- ================= 7. PRO TABBED ADMIN MODAL (With Reject & Refund) ================= -->
     <div id="admin-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
       <div class="bg-white rounded-3xl w-full max-w-md p-5 max-h-[92vh] flex flex-col justify-between shadow-2xl text-slate-900">
         
@@ -521,7 +585,7 @@
             <div id="admin-task-list" class="space-y-2 text-xs"></div>
           </div>
 
-          <!-- TAB 4: WITHDRAWAL REQUESTS -->
+          <!-- TAB 4: WITHDRAWAL REQUESTS (With Reject & Refund) -->
           <div id="admin-view-withdraw" class="space-y-2 hidden">
             <h4 class="font-bold text-xs uppercase text-slate-500">পেন্ডিং ক্যাশআউট তালিকা:</h4>
             <div id="admin-withdraw-list" class="space-y-2 text-xs"></div>
@@ -585,7 +649,7 @@
     }
     initClientIP();
 
-    // Canvas Auto Image Compression (Prevents 1MB Firestore limit errors)
+    // Canvas Auto Image Compression (Protects 1MB Firestore limit)
     function compressImageFile(file, maxWidth = 900, quality = 0.7) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -735,7 +799,6 @@
             userData = s.data();
             document.getElementById('user-avatar').src = userData.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + user.uid;
             document.getElementById('app-coins').innerText = (userData.coins || 0).toLocaleString();
-            // Exactly 10,000 Coins = ৳1.00
             document.getElementById('app-taka').innerText = ((userData.coins || 0) / 10000).toFixed(1);
             document.getElementById('my-invite-code').innerText = userData.myInviteCode || 'TR-----';
             document.getElementById('rank-user-name').innerText = userData.name;
@@ -948,6 +1011,14 @@
       document.getElementById('proof-modal').classList.add('hidden');
     };
 
+    window.openPrivacyModal = function() {
+      document.getElementById('privacy-modal').classList.remove('hidden');
+    };
+
+    window.closePrivacyModal = function() {
+      document.getElementById('privacy-modal').classList.add('hidden');
+    };
+
     window.previewAdminImage = function(subId) {
       const sub = adminSubmissionsMap[subId];
       if (sub && sub.proofImage) {
@@ -984,7 +1055,7 @@
           } else if (w.status === 'Pending') {
             statusBadge = `<span class="bg-amber-50 text-amber-600 border border-amber-200 font-bold px-2.5 py-0.5 rounded-full text-[10px]">⏳ প্রক্রিয়াধীন (Pending)</span>`;
           } else {
-            statusBadge = `<span class="bg-red-50 text-red-600 border border-red-200 font-bold px-2.5 py-0.5 rounded-full text-[10px]">✕ বাতিল (Rejected)</span>`;
+            statusBadge = `<span class="bg-red-50 text-red-600 border border-red-200 font-bold px-2.5 py-0.5 rounded-full text-[10px]">✕ বাতিল ও রিফান্ড</span>`;
           }
 
           listContainer.innerHTML += `
@@ -1030,10 +1101,8 @@
       submitBtn.disabled = true;
 
       try {
-        // Compress image safely to ~50-80 KB
         const compressedBase64 = await compressImageFile(file, 900, 0.7);
 
-        // Format Date & Time: 13 Sep 2026, 09:15 PM
         const now = new Date();
         const formattedDate = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
         const formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
@@ -1268,6 +1337,7 @@
         email: userData.email,
         method: selectedMethod,
         taka: selectedTaka,
+        coins: selectedCoins,
         phone: num,
         status: "Pending",
         createdAt: serverTimestamp()
@@ -1277,6 +1347,7 @@
       document.getElementById('withdraw-number').value = '';
     };
 
+    // Admin: Live Withdrawal Requests (With Approve & Reject/Refund Support!)
     function loadAdminWithdrawals() {
       if (currentUser?.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
       const q = query(collection(db, "withdrawals"), where("status", "==", "Pending"));
@@ -1297,27 +1368,36 @@
           const wId = d.id;
           const isBkash = w.method === 'bKash';
           const logoSrc = isBkash ? BKASH_LOGO : NAGAD_LOGO;
+          const refundCoins = w.coins || (w.taka * 10000);
 
           box.innerHTML += `
-            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex items-center justify-between shadow-xs">
-              <div class="flex items-center gap-2.5">
-                <img src="${logoSrc}" class="w-8 h-8 rounded-full object-cover shadow-xs" />
-                <div>
-                  <strong class="text-slate-900 block text-xs">${w.userName}</strong>
-                  <div class="text-emerald-700 font-extrabold text-xs mt-0.5">৳${w.taka} • ${w.method}</div>
-                  <div class="text-[11px] font-mono text-slate-600 mt-0.5">পার্সোনাল নম্বর: ${w.phone}</div>
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl flex flex-col gap-2.5 shadow-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <img src="${logoSrc}" class="w-8 h-8 rounded-full object-cover shadow-xs" />
+                  <div>
+                    <strong class="text-slate-900 block text-xs">${w.userName}</strong>
+                    <div class="text-emerald-700 font-extrabold text-xs mt-0.5">৳${w.taka} • ${w.method}</div>
+                    <div class="text-[11px] font-mono text-slate-600 mt-0.5">পার্সোনাল নম্বর: ${w.phone}</div>
+                  </div>
                 </div>
+                <span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">Pending</span>
               </div>
-              <button onclick="adminMarkPaid('${wId}', '${w.userId}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] px-3 py-2 rounded-xl shadow-xs transition">
-                পেমেন্ট সম্পন্ন ✓
-              </button>
+              <div class="flex gap-2 pt-1 border-t">
+                <button onclick="adminMarkPaid('${wId}', '${w.userId}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] py-1.5 rounded-xl shadow-xs transition">
+                  পেমেন্ট সম্পন্ন ✓
+                </button>
+                <button onclick="adminRejectWithdraw('${wId}', '${w.userId}', ${refundCoins})" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] py-1.5 rounded-xl shadow-xs transition">
+                  ✕ বাতিল ও রিফান্ড
+                </button>
+              </div>
             </div>
           `;
         });
       });
     }
 
-    // Trigger Referral Bonus: Exactly ৳10.00 = 100,000 Coins!
+    // Admin: Mark Paid -> Triggers ৳10 (100,000 Coins) Referral Bonus!
     window.adminMarkPaid = async function(wId, userId) {
       if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
       if (confirm("এই নম্বরে টাকা পাঠিয়ে দিয়েছেন? পেমেন্ট সম্পন্ন হিসেবে চিহ্নিত করতে চান?")) {
@@ -1342,7 +1422,21 @@
           }
         }
 
-        alert("পেমেন্ট সফল হিসেবে চিহ্নিত করা হয়েছে এবং রেফারার থাকলে তার অ্যাকাউন্টে ৳১০ (১,০০,০০০ কয়েন) বোনাস যোগ হয়েছে!");
+        alert("পেমেন্ট সফল হিসেবে চিহ্নিত করা হয়েছে এবং রেফারার থাকলে তার অ্যাকাউন্টে ৳১০ বোনাস যোগ হয়েছে!");
+      }
+    };
+
+    // Admin: Reject Withdrawal and Refund Coins to User!
+    window.adminRejectWithdraw = async function(wId, userId, refundCoins) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      if (confirm(`এই উইথড্রলটি বাতিল করতে চান? ইউজারের অ্যাকাউন্টে ${refundCoins.toLocaleString()} কয়েন রিফান্ড হয়ে যাবে।`)) {
+        await updateDoc(doc(db, "withdrawals", wId), { status: "Rejected" });
+        if (userId && refundCoins) {
+          await updateDoc(doc(db, "users", userId), {
+            coins: increment(refundCoins)
+          });
+        }
+        alert("উইথড্রল বাতিল করা হয়েছে এবং ইউজারের অ্যাকাউন্টে কয়েন রিফান্ড হয়েছে!");
       }
     };
 
@@ -1439,6 +1533,7 @@
 
     window.copyInviteCode = function() {
       const c = document.getElementById('my-invite-code').innerText;
+      navigator.clipboard.writeText(c c = document.getElementById('my-invite-code').innerText;
       navigator.clipboard.writeText(c);
       alert("ইনভাইট কোড কপি হয়েছে: " + c);
     };
