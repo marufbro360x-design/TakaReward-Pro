@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>TakaReward Pro - Top Micro Task & Earning App</title>
+
   <!-- Anti-Theft Domain Guard & Anti-Inspect Protection -->
   <script>
     (function() {
-      // 1. Domain Lock: If anyone copies our code to another domain, it redirects to our official site!
+      // 1. Domain Lock: takarewardpro.com ছাড়া নকল সাইটে কোড বসালে আসল সাইটে রিডাইরেক্ট করবে
       const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
       if (!allowedDomains.includes(window.location.hostname)) {
         document.addEventListener("DOMContentLoaded", function() {
@@ -13,7 +17,7 @@
               <div style="max-width:400px;background:#1e293b;padding:30px;border-radius:24px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);border:1px solid #334155;">
                 <div style="font-size:50px;margin-bottom:15px;">⚠️</div>
                 <h2 style="font-size:20px;font-weight:bold;color:#f87171;">নকল বা কপি করা ওয়েবসাইট!</h2>
-                <p style="font-size:13px;color:#94a3b8;margin-top:10px;line-height:1.6;">এই ওয়েবসাইটটি অবৈধভাবে কপি করা হয়েছে। আমাদের আসল ও নিরাপদ আর্নিং সাইটে যেতে নিচের বাটনে ক্লিক করুন:</p>
+                <p style="font-size:13px;color:#94a3b8;margin-top:10px;line-height:1.6;">এই ওয়েবসাইটটি অবৈধভাবে নকল করা হয়েছে। আমাদের আসল ও নিরাপদ আর্নিং সাইটে যেতে নিচের বাটনে ক্লিক করুন:</p>
                 <a href="https://takarewardpro.com" style="display:inline-block;margin-top:20px;background:#00c244;color:#fff;font-weight:bold;padding:12px 24px;border-radius:50px;text-decoration:none;box-shadow:0 4px 12px rgba(0,194,68,0.4);">অফিসিয়াল সাইটে যান (takarewardpro.com) ➔</a>
               </div>
             </div>
@@ -22,10 +26,10 @@
         throw new Error("Unauthorized Mirror Blocked");
       }
 
-      // 2. Disable Right-Click
+      // 2. মাউসের রাইট-ক্লিক বন্ধ
       document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
 
-      // 3. Disable DevTools Shortcuts (Ctrl+U, F12, Ctrl+Shift+I, etc.)
+      // 3. F12 ও View-Source (Ctrl+U, Ctrl+Shift+I) বন্ধ
       document.addEventListener("keydown", function(e) {
         if (e.key === "F12" || 
            (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "s" || e.key === "S")) ||
@@ -36,10 +40,6 @@
       });
     })();
   </script>
-
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>TakaReward Pro - Top Micro Task & Earning App</title>
 
   <!-- Open Graph Meta Tags -->
   <meta property="og:type" content="website" />
@@ -58,6 +58,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
   <style>
     body { font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
     .bg-pastel { background-color: #f6fbf7; }
@@ -91,7 +92,7 @@
 
   <!-- Audio & Confetti FX Engine (Feature 4) & PWA Install (Feature 7) -->
   <script>
-    // Pure Web Audio Synthesizer: Ultra-crisp instant arcade coin chime!
+    // Web Audio Synthesizer: Instant Arcade Coin Chime!
     function playCoinChime() {
       try {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -101,8 +102,8 @@
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(987.77, now); // B5 note
-        osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6 note
+        osc.frequency.setValueAtTime(987.77, now); // B5
+        osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6
         gain.gain.setValueAtTime(0.3, now);
         gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
         osc.connect(gain);
@@ -112,7 +113,7 @@
       } catch(e) {}
     }
 
-    // Realistic Confetti Explosion
+    // Confetti Blast
     function triggerConfettiBlast() {
       try {
         if (typeof confetti === 'function') {
@@ -148,7 +149,6 @@
       }
     }
   </script>
-
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex justify-center antialiased select-none">
 
@@ -180,7 +180,7 @@
         </button>
 
         <p class="text-slate-400 text-xs pt-2">
-          Continuing means that you accept our <button type="button" onclick="openPrivacyModal()" class="text-emerald-600 font-bold underline">privacy policy & rules</button>.
+          Continuing means that you accept our <button type="button" onclick="openPrivacyModal()" class="text-emerald-600 font-bold underline cursor-pointer">privacy policy & rules</button>.
         </p>
       </div>
     </div>
@@ -188,8 +188,8 @@
     <!-- ================= 2. MAIN APP VIEW ================= -->
     <div id="screen-app" class="flex-1 flex flex-col justify-between hidden pb-16 bg-pastel relative">
 
-      <!-- Header -->
-      <header class="bg-white px-4 py-2.5 border-b border-slate-200/80 sticky top-0 z-30 flex items-center justify-between shadow-xs">
+      <!-- Header (With VIP Badge, Notification Bell & Profile Customization Trigger) -->
+      <header class="bg-white px-3.5 py-2.5 border-b border-slate-200/80 sticky top-0 z-30 flex items-center justify-between shadow-xs">
         <div onclick="openProfileEditModal()" class="flex items-center gap-2.5 cursor-pointer group" title="প্রোফাইল এডিট করতে ক্লিক করুন">
           <div class="relative">
             <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-emerald-400 object-cover shadow-xs shrink-0 group-hover:opacity-85 transition" />
@@ -220,7 +220,7 @@
             <span id="notification-counter" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">1</span>
           </button>
 
-          <button id="admin-btn" onclick="toggleAdminModal()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-[11px] px-2.5 py-1 rounded-full shadow-xs border border-amber-500 flex items-center gap-1">
+          <button id="admin-btn" onclick="toggleAdminModal()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-[11px] px-2.5 py-1 rounded-full shadow-xs border border-amber-500 flex items-center gap-1 cursor-pointer">
             <span>⚙️</span> Admin
           </button>
           <div onclick="switchAppTab('cashout')" class="cursor-pointer bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-xs flex items-center gap-1">
@@ -248,7 +248,21 @@
         <!-- ================= TAB 1: OFFER ================= -->
         <section id="tab-content-offer" class="space-y-4">
           
-          <!-- Daily Reward Strip -->
+          <!-- 1-Click PWA App Install Banner (Feature 7) -->
+          <div id="pwa-install-banner" class="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-3 text-white flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">📲</span>
+              <div>
+                <strong class="text-xs block leading-tight">অ্যান্ড্রয়েড অ্যাপ ইনস্টল করুন</strong>
+                <span class="text-[10px] text-emerald-100">১-ক্লিকে আসল অ্যাপের মতো ফোনে চালান</span>
+              </div>
+            </div>
+            <button onclick="installAppDirect()" class="bg-white hover:bg-emerald-50 text-emerald-700 font-extrabold text-xs px-3 py-1.5 rounded-xl shadow-xs transition shrink-0 cursor-pointer">
+              ইনস্টল
+            </button>
+          </div>
+
+          <!-- Daily Reward Strip (With Sound FX & Confetti) -->
           <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex items-center justify-between">
             <div class="flex items-center gap-2.5">
               <span class="text-2xl">🎁</span>
@@ -257,7 +271,7 @@
                 <span id="daily-subtext" class="text-[10px] text-emerald-600 font-bold">+10,000 Coins Available</span>
               </div>
             </div>
-            <button onclick="claimDailyBonus()" id="daily-claim-btn" class="emerald-primary text-white font-black text-xs px-4 py-1.5 rounded-full shadow-sm transition">
+            <button onclick="claimDailyBonus()" id="daily-claim-btn" class="emerald-primary text-white font-black text-xs px-4 py-1.5 rounded-full shadow-sm transition cursor-pointer">
               Claim
             </button>
           </div>
@@ -334,7 +348,7 @@
                 <span class="text-[10px] font-bold text-slate-400 uppercase">My Invitation Code</span>
                 <div id="my-invite-code" class="text-xl font-black tracking-wider text-slate-900">TR-----</div>
               </div>
-              <button onclick="copyInviteCode()" class="emerald-primary text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm">
+              <button onclick="copyInviteCode()" class="emerald-primary text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm cursor-pointer">
                 Copy
               </button>
             </div>
@@ -392,9 +406,9 @@
           </div>
 
           <div class="grid grid-cols-3 gap-2">
-            <button onclick="shareLink('fb')" class="bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">Facebook</button>
-            <button onclick="shareLink('tg')" class="bg-sky-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">Telegram</button>
-            <button onclick="copyInviteCode()" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1">Copy</button>
+            <button onclick="shareLink('fb')" class="bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">Facebook</button>
+            <button onclick="shareLink('tg')" class="bg-sky-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">Telegram</button>
+            <button onclick="copyInviteCode()" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">Copy</button>
           </div>
         </section>
 
@@ -402,17 +416,17 @@
         <section id="tab-content-cashout" class="space-y-4 hidden">
           <div class="bg-emerald-50 rounded-2xl p-4 border border-emerald-200 flex items-center justify-between">
             <h2 class="text-xl font-black text-slate-900">Withdrawable</h2>
-            <button onclick="openWithdrawHistoryModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-xs flex items-center gap-1 transition">
+            <button onclick="openWithdrawHistoryModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-xs flex items-center gap-1 transition cursor-pointer">
               History &gt;
             </button>
           </div>
 
           <div class="flex gap-2.5">
-            <button onclick="selectGate('Nagad', this)" id="gate-btn-nagad" class="gate-btn flex-1 border-2 border-orange-500 bg-orange-50/70 font-black text-orange-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition">
+            <button onclick="selectGate('Nagad', this)" id="gate-btn-nagad" class="gate-btn flex-1 border-2 border-orange-500 bg-orange-50/70 font-black text-orange-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer">
               <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" alt="Nagad" class="w-6 h-6 rounded-full object-cover shadow-xs" />
               <span>নগদ (Nagad)</span>
             </button>
-            <button onclick="selectGate('bKash', this)" id="gate-btn-bkash" class="gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition">
+            <button onclick="selectGate('bKash', this)" id="gate-btn-bkash" class="gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer">
               <img src="https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg" alt="bKash" class="w-6 h-6 rounded-full object-cover shadow-xs" />
               <span>বিকাশ (bKash)</span>
             </button>
@@ -478,7 +492,7 @@
             </div>
           </div>
 
-          <button onclick="executeCashout()" class="w-full emerald-primary text-white font-black py-4 rounded-full text-base tracking-wide shadow-lg shadow-emerald-500/25 transition">
+          <button onclick="executeCashout()" class="w-full emerald-primary text-white font-black py-4 rounded-full text-base tracking-wide shadow-lg shadow-emerald-500/25 transition cursor-pointer">
             Cashout
           </button>
 
@@ -498,20 +512,20 @@
 
       <!-- Bottom Nav -->
       <nav class="fixed bottom-0 w-full max-w-md bg-white border-t border-slate-200/80 py-2 px-4 flex justify-around items-center z-20 shadow-lg">
-        <button onclick="switchAppTab('offer')" id="nav-btn-offer" class="flex flex-col items-center gap-1 text-emerald-primary font-bold text-xs">
+        <button onclick="switchAppTab('offer')" id="nav-btn-offer" class="flex flex-col items-center gap-1 text-emerald-primary font-bold text-xs cursor-pointer">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>
           <span>Offer</span>
         </button>
-        <button onclick="switchAppTab('myoffers')" id="nav-btn-myoffers" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-xs hover:text-slate-600 relative">
+        <button onclick="switchAppTab('myoffers')" id="nav-btn-myoffers" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-xs hover:text-slate-600 relative cursor-pointer">
           <span id="myoffers-badge" class="hidden absolute -top-1 right-2 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">0</span>
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
           <span>My offers</span>
         </button>
-        <button onclick="switchAppTab('refer')" id="nav-btn-refer" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-xs hover:text-slate-600">
+        <button onclick="switchAppTab('refer')" id="nav-btn-refer" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-xs hover:text-slate-600 cursor-pointer">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
           <span>Refer</span>
         </button>
-        <button onclick="switchAppTab('cashout')" id="nav-btn-cashout" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-xs hover:text-slate-600">
+        <button onclick="switchAppTab('cashout')" id="nav-btn-cashout" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-xs hover:text-slate-600 cursor-pointer">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
           <span>Cashout</span>
         </button>
@@ -519,8 +533,7 @@
 
     </div>
 
-    <!-- ================= 3. USER PROFILE EDIT MODAL ================= -->
-        <!-- ================= IN-APP NOTIFICATION INBOX MODAL (Feature 6) ================= -->
+    <!-- ================= 3. IN-APP NOTIFICATION INBOX MODAL (Feature 6) ================= -->
     <div id="notification-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3.5 shadow-2xl text-slate-900 max-h-[85vh] flex flex-col justify-between">
         <div class="flex items-center justify-between border-b pb-2">
@@ -554,13 +567,14 @@
       </div>
     </div>
 
+    <!-- ================= 4. USER PROFILE & VIP EDIT MODAL (Feature 5) ================= -->
     <div id="profile-edit-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3.5 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
         <div class="flex items-center justify-between border-b pb-2">
           <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
-            <span>👤</span> প্রোফাইল কাস্টমাইজ করুন
+            <span>👤</span> প্রোফাইল ও ভিআইপি লেভেল
           </h3>
-          <button onclick="closeProfileEditModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
+          <button onclick="closeProfileEditModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold cursor-pointer">✕</button>
         </div>
 
         <div class="flex-1 overflow-y-auto space-y-3.5 text-xs hide-scrollbar pr-1">
@@ -600,24 +614,24 @@
         </div>
 
         <div class="pt-2 flex gap-2">
-          <button onclick="saveUserProfile()" id="btn-save-profile" class="flex-1 emerald-primary text-white font-extrabold py-2.5 rounded-xl text-xs uppercase tracking-wider shadow">
+          <button onclick="saveUserProfile()" id="btn-save-profile" class="flex-1 emerald-primary text-white font-extrabold py-2.5 rounded-xl text-xs uppercase tracking-wider shadow cursor-pointer">
             সংরক্ষণ করুন (Save)
           </button>
-          <button onclick="closeProfileEditModal()" class="bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-xs">
+          <button onclick="closeProfileEditModal()" class="bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer">
             বাতিল
           </button>
         </div>
       </div>
     </div>
 
-    <!-- ================= 4. PRIVACY POLICY MODAL ================= -->
+    <!-- ================= 5. PRIVACY POLICY MODAL ================= -->
     <div id="privacy-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3 shadow-2xl text-slate-900 max-h-[85vh] flex flex-col justify-between">
         <div class="flex items-center justify-between border-b pb-2">
           <h3 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
             <span>🛡️</span> প্রাইভেসি পলিসি ও অ্যাপের নিয়মাবলি
           </h3>
-          <button onclick="closePrivacyModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
+          <button onclick="closePrivacyModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold cursor-pointer">✕</button>
         </div>
 
         <div class="flex-1 overflow-y-auto space-y-2.5 text-xs text-slate-700 leading-relaxed pr-1 hide-scrollbar">
@@ -639,20 +653,20 @@
           </div>
         </div>
 
-        <button onclick="closePrivacyModal()" class="w-full emerald-primary text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">
+        <button onclick="closePrivacyModal()" class="w-full emerald-primary text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer">
           আমি সম্মত (Agree)
         </button>
       </div>
     </div>
 
-    <!-- ================= 5. WITHDRAW HISTORY MODAL ================= -->
+    <!-- ================= 6. WITHDRAW HISTORY MODAL ================= -->
     <div id="withdraw-history-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3.5 shadow-2xl text-slate-900 max-h-[85vh] flex flex-col justify-between">
         <div class="flex items-center justify-between border-b pb-2.5">
           <h3 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
             <span>📋</span> টাকা উত্তোলনের হিস্ট্রি
           </h3>
-          <button onclick="closeWithdrawHistoryModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
+          <button onclick="closeWithdrawHistoryModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold cursor-pointer">✕</button>
         </div>
 
         <div class="bg-blue-50 border border-blue-200 rounded-2xl p-3 text-xs text-blue-900 space-y-1 leading-relaxed shadow-xs">
@@ -668,18 +682,18 @@
           <p class="text-slate-400 text-center py-4 text-xs">হিস্ট্রি লোড হচ্ছে...</p>
         </div>
 
-        <button onclick="closeWithdrawHistoryModal()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider">
+        <button onclick="closeWithdrawHistoryModal()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer">
           বন্ধ করুন
         </button>
       </div>
     </div>
 
-    <!-- ================= 6. PROOF SUBMISSION MODAL ================= -->
+    <!-- ================= 7. PROOF SUBMISSION MODAL ================= -->
     <div id="proof-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3.5 shadow-2xl text-slate-900">
         <div class="flex items-center justify-between border-b pb-2">
           <h3 id="modal-task-title" class="font-black text-sm text-slate-900">Task Title</h3>
-          <button onclick="closeProofModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
+          <button onclick="closeProofModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold cursor-pointer">✕</button>
         </div>
 
         <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 flex items-center justify-between">
@@ -710,31 +724,31 @@
           <input id="proof-notes" type="text" placeholder="যেমন: demo@gmail.com বা 017..." class="w-full border rounded-xl p-2.5 text-xs outline-none focus:border-emerald-500" />
         </div>
 
-        <button onclick="submitTaskProof()" id="btn-submit-proof" class="w-full emerald-primary text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider shadow">
+        <button onclick="submitTaskProof()" id="btn-submit-proof" class="w-full emerald-primary text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider shadow cursor-pointer">
           প্রুফ জমা দিন (Submit Proof)
         </button>
       </div>
     </div>
 
-    <!-- ================= 7. IN-APP SCREENSHOT VIEWER MODAL ================= -->
+    <!-- ================= 8. IN-APP SCREENSHOT VIEWER MODAL ================= -->
     <div id="image-viewer-modal" class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4 hidden backdrop-blur-md">
       <div class="w-full max-w-sm flex justify-between items-center text-white mb-2">
         <span class="text-xs font-bold">স্ক্রিনশট প্রুফ প্রিভিউ</span>
-        <button onclick="closeImageViewer()" class="text-white text-2xl font-bold bg-white/20 rounded-full w-8 h-8 flex items-center justify-center">✕</button>
+        <button onclick="closeImageViewer()" class="text-white text-2xl font-bold bg-white/20 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer">✕</button>
       </div>
       <div class="w-full max-w-sm max-h-[75vh] overflow-auto bg-black rounded-2xl border border-white/20 flex items-center justify-center">
         <img id="enlarged-screenshot" src="" alt="Proof Screenshot" class="max-w-full h-auto object-contain rounded-xl" />
       </div>
     </div>
 
-    <!-- ================= 8. ADMIN USER INSPECTION MODAL ================= -->
+    <!-- ================= 9. ADMIN USER INSPECTION MODAL ================= -->
     <div id="admin-user-inspect-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
       <div class="bg-white rounded-3xl w-full max-w-md p-5 space-y-3.5 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
         <div class="flex items-center justify-between border-b pb-2">
           <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
             <span>🔎</span> ইউজার প্রোফাইল ও টাস্ক অডিট
           </h3>
-          <button onclick="closeUserInspectModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold">✕</button>
+          <button onclick="closeUserInspectModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold cursor-pointer">✕</button>
         </div>
 
         <div id="inspect-user-summary" class="bg-slate-50 border border-slate-200 p-3 rounded-2xl text-xs space-y-1">
@@ -746,13 +760,13 @@
           <div id="inspect-submissions-list" class="space-y-2 text-xs"></div>
         </div>
 
-        <button onclick="closeUserInspectModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-xs">
+        <button onclick="closeUserInspectModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-xs cursor-pointer">
           বন্ধ করুন
         </button>
       </div>
     </div>
 
-    <!-- ================= 9. PRO TABBED ADMIN MODAL ================= -->
+    <!-- ================= 10. PRO TABBED ADMIN MODAL ================= -->
     <div id="admin-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
       <div class="bg-white rounded-3xl w-full max-w-md p-5 max-h-[92vh] flex flex-col justify-between shadow-2xl text-slate-900">
         
@@ -760,22 +774,22 @@
           <h3 class="font-extrabold text-slate-900 text-base flex items-center gap-1.5">
             <span>⚙️</span> মাস্টার অ্যাডমিন ড্যাশবোর্ড
           </h3>
-          <button onclick="toggleAdminModal()" class="text-slate-400 hover:text-slate-800 text-xl font-bold">✕</button>
+          <button onclick="toggleAdminModal()" class="text-slate-400 hover:text-slate-800 text-xl font-bold cursor-pointer">✕</button>
         </div>
 
         <!-- 4 Tabs Menu -->
         <div class="flex bg-slate-100 p-1 rounded-2xl my-3 gap-1 shrink-0 text-xs font-bold">
-          <button onclick="switchAdminTab('proofs')" id="atab-btn-proofs" class="flex-1 py-2 rounded-xl bg-white text-emerald-700 shadow-xs flex items-center justify-center gap-1 transition">
+          <button onclick="switchAdminTab('proofs')" id="atab-btn-proofs" class="flex-1 py-2 rounded-xl bg-white text-emerald-700 shadow-xs flex items-center justify-center gap-1 transition cursor-pointer">
             <span>📸 প্রুফ</span>
             <span id="pending-proofs-count" class="bg-red-500 text-white text-[10px] px-1.5 rounded-full">০</span>
           </button>
-          <button onclick="switchAdminTab('add')" id="atab-btn-add" class="flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1 transition">
+          <button onclick="switchAdminTab('add')" id="atab-btn-add" class="flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1 transition cursor-pointer">
             <span>➕ নতুন</span>
           </button>
-          <button onclick="switchAdminTab('manage')" id="atab-btn-manage" class="flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1 transition">
+          <button onclick="switchAdminTab('manage')" id="atab-btn-manage" class="flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1 transition cursor-pointer">
             <span>📋 লিস্ট</span>
           </button>
-          <button onclick="switchAdminTab('withdraw')" id="atab-btn-withdraw" class="flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1 transition">
+          <button onclick="switchAdminTab('withdraw')" id="atab-btn-withdraw" class="flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1 transition cursor-pointer">
             <span>💸 ক্যাশআউট</span>
             <span id="pending-withdraw-count" class="bg-emerald-600 text-white text-[10px] px-1.5 rounded-full">০</span>
           </button>
@@ -823,7 +837,7 @@
               <label class="text-[11px] font-bold text-slate-600">কাজের সহজ নির্দেশনা:</label>
               <input id="admin-desc" type="text" placeholder="লিংকে গিয়ে ইমেইল দিয়ে সাইন-আপ সম্পন্ন করুন" class="w-full border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none" />
             </div>
-            <button onclick="adminPublishTask()" id="admin-publish-btn" class="w-full emerald-primary text-white font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider shadow">
+            <button onclick="adminPublishTask()" id="admin-publish-btn" class="w-full emerald-primary text-white font-extrabold py-3 rounded-xl text-xs uppercase tracking-wider shadow cursor-pointer">
               পাবলিশ করুন
             </button>
           </div>
@@ -841,7 +855,7 @@
           </div>
         </div>
 
-        <button onclick="toggleAdminModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-xs mt-3 shrink-0">
+        <button onclick="toggleAdminModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-xs mt-3 shrink-0 cursor-pointer">
           বন্ধ করুন
         </button>
 
@@ -854,7 +868,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
     import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, where, deleteDoc, serverTimestamp, increment, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, where, getDocs, deleteDoc, serverTimestamp, increment, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA8c2BN56WPt_-SITD5fcWXj_aVFBzVgD0",
@@ -934,7 +948,7 @@
       return dId;
     }
 
-    // Direct, Robust Google Sign-In with instant feedback
+    // Direct Google Sign In
     window.loginWithGoogleSmart = async function() {
       const btnText = document.getElementById('btn-login-text');
       if (btnText) btnText.innerText = 'লোড হচ্ছে...';
@@ -960,7 +974,6 @@
       }
     };
 
-    // Attach event listener directly to button to guarantee clicks always fire
     document.getElementById('btn-google-login')?.addEventListener('click', window.loginWithGoogleSmart);
 
     async function handleRedirectAuth() {
@@ -975,26 +988,38 @@
     }
     handleRedirectAuth();
 
+    // 1-Phone = 1-Account Hard Device Lock + Safe Admin Bypass
     async function processUserRegistration(user) {
+      if (!user) return;
       const deviceId = getDeviceId();
-      const isAdmin = user.email.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase();
+      const isAdmin = (user.email && user.email.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase());
       const userRef = doc(db, "users", user.uid);
       const snap = await getDoc(userRef);
 
+      // Check if new account registration
       if (!snap.exists()) {
+        // Device Lock Verification (Admin exempt)
         if (!isAdmin) {
-          const devQuery = query(collection(db, "users"), where("deviceId", "==", deviceId));
-          const devSnap = await new Promise((resolve) => {
-            const unsub = onSnapshot(devQuery, (qSnap) => {
-              unsub();
-              resolve(qSnap);
-            });
-          });
+          try {
+            const deviceRef = doc(db, "devices", deviceId);
+            const devDoc = await getDoc(deviceRef);
 
-          if (!devSnap.empty) {
-            await signOut(auth);
-            alert("⚠️ এই ডিভাইসে ইতিমধ্যে অন্য একটি অ্যাকাউন্ট রেজিস্টার করা আছে!\n\nএকাধিক অ্যাকাউন্ট বা ফেক রেফার সম্পূর্ণ নিষিদ্ধ।");
-            return;
+            if (devDoc.exists() && devDoc.data().userId !== user.uid) {
+              await signOut(auth);
+              alert("⚠️ এই ডিভাইসে ইতিমধ্যে অন্য একটি অ্যাকাউন্ট খোলা রয়েছে!\n\nএকটি ফোনে একাধিক অ্যাকাউন্ট চালানো এবং একই কাজের ডুপ্লিকেট সাবমিশন সম্পূর্ণ নিষিদ্ধ।");
+              document.getElementById('screen-login').classList.remove('hidden');
+              document.getElementById('screen-app').classList.add('hidden');
+              return;
+            } else if (!devDoc.exists()) {
+              // Lock this device to this user ID!
+              await setDoc(deviceRef, {
+                userId: user.uid,
+                userEmail: user.email,
+                registeredAt: serverTimestamp()
+              });
+            }
+          } catch (e) {
+            console.warn("Device lock check notice:", e);
           }
         }
 
@@ -1007,8 +1032,8 @@
         await setDoc(userRef, {
           uid: user.uid,
           name: user.displayName || "User",
-          email: user.email,
-          photoURL: user.photoURL,
+          email: user.email || "",
+          photoURL: user.photoURL || "",
           deviceId: deviceId,
           coins: welcomeCoins,
           myInviteCode: myCode,
@@ -1021,14 +1046,17 @@
         });
 
         if (inviteCode) {
-          const q = query(collection(db, "users"), where("myInviteCode", "==", inviteCode));
-          onSnapshot(q, (rSnap) => {
+          try {
+            const q = query(collection(db, "users"), where("myInviteCode", "==", inviteCode));
+            const rSnap = await getDocs(q);
             rSnap.forEach(async (rDoc) => {
               await updateDoc(doc(db, "users", rDoc.id), {
                 referralCount: increment(1)
               });
             });
-          });
+          } catch (e) {
+            console.warn("Referral track notice:", e);
+          }
         }
       }
     }
@@ -1040,6 +1068,12 @@
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUser = user;
+        try {
+          await processUserRegistration(user);
+        } catch(e) {
+          console.warn("Auth registration notice:", e);
+        }
+
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-app').classList.remove('hidden');
 
@@ -1076,6 +1110,66 @@
       }
     });
 
+    // Dynamic VIP Tier Calculation (Feature 5)
+    function updateVIPTierStatus(tasksCount) {
+      let tierName = "BRONZE";
+      let tierIcon = "🥉";
+      let tierClass = "bg-amber-100 border-amber-300 text-amber-900";
+      let progressMsg = "";
+
+      if (tasksCount >= 30) {
+        tierName = "DIAMOND VIP";
+        tierIcon = "💎";
+        tierClass = "bg-sky-100 border-sky-300 text-sky-900 shadow-sm";
+        progressMsg = "🎉 আপনি সর্বোচ্চ ডায়মন্ড ভিআইপি লেভেলে আছেন (+৫% এক্সট্রা রিওয়ার্ড)";
+      } else if (tasksCount >= 15) {
+        tierName = "GOLD VIP";
+        tierIcon = "🥇";
+        tierClass = "bg-yellow-100 border-yellow-300 text-yellow-900";
+        progressMsg = `ডায়মন্ড ভিআইপি হতে আর ${30 - tasksCount}টি কাজ সম্পন্ন করুন`;
+      } else if (tasksCount >= 5) {
+        tierName = "SILVER VIP";
+        tierIcon = "🥈";
+        tierClass = "bg-slate-100 border-slate-300 text-slate-800";
+        progressMsg = `গোল্ড ভিআইপি হতে আর ${15 - tasksCount}টি কাজ সম্পন্ন করুন`;
+      } else {
+        tierName = "BRONZE";
+        tierIcon = "🥉";
+        tierClass = "bg-amber-50 border-amber-200 text-amber-800";
+        progressMsg = `সিলভার ভিআইপি হতে আর ${5 - tasksCount}টি কাজ সম্পন্ন করুন`;
+      }
+
+      const badge = document.getElementById("header-vip-badge");
+      if (badge) {
+        badge.innerHTML = `<span>${tierIcon}</span> ${tierName}`;
+        badge.className = `${tierClass} text-[9px] font-black px-1.5 py-0.2 rounded-md uppercase tracking-wider flex items-center gap-0.5 shadow-xs`;
+      }
+
+      const pBadge = document.getElementById("profile-vip-tier-badge");
+      if (pBadge) {
+        pBadge.innerHTML = `<span>${tierIcon}</span> ${tierName} EARNER`;
+        pBadge.className = `${tierClass} text-xs font-black px-2.5 py-0.5 rounded-full uppercase flex items-center gap-1 shadow-xs`;
+      }
+
+      const pText = document.getElementById("vip-progress-text");
+      if (pText) pText.innerText = progressMsg;
+    }
+
+    // In-App Notification Center (Feature 6)
+    window.openNotificationModal = function() {
+      document.getElementById("notification-modal")?.classList.remove("hidden");
+    };
+
+    window.closeNotificationModal = function() {
+      document.getElementById("notification-modal")?.classList.add("hidden");
+    };
+
+    window.markAllNotificationsRead = function() {
+      document.getElementById("notification-counter")?.classList.add("hidden");
+      closeNotificationModal();
+    };
+
+    // User Profile Customization
     window.openProfileEditModal = function() {
       if (!userData) return;
       document.getElementById('edit-profile-name').value = userData.name || "";
@@ -1132,66 +1226,6 @@
       }
     };
 
-    
-    // VIP Tier Calculation (Feature 5)
-    function updateVIPTierStatus(tasksCount) {
-      let tierName = "BRONZE";
-      let tierIcon = "🥉";
-      let tierClass = "bg-amber-100 border-amber-300 text-amber-900";
-      let progressMsg = "";
-
-      if (tasksCount >= 30) {
-        tierName = "DIAMOND VIP";
-        tierIcon = "💎";
-        tierClass = "bg-sky-100 border-sky-300 text-sky-900 shadow-sm";
-        progressMsg = "🎉 আপনি সর্বোচ্চ ডায়মন্ড ভিআইপি লেভেলে আছেন (+৫% এক্সট্রা রিওয়ার্ড)";
-      } else if (tasksCount >= 15) {
-        tierName = "GOLD VIP";
-        tierIcon = "🥇";
-        tierClass = "bg-yellow-100 border-yellow-300 text-yellow-900";
-        progressMsg = `ডায়মন্ড ভিআইপি হতে আর ${30 - tasksCount}টি কাজ সম্পন্ন করুন`;
-      } else if (tasksCount >= 5) {
-        tierName = "SILVER VIP";
-        tierIcon = "🥈";
-        tierClass = "bg-slate-100 border-slate-300 text-slate-800";
-        progressMsg = `গোল্ড ভিআইপি হতে আর ${15 - tasksCount}টি কাজ সম্পন্ন করুন`;
-      } else {
-        tierName = "BRONZE";
-        tierIcon = "🥉";
-        tierClass = "bg-amber-50 border-amber-200 text-amber-800";
-        progressMsg = `সিলভার ভিআইপি হতে আর ${5 - tasksCount}টি কাজ সম্পন্ন করুন`;
-      }
-
-      const badge = document.getElementById("header-vip-badge");
-      if (badge) {
-        badge.innerHTML = `<span>${tierIcon}</span> ${tierName}`;
-        badge.className = `${tierClass} text-[9px] font-black px-1.5 py-0.2 rounded-md uppercase tracking-wider flex items-center gap-0.5 shadow-xs`;
-      }
-
-      const pBadge = document.getElementById("profile-vip-tier-badge");
-      if (pBadge) {
-        pBadge.innerHTML = `<span>${tierIcon}</span> ${tierName} EARNER`;
-        pBadge.className = `${tierClass} text-xs font-black px-2.5 py-0.5 rounded-full uppercase flex items-center gap-1 shadow-xs`;
-      }
-
-      const pText = document.getElementById("vip-progress-text");
-      if (pText) pText.innerText = progressMsg;
-    }
-
-    // Notification Center (Feature 6)
-    window.openNotificationModal = function() {
-      document.getElementById("notification-modal")?.classList.remove("hidden");
-    };
-
-    window.closeNotificationModal = function() {
-      document.getElementById("notification-modal")?.classList.add("hidden");
-    };
-
-    window.markAllNotificationsRead = function() {
-      document.getElementById("notification-counter")?.classList.add("hidden");
-      closeNotificationModal();
-    };
-
     function checkDailyRewardStatus(lastClaimTime) {
       const now = Date.now();
       const diffMs = now - lastClaimTime;
@@ -1208,7 +1242,7 @@
       } else {
         btn.disabled = false;
         btn.innerText = "Claim";
-        btn.className = "emerald-primary text-white font-black text-xs px-4 py-1.5 rounded-full shadow-sm";
+        btn.className = "emerald-primary text-white font-black text-xs px-4 py-1.5 rounded-full shadow-sm cursor-pointer";
         sub.innerText = "+10,000 Coins Available";
       }
     }
@@ -1295,7 +1329,7 @@
                     <div class="text-slate-400 text-[10px]">৳${t.rewardTaka} ${t.videoLink ? '• 🎬 ভিডিও আছে' : ''}</div>
                   </div>
                 </div>
-                <button onclick="adminDeleteTask('${docItem.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-2.5 py-1 rounded-lg text-xs font-bold transition">ডিলিট</button>
+                <button onclick="adminDeleteTask('${docItem.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer">ডিলিট</button>
               </div>
             `;
           }
@@ -1351,7 +1385,7 @@
                 </div>
               </div>
             </div>
-            <button onclick="handleOpenTask('${t.id}')" class="emerald-primary text-white font-extrabold text-xs px-5 py-2.5 rounded-full shadow-sm shrink-0">
+            <button onclick="handleOpenTask('${t.id}')" class="emerald-primary text-white font-extrabold text-xs px-5 py-2.5 rounded-full shadow-sm shrink-0 cursor-pointer">
               Earn
             </button>
           </div>
@@ -1452,6 +1486,7 @@
       document.getElementById('withdraw-history-modal').classList.add('hidden');
     };
 
+    // Submit Proof with Duplicate Prevention & Auto Canvas Compression
     window.submitTaskProof = async function() {
       if (!currentUser || !activeModalTask) return;
       const fileInput = document.getElementById('proof-file');
@@ -1466,10 +1501,30 @@
         return;
       }
 
-      const file = fileInput.files[0];
       const submitBtn = document.getElementById('btn-submit-proof');
-      submitBtn.innerText = 'ছবি কমপ্রেস ও প্রসেস হচ্ছে...';
+      submitBtn.innerText = 'যাচাই হচ্ছে...';
       submitBtn.disabled = true;
+
+      // Duplicate Task Submission Lock: একই কাজের জন্য একই নম্বর/ইমেইল ২ বার জমা দেওয়া যাবে না
+      try {
+        const dupQuery = query(
+          collection(db, "submissions"),
+          where("taskId", "==", activeModalTask.id),
+          where("proofNotes", "==", notes)
+        );
+        const dupSnap = await getDocs(dupQuery);
+        if (!dupSnap.empty) {
+          alert("⚠️ এই ইমেইল বা নম্বরটি দিয়ে ইতিমধ্যে এই টাস্কে কাজ জমা দেওয়া হয়েছে!\n\nএকই তথ্য দিয়ে ডুপ্লিকেট সাবমিশন সম্পূর্ণ নিষিদ্ধ।");
+          submitBtn.innerText = 'প্রুফ জমা দিন (Submit Proof)';
+          submitBtn.disabled = false;
+          return;
+        }
+      } catch (e) {
+        console.warn("Duplicate check note:", e);
+      }
+
+      const file = fileInput.files[0];
+      submitBtn.innerText = 'ছবি কমপ্রেস ও প্রসেস হচ্ছে...';
 
       try {
         const compressedBase64 = await compressImageFile(file, 900, 0.7);
@@ -1500,6 +1555,7 @@
         submitBtn.innerText = 'প্রুফ জমা দিন (Submit Proof)';
         submitBtn.disabled = false;
         closeProofModal();
+
         playCoinChime();
         triggerConfettiBlast();
         alert("আপনার প্রুফ সফলভাবে জমা হয়েছে! অ্যাডমিন অনুমোদন করার সাথে সাথে কয়েন যোগ হবে।");
@@ -1608,15 +1664,15 @@
                 <strong class="text-slate-900">প্রুফ নোট:</strong> ${sub.proofNotes}
               </div>
               ${sub.proofImage ? `
-                <button type="button" onclick="previewAdminImage('${subId}')" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-bold px-3 py-1.5 rounded-xl text-[11px] w-full flex items-center justify-center gap-1 transition">
+                <button type="button" onclick="previewAdminImage('${subId}')" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-bold px-3 py-1.5 rounded-xl text-[11px] w-full flex items-center justify-center gap-1 transition cursor-pointer">
                   🔍 স্ক্রিনশট বড় করে দেখুন
                 </button>
               ` : ''}
               <div class="flex gap-2 pt-1">
-                <button onclick="approveSubmission('${subId}', '${sub.userId}', ${sub.rewardCoins})" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs shadow-xs transition">
+                <button onclick="approveSubmission('${subId}', '${sub.userId}', ${sub.rewardCoins})" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs shadow-xs transition cursor-pointer">
                   ✓ Approve
                 </button>
-                <button onclick="rejectSubmission('${subId}')" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-xl text-xs shadow-xs transition">
+                <button onclick="rejectSubmission('${subId}')" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 rounded-xl text-xs shadow-xs transition cursor-pointer">
                   ✕ Reject
                 </button>
               </div>
@@ -1669,11 +1725,11 @@
       const bkashBtn = document.getElementById('gate-btn-bkash');
 
       if (isBkash) {
-        bkashBtn.className = "gate-btn flex-1 border-2 border-pink-500 bg-pink-50/80 font-black text-pink-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition";
-        nagadBtn.className = "gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition";
+        bkashBtn.className = "gate-btn flex-1 border-2 border-pink-500 bg-pink-50/80 font-black text-pink-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
+        nagadBtn.className = "gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
       } else {
-        nagadBtn.className = "gate-btn flex-1 border-2 border-orange-500 bg-orange-50/80 font-black text-orange-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition";
-        bkashBtn.className = "gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition";
+        nagadBtn.className = "gate-btn flex-1 border-2 border-orange-500 bg-orange-50/80 font-black text-orange-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
+        bkashBtn.className = "gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
       }
 
       document.querySelectorAll('.card-method-img').forEach(img => img.src = activeImg);
@@ -1751,15 +1807,15 @@
                     <div class="text-[11px] font-mono text-slate-600 mt-0.5">পার্সোনাল নম্বর: ${w.phone}</div>
                   </div>
                 </div>
-                <button onclick="inspectUserHistory('${w.userId}', '${w.userName}', '${w.email}', '${w.phone}')" class="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 font-bold px-2.5 py-1.5 rounded-xl text-[11px] flex items-center gap-1 shadow-xs transition">
+                <button onclick="inspectUserHistory('${w.userId}', '${w.userName}', '${w.email}', '${w.phone}')" class="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 font-bold px-2.5 py-1.5 rounded-xl text-[11px] flex items-center gap-1 shadow-xs transition cursor-pointer">
                   🔍 অডিট
                 </button>
               </div>
               <div class="flex gap-2 pt-1 border-t">
-                <button onclick="adminMarkPaid('${wId}', '${w.userId}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] py-1.5 rounded-xl shadow-xs transition">
+                <button onclick="adminMarkPaid('${wId}', '${w.userId}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[11px] py-1.5 rounded-xl shadow-xs transition cursor-pointer">
                   পেমেন্ট সম্পন্ন ✓
                 </button>
-                <button onclick="adminRejectWithdraw('${wId}', '${w.userId}', ${refundCoins})" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] py-1.5 rounded-xl shadow-xs transition">
+                <button onclick="adminRejectWithdraw('${wId}', '${w.userId}', ${refundCoins})" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold text-[11px] py-1.5 rounded-xl shadow-xs transition cursor-pointer">
                   ✕ বাতিল ও রিফান্ড
                 </button>
               </div>
@@ -1786,12 +1842,7 @@
       listBox.innerHTML = `<p class="text-slate-400 text-center py-4">কাজের হিস্ট্রি লোড হচ্ছে...</p>`;
 
       const q = query(collection(db, "submissions"), where("userId", "==", userId));
-      const subSnap = await new Promise((resolve) => {
-        const unsub = onSnapshot(q, (s) => {
-          unsub();
-          resolve(s);
-        });
-      });
+      const subSnap = await getDocs(q);
 
       if (subSnap.empty) {
         listBox.innerHTML = `<p class="text-amber-600 text-center py-4 bg-amber-50 rounded-xl border border-amber-200">⚠️ এই ইউজার এখনও কোনো কাজ সম্পন্ন করেনি!</p>`;
@@ -1815,7 +1866,7 @@
             </div>
             <p class="text-[10px] bg-slate-50 p-1.5 rounded border text-slate-700"><strong>নোট:</strong> ${sub.proofNotes}</p>
             ${sub.proofImage ? `
-              <button type="button" onclick="openScreenshotPreview('${sub.proofImage}')" class="text-blue-600 font-bold text-[10px] underline">
+              <button type="button" onclick="previewAdminImage('${docItem.id}')" class="text-blue-600 font-bold text-[10px] underline cursor-pointer">
                 🔍 স্ক্রিনশট প্রিভিউ দেখুন
               </button>
             ` : ''}
@@ -1840,13 +1891,12 @@
             const uData = uSnap.data();
             if (uData.referredBy && !uData.referralBonusAwarded) {
               const q = query(collection(db, "users"), where("myInviteCode", "==", uData.referredBy));
-              onSnapshot(q, (rSnap) => {
-                rSnap.forEach(async (rDoc) => {
-                  await updateDoc(doc(db, "users", rDoc.id), {
-                    coins: increment(100000)
-                  });
-                  await updateDoc(uRef, { referralBonusAwarded: true });
+              const rSnap = await getDocs(q);
+              rSnap.forEach(async (rDoc) => {
+                await updateDoc(doc(db, "users", rDoc.id), {
+                  coins: increment(100000)
                 });
+                await updateDoc(uRef, { referralBonusAwarded: true });
               });
             }
           }
@@ -1940,13 +1990,13 @@
       tabs.forEach(t => {
         const btn = document.getElementById(`atab-btn-${t}`);
         if (btn) {
-          btn.className = "flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1 transition";
+          btn.className = "flex-1 py-2 rounded-xl text-slate-500 hover:text-slate-800 flex items-center justify-center gap-1 transition cursor-pointer";
         }
       });
 
       const activeBtn = document.getElementById(`atab-btn-${tab}`);
       if (activeBtn) {
-        activeBtn.className = "flex-1 py-2 rounded-xl bg-white text-emerald-700 shadow-xs flex items-center justify-center gap-1 transition";
+        activeBtn.className = "flex-1 py-2 rounded-xl bg-white text-emerald-700 shadow-xs flex items-center justify-center gap-1 transition cursor-pointer";
       }
 
       if (tab === 'proofs') {
