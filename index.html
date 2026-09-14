@@ -2,6 +2,11 @@
 <html lang="bn">
 <head>
   <meta charset="UTF-8" />
+    <!-- Top Status Bar Pure White (Like Tip Tip App) -->
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="msapplication-navbutton-color" content="#ffffff" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="white" />
+  <meta name="color-scheme" content="light" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>TakaReward Pro - Top Micro Task & Earning App</title>
 
@@ -65,7 +70,7 @@
   
   <style>
     body { font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
-    .bg-pastel { background-color: #f6fbf7; }
+    .bg-pastel { background-color: #f8fafc; }
     .emerald-primary { background-color: #00c244; }
     .emerald-primary:hover { background-color: #00a83a; }
     .text-emerald-primary { color: #00c244; }
@@ -260,13 +265,13 @@
         </div>
       </header>
 
-      <!-- Smooth Animated Live Ticker Notice Bar -->
-      <div class="bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border-b border-amber-200/80 px-2 py-1.5 flex items-center gap-2 text-[11px] text-amber-950 shrink-0 shadow-xs">
-        <span class="bg-amber-500 text-white font-black text-[9px] px-2 py-0.5 rounded-full uppercase shrink-0 shadow-xs flex items-center gap-1">
+      <!-- Clean Pure-White Animated Live Ticker Notice Bar -->
+      <div class="bg-white border-b border-slate-200/70 px-3 py-2 flex items-center gap-2 text-[11px] text-slate-800 shrink-0 shadow-xs">
+        <span class="bg-emerald-50 border border-emerald-200 text-emerald-700 font-extrabold text-[9px] px-2 py-0.5 rounded-full uppercase shrink-0 flex items-center gap-1">
           <span>📢</span> নোটিশ
         </span>
         <div class="live-ticker-wrap flex-1">
-          <div class="live-ticker-content font-bold text-amber-900 tracking-wide">
+          <div class="live-ticker-content font-bold text-slate-700 tracking-wide">
             🔥 স্বাগতম TakaReward Pro-তে! সবাই নিয়ম মেনে সঠিক তথ্য দিয়ে কাজ করুন। ভুল বা ফেক তথ্য দিলে আইডি ব্যান হবে। যেকোনো প্রয়োজনে অফিসিয়াল টেলিগ্রাম সাপোর্টে মেসেজ দিন: @RewardProAdmin &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; 💸 ২৪ ঘণ্টার মধ্যে বিকাশ ও নগদে পেমেন্ট নিশ্চিত করা হয়!
           </div>
         </div>
@@ -295,18 +300,40 @@
             </div>
           </div>
 
-          <!-- Daily Reward Strip (With Sound FX & Confetti) -->
-          <div class="bg-white rounded-2xl p-3 border border-slate-200/80 shadow-xs flex items-center justify-between">
-            <div class="flex items-center gap-2.5">
-              <span class="text-2xl">🎁</span>
-              <div>
-                <span class="text-xs font-black text-slate-800 block">Daily Sign-in Reward</span>
-                <span id="daily-subtext" class="text-[10px] text-emerald-600 font-bold">+10,000 Coins Available</span>
+          <!-- Premium White Daily Streak Progress Card (Like Reference App) -->
+          <div class="bg-white rounded-3xl p-4 border border-slate-200/80 shadow-xs space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">🎁</span>
+                <div>
+                  <span class="text-xs font-black text-slate-800 block">Daily Sign-in Reward</span>
+                  <span id="daily-subtext" class="text-[10px] text-emerald-600 font-bold">+10,000 Coins Available</span>
+                </div>
+              </div>
+              <button onclick="claimDailyBonus()" id="daily-claim-btn" class="emerald-primary text-white font-black text-xs px-5 py-2 rounded-full shadow-sm transition cursor-pointer">
+                Claim
+              </button>
+            </div>
+
+            <!-- 5-Step Visual Coin Streak Bar -->
+            <div class="pt-1">
+              <div class="flex items-center justify-between text-[10px] font-extrabold text-emerald-700 px-1 mb-1.5">
+                <span class="bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-md">+10,000</span>
+                <span class="bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-md">+20,000</span>
+                <span class="bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-md">+30,000</span>
+                <span class="bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 rounded-md">+40,000</span>
+              </div>
+              <div class="relative flex items-center justify-between px-2">
+                <div class="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-1.5 bg-slate-100 rounded-full z-0">
+                  <div class="h-full bg-emerald-500 rounded-full w-2/5"></div>
+                </div>
+                <div class="relative z-10 w-6 h-6 rounded-full bg-emerald-500 text-white font-black text-[10px] flex items-center justify-center shadow-xs">🪙</div>
+                <div class="relative z-10 w-6 h-6 rounded-full bg-emerald-500 text-white font-black text-[10px] flex items-center justify-center shadow-xs">🪙</div>
+                <div class="relative z-10 w-6 h-6 rounded-full bg-white border-2 border-emerald-400 text-slate-700 font-black text-[10px] flex items-center justify-center shadow-xs">🪙</div>
+                <div class="relative z-10 w-6 h-6 rounded-full bg-white border-2 border-slate-300 text-slate-400 font-black text-[10px] flex items-center justify-center shadow-xs">🪙</div>
+                <div class="relative z-10 w-7 h-7 rounded-xl bg-amber-400 border border-amber-300 text-white font-black text-xs flex items-center justify-center shadow-xs">🎁</div>
               </div>
             </div>
-            <button onclick="claimDailyBonus()" id="daily-claim-btn" class="emerald-primary text-white font-black text-xs px-4 py-1.5 rounded-full shadow-sm transition cursor-pointer">
-              Claim
-            </button>
           </div>
 
           <!-- Section 1: Admin Verified Custom Tasks -->
