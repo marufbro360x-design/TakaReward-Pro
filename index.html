@@ -54,6 +54,10 @@
 
   <link rel="icon" href="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg">
   <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg">
+  <meta name="apple-mobile-web-app-title" content="TakaReward Pro">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -126,13 +130,33 @@
       } catch(e) {}
     }
 
-    // 1-Click PWA App Install Handler (Feature 7)
+    // 1-Click PWA App Install Handler (Feature 7) - Auto-hide when already installed
     let deferredAppInstallPrompt = null;
+
+    function isAppAlreadyInstalled() {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone || document.referrer.includes('android-app://');
+      const isFlagged = localStorage.getItem('tr_pwa_installed') === 'true';
+      return (isStandalone || isFlagged);
+    }
+
+    // Auto-check on load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (isAppAlreadyInstalled()) {
+        document.getElementById('pwa-install-banner')?.classList.add('hidden');
+      }
+    });
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredAppInstallPrompt = e;
-      const banner = document.getElementById('pwa-install-banner');
-      if (banner) banner.classList.remove('hidden');
+      if (!isAppAlreadyInstalled()) {
+        document.getElementById('pwa-install-banner')?.classList.remove('hidden');
+      }
+    });
+
+    window.addEventListener('appinstalled', () => {
+      localStorage.setItem('tr_pwa_installed', 'true');
+      document.getElementById('pwa-install-banner')?.classList.add('hidden');
     });
 
     function installAppDirect() {
@@ -140,13 +164,19 @@
         deferredAppInstallPrompt.prompt();
         deferredAppInstallPrompt.userChoice.then((choice) => {
           if (choice.outcome === 'accepted') {
+            localStorage.setItem('tr_pwa_installed', 'true');
             document.getElementById('pwa-install-banner')?.classList.add('hidden');
           }
           deferredAppInstallPrompt = null;
         });
       } else {
-        alert("📲 ব্রাউজারের ৩-ডট (Three dots) মেনুতে গিয়ে 'Add to Home screen' বা 'Install App'-এ চাপ দিয়ে ফোনে আসল অ্যাপের মতো ইনস্টল করে নিন!");
+        alert("📲 ব্রাউজারের ৩-ডট (Three dots) মেনুতে গিয়ে 'Install App' বা 'Add to Home screen'-এ চাপ দিন!");
       }
+    }
+
+    function dismissInstallBanner() {
+      localStorage.setItem('tr_pwa_installed', 'true');
+      document.getElementById('pwa-install-banner')?.classList.add('hidden');
     }
   </script>
 </head>
@@ -249,7 +279,7 @@
         <section id="tab-content-offer" class="space-y-4">
           
           <!-- 1-Click PWA App Install Banner (Feature 7) -->
-          <div id="pwa-install-banner" class="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-3 text-white flex items-center justify-between shadow-sm">
+          <div id="pwa-install-banner" class="hidden bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-3 text-white flex items-center justify-between shadow-sm">
             <div class="flex items-center gap-2.5">
               <span class="text-2xl">📲</span>
               <div>
@@ -257,9 +287,12 @@
                 <span class="text-[10px] text-emerald-100">১-ক্লিকে আসল অ্যাপের মতো ফোনে চালান</span>
               </div>
             </div>
-            <button onclick="installAppDirect()" class="bg-white hover:bg-emerald-50 text-emerald-700 font-extrabold text-xs px-3 py-1.5 rounded-xl shadow-xs transition shrink-0 cursor-pointer">
-              ইনস্টল
-            </button>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="installAppDirect()" class="bg-white hover:bg-emerald-50 text-emerald-700 font-extrabold text-xs px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer">
+                ইনস্টল
+              </button>
+              <button onclick="dismissInstallBanner()" class="text-emerald-200 hover:text-white font-bold text-sm px-1.5 py-0.5 rounded-lg cursor-pointer" title="বন্ধ করুন">✕</button>
+            </div>
           </div>
 
           <!-- Daily Reward Strip (With Sound FX & Confetti) -->
