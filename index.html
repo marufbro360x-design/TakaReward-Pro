@@ -712,20 +712,6 @@
             <input id="edit-profile-name" type="text" placeholder="আপনার নাম লিখুন..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs font-bold outline-none focus:border-emerald-500" />
           </div>
 
-          <!-- App Download Section in Profile (Circular Logo) -->
-          <div class="bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 p-3 rounded-2xl flex items-center justify-between shadow-xs">
-            <div class="flex items-center gap-2.5">
-              <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="App Logo" class="w-10 h-10 rounded-full border-2 border-emerald-400 object-cover shadow-xs shrink-0" />
-              <div>
-                <strong class="text-xs text-slate-900 block leading-tight">TakaReward Pro App</strong>
-                <span class="text-[10px] text-emerald-700 font-bold">অফিসিয়াল অ্যান্ড্রয়েড অ্যাপ</span>
-              </div>
-            </div>
-            <button type="button" onclick="installAppDirect()" class="emerald-primary text-white font-extrabold text-xs px-3.5 py-2 rounded-xl shadow-xs hover:scale-105 active:scale-95 transition cursor-pointer shrink-0">
-              📲 ডাউনলোড
-            </button>
-          </div>
-
           <!-- Preset 3D Avatars -->
           <div class="space-y-1.5">
             <label class="font-bold text-slate-700 block">পছন্দের ৩ডি অবতার সিলেক্ট করুন:</label>
@@ -900,30 +886,6 @@
     </div>
 
     <!-- ================= 10. PRO TABBED ADMIN MODAL ================= -->
-        <!-- ================= ADMIN ALL USERS LIST MODAL ================= -->
-    <div id="admin-all-users-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-      <div class="bg-white rounded-3xl w-full max-w-md p-5 space-y-3 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
-        <div class="flex items-center justify-between border-b pb-2.5">
-          <div>
-            <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
-              <span>👥</span> সকল রেজিস্টার্ড ইউজার তালিকা
-            </h3>
-            <span id="admin-total-users-badge" class="text-[10px] text-blue-600 font-bold">মোট ইউজার: ০ জন</span>
-          </div>
-          <button onclick="closeAdminAllUsersModal()" class="text-slate-400 hover:text-slate-800 text-xl font-bold cursor-pointer">✕</button>
-        </div>
-
-        <!-- Users List with Live Balance & Details -->
-        <div id="admin-all-users-list" class="flex-1 overflow-y-auto space-y-2 pr-1 hide-scrollbar">
-          <p class="text-slate-400 text-center py-6 text-xs">ইউজার লিস্ট লোড হচ্ছে...</p>
-        </div>
-
-        <button onclick="closeAdminAllUsersModal()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer">
-          বন্ধ করুন
-        </button>
-      </div>
-    </div>
-
     <div id="admin-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
       <div class="bg-white rounded-3xl w-full max-w-md p-5 max-h-[92vh] flex flex-col justify-between shadow-2xl text-slate-900">
         
@@ -936,8 +898,8 @@
 
         <!-- Admin Live Analytics 3-Cards (User Count, Paid, Pending) -->
         <div class="grid grid-cols-3 gap-2 my-2 shrink-0 text-center">
-          <div onclick="openAdminAllUsersModal()" class="bg-blue-50 border border-blue-200 hover:bg-blue-100 p-2.5 rounded-2xl shadow-xs transition cursor-pointer" title="সকল ইউজারের তালিকা ও ব্যালেন্স দেখতে ক্লিক করুন">
-            <span class="text-[10px] font-extrabold text-blue-700 block uppercase">মোট ইউজার ➔</span>
+          <div class="bg-blue-50 border border-blue-200 p-2.5 rounded-2xl shadow-xs">
+            <span class="text-[10px] font-extrabold text-blue-700 block uppercase">মোট ইউজার</span>
             <span id="admin-stat-users" class="text-sm font-black text-slate-900">0</span>
           </div>
           <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-2xl shadow-xs">
@@ -1163,50 +1125,73 @@
     // 1-Phone = 1-Account Hard Device Lock + Safe Admin Bypass
     async function processUserRegistration(user) {
       if (!user) return;
-      try {
-        const userRef = doc(db, "users", user.uid);
-        const snap = await getDoc(userRef);
+      const deviceId = getDeviceId();
+      const isAdmin = (user.email && user.email.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase());
+      const userRef = doc(db, "users", user.uid);
+      const snap = await getDoc(userRef);
 
-        // If new user, create their document smoothly
-        if (!snap.exists()) {
-          const inviteCode = localStorage.getItem('tr_pending_invite') || '';
-          localStorage.removeItem('tr_pending_invite');
+      // Check if new account registration
+      if (!snap.exists()) {
+        // Device Lock Verification (Admin exempt)
+        if (!isAdmin) {
+          try {
+            const deviceRef = doc(db, "devices", deviceId);
+            const devDoc = await getDoc(deviceRef);
 
-          const welcomeCoins = inviteCode ? 30000 : 0;
-          const myCode = "TR" + Math.floor(10000 + Math.random() * 90000);
-
-          await setDoc(userRef, {
-            uid: user.uid,
-            name: user.displayName || "User",
-            email: user.email || "",
-            photoURL: user.photoURL || "",
-            deviceId: getDeviceId(),
-            coins: welcomeCoins,
-            myInviteCode: myCode,
-            referredBy: inviteCode || null,
-            referralCount: 0,
-            completedApprovedTasks: 0,
-            lastDailyClaimTime: 0,
-            referralBonusAwarded: false,
-            createdAt: serverTimestamp()
-          });
-
-          if (inviteCode) {
-            try {
-              const q = query(collection(db, "users"), where("myInviteCode", "==", inviteCode));
-              const rSnap = await getDocs(q);
-              rSnap.forEach(async (rDoc) => {
-                await updateDoc(doc(db, "users", rDoc.id), {
-                  referralCount: increment(1)
-                });
+            if (devDoc.exists() && devDoc.data().userId !== user.uid) {
+              await signOut(auth);
+              alert("⚠️ এই ডিভাইসে ইতিমধ্যে অন্য একটি অ্যাকাউন্ট খোলা রয়েছে!\n\nএকটি ফোনে একাধিক অ্যাকাউন্ট চালানো এবং একই কাজের ডুপ্লিকেট সাবমিশন সম্পূর্ণ নিষিদ্ধ।");
+              document.getElementById('screen-login').classList.remove('hidden');
+              document.getElementById('screen-app').classList.add('hidden');
+              return;
+            } else if (!devDoc.exists()) {
+              // Lock this device to this user ID!
+              await setDoc(deviceRef, {
+                userId: user.uid,
+                userEmail: user.email,
+                registeredAt: serverTimestamp()
               });
-            } catch (e) {
-              console.warn("Referral track notice:", e);
             }
+          } catch (e) {
+            console.warn("Device lock check notice:", e);
           }
         }
-      } catch (err) {
-        console.error("User registration error:", err);
+
+        const inviteCode = localStorage.getItem('tr_pending_invite') || '';
+        localStorage.removeItem('tr_pending_invite');
+
+        const welcomeCoins = inviteCode ? 30000 : 0;
+        const myCode = "TR" + Math.floor(10000 + Math.random() * 90000);
+
+        await setDoc(userRef, {
+          uid: user.uid,
+          name: user.displayName || "User",
+          email: user.email || "",
+          photoURL: user.photoURL || "",
+          deviceId: deviceId,
+          coins: welcomeCoins,
+          myInviteCode: myCode,
+          referredBy: inviteCode || null,
+          referralCount: 0,
+          completedApprovedTasks: 0,
+          lastDailyClaimTime: 0,
+          referralBonusAwarded: false,
+          createdAt: serverTimestamp()
+        });
+
+        if (inviteCode) {
+          try {
+            const q = query(collection(db, "users"), where("myInviteCode", "==", inviteCode));
+            const rSnap = await getDocs(q);
+            rSnap.forEach(async (rDoc) => {
+              await updateDoc(doc(db, "users", rDoc.id), {
+                referralCount: increment(1)
+              });
+            });
+          } catch (e) {
+            console.warn("Referral track notice:", e);
+          }
+        }
       }
     }
 
@@ -1247,7 +1232,6 @@
         });
 
         listenTasks();
-        listenNotifications();
         listenUserSubmissions(user.uid);
         listenRealLeaderboard();
         loadAdminSubmissions();
@@ -2130,20 +2114,6 @@
           iconImage: iconBase64 || null,
           createdAt: serverTimestamp()
         });
-
-        // Broadcast notification with formatted time to all users
-        try {
-          const nNow = new Date();
-          const nTime = nNow.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true });
-          await addDoc(collection(db, "notifications"), {
-            title: "🔥 নতুন কাজ যুক্ত হয়েছে!",
-            message: `"${title}" টাস্কটি সম্পন্ন করে জিতে নিন ৳${rewardTaka}!`,
-            time: nTime,
-            createdAt: serverTimestamp()
-          });
-        } catch(ne) {
-          console.warn("Notification broadcast notice:", ne);
-        }
 
         document.getElementById('admin-title').value = '';
         document.getElementById('admin-link').value = '';
