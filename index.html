@@ -1,6 +1,41 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+  <!-- Anti-Theft Domain Guard & Anti-Inspect Protection -->
+  <script>
+    (function() {
+      // ১. ডোমেইন গার্ড: নকল সাইটে ওপেন হলেই আসল সাইটের রিডাইরেক্ট দেখাবে
+      const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
+      if (!allowedDomains.includes(window.location.hostname)) {
+        document.addEventListener("DOMContentLoaded", function() {
+          document.body.innerHTML = `
+            <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding:20px;">
+              <div style="max-width:400px;background:#1e293b;padding:30px;border-radius:24px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);border:1px solid #334155;">
+                <div style="font-size:50px;margin-bottom:15px;">⚠️</div>
+                <h2 style="font-size:20px;font-weight:bold;color:#f87171;">নকল বা কপি করা ওয়েবসাইট!</h2>
+                <p style="font-size:13px;color:#94a3b8;margin-top:10px;line-height:1.6;">এই ওয়েবসাইটটি অবৈধভাবে নকল করা হয়েছে। আমাদের আসল ও নিরাপদ আর্নিং সাইটে যেতে নিচের বাটনে ক্লিক করুন:</p>
+                <a href="https://takarewardpro.com" style="display:inline-block;margin-top:20px;background:#00c244;color:#fff;font-weight:bold;padding:12px 24px;border-radius:50px;text-decoration:none;box-shadow:0 4px 12px rgba(0,194,68,0.4);">অফিসিয়াল সাইটে যান (takarewardpro.com) ➔</a>
+              </div>
+            </div>
+          `;
+        });
+        throw new Error("Unauthorized Mirror Blocked");
+      }
+
+      // ২. মাউসের রাইট-ক্লিক বন্ধ
+      document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
+
+      // ৩. F12 ও View-Source (Ctrl+U) বন্ধ
+      document.addEventListener("keydown", function(e) {
+        if (e.key === "F12" || 
+           (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "s" || e.key === "S")) ||
+           (e.ctrlKey && e.shiftKey && (e.key === "i" || e.key === "I" || e.key === "j" || e.key === "J" || e.key === "c" || e.key === "C"))) {
+          e.preventDefault();
+          return false;
+        }
+      });
+    })();
+  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>TakaReward Pro - Top Micro Task & Earning App</title>
