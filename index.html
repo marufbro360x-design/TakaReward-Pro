@@ -4,7 +4,7 @@
   <!-- Anti-Theft Domain Guard & Anti-Inspect Protection -->
   <script>
     (function() {
-      // ১. ডোমেইন গার্ড: নকল সাইটে ওপেন হলেই আসল সাইটের রিডাইরেক্ট দেখাবে
+      // 1. Domain Lock: If anyone copies our code to another domain, it redirects to our official site!
       const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
       if (!allowedDomains.includes(window.location.hostname)) {
         document.addEventListener("DOMContentLoaded", function() {
@@ -13,7 +13,7 @@
               <div style="max-width:400px;background:#1e293b;padding:30px;border-radius:24px;box-shadow:0 20px 25px -5px rgba(0,0,0,0.5);border:1px solid #334155;">
                 <div style="font-size:50px;margin-bottom:15px;">⚠️</div>
                 <h2 style="font-size:20px;font-weight:bold;color:#f87171;">নকল বা কপি করা ওয়েবসাইট!</h2>
-                <p style="font-size:13px;color:#94a3b8;margin-top:10px;line-height:1.6;">এই ওয়েবসাইটটি অবৈধভাবে নকল করা হয়েছে। আমাদের আসল ও নিরাপদ আর্নিং সাইটে যেতে নিচের বাটনে ক্লিক করুন:</p>
+                <p style="font-size:13px;color:#94a3b8;margin-top:10px;line-height:1.6;">এই ওয়েবসাইটটি অবৈধভাবে কপি করা হয়েছে। আমাদের আসল ও নিরাপদ আর্নিং সাইটে যেতে নিচের বাটনে ক্লিক করুন:</p>
                 <a href="https://takarewardpro.com" style="display:inline-block;margin-top:20px;background:#00c244;color:#fff;font-weight:bold;padding:12px 24px;border-radius:50px;text-decoration:none;box-shadow:0 4px 12px rgba(0,194,68,0.4);">অফিসিয়াল সাইটে যান (takarewardpro.com) ➔</a>
               </div>
             </div>
@@ -22,10 +22,10 @@
         throw new Error("Unauthorized Mirror Blocked");
       }
 
-      // ২. মাউসের রাইট-ক্লিক বন্ধ
+      // 2. Disable Right-Click
       document.addEventListener("contextmenu", function(e) { e.preventDefault(); });
 
-      // ৩. F12 ও View-Source (Ctrl+U) বন্ধ
+      // 3. Disable DevTools Shortcuts (Ctrl+U, F12, Ctrl+Shift+I, etc.)
       document.addEventListener("keydown", function(e) {
         if (e.key === "F12" || 
            (e.ctrlKey && (e.key === "u" || e.key === "U" || e.key === "s" || e.key === "S")) ||
@@ -36,6 +36,7 @@
       });
     })();
   </script>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>TakaReward Pro - Top Micro Task & Earning App</title>
@@ -54,6 +55,7 @@
   <link rel="icon" href="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg">
   <link rel="manifest" href="./manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -86,6 +88,67 @@
       animation-play-state: paused;
     }
   </style>
+
+  <!-- Audio & Confetti FX Engine (Feature 4) & PWA Install (Feature 7) -->
+  <script>
+    // Pure Web Audio Synthesizer: Ultra-crisp instant arcade coin chime!
+    function playCoinChime() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(987.77, now); // B5 note
+        osc.frequency.setValueAtTime(1318.51, now + 0.08); // E6 note
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.35);
+      } catch(e) {}
+    }
+
+    // Realistic Confetti Explosion
+    function triggerConfettiBlast() {
+      try {
+        if (typeof confetti === 'function') {
+          confetti({
+            particleCount: 75,
+            spread: 65,
+            origin: { y: 0.6 }
+          });
+        }
+      } catch(e) {}
+    }
+
+    // 1-Click PWA App Install Handler (Feature 7)
+    let deferredAppInstallPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredAppInstallPrompt = e;
+      const banner = document.getElementById('pwa-install-banner');
+      if (banner) banner.classList.remove('hidden');
+    });
+
+    function installAppDirect() {
+      if (deferredAppInstallPrompt) {
+        deferredAppInstallPrompt.prompt();
+        deferredAppInstallPrompt.userChoice.then((choice) => {
+          if (choice.outcome === 'accepted') {
+            document.getElementById('pwa-install-banner')?.classList.add('hidden');
+          }
+          deferredAppInstallPrompt = null;
+        });
+      } else {
+        alert("📲 ব্রাউজারের ৩-ডট (Three dots) মেনুতে গিয়ে 'Add to Home screen' বা 'Install App'-এ চাপ দিয়ে ফোনে আসল অ্যাপের মতো ইনস্টল করে নিন!");
+      }
+    }
+  </script>
+
 </head>
 <body class="bg-slate-100 text-slate-900 min-h-screen flex justify-center antialiased select-none">
 
@@ -133,18 +196,30 @@
             <span class="absolute -bottom-1 -right-1 bg-emerald-600 text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center border border-white">✎</span>
           </div>
           <div>
-            <div class="flex items-center gap-1 text-[11px] font-bold text-slate-500 leading-none">
-              <span>🪙</span>
-              <span id="app-coins">0</span>
+            <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1 text-[11px] font-bold text-slate-500 leading-none">
+                <span>🪙</span>
+                <span id="app-coins">0</span>
+              </div>
+              <!-- VIP Level Badge in Header (Feature 5) -->
+              <span id="header-vip-badge" class="bg-amber-100 border border-amber-300 text-amber-900 text-[9px] font-black px-1.5 py-0.2 rounded-md uppercase tracking-wider flex items-center gap-0.5 shadow-xs">
+                <span>🥉</span> BRONZE
+              </span>
             </div>
             <div class="flex items-baseline gap-1 mt-0.5">
-              <span class="text-slate-400 font-bold text-sm">=</span>
-              <span class="text-amber-500 font-black text-xl tracking-tight leading-none">৳<span id="app-taka">0.0</span></span>
+              <span class="text-slate-400 font-bold text-xs">=</span>
+              <span class="text-amber-500 font-black text-lg tracking-tight leading-none">৳<span id="app-taka">0.0</span></span>
             </div>
           </div>
         </div>
 
-        <div class="flex items-center gap-1.5 shrink-0">
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- In-App Notification Bell (Feature 6) -->
+          <button onclick="openNotificationModal()" class="relative p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer" title="নোটিফিকেশন">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+            <span id="notification-counter" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">1</span>
+          </button>
+
           <button id="admin-btn" onclick="toggleAdminModal()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-[11px] px-2.5 py-1 rounded-full shadow-xs border border-amber-500 flex items-center gap-1">
             <span>⚙️</span> Admin
           </button>
@@ -445,6 +520,40 @@
     </div>
 
     <!-- ================= 3. USER PROFILE EDIT MODAL ================= -->
+        <!-- ================= IN-APP NOTIFICATION INBOX MODAL (Feature 6) ================= -->
+    <div id="notification-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
+      <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3.5 shadow-2xl text-slate-900 max-h-[85vh] flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h3 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+            <span>🔔</span> নোটিফিকেশন ইনবক্স
+          </h3>
+          <button onclick="closeNotificationModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold cursor-pointer">✕</button>
+        </div>
+
+        <div id="notification-list" class="flex-1 overflow-y-auto space-y-2 pr-1 hide-scrollbar">
+          <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl text-xs space-y-1">
+            <div class="flex items-center justify-between font-bold text-emerald-800">
+              <span>🎉 স্বাগতম অফার!</span>
+              <span class="text-[10px] text-emerald-600">Active</span>
+            </div>
+            <p class="text-slate-600 text-[11px]">TakaReward Pro প্ল্যাটফর্মে আপনাকে স্বাগতম! ভেরিফায়েড টাস্ক পূরণ করে ও বন্ধুদের রেফার করে আয় শুরু করুন।</p>
+          </div>
+
+          <div class="bg-blue-50 border border-blue-200 p-3 rounded-2xl text-xs space-y-1">
+            <div class="flex items-center justify-between font-bold text-blue-800">
+              <span>🏆 ভিআইপি রিওয়ার্ড লেভেল</span>
+              <span class="text-[10px] text-blue-600">Live</span>
+            </div>
+            <p class="text-slate-600 text-[11px]">প্রতিটি সফল কাজের সাথে সাথে আপনার ভিআইপি র‍্যাঙ্ক বাড়বে এবং অতিরিক্ত রিওয়ার্ড আনলক হবে!</p>
+          </div>
+        </div>
+
+        <button onclick="markAllNotificationsRead()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer">
+          সবগুলো পড়া হয়েছে (Mark As Read)
+        </button>
+      </div>
+    </div>
+
     <div id="profile-edit-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3.5 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
         <div class="flex items-center justify-between border-b pb-2">
@@ -455,10 +564,13 @@
         </div>
 
         <div class="flex-1 overflow-y-auto space-y-3.5 text-xs hide-scrollbar pr-1">
-          <!-- Active Preview -->
-          <div class="flex flex-col items-center gap-2 py-1">
+          <!-- Active Preview & VIP Status (Feature 5) -->
+          <div class="flex flex-col items-center gap-2 py-1 bg-slate-50 p-3 rounded-2xl border">
             <img id="edit-avatar-preview" src="" class="w-20 h-20 rounded-full border-4 border-emerald-400 object-cover shadow-md" />
-            <span class="text-[11px] text-slate-400 font-bold">বর্তমান প্রোফাইল প্রিভিউ</span>
+            <div id="profile-vip-tier-badge" class="bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black px-2.5 py-0.5 rounded-full uppercase flex items-center gap-1 shadow-xs">
+              <span>🥉</span> BRONZE EARNER
+            </div>
+            <p id="vip-progress-text" class="text-[10px] text-slate-500 font-medium">সিলভার লেভেলে যেতে আর ৫টি কাজ সম্পন্ন করুন</p>
           </div>
 
           <!-- Name Input -->
@@ -946,6 +1058,7 @@
             document.getElementById('rank-user-name').innerText = userData.name;
             document.getElementById('rank-referrals-count').innerText = userData.referralCount || 0;
 
+            updateVIPTierStatus(userData.completedApprovedTasks || 0);
             checkDailyRewardStatus(userData.lastDailyClaimTime || 0);
           }
         });
@@ -1009,12 +1122,74 @@
         saveBtn.innerText = 'সংরক্ষণ করুন (Save)';
         saveBtn.disabled = false;
         closeProfileEditModal();
+        playCoinChime();
+        triggerConfettiBlast();
         alert("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!");
       } catch (err) {
         alert("প্রোফাইল আপডেট করতে সমস্যা: " + err.message);
         saveBtn.innerText = 'সংরক্ষণ করুন (Save)';
         saveBtn.disabled = false;
       }
+    };
+
+    
+    // VIP Tier Calculation (Feature 5)
+    function updateVIPTierStatus(tasksCount) {
+      let tierName = "BRONZE";
+      let tierIcon = "🥉";
+      let tierClass = "bg-amber-100 border-amber-300 text-amber-900";
+      let progressMsg = "";
+
+      if (tasksCount >= 30) {
+        tierName = "DIAMOND VIP";
+        tierIcon = "💎";
+        tierClass = "bg-sky-100 border-sky-300 text-sky-900 shadow-sm";
+        progressMsg = "🎉 আপনি সর্বোচ্চ ডায়মন্ড ভিআইপি লেভেলে আছেন (+৫% এক্সট্রা রিওয়ার্ড)";
+      } else if (tasksCount >= 15) {
+        tierName = "GOLD VIP";
+        tierIcon = "🥇";
+        tierClass = "bg-yellow-100 border-yellow-300 text-yellow-900";
+        progressMsg = `ডায়মন্ড ভিআইপি হতে আর ${30 - tasksCount}টি কাজ সম্পন্ন করুন`;
+      } else if (tasksCount >= 5) {
+        tierName = "SILVER VIP";
+        tierIcon = "🥈";
+        tierClass = "bg-slate-100 border-slate-300 text-slate-800";
+        progressMsg = `গোল্ড ভিআইপি হতে আর ${15 - tasksCount}টি কাজ সম্পন্ন করুন`;
+      } else {
+        tierName = "BRONZE";
+        tierIcon = "🥉";
+        tierClass = "bg-amber-50 border-amber-200 text-amber-800";
+        progressMsg = `সিলভার ভিআইপি হতে আর ${5 - tasksCount}টি কাজ সম্পন্ন করুন`;
+      }
+
+      const badge = document.getElementById("header-vip-badge");
+      if (badge) {
+        badge.innerHTML = `<span>${tierIcon}</span> ${tierName}`;
+        badge.className = `${tierClass} text-[9px] font-black px-1.5 py-0.2 rounded-md uppercase tracking-wider flex items-center gap-0.5 shadow-xs`;
+      }
+
+      const pBadge = document.getElementById("profile-vip-tier-badge");
+      if (pBadge) {
+        pBadge.innerHTML = `<span>${tierIcon}</span> ${tierName} EARNER`;
+        pBadge.className = `${tierClass} text-xs font-black px-2.5 py-0.5 rounded-full uppercase flex items-center gap-1 shadow-xs`;
+      }
+
+      const pText = document.getElementById("vip-progress-text");
+      if (pText) pText.innerText = progressMsg;
+    }
+
+    // Notification Center (Feature 6)
+    window.openNotificationModal = function() {
+      document.getElementById("notification-modal")?.classList.remove("hidden");
+    };
+
+    window.closeNotificationModal = function() {
+      document.getElementById("notification-modal")?.classList.add("hidden");
+    };
+
+    window.markAllNotificationsRead = function() {
+      document.getElementById("notification-counter")?.classList.add("hidden");
+      closeNotificationModal();
     };
 
     function checkDailyRewardStatus(lastClaimTime) {
@@ -1052,6 +1227,8 @@
         lastDailyClaimTime: now
       });
 
+      playCoinChime();
+      triggerConfettiBlast();
       alert("অভিনন্দন! ১০,০০০ কয়েন ফ্রি বোনাস যোগ হয়েছে!");
     };
 
@@ -1323,6 +1500,8 @@
         submitBtn.innerText = 'প্রুফ জমা দিন (Submit Proof)';
         submitBtn.disabled = false;
         closeProofModal();
+        playCoinChime();
+        triggerConfettiBlast();
         alert("আপনার প্রুফ সফলভাবে জমা হয়েছে! অ্যাডমিন অনুমোদন করার সাথে সাথে কয়েন যোগ হবে।");
       } catch (err) {
         alert("প্রুফ আপলোডে সমস্যা: " + err.message);
@@ -1534,6 +1713,7 @@
         createdAt: serverTimestamp()
       });
 
+      playCoinChime();
       alert(`উইথড্রল রিকোয়েস্ট সফল হয়েছে! সর্বোচ্চ ২৪ ঘণ্টার মধ্যে ৳${selectedTaka} আপনার ${selectedMethod} পার্সোনাল নম্বরে (${num}) পাঠানো হবে।`);
       document.getElementById('withdraw-number').value = '';
     };
