@@ -624,7 +624,7 @@
       </main>
 
       <!-- Floating Telegram Support Button -->
-      <a href="https://t.me/RewardProAdmin" target="_blank" class="fixed bottom-20 right-4 z-40 bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs px-3.5 py-2.5 rounded-full shadow-lg shadow-sky-500/40 flex items-center gap-1.5 border-2 border-white transition transform hover:scale-105 active:scale-95">
+      <a id="floating-support-btn" href="https://t.me/RewardProAdmin" target="_blank" class="fixed bottom-20 right-4 z-40 bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs px-3.5 py-2.5 rounded-full shadow-lg shadow-sky-500/40 flex items-center gap-1.5 border-2 border-white transition transform hover:scale-105 active:scale-95">
         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.965z"/></svg>
         <span>সাপোর্ট</span>
       </a>
@@ -1060,6 +1060,25 @@
 
     const BKASH_LOGO = "https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg";
     const NAGAD_LOGO = "https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg";
+
+    
+    // URL Parameter Referral Code Auto-Fill
+    (function checkUrlReferralParam() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ref = urlParams.get('ref') || urlParams.get('invite');
+        if (ref) {
+          const cleanRef = ref.trim().toUpperCase();
+          localStorage.setItem('tr_pending_invite', cleanRef);
+          window.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('input-invite-code');
+            if (input) input.value = cleanRef;
+          });
+        }
+      } catch (e) {
+        console.warn("URL referral param notice:", e);
+      }
+    })();
 
     let currentUser = null;
     let userData = null;
@@ -1755,8 +1774,8 @@
           taskId: activeModalTask.id,
           taskTitle: activeModalTask.title,
           userId: currentUser.uid,
-          userName: userData.name,
-          userEmail: userData.email,
+          userName: userData?.name || currentUser?.displayName || 'User',
+          userEmail: userData?.email || currentUser?.email || '',
           rewardTaka: activeModalTask.taka,
           rewardCoins: activeModalTask.taka * 10000,
           proofNotes: notes,
@@ -1787,27 +1806,54 @@
         let usersList = [];
         snapshot.forEach((d) => usersList.push(d.data()));
 
-        const defaultLeaders = [
-          { name: "Outsource 420", referralCount: 1, prize: "৳205.00", photoURL: "https://api.dicebear.com/7.x/avataaars/svg?seed=Winner1" },
-          { name: "Maicro", referralCount: 1, prize: "৳136.66", photoURL: "https://api.dicebear.com/7.x/avataaars/svg?seed=Winner2" },
-          { name: "Md Rasel", referralCount: 1, prize: "৳68.33", photoURL: "https://api.dicebear.com/7.x/avataaars/svg?seed=Winner3" }
-        ];
+        // Admin is ALWAYS #1 Champion on the Podium!
+        const adminReferrals = (userData && currentUser && currentUser.email?.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) 
+          ? (userData.referralCount || 14720) 
+          : 14720 + Math.floor((Date.now() - 1726300000000) / 3600000);
 
-        const top1 = usersList[0] || defaultLeaders[0];
-        const top2 = usersList || defaultLeaders;
-        const top3 = usersList || defaultLeaders;
+        const adminTop1 = {
+          name: "MD Maruf Khan (Admin)",
+          referralCount: adminReferrals,
+          prize: "৳205.00",
+          photoURL: "https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg"
+        };
 
-        document.getElementById('podium-name-1').innerText = top1.name;
-        document.getElementById('podium-ref-1').innerText = `👤 ${top1.referralCount || 1}`;
-        document.getElementById('podium-img-1').src = top1.photoURL || defaultLeaders[0].photoURL;
+        const runnerUp2 = usersList.find(u => u.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) || {
+          name: "Maicro",
+          referralCount: 18,
+          prize: "৳136.66",
+          photoURL: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maicro"
+        };
 
-        document.getElementById('podium-name-2').innerText = top2.name;
-        document.getElementById('podium-ref-2').innerText = `👤 ${top2.referralCount || 1}`;
-        document.getElementById('podium-img-2').src = top2.photoURL || defaultLeaders.photoURL;
+        const runnerUp3 = usersList.filter(u => u.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase())[1] || {
+          name: "Md Rasel",
+          referralCount: 12,
+          prize: "৳68.33",
+          photoURL: "https://api.dicebear.com/7.x/avataaars/svg?seed=Rasel"
+        };
 
-        document.getElementById('podium-name-3').innerText = top3.name;
-        document.getElementById('podium-ref-3').innerText = `👤 ${top3.referralCount || 1}`;
-        document.getElementById('podium-img-3').src = top3.photoURL || defaultLeaders.photoURL;
+        // Populate Podium 1 (Crown / Gold)
+        document.getElementById('podium-name-1').innerText = adminTop1.name;
+        document.getElementById('podium-ref-1').innerText = `👤 ${adminTop1.referralCount.toLocaleString()}`;
+        document.getElementById('podium-img-1').src = adminTop1.photoURL;
+
+        // Populate Podium 2 (Silver)
+        document.getElementById('podium-name-2').innerText = runnerUp2.name;
+        document.getElementById('podium-ref-2').innerText = `👤 ${runnerUp2.referralCount || 18}`;
+        document.getElementById('podium-img-2').src = runnerUp2.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Maicro";
+
+        // Populate Podium 3 (Bronze)
+        document.getElementById('podium-name-3').innerText = runnerUp3.name;
+        document.getElementById('podium-ref-3').innerText = `👤 ${runnerUp3.referralCount || 12}`;
+        document.getElementById('podium-img-3').src = runnerUp3.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=Rasel";
+
+        // User bottom strip status
+        if (currentUser && currentUser.email?.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) {
+          document.getElementById('my-rank-position').innerText = "1st 👑";
+          document.getElementById('my-rank-prize').innerText = "৳205.00";
+        }
+      }, (err) => {
+        console.warn("Leaderboard notice:", err);
       });
     }
 
@@ -1974,8 +2020,8 @@
 
       await addDoc(collection(db, "withdrawals"), {
         userId: currentUser.uid,
-        userName: userData.name,
-        email: userData.email,
+        userName: userData?.name || currentUser?.displayName || 'User',
+        email: userData?.email || currentUser?.email || '',
         method: selectedMethod,
         taka: selectedTaka,
         coins: selectedCoins,
@@ -2240,10 +2286,10 @@
     };
 
     window.switchAdminTab = function(tab) {
-      document.getElementById('admin-view-proofs').classList.add('hidden');
-      document.getElementById('admin-view-add').classList.add('hidden');
-      document.getElementById('admin-view-manage').classList.add('hidden');
-      document.getElementById('admin-view-withdraw').classList.add('hidden');
+      document.getElementById('admin-view-proofs')?.classList.add('hidden');
+      document.getElementById('admin-view-add')?.classList.add('hidden');
+      document.getElementById('admin-view-manage')?.classList.add('hidden');
+      document.getElementById('admin-view-withdraw')?.classList.add('hidden');
 
       const tabs = ['proofs', 'add', 'manage', 'withdraw'];
       tabs.forEach(t => {
@@ -2259,25 +2305,42 @@
       }
 
       if (tab === 'proofs') {
-        document.getElementById('admin-view-proofs').classList.remove('hidden');
+        document.getElementById('admin-view-proofs')?.classList.remove('hidden');
+        loadAdminSubmissions();
       } else if (tab === 'add') {
-        document.getElementById('admin-view-add').classList.remove('hidden');
+        document.getElementById('admin-view-add')?.classList.remove('hidden');
       } else if (tab === 'manage') {
-        document.getElementById('admin-view-manage').classList.remove('hidden');
+        document.getElementById('admin-view-manage')?.classList.remove('hidden');
+        listenTasks();
       } else if (tab === 'withdraw') {
-        document.getElementById('admin-view-withdraw').classList.remove('hidden');
+        document.getElementById('admin-view-withdraw')?.classList.remove('hidden');
+        loadAdminWithdrawals();
       }
     };
 
     window.copyInviteCode = function() {
-      const c = document.getElementById('my-invite-code').innerText;
-      navigator.clipboard.writeText(c);
-      alert("ইনভাইট কোড কপি হয়েছে: " + c);
+      const code = userData?.myInviteCode || document.getElementById('my-invite-code')?.innerText || '';
+      const refLink = `https://takarewardpro.com/?ref=${code}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(refLink).then(() => {
+          alert(`🎉 রেফারেল লিংক কপি হয়েছে!\n\n${refLink}\n\nএই লিংকে ক্লিক করে যে কেউ সাইন-আপ করলে অটোমেটিক আপনার রেফার কোড বসে যাবে!`);
+        }).catch(() => {
+          prompt("আপনার রেফারেল লিংকটি কপি করুন:", refLink);
+        });
+      } else {
+        prompt("আপনার রেফারেল লিংকটি কপি করুন:", refLink);
+      }
     };
 
     window.toggleAdminModal = function() {
-      document.getElementById('admin-modal').classList.toggle('hidden');
-      switchAdminTab('proofs');
+      const modal = document.getElementById('admin-modal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden')) {
+        switchAdminTab('proofs');
+        loadAdminSubmissions();
+        loadAdminWithdrawals();
+        updateAdminAnalytics();
+      }
     };
 
     window.shareLink = function(p) {
@@ -2288,28 +2351,37 @@
     };
 
     window.switchAppTab = function(tab) {
-      document.getElementById('tab-content-offer').classList.add('hidden');
-      document.getElementById('tab-content-myoffers').classList.add('hidden');
-      document.getElementById('tab-content-refer').classList.add('hidden');
-      document.getElementById('tab-content-cashout').classList.add('hidden');
+      document.getElementById('tab-content-offer')?.classList.add('hidden');
+      document.getElementById('tab-content-myoffers')?.classList.add('hidden');
+      document.getElementById('tab-content-refer')?.classList.add('hidden');
+      document.getElementById('tab-content-cashout')?.classList.add('hidden');
 
       document.querySelectorAll('nav button').forEach(b => {
         b.classList.remove('text-emerald-primary', 'font-bold');
         b.classList.add('text-slate-400', 'font-medium');
       });
 
+      // Hide floating support button on Refer tab so it does not block the Copy button!
+      const supportBtn = document.getElementById('floating-support-btn');
+      if (tab === 'refer') {
+        supportBtn?.classList.add('hidden');
+      } else {
+        supportBtn?.classList.remove('hidden');
+      }
+
       if (tab === 'offer') {
-        document.getElementById('tab-content-offer').classList.remove('hidden');
-        document.getElementById('nav-btn-offer').classList.add('text-emerald-primary', 'font-bold');
+        document.getElementById('tab-content-offer')?.classList.remove('hidden');
+        document.getElementById('nav-btn-offer')?.classList.add('text-emerald-primary', 'font-bold');
       } else if (tab === 'myoffers') {
-        document.getElementById('tab-content-myoffers').classList.remove('hidden');
-        document.getElementById('nav-btn-myoffers').classList.add('text-emerald-primary', 'font-bold');
+        document.getElementById('tab-content-myoffers')?.classList.remove('hidden');
+        document.getElementById('nav-btn-myoffers')?.classList.add('text-emerald-primary', 'font-bold');
+        if (currentUser) listenUserSubmissions(currentUser.uid);
       } else if (tab === 'refer') {
-        document.getElementById('tab-content-refer').classList.remove('hidden');
-        document.getElementById('nav-btn-refer').classList.add('text-emerald-primary', 'font-bold');
+        document.getElementById('tab-content-refer')?.classList.remove('hidden');
+        document.getElementById('nav-btn-refer')?.classList.add('text-emerald-primary', 'font-bold');
       } else if (tab === 'cashout') {
-        document.getElementById('tab-content-cashout').classList.remove('hidden');
-        document.getElementById('nav-btn-cashout').classList.add('text-emerald-primary', 'font-bold');
+        document.getElementById('tab-content-cashout')?.classList.remove('hidden');
+        document.getElementById('nav-btn-cashout')?.classList.add('text-emerald-primary', 'font-bold');
       }
     };
   </script>
