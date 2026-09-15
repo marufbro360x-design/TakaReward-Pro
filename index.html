@@ -490,7 +490,7 @@
                   <img id="podium-img-2" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maicro" class="w-12 h-12 rounded-full border-2 border-sky-400 object-cover shadow-xs" />
                 </div>
                 <span id="podium-name-2" class="font-extrabold text-slate-800 text-xs truncate w-full">Maicro</span>
-                <span id="podium-ref-2" class="text-[10px] text-slate-400">👤 18</span>
+                <span id="podium-ref-2" class="text-[10px] text-slate-400">👤 3,543</span>
                 <div id="podium-prize-2" class="podium-silver w-full h-20 rounded-t-2xl mt-1.5 flex items-center justify-center font-black text-xs text-sky-900 border-t border-sky-300 shadow-xs">৳17,480</div>
               </div>
 
@@ -512,7 +512,7 @@
                   <img id="podium-img-3" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rasel" class="w-12 h-12 rounded-full border-2 border-emerald-400 object-cover shadow-xs" />
                 </div>
                 <span id="podium-name-3" class="font-extrabold text-slate-800 text-xs truncate w-full">Md Rasel</span>
-                <span id="podium-ref-3" class="text-[10px] text-slate-400">👤 12</span>
+                <span id="podium-ref-3" class="text-[10px] text-slate-400">👤 1,767</span>
                 <div id="podium-prize-3" class="podium-bronze w-full h-16 rounded-t-2xl mt-1.5 flex items-center justify-center font-black text-xs text-emerald-900 border-t border-emerald-300 shadow-xs">৳11,630</div>
               </div>
             </div>
@@ -928,7 +928,7 @@
     </div>
 
         <!-- ================= ADMIN TASK EDIT MODAL ================= -->
-    <div id="admin-edit-task-modal" class="fixed inset-0 bg-black/75 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+    <div id="admin-edit-task-modal" class="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 hidden backdrop-blur-sm">
       <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
         <div class="flex items-center justify-between border-b pb-2">
           <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
@@ -1874,27 +1874,33 @@
         // Calculate dynamic growing values based on date
         const baseDays = Math.floor((Date.now() - 1726300000000) / 86400000);
         const dynamicAdminRefs = 14750 + (baseDays * 45) + Math.floor(Math.random() * 5);
+        const dynamicRank2Refs = 3543 + (baseDays * 15) + Math.floor(Math.random() * 3);
+        const dynamicRank3Refs = 1767 + (baseDays * 9) + Math.floor(Math.random() * 2);
+
         const dynamicAdminPrize = 23544 + (baseDays * 120);
         const dynamicRank2Prize = 17480 + (baseDays * 80);
         const dynamicRank3Prize = 11630 + (baseDays * 50);
 
-        // 1. Admin ALWAYS #1 Champion on Gold Podium!
+        // 1. Admin ALWAYS #1 Champion with Real Profile Picture!
+        const userHeaderAvatar = document.getElementById('user-avatar')?.src;
+        const realAdminAvatar = (userData && userData.photoURL) || (currentUser && currentUser.photoURL) || userHeaderAvatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=AdminMaruf";
+
         document.getElementById('podium-name-1').innerText = "MD Maruf Khan (Admin)";
         document.getElementById('podium-ref-1').innerText = `👤 ${dynamicAdminRefs.toLocaleString()}`;
-        document.getElementById('podium-img-1').src = (userData && userData.photoURL) || "https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg";
+        document.getElementById('podium-img-1').src = realAdminAvatar;
         document.getElementById('podium-prize-1').innerText = "৳" + dynamicAdminPrize.toLocaleString();
 
-        // 2. Second Place (Silver)
-        const rank2User = usersList.find(u => u.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) || { name: "Maicro", referralCount: 18 };
+        // 2. Second Place (Silver) - 3,543+ referrals
+        const rank2User = usersList.find(u => u.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) || { name: "Maicro" };
         document.getElementById('podium-name-2').innerText = rank2User.name || "Maicro";
-        document.getElementById('podium-ref-2').innerText = `👤 ${rank2User.referralCount || 18}`;
+        document.getElementById('podium-ref-2').innerText = `👤 ${dynamicRank2Refs.toLocaleString()}`;
         document.getElementById('podium-prize-2').innerText = "৳" + dynamicRank2Prize.toLocaleString();
 
-        // 3. Third Place (Bronze)
+        // 3. Third Place (Bronze) - 1,767+ referrals
         const nonAdminUsers = usersList.filter(u => u.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase());
-        const rank3User = nonAdminUsers[1] || { name: "Md Rasel", referralCount: 12 };
+        const rank3User = nonAdminUsers[1] || { name: "Md Rasel" };
         document.getElementById('podium-name-3').innerText = rank3User.name || "Md Rasel";
-        document.getElementById('podium-ref-3').innerText = `👤 ${rank3User.referralCount || 12}`;
+        document.getElementById('podium-ref-3').innerText = `👤 ${dynamicRank3Refs.toLocaleString()}`;
         document.getElementById('podium-prize-3').innerText = "৳" + dynamicRank3Prize.toLocaleString();
 
         // Bottom User Rank Status Strip
@@ -2330,6 +2336,87 @@
         }
       } else {
         saveTaskToDb(null);
+      }
+    };
+
+    
+    // Admin Task Editing Logic (Attached directly to window)
+    let currentEditingTaskId = null;
+    let currentEditingTaskIcon = null;
+
+    window.adminOpenEditTaskModal = function(taskId) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const t = allAvailableTasks.find(item => item.id === taskId);
+      if (!t) {
+        alert("টাস্ক পাওয়া যায়নি!");
+        return;
+      }
+
+      currentEditingTaskId = taskId;
+      currentEditingTaskIcon = t.iconImage || null;
+
+      document.getElementById('edit-task-title').value = t.title || '';
+      document.getElementById('edit-task-cat').value = t.category || 'Sign In';
+      document.getElementById('edit-task-taka').value = t.rewardTaka || 10;
+      document.getElementById('edit-task-link').value = t.link || '';
+      document.getElementById('edit-task-desc').value = t.desc || '';
+      document.getElementById('edit-task-video').value = t.videoLink || '';
+      document.getElementById('edit-task-image-file').value = '';
+
+      const modal = document.getElementById('admin-edit-task-modal');
+      if (modal) modal.classList.remove('hidden');
+    };
+
+    window.adminCloseEditTaskModal = function() {
+      const modal = document.getElementById('admin-edit-task-modal');
+      if (modal) modal.classList.add('hidden');
+      currentEditingTaskId = null;
+    };
+
+    window.adminSaveEditedTask = async function() {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase() || !currentEditingTaskId) return;
+
+      const title = document.getElementById('edit-task-title').value.trim();
+      const cat = document.getElementById('edit-task-cat').value.trim() || 'Sign In';
+      const rewardTaka = parseFloat(document.getElementById('edit-task-taka').value) || 10;
+      const link = document.getElementById('edit-task-link').value.trim();
+      const desc = document.getElementById('edit-task-desc').value.trim();
+      const videoLink = document.getElementById('edit-task-video').value.trim();
+      const imageFileInput = document.getElementById('edit-task-image-file');
+
+      if (!title || !link) {
+        alert("কাজের নাম ও লিংক অবশ্যই পূরণ করতে হবে!");
+        return;
+      }
+
+      const saveBtn = document.getElementById('btn-save-edited-task');
+      saveBtn.innerText = 'আপডেট হচ্ছে...';
+      saveBtn.disabled = true;
+
+      try {
+        let finalIcon = currentEditingTaskIcon;
+        if (imageFileInput.files && imageFileInput.files[0]) {
+          finalIcon = await compressImageFile(imageFileInput.files[0], 250, 0.8);
+        }
+
+        await updateDoc(doc(db, "tasks", currentEditingTaskId), {
+          title,
+          category: cat,
+          rewardTaka,
+          link,
+          desc,
+          videoLink: videoLink || null,
+          iconImage: finalIcon || null
+        });
+
+        saveBtn.innerText = 'আপডেট সংরক্ষণ করুন';
+        saveBtn.disabled = false;
+        adminCloseEditTaskModal();
+        alert("টাস্ক সফলভাবে আপডেট করা হয়েছে!");
+      } catch (err) {
+        alert("টাস্ক আপডেটে সমস্যা: " + err.message);
+        saveBtn.innerText = 'আপডেট সংরক্ষণ করুন';
+        saveBtn.disabled = false;
       }
     };
 
