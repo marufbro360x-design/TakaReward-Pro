@@ -233,7 +233,12 @@
       </div>
 
       <div class="space-y-3 pb-6">
-        <input id="input-invite-code" type="text" placeholder="Enter invite code (optional)" class="w-full border-2 border-slate-200 focus:border-emerald-500 rounded-full py-3.5 px-6 text-center text-sm font-bold tracking-wider uppercase outline-none transition" />
+        <div class="space-y-1">
+          <input id="input-invite-code" type="text" placeholder="ইনভাইট কোড (থাকলে লিখুন - ৩০,০০০ কয়েন বোনাস)" class="w-full border-2 border-slate-200 focus:border-emerald-500 rounded-full py-3.5 px-6 text-center text-sm font-bold tracking-wider uppercase outline-none transition" />
+          <div id="invite-code-badge" class="hidden text-[11px] font-bold text-emerald-600 text-center bg-emerald-50 py-1.5 px-3 rounded-full border border-emerald-200">
+            ✓ রেফারেল কোড যুক্ত হয়েছে! (৩০,০০০ কয়েন পাবেন)
+          </div>
+        </div>
         
         <button id="btn-google-login" class="w-full emerald-primary text-white font-extrabold py-4 px-6 rounded-full text-base flex items-center justify-center gap-3 shadow-lg shadow-emerald-500/30 hover:scale-[1.01] active:scale-[0.98] transition duration-150 cursor-pointer">
           <svg class="w-5 h-5 bg-white p-0.5 rounded-full" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.35 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
@@ -444,32 +449,95 @@
             <span class="text-3xl font-black text-emerald-600 block mt-0.5">৳৬৪৯.১৬ !</span>
 
             <div class="mt-4 bg-white/90 backdrop-blur rounded-2xl p-3 border border-emerald-200/60 shadow-xs flex items-center justify-around text-center text-[10px] font-bold text-slate-700">
-              <div><span class="text-lg block">👥</span><span>Refer friends</span></div>
+              <div><span class="text-lg block">👥</span><span>Refer Friends</span></div>
               <span class="text-slate-300">❯❯</span>
-              <div><span class="text-lg block">💸</span><span>Friend's 1st Cashout</span></div>
+              <div><span class="text-lg block text-emerald-600">⚡</span><span class="text-emerald-700">১০,০০০ কয়েন</span></div>
               <span class="text-slate-300">❯❯</span>
-              <div><span class="text-lg block text-emerald-600">💰</span><span class="text-emerald-700">Get ৳১০.০০</span></div>
+              <div><span class="text-lg block text-emerald-600">💰</span><span class="text-emerald-700">৳১০ ১ম ক্যাশআউট</span></div>
             </div>
 
             <div class="mt-3 text-left text-xs space-y-1.5 text-slate-700 font-medium px-1">
               <div class="flex items-center gap-1.5">
                 <span class="text-emerald-600 font-bold">✓</span>
-                <span><strong>Instant Reward:</strong> ৳৩.০০ (বন্ধু সাইন-আপ করলে ৩০,০০০ কয়েন)</span>
+                <span><strong>বন্ধু সাইন-আপ বোনাস:</strong> বন্ধু কোড দিয়ে জয়েন করলেই পাবে <strong>৩০,০০০ কয়েন</strong></span>
               </div>
               <div class="flex items-center gap-1.5">
                 <span class="text-emerald-600 font-bold">✓</span>
-                <span><strong>Referral Bonus:</strong> ৳১০.০০ (আপনার রেফার করা বন্ধু <strong>প্রথম উত্তোলন সম্পন্ন</strong> করলে ১,০০,০০০ কয়েন পাবেন)</span>
+                <span><strong>ইনস্ট্যান্ট রেফার রিওয়ার্ড:</strong> প্রতি সফল রেফারে আপনি সাথে সাথে পাবেন <strong>১০,০০০ কয়েন</strong></span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span><strong>১ম ক্যাশআউট বোনাস:</strong> রেফার করা বন্ধু <strong>প্রথম উত্তোলন</strong> সম্পন্ন করলে আপনি পাবেন <strong>৳১০.০০ (১,০০,০০০ কয়েন)</strong></span>
               </div>
             </div>
 
-            <div class="mt-4 bg-white rounded-2xl p-2.5 border-2 border-dashed border-emerald-400 flex items-center justify-between">
-              <div class="text-left pl-2">
-                <span class="text-[10px] font-bold text-slate-400 uppercase">My Invitation Code</span>
-                <div id="my-invite-code" class="text-xl font-black tracking-wider text-slate-900">TR-----</div>
+            <div class="mt-4 bg-white rounded-2xl p-3 border-2 border-dashed border-emerald-400 flex flex-col gap-2">
+              <div class="flex items-center justify-between">
+                <div class="text-left pl-1">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">My Invitation Code</span>
+                  <div id="my-invite-code" class="text-xl font-black tracking-wider text-slate-900">TR-----</div>
+                </div>
+                <div class="flex gap-1.5">
+                  <button onclick="copyOnlyCode()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs px-3.5 py-2.5 rounded-xl cursor-pointer transition">
+                    কোড কপি
+                  </button>
+                  <button onclick="copyInviteCode()" class="emerald-primary hover:bg-emerald-600 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-sm cursor-pointer transition">
+                    লিংক কপি 🔗
+                  </button>
+                </div>
               </div>
-              <button onclick="copyInviteCode()" class="emerald-primary text-white font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-sm cursor-pointer">
-                Copy
+            </div>
+          </div>
+
+          <!-- In-App Claim Referral Code Card (Shown if user joined without referral code) -->
+          <div id="card-apply-referral" class="hidden bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl p-4 border border-amber-200 shadow-2xs">
+            <div class="flex items-center gap-2 text-xs font-black text-amber-900 mb-1">
+              <span class="text-base">🎁</span>
+              <span>কারও রেফারেল কোড ব্যবহার করেননি?</span>
+            </div>
+            <p class="text-[11px] text-amber-800 mb-3">বন্ধুর ইনভাইট কোড বসালেই সাথে সাথে আপনার একাউন্টে <strong>৩০,০০০ কয়েন</strong> বোনাস যোগ হবে!</p>
+            <div class="flex gap-2">
+              <input id="input-inapp-invite-code" type="text" placeholder="কোড লিখুন (যেমন: TR12345)" class="flex-1 bg-white border border-amber-300 rounded-xl px-3 py-2 text-xs font-bold uppercase tracking-wider outline-none focus:border-amber-500" />
+              <button id="btn-apply-inapp-invite" onclick="applyInAppInviteCode()" class="bg-amber-600 hover:bg-amber-700 text-white font-black text-xs px-4 py-2 rounded-xl cursor-pointer shadow-xs whitespace-nowrap transition">
+                বোনাস নিন ➔
               </button>
+            </div>
+          </div>
+
+          <!-- My Referrals List Section (Real-time tracking of referred users) -->
+          <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-xs">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <h3 class="text-base font-black text-slate-900 flex items-center gap-1.5">
+                  <span>👥</span> আমার রেফারেল তালিকা
+                </h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">আপনার রেফারেল লিংকে জয়েন করা বন্ধুদের তালিকা</p>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-bold text-slate-400 block">মোট রেফারেল</span>
+                <span id="my-total-ref-count" class="text-sm font-black text-emerald-600">0 জন</span>
+              </div>
+            </div>
+
+            <!-- Referral Stats Summary -->
+            <div class="grid grid-cols-2 gap-2 mb-3 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-2.5 text-center">
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 block">ইনস্ট্যান্ট কয়েন আয়</span>
+                <span class="text-xs font-black text-emerald-700"><span id="my-total-ref-coins">0</span> 🪙</span>
+              </div>
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 block">১ম ক্যাশআউট বোনাস</span>
+                <span class="text-xs font-black text-amber-700">৳১০.০০ / জন 💰</span>
+              </div>
+            </div>
+
+            <!-- List Container -->
+            <div id="my-referral-list-container" class="space-y-2">
+              <div class="text-center py-6 px-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                <span class="text-3xl block mb-2">👥</span>
+                <p class="text-xs font-bold text-slate-700">এখনও কোনো সফল রেফারেল নেই</p>
+                <p class="text-[11px] text-slate-400 mt-1">আপনার বন্ধুদের সাথে লিংক শেয়ার করুন এবং প্রতি রেফারে ১০,০০০ কয়েন ও ১ম ক্যাশআউটে ৳১০ বোনাস পান!</p>
+              </div>
             </div>
           </div>
 
@@ -530,7 +598,7 @@
           <div class="grid grid-cols-3 gap-2">
             <button onclick="shareLink('fb')" class="bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">Facebook</button>
             <button onclick="shareLink('tg')" class="bg-sky-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">Telegram</button>
-            <button onclick="copyInviteCode()" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">Copy</button>
+            <button onclick="copyInviteCode()" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">লিংক কপি</button>
           </div>
         </section>
 
@@ -1124,18 +1192,47 @@
     const NAGAD_LOGO = "https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg";
 
     
-    // URL Parameter Referral Code Auto-Fill
+    // Robust Referral Code Extractor
+    function extractCleanInviteCode(val) {
+      if (!val) return '';
+      val = val.trim();
+      if (val.includes('ref=')) {
+        val = val.split('ref=')[1].split('&')[0];
+      } else if (val.includes('invite=')) {
+        val = val.split('invite=')[1].split('&')[0];
+      }
+      val = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      if (/^\d{5}$/.test(val)) {
+        val = 'TR' + val;
+      }
+      return val;
+    }
+
+    // URL Parameter Referral Code Auto-Fill & Badge Display
     (function checkUrlReferralParam() {
       try {
         const urlParams = new URLSearchParams(window.location.search);
         const ref = urlParams.get('ref') || urlParams.get('invite');
-        if (ref) {
-          const cleanRef = ref.trim().toUpperCase();
+        const cleanRef = extractCleanInviteCode(ref);
+        if (cleanRef) {
           localStorage.setItem('tr_pending_invite', cleanRef);
-          window.addEventListener('DOMContentLoaded', () => {
+          sessionStorage.setItem('tr_pending_invite', cleanRef);
+
+          const applyToInput = () => {
             const input = document.getElementById('input-invite-code');
+            const badge = document.getElementById('invite-code-badge');
             if (input) input.value = cleanRef;
-          });
+            if (badge) {
+              badge.classList.remove('hidden');
+              badge.innerText = `✓ রেফারেল কোড যুক্ত হয়েছে: ${cleanRef} (৩০,০০০ কয়েন পাবেন)`;
+            }
+          };
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applyToInput);
+          } else {
+            applyToInput();
+          }
         }
       } catch (e) {
         console.warn("URL referral param notice:", e);
@@ -1210,9 +1307,11 @@
       const btnText = document.getElementById('btn-login-text');
       if (btnText) btnText.innerText = 'গুগল কানেক্ট হচ্ছে...';
 
-      const inviteCode = document.getElementById('input-invite-code')?.value?.trim()?.toUpperCase() || '';
-      if (inviteCode) {
-        localStorage.setItem('tr_pending_invite', inviteCode);
+      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || '';
+      inputCode = extractCleanInviteCode(inputCode);
+      if (inputCode) {
+        localStorage.setItem('tr_pending_invite', inputCode);
+        sessionStorage.setItem('tr_pending_invite', inputCode);
       }
 
       try {
@@ -1255,24 +1354,43 @@
         }
       } catch (err) {
         console.error("Redirect Result Error:", err);
-        alert("⚠️ গুগল লগইন রিডাইরেক্ট সমস্যা:\n" + (err.code || err.message));
       }
     }
     handleRedirectAuth();
 
-    // 1-Phone = 1-Account Hard Device Lock + Safe Admin Bypass
+    // 1-Phone = 1-Account Hard Device Lock + Instant Referrer & User Bonus
+    let isRegisteringUser = false;
     async function processUserRegistration(user) {
-      if (!user) return;
+      if (!user || isRegisteringUser) return;
+      isRegisteringUser = true;
       try {
         const userRef = doc(db, "users", user.uid);
         const snap = await getDoc(userRef);
 
         // If new user, create their document smoothly
         if (!snap.exists()) {
-          const inviteCode = localStorage.getItem('tr_pending_invite') || '';
-          localStorage.removeItem('tr_pending_invite');
+          let pendingCode = localStorage.getItem('tr_pending_invite') || sessionStorage.getItem('tr_pending_invite') || '';
+          pendingCode = extractCleanInviteCode(pendingCode);
 
-          const welcomeCoins = inviteCode ? 30000 : 0;
+          let welcomeCoins = 0;
+          let validReferrerDoc = null;
+
+          if (pendingCode) {
+            try {
+              const q = query(collection(db, "users"), where("myInviteCode", "==", pendingCode));
+              const rSnap = await getDocs(q);
+              if (!rSnap.empty) {
+                const foundDoc = rSnap.docs[0];
+                if (foundDoc.id !== user.uid) {
+                  validReferrerDoc = foundDoc;
+                  welcomeCoins = 30000; // New User gets 30,000 Coins Bonus!
+                }
+              }
+            } catch (e) {
+              console.warn("Referral verify notice:", e);
+            }
+          }
+
           const myCode = "TR" + Math.floor(10000 + Math.random() * 90000);
 
           await setDoc(userRef, {
@@ -1283,7 +1401,8 @@
             deviceId: getDeviceId(),
             coins: welcomeCoins,
             myInviteCode: myCode,
-            referredBy: inviteCode || null,
+            referredBy: validReferrerDoc ? pendingCode : null,
+            referredByUid: validReferrerDoc ? validReferrerDoc.id : null,
             referralCount: 0,
             completedApprovedTasks: 0,
             lastDailyClaimTime: 0,
@@ -1291,22 +1410,25 @@
             createdAt: serverTimestamp()
           });
 
-          if (inviteCode) {
+          // Referrer gets 10,000 Coins INSTANTLY & Referral Count + 1
+          if (validReferrerDoc) {
             try {
-              const q = query(collection(db, "users"), where("myInviteCode", "==", inviteCode));
-              const rSnap = await getDocs(q);
-              rSnap.forEach(async (rDoc) => {
-                await updateDoc(doc(db, "users", rDoc.id), {
-                  referralCount: increment(1)
-                });
+              await updateDoc(doc(db, "users", validReferrerDoc.id), {
+                coins: increment(10000),
+                referralCount: increment(1)
               });
-            } catch (e) {
-              console.warn("Referral track notice:", e);
+            } catch (re) {
+              console.warn("Referrer reward error:", re);
             }
           }
+
+          localStorage.removeItem('tr_pending_invite');
+          sessionStorage.removeItem('tr_pending_invite');
         }
       } catch (err) {
         console.error("User registration error:", err);
+      } finally {
+        isRegisteringUser = false;
       }
     }
 
@@ -1329,49 +1451,9 @@
 
         // 3. Fail-safe User Profile Creation in Firestore
         try {
-          const userRef = doc(db, "users", user.uid);
-          const snap = await getDoc(userRef);
-
-          if (!snap.exists()) {
-            const inviteCode = localStorage.getItem('tr_pending_invite') || '';
-            localStorage.removeItem('tr_pending_invite');
-
-            const welcomeCoins = inviteCode ? 30000 : 0;
-            const myCode = "TR" + Math.floor(10000 + Math.random() * 90000);
-
-            await setDoc(userRef, {
-              uid: user.uid,
-              name: user.displayName || "User",
-              email: user.email || "",
-              photoURL: user.photoURL || "",
-              deviceId: getDeviceId(),
-              coins: welcomeCoins,
-              myInviteCode: myCode,
-              referredBy: inviteCode || null,
-              referralCount: 0,
-              completedApprovedTasks: 0,
-              lastDailyClaimTime: 0,
-              referralBonusAwarded: false,
-              createdAt: serverTimestamp()
-            });
-
-            if (inviteCode) {
-              try {
-                const q = query(collection(db, "users"), where("myInviteCode", "==", inviteCode));
-                const rSnap = await getDocs(q);
-                rSnap.forEach(async (rDoc) => {
-                  await updateDoc(doc(db, "users", rDoc.id), {
-                    referralCount: increment(1)
-                  });
-                });
-              } catch(re) {
-                console.warn("Referral tracking error:", re);
-              }
-            }
-          }
+          await processUserRegistration(user);
         } catch(dbErr) {
           console.error("Firestore user creation error:", dbErr);
-          alert("⚠️ ডাটাবেজ একাউন্ট এরর: " + (dbErr.code || dbErr.message));
         }
 
         // 4. Listen to user data live
@@ -1385,6 +1467,21 @@
             document.getElementById('my-invite-code').innerText = userData.myInviteCode || 'TR-----';
             document.getElementById('rank-user-name').innerText = userData.name;
             document.getElementById('rank-referrals-count').innerText = userData.referralCount || 0;
+
+            // Manage In-App Referral Code Card Visibility
+            const cardApplyRef = document.getElementById('card-apply-referral');
+            if (cardApplyRef) {
+              if (!userData.referredBy) {
+                cardApplyRef.classList.remove('hidden');
+              } else {
+                cardApplyRef.classList.add('hidden');
+              }
+            }
+
+            // Real-time listener for user's referrals
+            if (userData.myInviteCode) {
+              listenMyReferrals(user.uid, userData.myInviteCode);
+            }
 
             updateVIPTierStatus(userData.completedApprovedTasks || 0);
             checkDailyRewardStatus(userData.lastDailyClaimTime || 0);
@@ -2241,20 +2338,40 @@
           const uSnap = await getDoc(uRef);
           if (uSnap.exists()) {
             const uData = uSnap.data();
-            if (uData.referredBy && !uData.referralBonusAwarded) {
-              const q = query(collection(db, "users"), where("myInviteCode", "==", uData.referredBy));
-              const rSnap = await getDocs(q);
-              rSnap.forEach(async (rDoc) => {
-                await updateDoc(doc(db, "users", rDoc.id), {
-                  coins: increment(100000)
-                });
+            if ((uData.referredBy || uData.referredByUid) && !uData.referralBonusAwarded) {
+              let rewarded = false;
+              if (uData.referredByUid) {
+                try {
+                  await updateDoc(doc(db, "users", uData.referredByUid), {
+                    coins: increment(100000) // 100,000 coins = 10 Taka bonus
+                  });
+                  rewarded = true;
+                } catch(e) {
+                  console.warn("Reward by uid notice:", e);
+                }
+              }
+              if (!rewarded && uData.referredBy) {
+                try {
+                  const q = query(collection(db, "users"), where("myInviteCode", "==", uData.referredBy));
+                  const rSnap = await getDocs(q);
+                  rSnap.forEach(async (rDoc) => {
+                    await updateDoc(doc(db, "users", rDoc.id), {
+                      coins: increment(100000)
+                    });
+                  });
+                  rewarded = true;
+                } catch(e) {
+                  console.warn("Reward by code notice:", e);
+                }
+              }
+              if (rewarded) {
                 await updateDoc(uRef, { referralBonusAwarded: true });
-              });
+              }
             }
           }
         }
 
-        alert("পেমেন্ট সফল হিসেবে চিহ্নিত করা হয়েছে এবং রেফারার থাকলে তার অ্যাকাউন্টে ৳১০ বোনাস যোগ হয়েছে!");
+        alert("পেমেন্ট সফল হিসেবে চিহ্নিত করা হয়েছে এবং রেফারার থাকলে তার অ্যাকাউন্টে ৳১০ (১,০০,০০০ কয়েন) ক্যাশআউট বোনাস যোগ হয়েছে!");
       }
     };
 
@@ -2460,12 +2577,26 @@
       }
     };
 
+    window.copyOnlyCode = function() {
+      const code = userData?.myInviteCode || document.getElementById('my-invite-code')?.innerText || '';
+      if (!code || code === 'TR-----') return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+          alert(`🎉 রেফারেল কোড কপি হয়েছে!\n\nকোড: ${code}\n\nএই কোডটি আপনার বন্ধুদের শেয়ার করুন।`);
+        }).catch(() => {
+          prompt("আপনার রেফারেল কোডটি কপি করুন:", code);
+        });
+      } else {
+        prompt("আপনার রেফারেল কোডটি কপি করুন:", code);
+      }
+    };
+
     window.copyInviteCode = function() {
       const code = userData?.myInviteCode || document.getElementById('my-invite-code')?.innerText || '';
       const refLink = `https://takarewardpro.com/?ref=${code}`;
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(refLink).then(() => {
-          alert(`🎉 রেফারেল লিংক কপি হয়েছে!\n\n${refLink}\n\nএই লিংকে ক্লিক করে যে কেউ সাইন-আপ করলে অটোমেটিক আপনার রেফার কোড বসে যাবে!`);
+          alert(`🎉 রেফারেল লিংক কপি হয়েছে!\n\n${refLink}\n\nবন্ধু এই লিংকে ক্লিক করে সাইন-আপ করলে সাথে সাথে সে ৩০,০০০ কয়েন পাবে এবং আপনি ১০,০০০ কয়েন পাবেন!`);
         }).catch(() => {
           prompt("আপনার রেফারেল লিংকটি কপি করুন:", refLink);
         });
@@ -2473,6 +2604,153 @@
         prompt("আপনার রেফারেল লিংকটি কপি করুন:", refLink);
       }
     };
+
+    window.applyInAppInviteCode = async function() {
+      if (!currentUser || !userData) {
+        alert("দয়া করে প্রথমে লগইন করুন!");
+        return;
+      }
+      if (userData.referredBy) {
+        alert("আপনি ইতিমধ্যে একটি রেফারেল কোড ব্যবহার করেছেন!");
+        return;
+      }
+      const inputEl = document.getElementById('input-inapp-invite-code');
+      const btn = document.getElementById('btn-apply-inapp-invite');
+      const rawCode = inputEl?.value || '';
+      const code = extractCleanInviteCode(rawCode);
+      if (!code) {
+        alert("অনুগ্রহ করে একটি সঠিক রেফারেল কোড দিন!");
+        return;
+      }
+      if (code === userData.myInviteCode) {
+        alert("⚠️ আপনি নিজের রেফারেল কোড নিজে ব্যবহার করতে পারবেন না!");
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = "যাচাই হচ্ছে...";
+      }
+
+      try {
+        const q = query(collection(db, "users"), where("myInviteCode", "==", code));
+        const rSnap = await getDocs(q);
+        if (rSnap.empty) {
+          alert("⚠️ এই রেফারেল কোডটি পাওয়া যায়নি! দয়া করে সঠিক কোড দিন।");
+          if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
+          return;
+        }
+
+        const rDoc = rSnap.docs[0];
+        if (rDoc.id === currentUser.uid) {
+          alert("⚠️ আপনি নিজের রেফারেল কোড নিজে ব্যবহার করতে পারবেন না!");
+          if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
+          return;
+        }
+
+        // 1. Give Current User 30,000 Coins & save referral
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          coins: increment(30000),
+          referredBy: code,
+          referredByUid: rDoc.id
+        });
+
+        // 2. Give Referrer 10,000 Coins INSTANTLY & increment referralCount
+        await updateDoc(doc(db, "users", rDoc.id), {
+          coins: increment(10000),
+          referralCount: increment(1)
+        });
+
+        playCoinChime();
+        triggerConfettiBlast();
+        alert("🎉 অভিনন্দন! আপনার একাউন্টে ৩০,০০০ কয়েন যুক্ত হয়েছে এবং আপনার রেফারার ১০,০০০ কয়েন পেয়েছেন!");
+        document.getElementById('card-apply-referral')?.classList.add('hidden');
+      } catch (err) {
+        console.error("Apply in-app invite error:", err);
+        alert("রেফারেল কোড প্রয়োগে সমস্যা হয়েছে: " + (err.code || err.message));
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
+      }
+    };
+
+    // Live Real-Time Referrals Tracker for Current User
+    let unsubMyReferrals = null;
+    function listenMyReferrals(uid, myInviteCode) {
+      if (!myInviteCode || myInviteCode === 'TR-----') return;
+      if (unsubMyReferrals) unsubMyReferrals();
+
+      const q = query(
+        collection(db, "users"),
+        where("referredBy", "==", myInviteCode)
+      );
+
+      unsubMyReferrals = onSnapshot(q, (snapshot) => {
+        const listContainer = document.getElementById('my-referral-list-container');
+        const countEl = document.getElementById('my-total-ref-count');
+        const coinsEl = document.getElementById('my-total-ref-coins');
+        if (!listContainer) return;
+
+        const referrals = [];
+        snapshot.forEach((docSnap) => {
+          referrals.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        const totalCount = referrals.length;
+        if (countEl) countEl.innerText = `${totalCount} জন`;
+        if (coinsEl) coinsEl.innerText = (totalCount * 10000).toLocaleString();
+
+        if (totalCount === 0) {
+          listContainer.innerHTML = `
+            <div class="text-center py-6 px-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <span class="text-3xl block mb-2">👥</span>
+              <p class="text-xs font-bold text-slate-700">এখনও কোনো সফল রেফারেল নেই</p>
+              <p class="text-[11px] text-slate-400 mt-1">আপনার বন্ধুদের সাথে লিংক শেয়ার করুন এবং প্রতি রেফারে ১০,০০০ কয়েন ও ১ম ক্যাশআউটে ৳১০ বোনাস পান!</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Sort latest first
+        referrals.sort((a, b) => {
+          const tA = a.createdAt?.seconds || 0;
+          const tB = b.createdAt?.seconds || 0;
+          return tB - tA;
+        });
+
+        listContainer.innerHTML = referrals.map((r) => {
+          const name = r.name || 'ইউজার';
+          const avatar = r.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${r.id}`;
+          let dateStr = 'সম্প্রতি';
+          if (r.createdAt && r.createdAt.seconds) {
+            const d = new Date(r.createdAt.seconds * 1000);
+            dateStr = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' });
+          }
+          const isPaid = r.referralBonusAwarded;
+
+          return `
+            <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-2xs flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <img src="${avatar}" class="w-10 h-10 rounded-full border border-emerald-200 object-cover flex-shrink-0" />
+                <div class="truncate">
+                  <div class="font-bold text-xs text-slate-800 truncate">${name}</div>
+                  <div class="text-[10px] text-slate-400">জয়েন: ${dateStr}</div>
+                </div>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <span class="inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full mb-1">
+                  +১০,০০০ কয়েন ✓
+                </span>
+                <div class="text-[9px] font-bold ${isPaid ? 'text-emerald-600' : 'text-amber-600'}">
+                  ${isPaid ? '🎉 ১ম ক্যাশআউট বোনাস পেইড' : '⏳ ১ম ক্যাশআউট পেন্ডিং'}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }, (err) => {
+        console.warn("My Referrals listen error:", err);
+      });
+    }
 
     window.toggleAdminModal = function() {
       const modal = document.getElementById('admin-modal');
@@ -2487,9 +2765,10 @@
 
     window.shareLink = function(p) {
       const code = userData?.myInviteCode || '';
-      const text = `TakaReward অ্যাপে কাজ করে প্রতিদিন টাকা আয় করুন! আমার রেফারেল কোড: ${code}`;
-      if (p === 'fb') window.open(`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`);
-      if (p === 'tg') window.open(`https://t.me/share/url?url=${window.location.href}&text=${encodeURIComponent(text)}`);
+      const refUrl = `https://takarewardpro.com/?ref=${code}`;
+      const text = `TakaReward Pro অ্যাপে জয়েন করে সাথে সাথে ৩০,০০০ কয়েন বোনাস নিন! প্রতিদিন সহজ কাজ করে বিকাশ ও নগদে টাকা উত্তোলন করুন। আমার রেফারেল কোড: ${code}`;
+      if (p === 'fb') window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(refUrl)}`);
+      if (p === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(refUrl)}&text=${encodeURIComponent(text)}`);
     };
 
     window.switchAppTab = function(tab) {
@@ -2521,6 +2800,9 @@
       } else if (tab === 'refer') {
         document.getElementById('tab-content-refer')?.classList.remove('hidden');
         document.getElementById('nav-btn-refer')?.classList.add('text-emerald-primary', 'font-bold');
+        if (currentUser && userData?.myInviteCode) {
+          listenMyReferrals(currentUser.uid, userData.myInviteCode);
+        }
       } else if (tab === 'cashout') {
         document.getElementById('tab-content-cashout')?.classList.remove('hidden');
         document.getElementById('nav-btn-cashout')?.classList.add('text-emerald-primary', 'font-bold');
