@@ -1170,7 +1170,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
     import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, where, getDocs, deleteDoc, serverTimestamp, increment, orderBy, limit } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, where, getDocs, deleteDoc, serverTimestamp, increment, orderBy, limit, arrayUnion } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyA8c2BN56WPt_-SITD5fcWXj_aVFBzVgD0",
@@ -2675,6 +2675,7 @@
 
     // Live Real-Time Referrals Tracker for Current User
     let unsubMyReferrals = null;
+    let isSyncingReferralCoins = false;
     function listenMyReferrals(uid, myInviteCode) {
       if (!myInviteCode || myInviteCode === 'TR-----') return;
       if (unsubMyReferrals) unsubMyReferrals();
@@ -2684,11 +2685,10 @@
         where("referredBy", "==", myInviteCode)
       );
 
-      unsubMyReferrals = onSnapshot(q, (snapshot) => {
+      unsubMyReferrals = onSnapshot(q, async (snapshot) => {
         const listContainer = document.getElementById('my-referral-list-container');
         const countEl = document.getElementById('my-total-ref-count');
         const coinsEl = document.getElementById('my-total-ref-coins');
-        if (!listContainer) return;
 
         const referrals = [];
         snapshot.forEach((docSnap) => {
@@ -2698,6 +2698,36 @@
         const totalCount = referrals.length;
         if (countEl) countEl.innerText = `${totalCount} জন`;
         if (coinsEl) coinsEl.innerText = (totalCount * 10000).toLocaleString();
+
+        // Auto-credit 10,000 Coins per referral directly to the logged-in Referrer's account
+        if (currentUser && currentUser.uid === uid && totalCount > 0 && !isSyncingReferralCoins) {
+          const claimedList = (userData && Array.isArray(userData.claimedReferralUids)) ? userData.claimedReferralUids : [];
+          const uncredited = referrals.filter(r => !claimedList.includes(r.id));
+
+          if (uncredited.length > 0) {
+            isSyncingReferralCoins = true;
+            const uncreditedIds = uncredited.map(r => r.id);
+            const coinsToAdd = uncredited.length * 10000;
+
+            try {
+              await updateDoc(doc(db, "users", currentUser.uid), {
+                coins: increment(coinsToAdd),
+                referralCount: totalCount,
+                claimedReferralUids: arrayUnion(...uncreditedIds)
+              });
+
+              playCoinChime();
+              triggerConfettiBlast();
+              console.log(`Successfully credited ${coinsToAdd} coins for ${uncredited.length} new referrals!`);
+            } catch (err) {
+              console.error("Auto referral coin sync error:", err);
+            } finally {
+              isSyncingReferralCoins = false;
+            }
+          }
+        }
+
+        if (!listContainer) return;
 
         if (totalCount === 0) {
           listContainer.innerHTML = `
