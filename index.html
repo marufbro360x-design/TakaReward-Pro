@@ -1802,10 +1802,16 @@
 
     function renderOfferTabTasks() {
       const container = document.getElementById('tasks-list');
+      if (!container) return;
       container.innerHTML = '';
 
       const unattemptedTasks = allAvailableTasks.filter(t => !userSubmissions[t.id]);
-      document.getElementById('task-badge-count').innerText = `${unattemptedTasks.length}টি নতুন কাজ`;
+      
+      // Pinned tasks always stay at the very top!
+      unattemptedTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+
+      const badgeEl = document.getElementById('task-badge-count');
+      if (badgeEl) badgeEl.innerText = `${unattemptedTasks.length}টি নতুন কাজ`;
 
       if (unattemptedTasks.length === 0) {
         container.innerHTML = `
@@ -1818,21 +1824,41 @@
 
       unattemptedTasks.forEach((t) => {
         const coins = (t.rewardTaka * 10000);
+        const isPinned = !!t.isPinned;
+
         const imageElement = t.iconImage 
           ? `<img src="${t.iconImage}" alt="Task" class="w-12 h-12 rounded-2xl object-cover border border-slate-100 shrink-0 shadow-xs" />`
-          : `<div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-2xl shrink-0">📱</div>`;
+          : `<div class="w-12 h-12 rounded-2xl ${isPinned ? 'bg-amber-100 border-amber-200 text-amber-800' : 'bg-emerald-50 border-emerald-100 text-emerald-700'} border flex items-center justify-center text-2xl shrink-0">${isPinned ? '🔥' : '📱'}</div>`;
+
+        const cardClasses = isPinned 
+          ? 'bg-gradient-to-r from-amber-50/90 via-white to-emerald-50/60 border-2 border-amber-400 rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3 relative overflow-hidden transition hover:shadow-md'
+          : 'bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex items-center justify-between gap-3 hover:border-emerald-300 transition';
+
+        const topBadge = isPinned 
+          ? `<div class="flex items-center gap-1.5 text-[10px] mb-0.5">
+               <span class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs flex items-center gap-1">
+                 <span>📌</span> স্পেশাল পিন্ড টাস্ক
+               </span>
+               <span class="text-amber-600 font-extrabold text-[10px] animate-pulse">🔥 High Reward</span>
+               ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
+             </div>`
+          : `<div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold mb-0.5">
+               <span>~2Minute</span><span>•</span>
+               <span class="text-emerald-600">✓ Active</span>
+               ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
+             </div>`;
+
+        const buttonClasses = isPinned 
+          ? 'bg-gradient-to-r from-amber-500 to-emerald-600 hover:opacity-95 text-white font-black text-xs px-5 py-2.5 rounded-full shadow-md shrink-0 cursor-pointer transition transform hover:scale-105 active:scale-95 flex items-center gap-1'
+          : 'emerald-primary hover:bg-emerald-600 text-white font-extrabold text-xs px-5 py-2.5 rounded-full shadow-sm shrink-0 cursor-pointer transition';
 
         container.innerHTML += `
-          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
+          <div class="${cardClasses}">
+            <div class="flex items-center gap-3 min-w-0">
               ${imageElement}
-              <div>
-                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold mb-0.5">
-                  <span>~2Minute</span><span>•</span>
-                  <span class="text-emerald-600">✓ Active</span>
-                  ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
-                </div>
-                <h4 class="font-extrabold text-slate-900 text-sm leading-tight">${t.title}</h4>
+              <div class="truncate">
+                ${topBadge}
+                <h4 class="font-extrabold text-slate-900 text-sm leading-tight truncate">${t.title}</h4>
                 <div class="flex items-center gap-1 text-xs mt-1">
                   <span class="text-amber-500 font-bold">🪙 ${coins.toLocaleString()}</span>
                   <span class="text-slate-400">≈</span>
@@ -1840,8 +1866,8 @@
                 </div>
               </div>
             </div>
-            <button onclick="handleOpenTask('${t.id}')" class="emerald-primary text-white font-extrabold text-xs px-5 py-2.5 rounded-full shadow-sm shrink-0 cursor-pointer">
-              Earn
+            <button onclick="handleOpenTask('${t.id}')" class="${buttonClasses}">
+              ${isPinned ? 'কাজ করুন ➔' : 'Earn'}
             </button>
           </div>
         `;
