@@ -1246,6 +1246,28 @@
     let selectedCoins = 1050000;
     let activeModalTask = null;
     let userSubmissions = {};
+    let isSubmissionsLoaded = false;
+    try {
+      const cachedSub = localStorage.getItem('tr_cached_user_submissions');
+      if (cachedSub) {
+        userSubmissions = JSON.parse(cachedSub);
+        isSubmissionsLoaded = true;
+      }
+    } catch(e) {}
+
+    // Instant Restore Cached Balance on load so balance never flashes 0
+    (function restoreCachedBalance() {
+      try {
+        const cCoins = localStorage.getItem('tr_cached_coins');
+        const cTaka = localStorage.getItem('tr_cached_taka');
+        if (cCoins && document.getElementById('app-coins')) {
+          document.getElementById('app-coins').innerText = Number(cCoins).toLocaleString();
+        }
+        if (cTaka && document.getElementById('app-taka')) {
+          document.getElementById('app-taka').innerText = cTaka;
+        }
+      } catch(e) {}
+    })();
     let allAvailableTasks = [];
     let adminSubmissionsMap = {};
     let clientIP = "Unknown";
@@ -1457,11 +1479,19 @@
             const avatarEl = document.getElementById('user-avatar');
             if (avatarEl) avatarEl.src = avatarImg;
 
+            const userCoins = userData.coins || 0;
+            const userTaka = (userCoins / 10000).toFixed(1);
+
             const coinsEl = document.getElementById('app-coins');
-            if (coinsEl) coinsEl.innerText = (userData.coins || 0).toLocaleString();
+            if (coinsEl) coinsEl.innerText = userCoins.toLocaleString();
 
             const takaEl = document.getElementById('app-taka');
-            if (takaEl) takaEl.innerText = ((userData.coins || 0) / 10000).toFixed(1);
+            if (takaEl) takaEl.innerText = userTaka;
+
+            try {
+              localStorage.setItem('tr_cached_coins', userCoins);
+              localStorage.setItem('tr_cached_taka', userTaka);
+            } catch(e) {}
 
             const inviteCodeEl = document.getElementById('my-invite-code');
             if (inviteCodeEl) inviteCodeEl.innerText = userData.myInviteCode || 'TR-----';
@@ -1671,16 +1701,16 @@
       onSnapshot(q, (snapshot) => {
         userSubmissions = {};
         const myOffersBox = document.getElementById('my-offers-container');
-        myOffersBox.innerHTML = '';
+        if (myOffersBox) myOffersBox.innerHTML = '';
 
-        document.getElementById('myoffers-badge').innerText = snapshot.size;
-        if (snapshot.size > 0) {
-          document.getElementById('myoffers-badge').classList.remove('hidden');
-        } else {
-          document.getElementById('myoffers-badge').classList.add('hidden');
+        const badgeEl = document.getElementById('myoffers-badge');
+        if (badgeEl) {
+          badgeEl.innerText = snapshot.size;
+          if (snapshot.size > 0) badgeEl.classList.remove('hidden');
+          else badgeEl.classList.add('hidden');
         }
 
-        if (snapshot.empty) {
+        if (snapshot.empty && myOffersBox) {
           myOffersBox.innerHTML = `<p class="text-slate-400 text-center py-6 text-xs bg-white rounded-2xl border">এখনও কোনো টাস্ক জমা দেননি।</p>`;
         }
 
@@ -1688,24 +1718,33 @@
           const sub = docItem.data();
           userSubmissions[sub.taskId] = sub.status;
 
-          let statusColor = sub.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : (sub.status === 'Pending' ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-red-50 text-red-600 border-red-200');
-          let statusText = sub.status === 'Approved' ? 'সফল (Approved)' : (sub.status === 'Pending' ? 'পেন্ডিং ভেরিফিকেশন' : 'বাতিল (Rejected)');
+          if (myOffersBox) {
+            let statusColor = sub.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : (sub.status === 'Pending' ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-red-50 text-red-600 border-red-200');
+            let statusText = sub.status === 'Approved' ? 'সফল (Approved)' : (sub.status === 'Pending' ? 'পেন্ডিং ভেরিফিকেশন' : 'বাতিল (Rejected)');
 
-          myOffersBox.innerHTML += `
-            <div class="bg-white border border-slate-200 rounded-2xl p-3.5 flex items-center justify-between shadow-xs">
-              <div>
-                <strong class="text-slate-900 text-xs block">${sub.taskTitle}</strong>
-                <div class="text-[11px] text-amber-500 font-bold mt-0.5">🪙 ${(sub.rewardTaka * 10000).toLocaleString()} ≈ ৳${sub.rewardTaka}</div>
-                <div class="text-[10px] text-slate-400 mt-0.5">📅 ${sub.submittedTime || ''}</div>
+            myOffersBox.innerHTML += `
+              <div class="bg-white border border-slate-200 rounded-2xl p-3.5 flex items-center justify-between shadow-xs">
+                <div>
+                  <strong class="text-slate-900 text-xs block">${sub.taskTitle}</strong>
+                  <div class="text-[11px] text-amber-500 font-bold mt-0.5">🪙 ${(sub.rewardTaka * 10000).toLocaleString()} ≈ ৳${sub.rewardTaka}</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">📅 ${sub.submittedTime || ''}</div>
+                </div>
+                <span class="text-[10px] font-bold px-3 py-1 rounded-full border ${statusColor}">
+                  ${statusText}
+                </span>
               </div>
-              <span class="text-[10px] font-bold px-3 py-1 rounded-full border ${statusColor}">
-                ${statusText}
-              </span>
-            </div>
-          `;
+            `;
+          }
         });
 
+        try {
+          localStorage.setItem('tr_cached_user_submissions', JSON.stringify(userSubmissions));
+        } catch(e) {}
+        isSubmissionsLoaded = true;
+
         renderOfferTabTasks();
+      }, (err) => {
+        console.warn("User submissions listen notice:", err);
       });
     }
 
@@ -1745,6 +1784,19 @@
     window.handleOpenTask = function(taskId) {
       const task = allAvailableTasks.find(item => item.id === taskId);
       if (!task) return;
+
+      if (userSubmissions && userSubmissions[taskId]) {
+        const status = userSubmissions[taskId];
+        if (status === 'Approved') {
+          alert("✅ আপনি ইতিমধ্যে এই কাজটি সফলভাবে সম্পন্ন করেছেন!");
+        } else if (status === 'Pending') {
+          alert("⏳ এই কাজটি ইতিমধ্যে জমা দিয়েছেন এবং বর্তমানে ভেরিফিকেশন পেন্ডিংয়ে আছে। অনুমোদনের পর কয়েন যুক্ত হবে।");
+        } else {
+          alert("⚠️ আপনি ইতিমধ্যে এই কাজটি জমা দিয়েছেন!");
+        }
+        return;
+      }
+
       openProofModal(task.id, task.title, task.rewardTaka, task.link, task.desc, task.videoLink || '');
     };
 
@@ -1797,6 +1849,10 @@
     }
 
     window.openProofModal = function(id, title, taka, link, desc, videoLink) {
+      if (userSubmissions && userSubmissions[id]) {
+        alert("⚠️ আপনি ইতিমধ্যে এই কাজটি সম্পন্ন বা সাবমিট করেছেন!");
+        return;
+      }
       activeModalTask = { id, title, taka, link, desc, videoLink };
       document.getElementById('modal-task-title').innerText = title;
       document.getElementById('modal-task-reward').innerText = `৳${taka}.00 (${(taka * 10000).toLocaleString()} কয়েন)`;
@@ -2683,7 +2739,6 @@
     // Live Real-Time Referrals Tracker for Current User
     let unsubMyReferrals = null;
     let activeReferralListenerCode = null;
-    let isSyncingReferralCoins = false;
     function listenMyReferrals(uid, myInviteCode) {
       if (!myInviteCode || myInviteCode === 'TR-----') return;
       if (activeReferralListenerCode === myInviteCode && unsubMyReferrals) return;
@@ -2695,7 +2750,7 @@
         where("referredBy", "==", myInviteCode)
       );
 
-      unsubMyReferrals = onSnapshot(q, async (snapshot) => {
+      unsubMyReferrals = onSnapshot(q, (snapshot) => {
         const listContainer = document.getElementById('my-referral-list-container');
         const countEl = document.getElementById('my-total-ref-count');
         const coinsEl = document.getElementById('my-total-ref-coins');
@@ -2708,34 +2763,6 @@
         const totalCount = referrals.length;
         if (countEl) countEl.innerText = `${totalCount} জন`;
         if (coinsEl) coinsEl.innerText = (totalCount * 10000).toLocaleString();
-
-        // Auto-credit 10,000 Coins per referral directly to the logged-in Referrer's account
-        if (currentUser && currentUser.uid === uid && totalCount > 0 && !isSyncingReferralCoins) {
-          const claimedList = (userData && Array.isArray(userData.claimedReferralUids)) ? userData.claimedReferralUids : [];
-          const uncredited = referrals.filter(r => !claimedList.includes(r.id));
-
-          if (uncredited.length > 0) {
-            isSyncingReferralCoins = true;
-            const uncreditedIds = uncredited.map(r => r.id);
-            const coinsToAdd = uncredited.length * 10000;
-
-            try {
-              await updateDoc(doc(db, "users", currentUser.uid), {
-                coins: increment(coinsToAdd),
-                referralCount: totalCount,
-                claimedReferralUids: arrayUnion(...uncreditedIds)
-              });
-
-              playCoinChime();
-              triggerConfettiBlast();
-              console.log(`Successfully credited ${coinsToAdd} coins for ${uncredited.length} new referrals!`);
-            } catch (err) {
-              console.error("Auto referral coin sync error:", err);
-            } finally {
-              isSyncingReferralCoins = false;
-            }
-          }
-        }
 
         if (!listContainer) return;
 
