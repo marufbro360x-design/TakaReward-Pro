@@ -1960,7 +1960,15 @@
       document.getElementById('modal-task-title').innerText = title;
       document.getElementById('modal-task-reward').innerText = `৳${taka}.00 (${(taka * 10000).toLocaleString()} কয়েন)`;
       document.getElementById('modal-task-desc').innerText = desc || "লিংকে গিয়ে সাইন-আপ সম্পন্ন করুন এবং স্ক্রিনশট প্রুফ দিন।";
-      document.getElementById('modal-cpa-btn').href = link;
+      // SubID Tracking for AdBlueMedia, CPAlead & CPAGrip
+      let dynamicCpaLink = link || '';
+      if (currentUser && currentUser.uid) {
+        const uid = currentUser.uid;
+        const separator = dynamicCpaLink.includes('?') ? '&' : '?';
+        // s1 for AdBlueMedia, subid for CPAlead, tracking_id for CPAGrip
+        dynamicCpaLink += `${separator}s1=${encodeURIComponent(uid)}&subid=${encodeURIComponent(uid)}&tracking_id=${encodeURIComponent(uid)}`;
+      }
+      document.getElementById('modal-cpa-btn').href = dynamicCpaLink;
       
       const videoBtn = document.getElementById('modal-video-btn');
       if (videoLink && videoLink.trim() !== '') {
@@ -2104,6 +2112,7 @@
           userId: currentUser.uid,
           userName: userData?.name || currentUser?.displayName || 'User',
           userEmail: userData?.email || currentUser?.email || '',
+          userInviteCode: userData?.myInviteCode || '',
           rewardTaka: activeModalTask.taka,
           rewardCoins: activeModalTask.taka * 10000,
           proofNotes: notes,
@@ -2233,17 +2242,26 @@
           adminSubmissionsMap[subId] = sub;
 
           box.innerHTML += `
-            <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl space-y-2.5">
-              <div class="flex justify-between items-start">
-                <div>
-                  <strong class="text-slate-900 block text-xs">${sub.userName}</strong>
-                  <span class="text-emerald-700 font-bold text-[11px]">${sub.taskTitle} (৳${sub.rewardTaka})</span>
+            <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl space-y-2.5 shadow-2xs">
+              <div class="flex justify-between items-start gap-2">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <strong class="text-slate-900 text-xs font-black">${sub.userName}</strong>
+                    <span class="text-[10px] bg-sky-50 border border-sky-200 text-sky-800 font-bold px-1.5 py-0.2 rounded font-mono select-all">
+                      UID: ${sub.userId || 'N/A'}
+                    </span>
+                    <button type="button" onclick="navigator.clipboard.writeText('${sub.userId || ''}').then(() => alert('UID কপি হয়েছে: ${sub.userId}'))" class="text-[9px] bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold px-1.5 py-0.5 rounded transition cursor-pointer" title="UID কপি করুন">
+                      📋 কপি
+                    </button>
+                  </div>
+                  <span class="text-emerald-700 font-extrabold text-[11px] block mt-0.5">${sub.taskTitle} (৳${sub.rewardTaka})</span>
                   <div class="text-[10px] text-slate-500 flex flex-wrap gap-x-3 gap-y-0.5 mt-1 font-medium">
+                    <span>📧 <strong>ইমেইল:</strong> ${sub.userEmail || 'N/A'}</span>
                     <span>📅 <strong>সময়:</strong> ${sub.submittedTime || 'N/A'}</span>
-                    <span>🌐 <strong>IP:</strong> <code class="text-slate-800 bg-white px-1.5 py-0.2 rounded border">${sub.userIP || 'N/A'}</code></span>
+                    <span>🌐 <strong>IP:</strong> <code class="text-slate-800 bg-white px-1.5 py-0.2 rounded border font-mono">${sub.userIP || 'N/A'}</code></span>
                   </div>
                 </div>
-                <span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold">Pending</span>
+                <span class="bg-amber-100 text-amber-800 text-[10px] px-2 py-0.5 rounded-full font-bold shrink-0">Pending</span>
               </div>
               <div class="text-[11px] bg-white p-2 rounded-xl border text-slate-700 break-all">
                 <strong class="text-slate-900">প্রুফ নোট:</strong> ${sub.proofNotes}
