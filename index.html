@@ -415,7 +415,58 @@
             <div id="tasks-list" class="space-y-2.5"></div>
           </div>
 
-          <!-- Section 2: CPAlead Auto Offerwall -->
+          <!-- Section 2: TimeWall Offerwall (Clicks, Surveys, Microtasks) -->
+          <div class="space-y-3 pt-3 border-t border-slate-200/80">
+            <div class="bg-gradient-to-r from-sky-50 via-white to-emerald-50 border-2 border-sky-300 rounded-3xl p-4 shadow-sm relative overflow-hidden">
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-2">
+                  <div class="w-10 h-10 rounded-2xl bg-sky-500 text-white flex items-center justify-center font-black text-xl shadow-xs">
+                    ⏱️
+                  </div>
+                  <div>
+                    <h3 class="font-black text-slate-900 text-sm leading-tight flex items-center gap-1.5">
+                      <span>TimeWall অফারওয়াল</span>
+                      <span class="bg-emerald-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Verified</span>
+                    </h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">সহজ ক্লিক, সার্ভে ও মাইক্রো-টাস্ক করে আনলিমিটেড কয়েন আয় করুন</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Category Tags -->
+              <div class="grid grid-cols-3 gap-1.5 my-2.5 text-center text-xs font-bold">
+                <button type="button" onclick="openTimeWall('clicks')" class="bg-white hover:bg-sky-50 text-sky-700 border border-sky-200 py-1.5 px-2 rounded-xl text-[11px] font-extrabold flex items-center justify-center gap-1 shadow-2xs transition cursor-pointer">
+                  <span>🎯</span> Clicks
+                </button>
+                <button type="button" onclick="openTimeWall('surveys')" class="bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200 py-1.5 px-2 rounded-xl text-[11px] font-extrabold flex items-center justify-center gap-1 shadow-2xs transition cursor-pointer">
+                  <span>📋</span> Surveys
+                </button>
+                <button type="button" onclick="openTimeWall('tasks')" class="bg-white hover:bg-amber-50 text-amber-700 border border-amber-200 py-1.5 px-2 rounded-xl text-[11px] font-extrabold flex items-center justify-center gap-1 shadow-2xs transition cursor-pointer">
+                  <span>⚡</span> Tasks
+                </button>
+              </div>
+
+              <!-- Main Action Buttons -->
+              <div class="flex gap-2 mt-3">
+                <button type="button" onclick="openTimeWall()" class="flex-1 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-black text-xs py-3 px-4 rounded-2xl shadow-md flex items-center justify-center gap-1.5 transition transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+                  <span>ফুল স্ক্রিনে কাজ করুন</span>
+                  <span>🚀</span>
+                </button>
+                <button type="button" onclick="toggleTimeWallIframe()" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-extrabold text-xs py-3 px-3 rounded-2xl shadow-xs transition cursor-pointer shrink-0">
+                  <span id="timewall-toggle-text">অ্যাপে দেখুন 🔽</span>
+                </button>
+              </div>
+
+              <!-- Hidden Embedded iFrame Container (Can be toggled) -->
+              <div id="timewall-iframe-container" class="hidden mt-4 pt-3 border-t border-slate-200">
+                <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
+                  <iframe id="timewall-iframe" title="TimeWall" src="" frameborder="0" width="100%" height="800" class="w-full rounded-2xl" scrolling="auto"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 3: CPAlead Auto Offerwall -->
           <div class="space-y-2 pt-2 border-t border-slate-200/80">
             <div class="flex items-center justify-between">
               <h2 class="font-extrabold text-slate-900 text-sm flex items-center gap-1.5">
@@ -1518,6 +1569,7 @@
             }
 
             updateVIPTierStatus(userData.completedApprovedTasks || 0);
+            updateTimeWallLinks(user.uid);
             checkDailyRewardStatus(userData.lastDailyClaimTime || 0);
           }
         }, (err) => {
@@ -1802,10 +1854,16 @@
 
     function renderOfferTabTasks() {
       const container = document.getElementById('tasks-list');
+      if (!container) return;
       container.innerHTML = '';
 
       const unattemptedTasks = allAvailableTasks.filter(t => !userSubmissions[t.id]);
-      document.getElementById('task-badge-count').innerText = `${unattemptedTasks.length}টি নতুন কাজ`;
+      
+      // Pinned tasks always stay at the very top!
+      unattemptedTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+
+      const badgeEl = document.getElementById('task-badge-count');
+      if (badgeEl) badgeEl.innerText = `${unattemptedTasks.length}টি নতুন কাজ`;
 
       if (unattemptedTasks.length === 0) {
         container.innerHTML = `
@@ -1818,21 +1876,41 @@
 
       unattemptedTasks.forEach((t) => {
         const coins = (t.rewardTaka * 10000);
+        const isPinned = !!t.isPinned;
+
         const imageElement = t.iconImage 
           ? `<img src="${t.iconImage}" alt="Task" class="w-12 h-12 rounded-2xl object-cover border border-slate-100 shrink-0 shadow-xs" />`
-          : `<div class="w-12 h-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-2xl shrink-0">📱</div>`;
+          : `<div class="w-12 h-12 rounded-2xl ${isPinned ? 'bg-amber-100 border-amber-200 text-amber-800' : 'bg-emerald-50 border-emerald-100 text-emerald-700'} border flex items-center justify-center text-2xl shrink-0">${isPinned ? '🔥' : '📱'}</div>`;
+
+        const cardClasses = isPinned 
+          ? 'bg-gradient-to-r from-amber-50/90 via-white to-emerald-50/60 border-2 border-amber-400 rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3 relative overflow-hidden transition hover:shadow-md'
+          : 'bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex items-center justify-between gap-3 hover:border-emerald-300 transition';
+
+        const topBadge = isPinned 
+          ? `<div class="flex items-center gap-1.5 text-[10px] mb-0.5">
+               <span class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs flex items-center gap-1">
+                 <span>📌</span> স্পেশাল পিন্ড টাস্ক
+               </span>
+               <span class="text-amber-600 font-extrabold text-[10px] animate-pulse">🔥 High Reward</span>
+               ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
+             </div>`
+          : `<div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold mb-0.5">
+               <span>~2Minute</span><span>•</span>
+               <span class="text-emerald-600">✓ Active</span>
+               ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
+             </div>`;
+
+        const buttonClasses = isPinned 
+          ? 'bg-gradient-to-r from-amber-500 to-emerald-600 hover:opacity-95 text-white font-black text-xs px-5 py-2.5 rounded-full shadow-md shrink-0 cursor-pointer transition transform hover:scale-105 active:scale-95 flex items-center gap-1'
+          : 'emerald-primary hover:bg-emerald-600 text-white font-extrabold text-xs px-5 py-2.5 rounded-full shadow-sm shrink-0 cursor-pointer transition';
 
         container.innerHTML += `
-          <div class="bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
+          <div class="${cardClasses}">
+            <div class="flex items-center gap-3 min-w-0">
               ${imageElement}
-              <div>
-                <div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold mb-0.5">
-                  <span>~2Minute</span><span>•</span>
-                  <span class="text-emerald-600">✓ Active</span>
-                  ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
-                </div>
-                <h4 class="font-extrabold text-slate-900 text-sm leading-tight">${t.title}</h4>
+              <div class="truncate">
+                ${topBadge}
+                <h4 class="font-extrabold text-slate-900 text-sm leading-tight truncate">${t.title}</h4>
                 <div class="flex items-center gap-1 text-xs mt-1">
                   <span class="text-amber-500 font-bold">🪙 ${coins.toLocaleString()}</span>
                   <span class="text-slate-400">≈</span>
@@ -1840,13 +1918,54 @@
                 </div>
               </div>
             </div>
-            <button onclick="handleOpenTask('${t.id}')" class="emerald-primary text-white font-extrabold text-xs px-5 py-2.5 rounded-full shadow-sm shrink-0 cursor-pointer">
-              Earn
+            <button onclick="handleOpenTask('${t.id}')" class="${buttonClasses}">
+              ${isPinned ? 'কাজ করুন ➔' : 'Earn'}
             </button>
           </div>
         `;
       });
     }
+
+        // ================= TIMEWALL OFFERWALL HELPERS =================
+    const TIMEWALL_PLACEMENT_ID = "e62ce94a3f9bf6b3";
+
+    function getTimeWallUrl(tab = '') {
+      const uid = (currentUser && currentUser.uid) ? currentUser.uid : 'guest';
+      let url = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}`;
+      if (tab) url += `&tab=${tab}`;
+      return url;
+    }
+
+    function updateTimeWallLinks(uid) {
+      const iframe = document.getElementById('timewall-iframe');
+      if (iframe && uid) {
+        iframe.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}`;
+      }
+    }
+
+    window.openTimeWall = function(tab = '') {
+      if (!currentUser) {
+        alert("TimeWall-এ কাজ করতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
+        return;
+      }
+      const url = getTimeWallUrl(tab);
+      window.open(url, '_blank');
+    };
+
+    window.toggleTimeWallIframe = function() {
+      const container = document.getElementById('timewall-iframe-container');
+      const btnText = document.getElementById('timewall-toggle-text');
+      if (!container) return;
+      const isHidden = container.classList.contains('hidden');
+      if (isHidden) {
+        container.classList.remove('hidden');
+        if (btnText) btnText.innerText = 'বন্ধ করুন 🔼';
+        if (currentUser) updateTimeWallLinks(currentUser.uid);
+      } else {
+        container.classList.add('hidden');
+        if (btnText) btnText.innerText = 'অ্যাপে দেখুন 🔽';
+      }
+    };
 
     window.openProofModal = function(id, title, taka, link, desc, videoLink) {
       if (userSubmissions && userSubmissions[id]) {
