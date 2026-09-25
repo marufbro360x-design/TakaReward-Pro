@@ -1096,9 +1096,7 @@
         <!-- Top Executive Navbar -->
         <header class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between shrink-0 border-b border-slate-800">
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-black text-lg shadow-sm">
-              ⚡
-            </div>
+            <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro Logo" class="w-9 h-9 rounded-2xl object-cover border border-emerald-400/50 shadow-sm shrink-0" />
             <div>
               <div class="flex items-center gap-2">
                 <h3 class="font-black text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
@@ -1113,7 +1111,7 @@
           <div class="flex items-center gap-2">
             <!-- View Mode Switcher: Desktop Wide vs Mobile View -->
             <button type="button" onclick="toggleAdminViewMode()" id="btn-admin-view-mode" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs" title="ডেস্কটপ এবং মোবাইল ভিউ পরিবর্তন করুন">
-              <span id="admin-mode-icon">📱</span>
+              <img id="admin-mode-icon" src="https://i.ibb.co.com/fzMfXHVd/Mobile-View.jpg" class="w-4 h-4 object-contain rounded shrink-0" alt="Mobile View" />
               <span id="admin-mode-text" class="hidden sm:inline">মোবাইল ভিউ</span>
             </button>
             <button type="button" onclick="toggleAdminModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-400 flex items-center justify-center font-bold text-base transition cursor-pointer" title="ড্যাশবোর্ড বন্ধ করুন">
@@ -1130,14 +1128,14 @@
             <nav class="flex md:flex-col gap-1.5 w-full">
               <!-- Tab 1: Overview & Graphs -->
               <button type="button" onclick="switchAdminTab('overview')" id="atab-btn-overview" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-extrabold flex items-center gap-2.5 transition text-left cursor-pointer bg-emerald-50 text-emerald-700 shadow-2xs border border-emerald-200/60">
-                <span class="text-base">📊</span>
+                <img src="https://i.ibb.co.com/VczkPQZW/Whats-App-Image-2026-09-25-at-2-32-02-AM.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="Overview" />
                 <span class="truncate">ওভারভিউ ও গ্রাফ</span>
               </button>
 
               <!-- Tab 2: Proof Verification -->
               <button type="button" onclick="switchAdminTab('proofs')" id="atab-btn-proofs" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center justify-between gap-2 transition text-left cursor-pointer">
                 <div class="flex items-center gap-2.5 truncate">
-                  <span class="text-base">📸</span>
+                  <img src="https://i.ibb.co.com/jv85XLJr/Pending-Proof.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="Pending Proof" />
                   <span class="truncate">পেন্ডিং প্রুফ</span>
                 </div>
                 <span id="pending-proofs-count" class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">0</span>
@@ -1145,20 +1143,20 @@
 
               <!-- Tab 3: Add New Task -->
               <button type="button" onclick="switchAdminTab('add')" id="atab-btn-add" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center gap-2.5 transition text-left cursor-pointer">
-                <span class="text-base">➕</span>
+                <img src="https://i.ibb.co.com/MHvfRnH/New-Task.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="New Task" />
                 <span class="truncate">নতুন টাস্ক</span>
               </button>
 
               <!-- Tab 4: Manage Tasks -->
               <button type="button" onclick="switchAdminTab('manage')" id="atab-btn-manage" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center gap-2.5 transition text-left cursor-pointer">
-                <span class="text-base">📋</span>
+                <img src="https://i.ibb.co.com/G3PfCNcK/Task-Manager.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="Task Manager" />
                 <span class="truncate">টাস্ক ম্যানেজার</span>
               </button>
 
               <!-- Tab 5: Withdrawals -->
               <button type="button" onclick="switchAdminTab('withdraw')" id="atab-btn-withdraw" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center justify-between gap-2 transition text-left cursor-pointer">
                 <div class="flex items-center gap-2.5 truncate">
-                  <span class="text-base">💸</span>
+                  <img src="https://i.ibb.co.com/Txwq04pQ/Cashout.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="Cashout" />
                   <span class="truncate">ক্যাশআউট</span>
                 </div>
                 <span id="pending-withdraw-count" class="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full">0</span>
@@ -1166,7 +1164,7 @@
 
               <!-- Tab 6: User Management -->
               <button type="button" onclick="switchAdminTab('users')" id="atab-btn-users" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center gap-2.5 transition text-left cursor-pointer">
-                <span class="text-base">👥</span>
+                <img src="https://i.ibb.co.com/4Z7msF2R/User-Database.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="User Database" />
                 <span class="truncate">ইউজার ডাটাবেজ</span>
               </button>
             </nav>
@@ -1190,7 +1188,7 @@
               <!-- 4 Top KPI Cards -->
               <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center text-xl shrink-0">👥</div>
+                  <div class="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0 p-1 shadow-2xs"><img src="https://i.ibb.co.com/6RS7yh8R/Total-Users.jpg" class="w-full h-full object-contain rounded-xl" alt="Total Users" /></div>
                   <div>
                     <span class="text-[10px] font-bold text-slate-400 block uppercase">মোট ইউজার</span>
                     <strong id="admin-stat-users" class="text-base font-black text-slate-900">0</strong>
@@ -1198,7 +1196,7 @@
                 </div>
 
                 <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center text-xl shrink-0">⚡</div>
+                  <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0 p-1 shadow-2xs"><img src="https://i.ibb.co.com/FkL0LP8P/Today-s-Active-Users.jpg" class="w-full h-full object-contain rounded-xl" alt="Active Users" /></div>
                   <div>
                     <span class="text-[10px] font-bold text-slate-400 block uppercase">আজকের অ্যাক্টিভ ইউজার</span>
                     <strong id="admin-stat-active-today" class="text-base font-black text-emerald-600">0 জন</strong>
@@ -1206,7 +1204,7 @@
                 </div>
 
                 <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-200 text-teal-600 flex items-center justify-center text-xl shrink-0">💰</div>
+                  <div class="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-200 flex items-center justify-center shrink-0 p-1 shadow-2xs"><img src="https://i.ibb.co.com/1YwXDYrp/Total-Paid-Out.jpg" class="w-full h-full object-contain rounded-xl" alt="Total Paid" /></div>
                   <div>
                     <span class="text-[10px] font-bold text-slate-400 block uppercase">মোট পেইড আউট</span>
                     <strong id="admin-stat-paid" class="text-base font-black text-teal-700">৳0</strong>
@@ -1214,7 +1212,7 @@
                 </div>
 
                 <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
-                  <div class="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 text-amber-600 flex items-center justify-center text-xl shrink-0">⏳</div>
+                  <div class="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 p-1 shadow-2xs"><img src="https://i.ibb.co.com/RTG1Ywxq/Pending-Cashout.jpg" class="w-full h-full object-contain rounded-xl" alt="Pending Cashout" /></div>
                   <div>
                     <span class="text-[10px] font-bold text-slate-400 block uppercase">পেন্ডিং ক্যাশআউট</span>
                     <strong id="admin-stat-pending" class="text-base font-black text-amber-700">৳0</strong>
@@ -1226,8 +1224,15 @@
               <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs space-y-3">
                 <div class="flex items-center justify-between">
                   <div>
-                    <h4 class="font-black text-sm text-slate-900 flex items-center gap-2">
-                      <span>📈</span> গত ৭ দিনের টাস্ক সাবমিশন ট্রেন্ড
+                    <h4 class="font-black text-sm text-slate-900 flex items-center gap-2.5">
+                      <div class="w-6 h-6 rounded-lg border border-red-300 bg-red-50/80 flex items-center justify-center p-0.5 shadow-2xs shrink-0">
+                        <svg viewBox="0 0 24 24" fill="none" class="w-full h-full text-red-500 stroke-current" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="2" y="3" width="20" height="18" rx="3" stroke="#fca5a5" fill="none"/>
+                          <path d="M6 16l4-5 4 3 4-6" />
+                          <circle cx="18" cy="8" r="1.5" fill="#ef4444" stroke="none" />
+                        </svg>
+                      </div>
+                      <span>গত ৭ দিনের টাস্ক সাবমিশন ট্রেন্ড</span>
                     </h4>
                     <p class="text-[11px] text-slate-400 mt-0.5">কোন দিন কতজন ইউজার কাজ জমা দিয়েছে তার লাইভ পরিসংখ্যান</p>
                   </div>
@@ -1291,7 +1296,7 @@
               <div class="flex items-center justify-between">
                 <div>
                   <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
-                    <span>📸</span> পেন্ডিং প্রুফ ভেরিফিকেশন
+                    <img src="https://i.ibb.co.com/jv85XLJr/Pending-Proof.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="Pending Proof" /> পেন্ডিং প্রুফ ভেরিফিকেশন
                   </h4>
                   <p class="text-[11px] text-slate-400">ইউজারদের জমা দেওয়া স্ক্রিনশট ও জিমেইল দেখে কয়েন অনুমোদন করুন</p>
                 </div>
@@ -1303,7 +1308,7 @@
             <div id="admin-view-add" class="bg-white border border-slate-200 rounded-3xl p-5 space-y-3.5 hidden shadow-xs">
               <div class="border-b pb-2">
                 <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
-                  <span>➕</span> নতুন CPA টাস্ক তৈরি করুন
+                  <img src="https://i.ibb.co.com/MHvfRnH/New-Task.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="New Task" /> নতুন CPA টাস্ক তৈরি করুন
                 </h4>
                 <p class="text-[11px] text-slate-400">নতুন অফার তৈরি করে বাজেট ও ইউজার লিমিট নির্ধারণ করুন</p>
               </div>
@@ -1380,7 +1385,7 @@
               <div class="flex items-center justify-between">
                 <div>
                   <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
-                    <span>📋</span> অ্যাক্টিভ টাস্ক ম্যানেজার
+                    <img src="https://i.ibb.co.com/G3PfCNcK/Task-Manager.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="Task Manager" /> অ্যাক্টিভ টাস্ক ম্যানেজার
                   </h4>
                   <p class="text-[11px] text-slate-400">প্রতিটি কাজের অনুমোদন, রিজেক্ট ও লিমিট হিসেব দেখুন</p>
                 </div>
@@ -1393,7 +1398,7 @@
               <div class="flex items-center justify-between">
                 <div>
                   <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
-                    <span>💸</span> ক্যাশআউট রিকোয়েস্ট
+                    <img src="https://i.ibb.co.com/Txwq04pQ/Cashout.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="Cashout" /> ক্যাশআউট রিকোয়েস্ট
                   </h4>
                   <p class="text-[11px] text-slate-400">বিকাশ ও নগদ পেমেন্ট সম্পন্ন করে অনুমোদন করুন</p>
                 </div>
@@ -1406,7 +1411,7 @@
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
-                    <span>👥</span> ইউজার ডাটাবেজ ও ওয়ালেট
+                    <img src="https://i.ibb.co.com/4Z7msF2R/User-Database.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="User Database" /> ইউজার ডাটাবেজ ও ওয়ালেট
                   </h4>
                   <p class="text-[11px] text-slate-400">সকল ইউজারের ব্যালেন্স, রেফারেল এবং কাজের হিসাব</p>
                 </div>
@@ -2810,52 +2815,152 @@
       });
     }
 
-    // Render 7-Day Submissions Bar Chart
+    // Render 7-Day Submissions Curved Area Chart (Replicating Screenshot 2 Exactly)
     function render7DaySubmissionsChart() {
       const chartContainer = document.getElementById('chart-7day-submissions');
       if (!chartContainer) return;
 
       const days = [];
       const dayNames = ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি'];
+      const monthNamesBn = ['জানু', 'ফেব্রু', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্ট', 'অক্টো', 'নভে', 'ডিসে'];
       const counts = [];
 
       for (let i = 6; i >= 0; i--) {
         const d = new Date();
         d.setDate(d.getDate() - i);
         const iso = d.toISOString().split('T')[0];
-        const dayLabel = `${d.getDate()} ${d.toLocaleString('bn-BD', { month: 'short' })}`;
+        const dayLabel = `${d.getDate()} ${monthNamesBn[d.getMonth()]}`;
         const dayOfWeek = dayNames[d.getDay()];
         const count = adminDailySubmissionsMap[iso] || 0;
-        days.push({ iso, dayLabel, dayOfWeek, isToday: i === 0 });
+        days.push({ iso, dayLabel, dayOfWeek, isToday: i === 0, count });
         counts.push(count);
       }
 
-      const maxCount = Math.max(...counts, 5); // minimum scale of 5
+      // Compute SVG Coordinates
+      const svgWidth = 700;
+      const svgHeight = 220;
+      const padLeft = 45;
+      const padRight = 45;
+      const chartTop = 35;
+      const chartBottom = 160;
+      const chartHeight = chartBottom - chartTop;
+      const chartWidth = svgWidth - padLeft - padRight;
 
-      const barsHtml = days.map((day, idx) => {
-        const val = counts[idx];
-        const heightPercent = Math.max(8, Math.round((val / maxCount) * 100));
-        const barBg = day.isToday
-          ? 'bg-gradient-to-t from-emerald-600 to-teal-400 shadow-sm shadow-emerald-500/30'
-          : 'bg-gradient-to-t from-slate-400 to-slate-300 hover:from-sky-500 hover:to-blue-400';
+      const maxVal = Math.max(...counts, 6); // At least scale of 6
+
+      const stepX = chartWidth / (days.length - 1);
+      const points = days.map((d, i) => {
+        const x = padLeft + i * stepX;
+        const normalized = d.count / maxVal;
+        const y = chartBottom - (normalized * chartHeight);
+        return { x, y, count: d.count, isToday: d.isToday, dayOfWeek: d.dayOfWeek, dayLabel: d.dayLabel };
+      });
+
+      // Smooth Cubic Bezier Spline Path Generator
+      function getSplineD(pts) {
+        if (!pts.length) return '';
+        let d = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+        for (let i = 0; i < pts.length - 1; i++) {
+          const p0 = pts[i === 0 ? 0 : i - 1];
+          const p1 = pts[i];
+          const p2 = pts[i + 1];
+          const p3 = pts[i + 2] ? pts[i + 2] : p2;
+
+          const cp1x = p1.x + (p2.x - p0.x) / 6.0;
+          const cp1y = p1.y + (p2.y - p0.y) / 6.0;
+          const cp2x = p2.x - (p3.x - p1.x) / 6.0;
+          const cp2y = p2.y - (p3.y - p1.y) / 6.0;
+
+          d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+        }
+        return d;
+      }
+
+      const curvePath = getSplineD(points);
+      const areaPath = `${curvePath} L ${points[points.length - 1].x.toFixed(1)},${chartBottom} L ${points[0].x.toFixed(1)},${chartBottom} Z`;
+
+      // Secondary smooth wave offset for layered visual depth (like screenshot 2)
+      const secPoints = points.map((p, idx) => {
+        const yShift = (idx % 2 === 1) ? Math.min(chartBottom, p.y + 12) : Math.max(chartTop, p.y - 8);
+        return { x: p.x, y: yShift };
+      });
+      const secCurve = getSplineD(secPoints);
+      const secAreaPath = `${secCurve} L ${secPoints[secPoints.length - 1].x.toFixed(1)},${chartBottom} L ${secPoints[0].x.toFixed(1)},${chartBottom} Z`;
+
+      // Horizontal Grid Lines
+      const gridLines = [0.25, 0.5, 0.75, 1.0].map(ratio => {
+        const y = chartBottom - ratio * chartHeight;
+        return `<line x1="${padLeft - 10}" y1="${y.toFixed(1)}" x2="${svgWidth - padRight + 10}" y2="${y.toFixed(1)}" stroke="#f1f5f9" stroke-width="1.5" />`;
+      }).join('');
+
+      // Markers and Labels
+      const markersHtml = points.map((p) => {
+        const isCurrent = p.isToday;
+        const numColor = isCurrent ? '#10b981' : '#1e293b';
+        const numWeight = '800';
 
         return `
-          <div class="flex-1 flex flex-col items-center justify-end h-full group relative cursor-pointer">
-            <span class="text-[10px] font-black ${day.isToday ? 'text-emerald-700' : 'text-slate-600'} mb-1 group-hover:scale-110 transition">
-              ${val}
-            </span>
-            <div class="w-full max-w-[36px] ${barBg} rounded-t-xl transition-all duration-500" style="height: ${heightPercent}%;"></div>
-            <div class="mt-2 text-center">
-              <span class="text-[10px] font-extrabold ${day.isToday ? 'text-emerald-600' : 'text-slate-700'} block leading-tight">${day.dayOfWeek}</span>
-              <span class="text-[9px] text-slate-400 font-bold block">${day.dayLabel}</span>
-            </div>
-          </div>
+          <!-- Number Label -->
+          <text x="${p.x.toFixed(1)}" y="${(p.y - 12).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="${numWeight}" fill="${numColor}" font-family="system-ui, sans-serif">
+            ${p.count}
+          </text>
+
+          <!-- Marker Dot -->
+          ${isCurrent ? `
+            <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9" fill="#10b981" opacity="0.2" />
+            <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5.5" fill="#10b981" stroke="#ffffff" stroke-width="2.5" />
+          ` : `
+            <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="#38bdf8" stroke="#ffffff" stroke-width="2" />
+          `}
+
+          <!-- X-Axis Labels -->
+          ${isCurrent ? `
+            <rect x="${(p.x - 22).toFixed(1)}" y="${chartBottom + 6}" width="44" height="22" rx="11" fill="#10b981" />
+            <text x="${p.x.toFixed(1)}" y="${chartBottom + 21}" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" font-family="system-ui, sans-serif">
+              ${p.dayOfWeek}
+            </text>
+            <text x="${p.x.toFixed(1)}" y="${chartBottom + 42}" text-anchor="middle" font-size="10" font-weight="700" fill="#10b981" font-family="system-ui, sans-serif">
+              ${p.dayLabel}
+            </text>
+          ` : `
+            <text x="${p.x.toFixed(1)}" y="${chartBottom + 21}" text-anchor="middle" font-size="11" font-weight="800" fill="#334155" font-family="system-ui, sans-serif">
+              ${p.dayOfWeek}
+            </text>
+            <text x="${p.x.toFixed(1)}" y="${chartBottom + 38}" text-anchor="middle" font-size="10" font-weight="600" fill="#94a3b8" font-family="system-ui, sans-serif">
+              ${p.dayLabel}
+            </text>
+          `}
         `;
       }).join('');
 
       chartContainer.innerHTML = `
-        <div class="flex items-end justify-between gap-1.5 sm:gap-3 h-40 border-b border-slate-200 px-2">
-          ${barsHtml}
+        <div class="w-full overflow-x-auto">
+          <svg viewBox="0 0 ${svgWidth} ${svgHeight}" class="w-full h-auto min-w-[550px] select-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="chartBlueGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.65" />
+                <stop offset="60%" stop-color="#0284c7" stop-opacity="0.25" />
+                <stop offset="100%" stop-color="#0369a1" stop-opacity="0.0" />
+              </linearGradient>
+
+              <linearGradient id="chartTealGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.6" />
+                <stop offset="65%" stop-color="#14b8a6" stop-opacity="0.2" />
+                <stop offset="100%" stop-color="#0d9488" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+
+            ${gridLines}
+            <line x1="${padLeft - 10}" y1="${chartBottom}" x2="${svgWidth - padRight + 10}" y2="${chartBottom}" stroke="#cbd5e1" stroke-width="1.5" />
+
+            <path d="${secAreaPath}" fill="url(#chartBlueGrad)" />
+            <path d="${secCurve}" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" />
+
+            <path d="${areaPath}" fill="url(#chartTealGrad)" />
+            <path d="${curvePath}" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" />
+
+            ${markersHtml}
+          </svg>
         </div>
       `;
     }
