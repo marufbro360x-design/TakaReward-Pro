@@ -1964,9 +1964,14 @@
       let dynamicCpaLink = link || '';
       if (currentUser && currentUser.uid) {
         const uid = currentUser.uid;
+        // Clean out any existing placeholders like SUBID1HERE or old sub1/s1
+        dynamicCpaLink = dynamicCpaLink.replace(/([?&](?:s1|sub1|subid|tracking_id)=)[^&]*/gi, '');
+        dynamicCpaLink = dynamicCpaLink.replace(/[?&]SUBID[12]HERE/gi, '');
+        dynamicCpaLink = dynamicCpaLink.replace(/&+/g, '&').replace(/\?&/g, '?');
+        
         const separator = dynamicCpaLink.includes('?') ? '&' : '?';
-        // s1 for AdBlueMedia, subid for CPAlead, tracking_id for CPAGrip
-        dynamicCpaLink += `${separator}s1=${encodeURIComponent(uid)}&subid=${encodeURIComponent(uid)}&tracking_id=${encodeURIComponent(uid)}`;
+        // Passes s1 and sub1 for AdBlueMedia, subid for CPAlead, tracking_id for CPAGrip
+        dynamicCpaLink += `${separator}s1=${encodeURIComponent(uid)}&sub1=${encodeURIComponent(uid)}&subid=${encodeURIComponent(uid)}&tracking_id=${encodeURIComponent(uid)}`;
       }
       document.getElementById('modal-cpa-btn').href = dynamicCpaLink;
       
