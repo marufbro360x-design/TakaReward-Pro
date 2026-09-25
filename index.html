@@ -14,7 +14,7 @@
   <script>
     (function() {
       // 1. Domain Lock: takarewardpro.com ছাড়া নকল সাইটে কোড বসালে আসল সাইটে রিডাইরেক্ট করবে
-      const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
+      const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "takarewardpro.netlify.app", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
       if (!allowedDomains.includes(window.location.hostname)) {
         document.addEventListener("DOMContentLoaded", function() {
           document.body.innerHTML = `
