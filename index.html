@@ -940,9 +940,14 @@
           <span id="modal-task-reward" class="text-emerald-700 font-black text-sm">৳0.00</span>
         </div>
 
-        <p id="modal-task-desc" class="text-xs text-slate-600 leading-relaxed bg-slate-50 p-2.5 rounded-xl border">
-          Instructions
-        </p>
+        <div class="space-y-1.5">
+          <span class="text-[11px] font-black text-slate-700 flex items-center gap-1.5">
+            <span>📋</span> কাজের সহজ ধাপসমূহ (Instructions):
+          </span>
+          <div id="modal-task-instructions-container" class="space-y-1.5 text-xs text-slate-700 max-h-48 overflow-y-auto pr-1">
+            <!-- Step cards rendered cleanly -->
+          </div>
+        </div>
 
         <a id="modal-video-btn" href="#" target="_blank" class="hidden text-center w-full bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 transition">
           <span class="text-base">▶️</span>
@@ -1335,8 +1340,17 @@
               </div>
 
               <div>
-                <label class="text-[11px] font-bold text-slate-700">কাজের সহজ নির্দেশনা:</label>
-                <input id="admin-desc" type="text" placeholder="লিংকে গিয়ে সাইন-আপ সম্পন্ন করুন এবং শেষ পেজের স্ক্রিনশট দিন" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
+                    <span>📝</span> কাজের সহজ নির্দেশনা (ধাপে ধাপে):
+                  </label>
+                  <button type="button" onclick="adminAddInstructionStep('publish')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 px-2.5 py-1 rounded-xl text-[11px] font-black transition flex items-center gap-1 cursor-pointer shadow-2xs">
+                    <span>➕</span> আরও স্টেপ যোগ করুন
+                  </button>
+                </div>
+                <div id="admin-instructions-list" class="space-y-2">
+                  <!-- Dynamic Step Rows Injected Here -->
+                </div>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -1479,8 +1493,17 @@
             <input id="edit-task-link" type="url" class="w-full border rounded-xl p-2 mt-1 outline-none" />
           </div>
           <div>
-            <label class="font-bold text-slate-700">নির্দেশনা:</label>
-            <input id="edit-task-desc" type="text" class="w-full border rounded-xl p-2 mt-1 outline-none" />
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-slate-700 flex items-center gap-1.5 text-xs">
+                <span>📝</span> কাজের সহজ নির্দেশনা (ধাপে ধাপে):
+              </label>
+              <button type="button" onclick="adminAddInstructionStep('edit')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded-lg text-[10px] font-black transition flex items-center gap-1 cursor-pointer shadow-2xs">
+                <span>➕</span> স্টেপ যোগ করুন
+              </button>
+            </div>
+            <div id="edit-instructions-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+              <!-- Dynamic Step Rows for Edit Modal -->
+            </div>
           </div>
           <div>
             <label class="font-bold text-slate-700">টিউটোরিয়াল ভিডিও লিংক:</label>
@@ -2159,7 +2182,7 @@
         return;
       }
 
-      openProofModal(task.id, task.title, task.rewardTaka, task.link, task.desc, task.videoLink || '');
+      openProofModal(task.id, task.title, task.rewardTaka, task.link, task.desc, task.videoLink || '', task.instructions || null);
     };
 
     function renderOfferTabTasks() {
@@ -2285,15 +2308,57 @@
       }
     };
 
-    window.openProofModal = function(id, title, taka, link, desc, videoLink) {
+    function renderTaskInstructionsInModal(task) {
+      const container = document.getElementById('modal-task-instructions-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let steps = [];
+      if (Array.isArray(task.instructions) && task.instructions.length > 0) {
+        steps = task.instructions.filter(s => s && s.trim());
+      } else if (task.desc && typeof task.desc === 'string') {
+        const raw = task.desc.replace(/(\r\n|\n|\r)/gm, "\n");
+        if (/([০-৯\d]+[\.\)])/.test(raw) || raw.includes('\n')) {
+          const parts = raw.split(/(?:^|\n|\s*)(?:[০-৯\d]+[\.\)]\s*)/).filter(p => p && p.trim().length > 0);
+          steps = parts.length > 1 ? parts : raw.split('\n').filter(p => p && p.trim().length > 0);
+        } else {
+          steps = [raw];
+        }
+      }
+
+      if (steps.length === 0) {
+        steps = ["লিংকে গিয়ে সাইন-আপ সম্পন্ন করুন এবং শেষ পেজের স্ক্রিনশট প্রুফ দিন।"];
+      }
+
+      const bnNumbers = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '১০', '১১', '১২', '১৩', '১৪', '১৫'];
+
+      container.innerHTML = steps.map((step, idx) => {
+        const numBadge = bnNumbers[idx] || (idx + 1);
+        const cleanText = step.replace(/^[০-৯\d]+[\.\)]\s*/, '').trim();
+        return `
+          <div class="flex items-start gap-2.5 bg-slate-50 border border-slate-200/80 p-2.5 rounded-2xl shadow-2xs">
+            <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-black text-[11px] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+              ${numBadge}
+            </span>
+            <span class="text-slate-800 text-xs font-medium leading-relaxed flex-1">
+              ${cleanText}
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.openProofModal = function(id, title, taka, link, desc, videoLink, instructions) {
       if (userSubmissions && userSubmissions[id]) {
         alert("⚠️ আপনি ইতিমধ্যে এই কাজটি সম্পন্ন বা সাবমিট করেছেন!");
         return;
       }
-      activeModalTask = { id, title, taka, link, desc, videoLink };
+      activeModalTask = { id, title, taka, link, desc, videoLink, instructions };
       document.getElementById('modal-task-title').innerText = title;
       document.getElementById('modal-task-reward').innerText = `৳${taka}.00 (${(taka * 10000).toLocaleString()} কয়েন)`;
-      document.getElementById('modal-task-desc').innerText = desc || "লিংকে গিয়ে সাইন-আপ সম্পন্ন করুন এবং স্ক্রিনশট প্রুফ দিন।";
+
+      // Render Clean Step-by-Step Cards in User Modal
+      renderTaskInstructionsInModal(activeModalTask);
       // SubID Tracking for AdBlueMedia, CPAlead & CPAGrip
       let dynamicCpaLink = link || '';
       if (currentUser && currentUser.uid) {
@@ -2567,6 +2632,74 @@
     let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
     let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
     let isDesktopWideMode = true;
+    let currentEditingTaskId = null;
+    let currentEditingTaskIcon = null;
+
+    const bnStepNumbers = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '১০', '১১', '১২', '১৩', '১৪', '১৫', '১৬', '১৭', '১৮', '১৯', '২০'];
+
+    // Dynamic Step-by-Step Instructions Engine
+    window.adminAddInstructionStep = function(type, initialText = '') {
+      const containerId = type === 'publish' ? 'admin-instructions-list' : 'edit-instructions-list';
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const currentCount = container.children.length;
+      const numBadge = bnStepNumbers[currentCount] || (currentCount + 1);
+
+      const row = document.createElement('div');
+      row.className = 'instruction-step-row flex items-center gap-2 bg-slate-50 border border-slate-200/90 p-2 rounded-2xl shadow-2xs';
+      row.innerHTML = `
+        <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-2xs step-number-badge">
+          ${numBadge}
+        </span>
+        <input type="text" value="${(initialText || '').replace(/"/g, '&quot;')}" placeholder="যেমন: লিংকে গিয়ে সাইন-আপ সম্পন্ন করুন" class="flex-1 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs outline-none focus:border-emerald-500 font-medium text-slate-800" />
+        <button type="button" onclick="adminRemoveInstructionStep(this, '${type}')" class="w-7 h-7 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 flex items-center justify-center text-xs font-black cursor-pointer transition shrink-0" title="মুছে ফেলুন">
+          ✕
+        </button>
+      `;
+      container.appendChild(row);
+    };
+
+    window.adminRemoveInstructionStep = function(btn, type) {
+      const containerId = type === 'publish' ? 'admin-instructions-list' : 'edit-instructions-list';
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const row = btn.closest('.instruction-step-row');
+      if (row) row.remove();
+
+      // Re-number badges
+      Array.from(container.children).forEach((child, idx) => {
+        const badge = child.querySelector('.step-number-badge');
+        if (badge) badge.innerText = bnStepNumbers[idx] || (idx + 1);
+      });
+
+      // Ensure at least one row exists
+      if (container.children.length === 0) {
+        adminAddInstructionStep(type, '');
+      }
+    };
+
+    window.adminGetInstructionSteps = function(type) {
+      const containerId = type === 'publish' ? 'admin-instructions-list' : 'edit-instructions-list';
+      const container = document.getElementById(containerId);
+      if (!container) return [];
+
+      const steps = [];
+      container.querySelectorAll('input').forEach(inp => {
+        const val = inp.value.trim();
+        if (val) steps.push(val);
+      });
+      return steps;
+    };
+
+    function initPublishInstructionSteps() {
+      const container = document.getElementById('admin-instructions-list');
+      if (!container || container.children.length > 0) return;
+      adminAddInstructionStep('publish', 'প্রদত্ত অফার লিংকে ক্লিক করে সরাসরি সাইটে প্রবেশ করুন।');
+      adminAddInstructionStep('publish', 'নির্দেশনা অনুযায়ী রেজিস্ট্রেশন / সাইন-আপ সম্পন্ন করুন।');
+      adminAddInstructionStep('publish', 'কাজটি সফলভাবে শেষ হওয়ার পর কনফার্মেশন পেজের একটি পরিষ্কার স্ক্রিনশট নিন এবং প্রুফ দিন।');
+    }
 
     window.toggleAdminViewMode = function() {
       const container = document.getElementById('admin-dashboard-container');
@@ -2633,6 +2766,150 @@
           rejectReason: reason.trim() || "Fake proof"
         });
         alert("টাস্ক বাতিল করা হয়েছে।");
+      }
+    };
+
+    // ================= CASHOUT APPROVE & CANCEL HANDLERS =================
+    window.adminMarkPaid = async function(wId, userId) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      if (!confirm("আপনি কি নিশ্চিত এই উইথড্রল পেমেন্টটি সম্পন্ন হয়েছে এবং এটি 'পেইড' হিসেবে সংরক্ষণ করতে চান?")) return;
+
+      try {
+        const wRef = doc(db, "withdrawals", wId);
+        await updateDoc(wRef, {
+          status: "Paid",
+          paidAt: serverTimestamp()
+        });
+
+        // Award ৳10 referral bonus to referrer on user's first withdrawal
+        try {
+          const uRef = doc(db, "users", userId);
+          const uSnap = await getDoc(uRef);
+          if (uSnap.exists()) {
+            const uData = uSnap.data();
+            if (uData.referredBy && !uData.hasAwardedFirstWithdrawReferral) {
+              const refQ = query(collection(db, "users"), where("myInviteCode", "==", uData.referredBy));
+              const refSnap = await getDocs(refQ);
+              if (!refSnap.empty) {
+                const referrerDoc = refSnap.docs[0];
+                await updateDoc(doc(db, "users", referrerDoc.id), {
+                  coins: increment(100000) // ৳10 bonus
+                });
+                await addDoc(collection(db, "notifications"), {
+                  userId: referrerDoc.id,
+                  title: "🎉 রেফারেল উইথড্রল বোনাস!",
+                  message: `আপনার রেফার করা ফ্রেন্ড (${uData.name || 'User'}) প্রথমবার ক্যাশআউট করায় আপনি ১০ টাকা (১,০০,০০০ কয়েন) ক্যাশ বোনাস পেয়েছেন!`,
+                  createdAt: serverTimestamp()
+                });
+              }
+              await updateDoc(uRef, { hasAwardedFirstWithdrawReferral: true });
+            }
+          }
+        } catch (refErr) {
+          console.warn("Referral payout check notice:", refErr);
+        }
+
+        // Notify User
+        try {
+          await addDoc(collection(db, "notifications"), {
+            userId: userId,
+            title: "💸 পেমেন্ট সম্পন্ন হয়েছে!",
+            message: "আপনার ক্যাশআউট রিকোয়েস্ট সফলভাবে পেমেন্ট করা হয়েছে। আমাদের সাথে কাজ করার জন্য ধন্যবাদ!",
+            createdAt: serverTimestamp()
+          });
+        } catch(ne) {}
+
+        playCoinChime();
+        alert("✓ পেমেন্ট সফলভাবে সম্পন্ন হিসেবে চিহ্নিত করা হয়েছে!");
+      } catch (err) {
+        alert("পেমেন্ট আপডেটে সমস্যা: " + err.message);
+      }
+    };
+
+    window.adminRejectWithdraw = async function(wId, userId, refundCoins) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const reason = prompt("ক্যাশআউট বাতিলের কারণ লিখুন (ইউজার এই কারণটি দেখতে পাবে):", "ভুল বা বন্ধ মোবাইল নম্বর");
+      if (reason === null) return;
+
+      try {
+        const finalReason = reason.trim() || "তথ্য অসম্পূর্ণ বা ভুল নম্বর";
+        const coinsToRefund = parseInt(refundCoins, 10) || 0;
+
+        await updateDoc(doc(db, "withdrawals", wId), {
+          status: "Rejected",
+          rejectReason: finalReason,
+          rejectedAt: serverTimestamp()
+        });
+
+        if (coinsToRefund > 0) {
+          await updateDoc(doc(db, "users", userId), {
+            coins: increment(coinsToRefund)
+          });
+        }
+
+        // Notify User with explanation and refund notification
+        try {
+          await addDoc(collection(db, "notifications"), {
+            userId: userId,
+            title: "⚠️ ক্যাশআউট বাতিল ও রিফান্ড",
+            message: `আপনার উইথড্রল রিকোয়েস্টটি বাতিল করা হয়েছে এবং ${coinsToRefund.toLocaleString()} কয়েন আপনার ওয়ালেটে ফেরত দেওয়া হয়েছে। কারণ: ${finalReason}`,
+            createdAt: serverTimestamp()
+          });
+        } catch(ne) {}
+
+        alert(`✕ উইথড্রল বাতিল করা হয়েছে এবং ইউজারের অ্যাকাউন্টে ${coinsToRefund.toLocaleString()} কয়েন ফেরত দেওয়া হয়েছে।`);
+      } catch (err) {
+        alert("বাতিল প্রক্রিয়ায় সমস্যা: " + err.message);
+      }
+    };
+
+    // User Audit Inspection Modal / Alert
+    window.inspectUserHistory = async function(userId, userName, email, phone) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      try {
+        const uRef = doc(db, "users", userId);
+        const uSnap = await getDoc(uRef);
+        const uData = uSnap.exists() ? uSnap.data() : {};
+
+        const subQ = query(collection(db, "submissions"), where("userId", "==", userId));
+        const subSnap = await getDocs(subQ);
+        let appCount = 0, rejCount = 0, pendCount = 0;
+        subSnap.forEach(d => {
+          const s = d.data().status;
+          if (s === 'Approved') appCount++;
+          else if (s === 'Rejected') rejCount++;
+          else pendCount++;
+        });
+
+        const wQ = query(collection(db, "withdrawals"), where("userId", "==", userId));
+        const wSnap = await getDocs(wQ);
+        let totalWithdrawn = 0;
+        wSnap.forEach(d => {
+          const w = d.data();
+          if (w.status === 'Paid') totalWithdrawn += (Number(w.taka) || 0);
+        });
+
+        const info = `
+🔍 ইউজার অডিট রিপোর্ট:
+------------------------------------
+👤 নাম: ${userName || uData.name || 'User'}
+🆔 UID: ${userId}
+📧 ইমেইল: ${email || uData.email || 'N/A'}
+📱 নম্বর: ${phone || uData.phone || 'N/A'}
+🪙 বর্তমান কয়েন: ${(uData.coins || 0).toLocaleString()} (৳${((uData.coins || 0)/10000).toFixed(1)})
+👥 মোট রেফারেল: ${uData.referralCount || 0} জন
+🎁 রেফার কোড: ${uData.myInviteCode || 'N/A'} (Referred By: ${uData.referredBy || 'None'})
+
+📋 টাস্ক হিস্ট্রি:
+✓ অনুমোদিত: ${appCount}টি | ⏳ পেন্ডিং: ${pendCount}টি | ✕ বাতিল: ${rejCount}টি
+
+💸 ক্যাশআউট হিস্ট্রি:
+মোট উত্তোলন (পেইড): ৳${totalWithdrawn}
+        `.trim();
+
+        alert(info);
+      } catch (e) {
+        alert("অডিট হিস্ট্রি লোড করতে সমস্যা: " + e.message);
       }
     };
 
@@ -3144,13 +3421,18 @@
       const cat = document.getElementById('admin-cat').value.trim() || 'Sign In';
       const rewardTaka = parseFloat(document.getElementById('admin-taka').value) || 10;
       const link = document.getElementById('admin-link').value.trim();
-      const desc = document.getElementById('admin-desc').value.trim();
       const videoLink = document.getElementById('admin-video-link').value.trim();
       const imageFileInput = document.getElementById('admin-task-image-file');
-      
+
       const isPinned = document.getElementById('admin-pin-task')?.checked || false;
       const isUnlimited = document.getElementById('admin-unlimited-workers')?.checked || false;
       const workerLimit = isUnlimited ? 0 : (parseInt(document.getElementById('admin-worker-limit')?.value, 10) || 0);
+
+      // Collect Dynamic Step-by-Step Instructions
+      const instructions = adminGetInstructionSteps('publish');
+      const desc = instructions.length > 0 
+        ? instructions.map((s, i) => `${bnStepNumbers[i] || (i+1)}. ${s}`).join('\n')
+        : "অফারটি সম্পন্ন করে রিওয়ার্ড সংগ্রহ করুন।";
 
       if (!title || !link) {
         alert("কাজের নাম ও লিংক অবশ্যই দিতে হবে!");
@@ -3167,7 +3449,8 @@
           category: cat,
           rewardTaka,
           link,
-          desc: desc || "অফারটি সম্পন্ন করে রিওয়ার্ড সংগ্রহ করুন।",
+          desc,
+          instructions: instructions.length > 0 ? instructions : [desc],
           isPinned: isPinned,
           workerLimit: workerLimit,
           videoLink: videoLink || null,
@@ -3190,12 +3473,21 @@
         }
 
         document.getElementById('admin-title').value = '';
+        document.getElementById('admin-cat').value = '';
+        document.getElementById('admin-taka').value = '';
         document.getElementById('admin-link').value = '';
-        document.getElementById('admin-desc').value = '';
         document.getElementById('admin-video-link').value = '';
         document.getElementById('admin-task-image-file').value = '';
         if (document.getElementById('admin-worker-limit')) document.getElementById('admin-worker-limit').value = '';
-        
+        if (document.getElementById('admin-pin-task')) document.getElementById('admin-pin-task').checked = false;
+
+        // Reset instructions list to default 3 steps
+        const instList = document.getElementById('admin-instructions-list');
+        if (instList) {
+          instList.innerHTML = '';
+          initPublishInstructionSteps();
+        }
+
         publishBtn.innerText = 'টাস্ক পাবলিশ করুন 🚀';
         publishBtn.disabled = false;
         alert("টাস্ক সফলভাবে পাবলিশ হয়েছে!");
@@ -3229,9 +3521,28 @@
       document.getElementById('edit-task-cat').value = t.category || 'Sign In';
       document.getElementById('edit-task-taka').value = t.rewardTaka || 10;
       document.getElementById('edit-task-link').value = t.link || '';
-      document.getElementById('edit-task-desc').value = t.desc || '';
       document.getElementById('edit-task-video').value = t.videoLink || '';
       document.getElementById('edit-task-image-file').value = '';
+
+      // Populate Dynamic Step-by-Step Instructions in Edit Modal
+      const editContainer = document.getElementById('edit-instructions-list');
+      if (editContainer) {
+        editContainer.innerHTML = '';
+        let steps = [];
+        if (Array.isArray(t.instructions) && t.instructions.length > 0) {
+          steps = t.instructions;
+        } else if (t.desc) {
+          const raw = t.desc.replace(/(\r\n|\n|\r)/gm, "\n");
+          if (/([০-৯\d]+[\.\)])/.test(raw) || raw.includes('\n')) {
+            const parts = raw.split(/(?:^|\n|\s*)(?:[০-৯\d]+[\.\)]\s*)/).filter(p => p && p.trim().length > 0);
+            steps = parts.length > 1 ? parts : raw.split('\n').filter(p => p && p.trim().length > 0);
+          } else {
+            steps = [raw];
+          }
+        }
+        if (steps.length === 0) steps = [''];
+        steps.forEach(s => adminAddInstructionStep('edit', s.replace(/^[০-৯\d]+[\.\)]\s*/, '').trim()));
+      }
 
       const isUnlimited = !t.workerLimit || t.workerLimit <= 0;
       const unlimCheckbox = document.getElementById('edit-unlimited-workers');
@@ -3262,13 +3573,18 @@
       const cat = document.getElementById('edit-task-cat').value.trim() || 'Sign In';
       const rewardTaka = parseFloat(document.getElementById('edit-task-taka').value) || 10;
       const link = document.getElementById('edit-task-link').value.trim();
-      const desc = document.getElementById('edit-task-desc').value.trim();
       const videoLink = document.getElementById('edit-task-video').value.trim();
       const imageFileInput = document.getElementById('edit-task-image-file');
 
       const isPinned = document.getElementById('edit-task-pin')?.checked || false;
       const isUnlimited = document.getElementById('edit-unlimited-workers')?.checked || false;
       const workerLimit = isUnlimited ? 0 : (parseInt(document.getElementById('edit-task-limit')?.value, 10) || 0);
+
+      // Collect Dynamic Step-by-Step Instructions
+      const instructions = adminGetInstructionSteps('edit');
+      const desc = instructions.length > 0 
+        ? instructions.map((s, i) => `${bnStepNumbers[i] || (i+1)}. ${s}`).join('\n')
+        : "অফারটি সম্পন্ন করে রিওয়ার্ড সংগ্রহ করুন।";
 
       if (!title || !link) {
         alert("কাজের নাম ও লিংক অবশ্যই পূরণ করতে হবে!");
@@ -3291,6 +3607,7 @@
           rewardTaka,
           link,
           desc,
+          instructions: instructions.length > 0 ? instructions : [desc],
           isPinned,
           workerLimit,
           videoLink: videoLink || null,
@@ -3518,7 +3835,9 @@
         activeBtn.className = "atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-extrabold flex items-center justify-between gap-2 transition text-left cursor-pointer bg-emerald-50 text-emerald-700 shadow-2xs border border-emerald-200/60";
       }
 
-      if (tab === 'overview') {
+      if (tab === 'add') {
+        initPublishInstructionSteps();
+      } else if (tab === 'overview') {
         updateAdminAnalytics();
       } else if (tab === 'proofs') {
         loadAdminSubmissions();
