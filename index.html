@@ -958,15 +958,14 @@
           ১. অফার লিংকে গিয়ে সাইন-আপ করুন ➔
         </a>
 
-        <!-- Dynamic Screenshots Upload Container -->
-        <div id="modal-screenshots-container" class="space-y-2 text-xs pt-1 border-t">
-          <!-- Dynamically populated based on required screenshot count -->
+        <div class="space-y-2 pt-1 border-t">
+          <label class="text-[11px] font-bold text-slate-700 block">২. সাইন-আপ সফল হওয়ার স্ক্রিনশট দিন:</label>
+          <input id="proof-file" type="file" accept="image/*" class="w-full border rounded-xl p-2 text-xs file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700" />
         </div>
 
-        <!-- Customizable Proof Note Field -->
-        <div class="space-y-1.5 text-xs">
-          <label id="modal-proof-note-label" class="text-xs font-bold text-slate-700 block">আপনার ব্যবহৃত ইমেইল বা নম্বর (প্রুফ নোট) :</label>
-          <input id="proof-notes" type="text" placeholder="যেমন: demo@gmail.com বা 017..." class="w-full border rounded-xl p-2.5 text-xs outline-none focus:border-emerald-500 font-medium" />
+        <div class="space-y-1">
+          <label class="text-[11px] font-bold text-slate-700 block">৩. আপনার ব্যবহৃত ইমেইল বা নম্বর (প্রুফ নোট):</label>
+          <input id="proof-notes" type="text" placeholder="যেমন: demo@gmail.com বা 017..." class="w-full border rounded-xl p-2.5 text-xs outline-none focus:border-emerald-500" />
         </div>
 
         <button onclick="submitTaskProof()" id="btn-submit-proof" class="w-full emerald-primary text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider shadow cursor-pointer">
@@ -1354,7 +1353,7 @@
                 </div>
               </div>
 
-              <!-- 3. SCREENSHOT COUNT & INSTRUCTIONS CONFIG -->
+              <!-- 3. SCREENSHOT COUNT & INSTRUCTIONS CONFIG (NEW) -->
               <div class="bg-indigo-50/70 border border-indigo-200 p-3.5 rounded-2xl space-y-2">
                 <div class="flex items-center justify-between">
                   <label class="text-xs font-black text-indigo-950 flex items-center gap-1.5">
@@ -1371,7 +1370,7 @@
                 </div>
               </div>
 
-              <!-- 4. CUSTOM PROOF NOTE FIELD CONFIG -->
+              <!-- 4. CUSTOM PROOF NOTE FIELD CONFIG (NEW) -->
               <div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-2xl space-y-2">
                 <label class="text-xs font-black text-amber-950 flex items-center gap-1.5">
                   <span>✍️</span> প্রুফ নোট ফিল্ড কাস্টমাইজেশন:
@@ -3716,8 +3715,7 @@ function initPublishInstructionSteps() {
     };
 
     window.adminSaveEditedTask = async function() {
-      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
-      if (!currentEditingTaskId) return;
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase() || !currentEditingTaskId) return;
 
       const title = document.getElementById('edit-task-title').value.trim();
       const cat = document.getElementById('edit-task-cat').value.trim() || 'Sign In';
@@ -3768,6 +3766,3202 @@ function initPublishInstructionSteps() {
           screenshotLabels,
           proofNoteLabel,
           proofNotePlaceholder,
+          isPinned,
+          workerLimit,
+          videoLink: videoLink || null,
+          iconImage: finalIcon || null
+        });
+
+        saveBtn.innerText = 'সংরক্ষণ করুন';
+        saveBtn.disabled = false;
+        adminCloseEditTaskModal();
+        alert("টাস্ক সফলভাবে আপডেট করা হয়েছে!");
+      } catch (err) {
+        alert("টাস্ক আপডেটে সমস্যা: " + err.message);
+        saveBtn.innerText = 'সংরক্ষণ করুন';
+        saveBtn.disabled = false;
+      }
+    };
+
+    window.adminTogglePinTask = async function(taskId, targetState) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      try {
+        await updateDoc(doc(db, "tasks", taskId), {
+          isPinned: targetState
+        });
+      } catch(e) {
+        alert("পিন পরিবর্তন এরর: " + e.message);
+      }
+    };
+
+    window.adminDeleteTask = async function(id) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      if (confirm("এই কাজটি মুছে ফেলতে চান?")) {
+        await deleteDoc(doc(db, "tasks", id));
+      }
+    };
+
+    // Render Admin Manage Tasks List with Per-Task Stats
+    function renderAdminManageTasksList() {
+      const box = document.getElementById('admin-task-list');
+      if (!box) return;
+
+      if (allAvailableTasks.length === 0) {
+        box.innerHTML = `<div class="text-center py-10 bg-slate-50 border border-dashed border-slate-200 rounded-3xl"><p class="text-xs font-bold text-slate-500">বর্তমানে কোনো টাস্ক পাবলিশ করা নেই।</p></div>`;
+        return;
+      }
+
+      box.innerHTML = allAvailableTasks.map((t) => {
+        const stats = adminTaskStatsMap[t.id] || { approved: 0, rejected: 0, pending: 0, total: 0 };
+        const limit = t.workerLimit || 0;
+        const isFull = (limit > 0 && stats.approved >= limit);
+        const progressPercent = limit > 0 ? Math.min(100, Math.round((stats.approved / limit) * 100)) : 100;
+
+        const imgEl = t.iconImage
+          ? `<img src="${t.iconImage}" class="w-11 h-11 rounded-2xl object-cover border border-slate-200 shrink-0 shadow-2xs" />`
+          : `<div class="w-11 h-11 rounded-2xl ${t.isPinned ? 'bg-amber-100 text-amber-800' : 'bg-emerald-50 text-emerald-700'} border flex items-center justify-center text-xl shrink-0 font-black">${t.isPinned ? '📌' : '🎯'}</div>`;
+
+        return `
+          <div class="bg-white border ${isFull ? 'border-red-200 bg-red-50/20' : 'border-slate-200'} p-3.5 rounded-3xl shadow-xs space-y-3">
+            <div class="flex items-start justify-between gap-3">
+              <div class="flex items-center gap-3 min-w-0">
+                ${imgEl}
+                <div class="truncate">
+                  <div class="flex items-center gap-1.5 flex-wrap">
+                    <strong class="text-slate-900 text-xs font-black truncate">${t.title}</strong>
+                    ${t.isPinned ? '<span class="bg-amber-100 text-amber-800 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-amber-300">📌 PINNED</span>' : ''}
+                    ${isFull ? '<span class="bg-red-100 text-red-700 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-red-200">🔴 স্লট পূর্ণ (Full)</span>' : '<span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-emerald-200">🟢 রানিং</span>'}
+                  </div>
+                  <div class="text-[11px] text-slate-500 font-bold mt-0.5">
+                    রিওয়ার্ড: <span class="text-emerald-600 font-black">৳${t.rewardTaka}</span> (${(t.rewardTaka * 10000).toLocaleString()} কয়েন) • ${t.category || 'Special'}
+                  </div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button type="button" onclick="adminTogglePinTask('${t.id}', ${!t.isPinned})" class="${t.isPinned ? 'bg-amber-100 text-amber-800 border-amber-300' : 'bg-slate-100 text-slate-600 border-slate-200'} border px-2 py-1 rounded-xl text-xs font-bold transition cursor-pointer">
+                  ${t.isPinned ? '📌 আনপিন' : '📌 পিন'}
+                </button>
+                <button type="button" onclick="adminOpenEditTaskModal('${t.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-xl text-xs font-bold transition cursor-pointer">
+                  ✏️ এডিট
+                </button>
+                <button type="button" onclick="adminDeleteTask('${t.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-2 py-1 rounded-xl text-xs font-bold transition cursor-pointer">
+                  🗑️
+                </button>
+              </div>
+            </div>
+
+            <!-- Detailed Task Stats Grid -->
+            <div class="bg-slate-50 border border-slate-200/80 p-2.5 rounded-2xl space-y-2">
+              <div class="grid grid-cols-4 gap-1.5 text-center text-xs">
+                <div class="bg-emerald-50 border border-emerald-200 py-1.5 px-1 rounded-xl">
+                  <span class="text-[9px] text-emerald-700 font-bold block uppercase">✓ অ্যাপ্রুভড</span>
+                  <strong class="text-emerald-800 text-xs font-black">${stats.approved} জন</strong>
+                </div>
+                <div class="bg-amber-50 border border-amber-200 py-1.5 px-1 rounded-xl">
+                  <span class="text-[9px] text-amber-700 font-bold block uppercase">⏳ পেন্ডিং</span>
+                  <strong class="text-amber-800 text-xs font-black">${stats.pending} জন</strong>
+                </div>
+                <div class="bg-red-50 border border-red-200 py-1.5 px-1 rounded-xl">
+                  <span class="text-[9px] text-red-700 font-bold block uppercase">✕ বাতিল</span>
+                  <strong class="text-red-800 text-xs font-black">${stats.rejected} জন</strong>
+                </div>
+                <div class="bg-sky-50 border border-sky-200 py-1.5 px-1 rounded-xl">
+                  <span class="text-[9px] text-sky-700 font-bold block uppercase">🎯 লিমিট</span>
+                  <strong class="text-sky-800 text-xs font-black">${limit > 0 ? `${limit} জন` : 'আনলিমিটেড'}</strong>
+                </div>
+              </div>
+
+              ${limit > 0 ? `
+                <div>
+                  <div class="flex justify-between text-[10px] font-bold text-slate-500 mb-1">
+                    <span>প্রগ্রেস: ${stats.approved} / ${limit} জন সম্পন্ন</span>
+                    <span>${progressPercent}%</span>
+                  </div>
+                  <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                    <div class="bg-emerald-500 h-2 rounded-full transition-all duration-500" style="width: ${progressPercent}%;"></div>
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ================= USER DATABASE & WALLET CONTROL =================
+    function renderAdminUsersTable(usersList) {
+      const tbody = document.getElementById('admin-users-table-body');
+      if (!tbody) return;
+
+      if (!usersList || usersList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-slate-400">কোনো ইউজার পাওয়া যায়নি।</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = usersList.map(u => {
+        const avatar = u.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.id}`;
+        const coins = u.coins || 0;
+        const taka = (coins / 10000).toFixed(1);
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="p-3">
+              <div class="flex items-center gap-2.5">
+                <img src="${avatar}" class="w-8 h-8 rounded-full border border-slate-200 object-cover shrink-0" />
+                <div class="truncate max-w-[140px]">
+                  <strong class="text-slate-900 text-xs block truncate">${u.name || 'User'}</strong>
+                  <span class="text-[10px] text-slate-400 truncate block">${u.email || 'No email'}</span>
+                </div>
+              </div>
+            </td>
+            <td class="p-3 font-mono text-[10px] text-slate-600">
+              <div class="flex items-center gap-1">
+                <span class="truncate max-w-[80px]">${u.id}</span>
+                <button type="button" onclick="navigator.clipboard.writeText('${u.id}').then(() => alert('UID কপি হয়েছে'))" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-1 py-0.5 rounded text-[9px] font-bold cursor-pointer">কপি</button>
+              </div>
+            </td>
+            <td class="p-3 font-black text-amber-600 text-xs">🪙 ${coins.toLocaleString()}</td>
+            <td class="p-3 font-black text-emerald-700 text-xs">৳${taka}</td>
+            <td class="p-3 text-slate-700 font-bold">${u.referralCount || 0} জন</td>
+            <td class="p-3 text-slate-700 font-bold">${u.completedApprovedTasks || 0}টি</td>
+            <td class="p-3 text-right">
+              <div class="flex items-center justify-end gap-1.5">
+                <button onclick="adminAdjustUserCoins('${u.id}', '${u.name || 'User'}', ${coins})" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 px-2 py-1 rounded-lg text-[10px] font-extrabold transition cursor-pointer">
+                  💰 কয়েন
+                </button>
+                <button onclick="inspectUserHistory('${u.id}', '${u.name || 'User'}', '${u.email || ''}', '')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-2 py-1 rounded-lg text-[10px] font-extrabold transition cursor-pointer">
+                  🔍 অডিট
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    window.filterAdminUsers = function() {
+      const q = document.getElementById('admin-user-search-input')?.value?.toLowerCase().trim() || '';
+      if (!q) {
+        renderAdminUsersTable(adminAllUsersList);
+        return;
+      }
+      const filtered = adminAllUsersList.filter(u => {
+        return (u.name && u.name.toLowerCase().includes(q)) ||
+               (u.email && u.email.toLowerCase().includes(q)) ||
+               (u.id && u.id.toLowerCase().includes(q)) ||
+               (u.myInviteCode && u.myInviteCode.toLowerCase().includes(q));
+      });
+      renderAdminUsersTable(filtered);
+    };
+
+    window.adminAdjustUserCoins = async function(userId, userName, currentCoins) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const amountStr = prompt(`ইউজার: ${userName}\nবর্তমান ব্যালেন্স: ${currentCoins.toLocaleString()} কয়েন\n\nকয়েন যোগ করতে পজিটিভ সংখ্যা দিন (যেমন: 10000)\nকয়েন কাটতে নেগেটিভ সংখ্যা দিন (যেমন: -5000):`, "10000");
+      if (amountStr === null) return;
+      const delta = parseInt(amountStr, 10);
+      if (isNaN(delta) || delta === 0) {
+        alert("সঠিক সংখ্যা দিন!");
+        return;
+      }
+
+      try {
+        await updateDoc(doc(db, "users", userId), {
+          coins: increment(delta)
+        });
+        alert(`সফলভাবে ${delta > 0 ? '+' : ''}${delta.toLocaleString()} কয়েন আপডেট করা হয়েছে!`);
+      } catch(e) {
+        alert("কয়েন আপডেটে এরর: " + e.message);
+      }
+    };
+
+    // ================= ADMIN TABS SWITCHER =================
+    window.switchAdminTab = function(tab) {
+      const allViews = ['overview', 'proofs', 'add', 'manage', 'withdraw', 'users'];
+      allViews.forEach(v => {
+        document.getElementById(`admin-view-${v}`)?.classList.add('hidden');
+      });
+
+      document.querySelectorAll('.atab-nav-btn').forEach(btn => {
+        btn.className = "atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center justify-between gap-2 transition text-left cursor-pointer";
+      });
+
+      const activeView = document.getElementById(`admin-view-${tab}`);
+      if (activeView) activeView.classList.remove('hidden');
+
+      const activeBtn = document.getElementById(`atab-btn-${tab}`);
+      if (activeBtn) {
+        activeBtn.className = "atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-extrabold flex items-center justify-between gap-2 transition text-left cursor-pointer bg-emerald-50 text-emerald-700 shadow-2xs border border-emerald-200/60";
+      }
+
+      if (tab === 'add') {
+        initPublishInstructionSteps();
+        renderScreenshotLabelInputs('publish');
+      } else if (tab === 'overview') {
+        updateAdminAnalytics();
+      } else if (tab === 'proofs') {
+        loadAdminSubmissions();
+      } else if (tab === 'manage') {
+        renderAdminManageTasksList();
+      } else if (tab === 'withdraw') {
+        loadAdminWithdrawals();
+      }
+    };
+
+    window.copyOnlyCode = function() {
+      const code = userData?.myInviteCode || document.getElementById('my-invite-code')?.innerText || '';
+      if (!code || code === 'TR-----') return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(code).then(() => {
+          alert(`🎉 রেফারেল কোড কপি হয়েছে!\n\nকোড: ${code}\n\nএই কোডটি আপনার বন্ধুদের শেয়ার করুন।`);
+        }).catch(() => {
+          prompt("আপনার রেফারেল কোডটি কপি করুন:", code);
+        });
+      } else {
+        prompt("আপনার রেফারেল কোডটি কপি করুন:", code);
+      }
+    };
+
+    window.copyInviteCode = function() {
+      const code = userData?.myInviteCode || document.getElementById('my-invite-code')?.innerText || '';
+      const refLink = `https://takarewardpro.com/?ref=${code}`;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(refLink).then(() => {
+          alert(`🎉 রেফারেল লিংক কপি হয়েছে!\n\n${refLink}\n\nবন্ধু এই লিংকে ক্লিক করে সাইন-আপ করলে সাথে সাথে সে ৩০,০০০ কয়েন পাবে এবং আপনি ১০,০০০ কয়েন পাবেন!`);
+        }).catch(() => {
+          prompt("আপনার রেফারেল লিংকটি কপি করুন:", refLink);
+        });
+      } else {
+        prompt("আপনার রেফারেল লিংকটি কপি করুন:", refLink);
+      }
+    };
+
+    window.applyInAppInviteCode = async function() {
+      if (!currentUser || !userData) {
+        alert("দয়া করে প্রথমে লগইন করুন!");
+        return;
+      }
+      if (userData.referredBy) {
+        alert("আপনি ইতিমধ্যে একটি রেফারেল কোড ব্যবহার করেছেন!");
+        return;
+      }
+      const inputEl = document.getElementById('input-inapp-invite-code');
+      const btn = document.getElementById('btn-apply-inapp-invite');
+      const rawCode = inputEl?.value || '';
+      const code = extractCleanInviteCode(rawCode);
+      if (!code) {
+        alert("অনুগ্রহ করে একটি সঠিক রেফারেল কোড দিন!");
+        return;
+      }
+      if (code === userData.myInviteCode) {
+        alert("⚠️ আপনি নিজের রেফারেল কোড নিজে ব্যবহার করতে পারবেন না!");
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = "যাচাই হচ্ছে...";
+      }
+
+      try {
+        const q = query(collection(db, "users"), where("myInviteCode", "==", code));
+        const rSnap = await getDocs(q);
+        if (rSnap.empty) {
+          alert("⚠️ এই রেফারেল কোডটি পাওয়া যায়নি! দয়া করে সঠিক কোড দিন।");
+          if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
+          return;
+        }
+
+        const rDoc = rSnap.docs[0];
+        if (rDoc.id === currentUser.uid) {
+          alert("⚠️ আপনি নিজের রেফারেল কোড নিজে ব্যবহার করতে পারবেন না!");
+          if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
+          return;
+        }
+
+        // 1. Give Current User 30,000 Coins & save referral
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          coins: increment(30000),
+          referredBy: code,
+          referredByUid: rDoc.id
+        });
+
+        // 2. Give Referrer 10,000 Coins INSTANTLY & increment referralCount
+        await updateDoc(doc(db, "users", rDoc.id), {
+          coins: increment(10000),
+          referralCount: increment(1)
+        });
+
+        playCoinChime();
+        triggerConfettiBlast();
+        alert("🎉 অভিনন্দন! আপনার একাউন্টে ৩০,০০০ কয়েন যুক্ত হয়েছে এবং আপনার রেফারার ১০,০০০ কয়েন পেয়েছেন!");
+        document.getElementById('card-apply-referral')?.classList.add('hidden');
+      } catch (err) {
+        console.error("Apply in-app invite error:", err);
+        alert("রেফারেল কোড প্রয়োগে সমস্যা হয়েছে: " + (err.code || err.message));
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
+      }
+    };
+
+    // Live Real-Time Referrals Tracker for Current User
+    let unsubMyReferrals = null;
+    let activeReferralListenerCode = null;
+    function listenMyReferrals(uid, myInviteCode) {
+      if (!myInviteCode || myInviteCode === 'TR-----') return;
+      if (activeReferralListenerCode === myInviteCode && unsubMyReferrals) return;
+      if (unsubMyReferrals) unsubMyReferrals();
+      activeReferralListenerCode = myInviteCode;
+
+      const q = query(
+        collection(db, "users"),
+        where("referredBy", "==", myInviteCode)
+      );
+
+      unsubMyReferrals = onSnapshot(q, (snapshot) => {
+        const listContainer = document.getElementById('my-referral-list-container');
+        const countEl = document.getElementById('my-total-ref-count');
+        const coinsEl = document.getElementById('my-total-ref-coins');
+
+        const referrals = [];
+        snapshot.forEach((docSnap) => {
+          referrals.push({ id: docSnap.id, ...docSnap.data() });
+        });
+
+        const totalCount = referrals.length;
+        if (countEl) countEl.innerText = `${totalCount} জন`;
+        if (coinsEl) coinsEl.innerText = (totalCount * 10000).toLocaleString();
+
+        if (!listContainer) return;
+
+        if (totalCount === 0) {
+          listContainer.innerHTML = `
+            <div class="text-center py-6 px-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+              <span class="text-3xl block mb-2">👥</span>
+              <p class="text-xs font-bold text-slate-700">এখনও কোনো সফল রেফারেল নেই</p>
+              <p class="text-[11px] text-slate-400 mt-1">আপনার বন্ধুদের সাথে লিংক শেয়ার করুন এবং প্রতি রেফারে ১০,০০০ কয়েন ও ১ম ক্যাশআউটে ৳১০ বোনাস পান!</p>
+            </div>
+          `;
+          return;
+        }
+
+        // Sort latest first
+        referrals.sort((a, b) => {
+          const tA = a.createdAt?.seconds || 0;
+          const tB = b.createdAt?.seconds || 0;
+          return tB - tA;
+        });
+
+        listContainer.innerHTML = referrals.map((r) => {
+          const name = r.name || 'ইউজার';
+          const avatar = r.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${r.id}`;
+          let dateStr = 'সম্প্রতি';
+          if (r.createdAt && r.createdAt.seconds) {
+            const d = new Date(r.createdAt.seconds * 1000);
+            dateStr = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' });
+          }
+          const isPaid = r.referralBonusAwarded;
+
+          return `
+            <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-2xs flex items-center justify-between gap-3">
+              <div class="flex items-center gap-2.5 min-w-0">
+                <img src="${avatar}" class="w-10 h-10 rounded-full border border-emerald-200 object-cover flex-shrink-0" />
+                <div class="truncate">
+                  <div class="font-bold text-xs text-slate-800 truncate">${name}</div>
+                  <div class="text-[10px] text-slate-400">জয়েন: ${dateStr}</div>
+                </div>
+              </div>
+              <div class="text-right flex-shrink-0">
+                <span class="inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full mb-1">
+                  +১০,০০০ কয়েন ✓
+                </span>
+                <div class="text-[9px] font-bold ${isPaid ? 'text-emerald-600' : 'text-amber-600'}">
+                  ${isPaid ? '🎉 ১ম ক্যাশআউট বোনাস পেইড' : '⏳ ১ম ক্যাশআউট পেন্ডিং'}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }, (err) => {
+        console.warn("My Referrals listen error:", err);
+      });
+    }
+
+    window.toggleAdminModal = function() {
+      const modal = document.getElementById('admin-modal');
+      modal.classList.toggle('hidden');
+      if (!modal.classList.contains('hidden')) {
+        switchAdminTab('proofs');
+        loadAdminSubmissions();
+        loadAdminWithdrawals();
+        updateAdminAnalytics();
+      }
+    };
+
+    window.shareLink = function(p) {
+      const code = userData?.myInviteCode || '';
+      const refUrl = `https://takarewardpro.com/?ref=${code}`;
+      const text = `TakaReward Pro অ্যাপে জয়েন করে সাথে সাথে ৩০,০০০ কয়েন বোনাস নিন! প্রতিদিন সহজ কাজ করে বিকাশ ও নগদে টাকা উত্তোলন করুন। আমার রেফারেল কোড: ${code}`;
+      if (p === 'fb') window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(refUrl)}`);
+      if (p === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(refUrl)}&text=${encodeURIComponent(text)}`);
+    };
+
+    window.switchAppTab = function(tab) {
+      document.getElementById('tab-content-offer')?.classList.add('hidden');
+      document.getElementById('tab-content-myoffers')?.classList.add('hidden');
+      document.getElementById('tab-content-refer')?.classList.add('hidden');
+      document.getElementById('tab-content-cashout')?.classList.add('hidden');
+
+      document.querySelectorAll('nav button').forEach(b => {
+        b.classList.remove('text-emerald-primary', 'font-bold');
+        b.classList.add('text-slate-400', 'font-medium');
+      });
+
+      // Hide floating support button on Refer tab so it does not block the Copy button!
+      const supportBtn = document.getElementById('floating-support-btn');
+      if (tab === 'refer') {
+        supportBtn?.classList.add('hidden');
+      } else {
+        supportBtn?.classList.remove('hidden');
+      }
+
+      if (tab === 'offer') {
+        document.getElementById('tab-content-offer')?.classList.remove('hidden');
+        document.getElementById('nav-btn-offer')?.classList.add('text-emerald-primary', 'font-bold');
+      } else if (tab === 'myoffers') {
+        document.getElementById('tab-content-myoffers')?.classList.remove('hidden');
+        document.getElementById('nav-btn-myoffers')?.classList.add('text-emerald-primary', 'font-bold');
+        if (currentUser) listenUserSubmissions(currentUser.uid);
+      } else if (tab === 'refer') {
+        document.getElementById('tab-content-refer')?.classList.remove('hidden');
+        document.getElementById('nav-btn-refer')?.classList.add('text-emerald-primary', 'font-bold');
+        if (currentUser && userData?.myInviteCode) {
+          listenMyReferrals(currentUser.uid, userData.myInviteCode);
+        }
+      } else if (tab === 'cashout') {
+        document.getElementById('tab-content-cashout')?.classList.remove('hidden');
+        document.getElementById('nav-btn-cashout')?.classList.add('text-emerald-primary', 'font-bold');
+      }
+    };
+  </script>
+
+</body>
+</html<!-- Dynamic Screenshots Upload Container -->
+        <div id="modal-screenshots-container" class="space-y-2 text-xs">
+          <!-- Dynamically populated based on required screenshot count -->
+        </div>
+
+        <!-- Customizable Proof Note Field -->
+        <div class="space-y-1.5 text-xs">
+          <label id="modal-proof-note-label" class="text-xs font-bold text-slate-700 block">আপনার ব্যবহৃত ইমেইল বা নম্বর (প্রুফ নোট) :</label>
+          <input id="proof-notes" type="text" placeholder="যেমন: demo@gmail.com বা 017..." class="w-full border rounded-xl p-2.5 text-xs outline-none focus:border-emerald-500 font-medium" />
+        </div>
+
+        <button onclick="submitTaskProof()" id="btn-submit-proof" class="w-full emerald-primary text-white font-black py-3 rounded-xl text-xs uppercase tracking-wider shadow cursor-pointer">
+          প্রুফ জমা দিন (Submit Proof)
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= 8. IN-APP SCREENSHOT VIEWER MODAL ================= -->
+    <div id="image-viewer-modal" class="fixed inset-0 bg-black/95 z-[9999] flex flex-col items-center justify-center p-3 sm:p-5 hidden backdrop-blur-md transition-all duration-200">
+      <div class="w-full max-w-sm flex justify-between items-center text-white mb-2">
+        <span class="text-xs font-bold">স্ক্রিনশট প্রুফ প্রিভিউ</span>
+        <button onclick="closeImageViewer()" class="text-white text-2xl font-bold bg-white/20 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer">✕</button>
+      </div>
+      <div class="w-full max-w-sm max-h-[75vh] overflow-auto bg-black rounded-2xl border border-white/20 flex items-center justify-center">
+        <img id="enlarged-screenshot" src="" alt="Proof Screenshot" class="max-w-full h-auto object-contain rounded-xl" />
+      </div>
+    </div>
+
+    <!-- ================= 9. ADMIN USER INSPECTION MODAL ================= -->
+    <div id="admin-user-inspect-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+      <div class="bg-white rounded-3xl w-full max-w-md p-5 space-y-3.5 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
+            <span>🔎</span> ইউজার প্রোফাইল ও টাস্ক অডিট
+          </h3>
+          <button onclick="closeUserInspectModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold cursor-pointer">✕</button>
+        </div>
+
+        <div id="inspect-user-summary" class="bg-slate-50 border border-slate-200 p-3 rounded-2xl text-xs space-y-1">
+          লোড হচ্ছে...
+        </div>
+
+        <div class="flex-1 overflow-y-auto space-y-2 pr-1 hide-scrollbar">
+          <h4 class="font-extrabold text-xs text-slate-700 uppercase">ইউজারের সাবমিট করা কাজের তালিকা:</h4>
+          <div id="inspect-submissions-list" class="space-y-2 text-xs"></div>
+        </div>
+
+        <button onclick="closeUserInspectModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-xs cursor-pointer">
+          বন্ধ করুন
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= 10. PRO TABBED ADMIN MODAL ================= -->
+        <!-- ================= ADMIN ALL USERS LIST MODAL ================= -->
+    <div id="admin-all-users-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+      <div class="bg-white rounded-3xl w-full max-w-md p-5 space-y-3 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b pb-2.5">
+          <div>
+            <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
+              <span>👥</span> সকল রেজিস্টার্ড ইউজার তালিকা
+            </h3>
+            <span id="admin-total-users-badge" class="text-[10px] text-blue-600 font-bold">মোট ইউজার: ০ জন</span>
+          </div>
+          <button onclick="closeAdminAllUsersModal()" class="text-slate-400 hover:text-slate-800 text-xl font-bold cursor-pointer">✕</button>
+        </div>
+
+        <!-- Users List with Live Balance & Details -->
+        <div id="admin-all-users-list" class="flex-1 overflow-y-auto space-y-2 pr-1 hide-scrollbar">
+          <p class="text-slate-400 text-center py-6 text-xs">ইউজার লিস্ট লোড হচ্ছে...</p>
+        </div>
+
+        <button onclick="closeAdminAllUsersModal()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer">
+          বন্ধ করুন
+        </button>
+      </div>
+    </div>
+
+        <!-- ================= ADMIN TASK EDIT MODAL ================= -->
+    <div id="admin-edit-task-modal" class="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 hidden backdrop-blur-sm">
+      <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
+            <span>✏️</span> টাস্ক তথ্য এডিট করুন
+          </h3>
+          <button onclick="adminCloseEditTaskModal()" class="text-slate-400 hover:text-slate-800 text-xl font-bold cursor-pointer">✕</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto space-y-2.5 text-xs hide-scrollbar pr-1">
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block">কাজের নাম:</label>
+            <input id="edit-task-title" type="text" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 font-bold" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 block">ক্যাটাগরি:</label>
+              <input id="edit-task-cat" type="text" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 block">রিওয়ার্ড টাকা (৳):</label>
+              <input id="edit-task-taka" type="number" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none font-bold" />
+            </div>
+          </div>
+
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block">CPA অফার লিংক:</label>
+            <input id="edit-task-link" type="url" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+          </div>
+
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block">সহজ নির্দেশনা:</label>
+            <input id="edit-task-desc" type="text" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+          </div>
+
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block">টিউটোরিয়াল ভিডিও লিংক (ঐচ্ছিক):</label>
+            <input id="edit-task-video" type="url" placeholder="https://youtube.com/watch?v=..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+          </div>
+
+          <div class="border-t pt-2">
+            <label class="text-[11px] font-bold text-slate-700 block">নতুন আইকন বা ছবি (পরিবর্তন করতে চাইলে):</label>
+            <input id="edit-task-image-file" type="file" accept="image/*" class="w-full border rounded-xl p-2 text-xs file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 mt-1" />
+          </div>
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button onclick="adminSaveEditedTask()" id="btn-save-edited-task" class="flex-1 emerald-primary text-white font-black py-2.5 rounded-xl text-xs uppercase tracking-wider shadow cursor-pointer">
+            আপডেট সংরক্ষণ করুন
+          </button>
+          <button onclick="adminCloseEditTaskModal()" class="bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer">
+            বাতিল
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ENTERPRISE PRO MASTER ADMIN DASHBOARD (DUAL PC & MOBILE MODE) ================= -->
+    <div id="admin-modal" class="fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-2 sm:p-4 hidden backdrop-blur-md transition-all duration-300">
+      <div id="admin-dashboard-container" class="bg-white rounded-3xl w-full max-w-6xl max-h-[96vh] h-[96vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden transition-all duration-300">
+        
+        <!-- Top Executive Navbar -->
+        <header class="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between shrink-0 border-b border-slate-800">
+          <div class="flex items-center gap-3">
+            <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro Logo" class="w-9 h-9 rounded-2xl object-cover border border-emerald-400/50 shadow-sm shrink-0" />
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-black text-sm sm:text-base tracking-tight text-white flex items-center gap-1.5">
+                  TakaReward Pro <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-extrabold px-2 py-0.5 rounded-full border border-emerald-500/30">MASTER ADMIN</span>
+                </h3>
+              </div>
+              <p class="text-[11px] text-slate-400 hidden sm:block">Enterprise Management & Realtime Traffic Hub</p>
+            </div>
+          </div>
+
+          <!-- Mode Toggles & Close -->
+          <div class="flex items-center gap-2">
+            <!-- View Mode Switcher: Desktop Wide vs Mobile View -->
+            <button type="button" onclick="toggleAdminViewMode()" id="btn-admin-view-mode" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer shadow-xs" title="ডেস্কটপ এবং মোবাইল ভিউ পরিবর্তন করুন">
+              <img id="admin-mode-icon" src="https://i.ibb.co.com/fzMfXHVd/Mobile-View.jpg" class="w-4 h-4 object-contain rounded shrink-0" alt="Mobile View" />
+              <span id="admin-mode-text" class="hidden sm:inline">মোবাইল ভিউ</span>
+            </button>
+            <button type="button" onclick="toggleAdminModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-red-500/20 hover:text-red-400 text-slate-400 flex items-center justify-center font-bold text-base transition cursor-pointer" title="ড্যাশবোর্ড বন্ধ করুন">
+              ✕
+            </button>
+          </div>
+        </header>
+
+        <!-- Main Workspace (Desktop Split View: Left Sidebar + Right Content) -->
+        <div class="flex-1 flex flex-col md:flex-row overflow-hidden bg-slate-100/60">
+          
+          <!-- LEFT SIDEBAR NAVIGATION (Desktop) / Horizontal Tabs (Mobile) -->
+          <aside class="w-full md:w-64 bg-white border-r border-slate-200 flex md:flex-col justify-between shrink-0 overflow-x-auto md:overflow-y-auto p-2 md:p-3 shadow-xs">
+            <nav class="flex md:flex-col gap-1.5 w-full">
+              <!-- Tab 1: Overview & Graphs -->
+              <button type="button" onclick="switchAdminTab('overview')" id="atab-btn-overview" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-extrabold flex items-center gap-2.5 transition text-left cursor-pointer bg-emerald-50 text-emerald-700 shadow-2xs border border-emerald-200/60">
+                <img src="https://i.ibb.co.com/VczkPQZW/Whats-App-Image-2026-09-25-at-2-32-02-AM.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="Overview" />
+                <span class="truncate">ওভারভিউ ও গ্রাফ</span>
+              </button>
+
+              <!-- Tab 2: Proof Verification -->
+              <button type="button" onclick="switchAdminTab('proofs')" id="atab-btn-proofs" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center justify-between gap-2 transition text-left cursor-pointer">
+                <div class="flex items-center gap-2.5 truncate">
+                  <img src="https://i.ibb.co.com/jv85XLJr/Pending-Proof.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="Pending Proof" />
+                  <span class="truncate">পেন্ডিং প্রুফ</span>
+                </div>
+                <span id="pending-proofs-count" class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">0</span>
+              </button>
+
+              <!-- Tab 3: Add New Task -->
+              <button type="button" onclick="switchAdminTab('add')" id="atab-btn-add" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center gap-2.5 transition text-left cursor-pointer">
+                <img src="https://i.ibb.co.com/MHvfRnH/New-Task.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="New Task" />
+                <span class="truncate">নতুন টাস্ক</span>
+              </button>
+
+              <!-- Tab 4: Manage Tasks -->
+              <button type="button" onclick="switchAdminTab('manage')" id="atab-btn-manage" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center gap-2.5 transition text-left cursor-pointer">
+                <img src="https://i.ibb.co.com/G3PfCNcK/Task-Manager.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="Task Manager" />
+                <span class="truncate">টাস্ক ম্যানেজার</span>
+              </button>
+
+              <!-- Tab 5: Withdrawals -->
+              <button type="button" onclick="switchAdminTab('withdraw')" id="atab-btn-withdraw" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center justify-between gap-2 transition text-left cursor-pointer">
+                <div class="flex items-center gap-2.5 truncate">
+                  <img src="https://i.ibb.co.com/Txwq04pQ/Cashout.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="Cashout" />
+                  <span class="truncate">ক্যাশআউট</span>
+                </div>
+                <span id="pending-withdraw-count" class="bg-emerald-600 text-white text-[10px] font-black px-2 py-0.5 rounded-full">0</span>
+              </button>
+
+              <!-- Tab 6: User Management -->
+              <button type="button" onclick="switchAdminTab('users')" id="atab-btn-users" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center gap-2.5 transition text-left cursor-pointer">
+                <img src="https://i.ibb.co.com/4Z7msF2R/User-Database.jpg" class="w-5 h-5 rounded-lg object-contain shrink-0 shadow-2xs" alt="User Database" />
+                <span class="truncate">ইউজার ডাটাবেজ</span>
+              </button>
+            </nav>
+
+            <!-- Bottom Mini Admin Card -->
+            <div class="hidden md:flex items-center gap-2.5 pt-3 border-t border-slate-200 mt-2">
+              <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" class="w-8 h-8 rounded-full border border-emerald-400 object-cover shadow-2xs" />
+              <div class="truncate">
+                <strong class="text-xs font-black text-slate-900 block truncate">MD Maruf Khan</strong>
+                <span class="text-[10px] text-emerald-600 font-bold block">Super Admin</span>
+              </div>
+            </div>
+          </aside>
+
+          <!-- RIGHT CONTENT WORKSPACE -->
+          <main class="flex-1 overflow-y-auto p-3 sm:p-5 space-y-4">
+
+            <!-- TAB 1: OVERVIEW & INTERACTIVE ANALYTICS GRAPHS -->
+            <div id="admin-view-overview" class="space-y-4">
+              
+              <!-- 4 Top KPI Cards -->
+              <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0 p-1 shadow-2xs"><img src="https://i.ibb.co.com/6RS7yh8R/Total-Users.jpg" class="w-full h-full object-contain rounded-xl" alt="Total Users" /></div>
+                  <div>
+                    <span class="text-[10px] font-bold text-slate-400 block uppercase">মোট ইউজার</span>
+                    <strong id="admin-stat-users" class="text-base font-black text-slate-900">0</strong>
+                  </div>
+                </div>
+
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center shrink-0 p-1 shadow-2xs"><img src="https://i.ibb.co.com/FkL0LP8P/Today-s-Active-Users.jpg" class="w-full h-full object-contain rounded-xl" alt="Active Users" /></div>
+                  <div>
+                    <span class="text-[10px] font-bold text-slate-400 block uppercase">আজকের অ্যাক্টিভ ইউজার</span>
+                    <strong id="admin-stat-active-today" class="text-base font-black text-emerald-600">0 জন</strong>
+                  </div>
+                </div>
+
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-teal-50 border border-teal-200 flex items-center justify-center shrink-0 p-1 shadow-2xs"><img src="https://i.ibb.co.com/1YwXDYrp/Total-Paid-Out.jpg" class="w-full h-full object-contain rounded-xl" alt="Total Paid" /></div>
+                  <div>
+                    <span class="text-[10px] font-bold text-slate-400 block uppercase">মোট পেইড আউট</span>
+                    <strong id="admin-stat-paid" class="text-base font-black text-teal-700">৳0</strong>
+                  </div>
+                </div>
+
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center shrink-0 p-1 shadow-2xs"><img src="https://i.ibb.co.com/RTG1Ywxq/Pending-Cashout.jpg" class="w-full h-full object-contain rounded-xl" alt="Pending Cashout" /></div>
+                  <div>
+                    <span class="text-[10px] font-bold text-slate-400 block uppercase">পেন্ডিং ক্যাশআউট</span>
+                    <strong id="admin-stat-pending" class="text-base font-black text-amber-700">৳0</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- GRAPH 1: 7-DAY SUBMISSIONS TREND CHART -->
+              <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <h4 class="font-black text-sm text-slate-900 flex items-center gap-2.5">
+                      <div class="w-6 h-6 rounded-lg border border-red-300 bg-red-50/80 flex items-center justify-center p-0.5 shadow-2xs shrink-0">
+                        <svg viewBox="0 0 24 24" fill="none" class="w-full h-full text-red-500 stroke-current" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                          <rect x="2" y="3" width="20" height="18" rx="3" stroke="#fca5a5" fill="none"/>
+                          <path d="M6 16l4-5 4 3 4-6" />
+                          <circle cx="18" cy="8" r="1.5" fill="#ef4444" stroke="none" />
+                        </svg>
+                      </div>
+                      <span>গত ৭ দিনের টাস্ক সাবমিশন ট্রেন্ড</span>
+                    </h4>
+                    <p class="text-[11px] text-slate-400 mt-0.5">কোন দিন কতজন ইউজার কাজ জমা দিয়েছে তার লাইভ পরিসংখ্যান</p>
+                  </div>
+                  <span class="text-[11px] bg-slate-100 text-slate-600 font-extrabold px-2.5 py-1 rounded-full border border-slate-200">
+                    রিয়েল-টাইম
+                  </span>
+                </div>
+
+                <!-- Interactive SVG / Bar Chart Container -->
+                <div id="chart-7day-submissions" class="pt-4 pb-2">
+                  <div class="flex items-end justify-between gap-2 h-44 border-b border-slate-200 px-2">
+                    <!-- Bars injected dynamically via JS -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2 Column Breakdown: Today's Stats & Task Performance Leaderboard -->
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                
+                <!-- Box A: Today's Live Stats -->
+                <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs space-y-3">
+                  <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+                    <span>🔥</span> আজকের লাইভ পারফরম্যান্স
+                  </h4>
+                  <div class="grid grid-cols-2 gap-2 text-center text-xs">
+                    <div class="bg-slate-50 border border-slate-200 p-3 rounded-2xl">
+                      <span class="text-[10px] text-slate-400 font-bold block uppercase">আজকের মোট কাজ জমা</span>
+                      <strong id="today-total-subs" class="text-base font-black text-slate-800">0</strong>
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl">
+                      <span class="text-[10px] text-emerald-600 font-bold block uppercase">আজকে অনুমোদিত (Approved)</span>
+                      <strong id="today-approved-subs" class="text-base font-black text-emerald-700">0</strong>
+                    </div>
+                    <div class="bg-red-50 border border-red-200 p-3 rounded-2xl">
+                      <span class="text-[10px] text-red-500 font-bold block uppercase">আজকে বাতিল (Rejected)</span>
+                      <strong id="today-rejected-subs" class="text-base font-black text-red-700">0</strong>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-2xl">
+                      <span class="text-[10px] text-amber-600 font-bold block uppercase">আজকের বিতরণকৃত রিওয়ার্ড</span>
+                      <strong id="today-rewards-distributed" class="text-base font-black text-amber-800">৳0</strong>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Box B: Submissions by Task -->
+                <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs space-y-3">
+                  <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+                    <span>🎯</span> কোন টাস্কে কতজন কাজ করেছে
+                  </h4>
+                  <div id="overview-task-breakdown-list" class="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                    <p class="text-xs text-slate-400 text-center py-6">টাস্ক ডাটা লোড হচ্ছে...</p>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- TAB 2: PENDING PROOFS (With 1-Click Approve, Reject & UID Copy) -->
+            <div id="admin-view-proofs" class="space-y-3 hidden">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+                    <img src="https://i.ibb.co.com/jv85XLJr/Pending-Proof.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="Pending Proof" /> পেন্ডিং প্রুফ ভেরিফিকেশন
+                  </h4>
+                  <p class="text-[11px] text-slate-400">ইউজারদের জমা দেওয়া স্ক্রিনশট ও জিমেইল দেখে কয়েন অনুমোদন করুন</p>
+                </div>
+              </div>
+              <div id="admin-submissions-list" class="space-y-2.5 text-xs"></div>
+            </div>
+
+            <!-- TAB 3: ADD NEW TASK (With Worker Limit & Pin Option) -->
+            <div id="admin-view-add" class="bg-white border border-slate-200 rounded-3xl p-5 space-y-3.5 hidden shadow-xs">
+              <div class="border-b pb-2">
+                <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+                  <img src="https://i.ibb.co.com/MHvfRnH/New-Task.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="New Task" /> নতুন CPA টাস্ক তৈরি করুন
+                </h4>
+                <p class="text-[11px] text-slate-400">নতুন অফার তৈরি করে বাজেট ও ইউজার লিমিট নির্ধারণ করুন</p>
+              </div>
+
+              <div>
+                <label class="text-[11px] font-bold text-slate-700">কাজের নাম (Title):</label>
+                <input id="admin-title" type="text" placeholder="যেমন: Asian Games সার্ভে ও সাইন-আপ" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white transition" />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[11px] font-bold text-slate-700">ক্যাটাগরি:</label>
+                  <input id="admin-cat" type="text" placeholder="Sign In / App / Special" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
+                </div>
+                <div>
+                  <label class="text-[11px] font-bold text-slate-700">ইউজার রিওয়ার্ড টাকা (৳):</label>
+                  <input id="admin-taka" type="number" placeholder="যেমন: 20" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
+                </div>
+              </div>
+
+              <div>
+                <label class="text-[11px] font-bold text-slate-700">CPA অফার লিংক:</label>
+                <input id="admin-link" type="url" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
+                    <span>📝</span> কাজের সহজ নির্দেশনা (ধাপে ধাপে):
+                  </label>
+                  <button type="button" onclick="adminAddInstructionStep('publish')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 px-2.5 py-1 rounded-xl text-[11px] font-black transition flex items-center gap-1 cursor-pointer shadow-2xs">
+                    <span>➕</span> আরও স্টেপ যোগ করুন
+                  </button>
+                </div>
+                <div id="admin-instructions-list" class="space-y-2">
+                  <!-- Dynamic Step Rows Injected Here -->
+                </div>
+              </div>
+
+              <!-- 3. SCREENSHOT COUNT & INSTRUCTIONS CONFIG (NEW) -->
+              <div class="bg-indigo-50/70 border border-indigo-200 p-3.5 rounded-2xl space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-black text-indigo-950 flex items-center gap-1.5">
+                    <span>📸</span> প্রয়োজনীয় স্ক্রিনশটের সংখ্যা:
+                  </label>
+                  <select id="admin-screenshot-count" onchange="renderScreenshotLabelInputs('publish')" class="bg-white border border-indigo-300 rounded-xl px-2.5 py-1 text-xs font-bold text-indigo-900 outline-none cursor-pointer">
+                    <option value="1">১টি স্ক্রিনশট</option>
+                    <option value="2">২টি স্ক্রিনশট</option>
+                    <option value="3">৩টি স্ক্রিনশট</option>
+                  </select>
+                </div>
+                <div id="admin-screenshot-labels-container" class="space-y-1.5">
+                  <!-- Dynamic screenshot label inputs -->
+                </div>
+              </div>
+
+              <!-- 4. CUSTOM PROOF NOTE FIELD CONFIG (NEW) -->
+              <div class="bg-amber-50/70 border border-amber-200 p-3.5 rounded-2xl space-y-2">
+                <label class="text-xs font-black text-amber-950 flex items-center gap-1.5">
+                  <span>✍️</span> প্রুফ নোট ফিল্ড কাস্টমাইজেশন:
+                </label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div>
+                    <label class="text-[10px] font-bold text-amber-800">ফিল্ডের শিরোনাম (Label):</label>
+                    <input id="admin-proof-note-label" type="text" placeholder="ডিফল্ট: আপনার ব্যবহৃত ইমেইল বা নম্বর (প্রুফ নোট)" class="w-full bg-white border border-amber-300 rounded-xl p-2 text-xs outline-none font-medium mt-0.5" />
+                  </div>
+                  <div>
+                    <label class="text-[10px] font-bold text-amber-800">প্লেসহোল্ডার টেক্সট (Placeholder):</label>
+                    <input id="admin-proof-note-placeholder" type="text" placeholder="ডিফল্ট: যেমন: demo@gmail.com বা 017..." class="w-full bg-white border border-amber-300 rounded-xl p-2 text-xs outline-none font-medium mt-0.5" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="text-[11px] font-bold text-slate-700">টিউটোরিয়াল ভিডিও লিংক (ঐচ্ছিক):</label>
+                  <input id="admin-video-link" type="url" placeholder="https://youtube.com/watch?v=..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs mt-1 outline-none" />
+                </div>
+                <div>
+                  <label class="text-[11px] font-bold text-slate-700">টাস্কের ছবি/লোগো (ঐচ্ছিক):</label>
+                  <input id="admin-task-image-file" type="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-1.5 text-xs mt-1 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700" />
+                </div>
+              </div>
+
+              <!-- WORKER LIMIT SECTION (NEW FEATURE!) -->
+              <div class="bg-sky-50/70 border border-sky-200 p-3.5 rounded-2xl space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-black text-sky-950 flex items-center gap-1.5">
+                    <span>🎯</span> কাজের ইউজার লিমিট (Worker Limit):
+                  </label>
+                  <label class="flex items-center gap-1.5 text-xs font-bold text-sky-800 cursor-pointer">
+                    <input id="admin-unlimited-workers" type="checkbox" onchange="toggleLimitInput('admin')" class="w-4 h-4 rounded text-sky-600 accent-sky-600 cursor-pointer" />
+                    <span>আনলিমিটেড ইউজার</span>
+                  </label>
+                </div>
+                <div id="admin-limit-input-container">
+                  <input id="admin-worker-limit" type="number" placeholder="কতজন ইউজার এই কাজ করতে পারবে? (যেমন: 50)" class="w-full bg-white border border-sky-300 rounded-xl p-2.5 text-xs outline-none focus:border-sky-500 font-bold" />
+                  <p class="text-[10px] text-sky-700 mt-1">লিমিট পূর্ণ হয়ে গেলে কাজটি স্বয়ংক্রিয়ভাবে বন্ধ হয়ে যাবে।</p>
+                </div>
+              </div>
+
+              <!-- PIN TASK SECTION -->
+              <div class="flex items-center gap-2.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 p-3 rounded-2xl">
+                <input id="admin-pin-task" type="checkbox" class="w-4 h-4 text-amber-600 rounded cursor-pointer accent-amber-600" />
+                <label for="admin-pin-task" class="text-xs font-black text-amber-900 cursor-pointer flex items-center gap-1.5">
+                  <span>📌</span> এই টাস্কটি সবার ওপরে পিন করে রাখুন (Featured / Top Priority)
+                </label>
+              </div>
+
+              <button onclick="adminPublishTask()" id="admin-publish-btn" class="w-full emerald-primary hover:bg-emerald-600 text-white font-extrabold py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-md cursor-pointer transition">
+                টাস্ক পাবলিশ করুন 🚀
+              </button>
+            </div>
+
+            <!-- TAB 4: MANAGE TASKS (Detailed Stats per Task & 1-Click Controls) -->
+            <div id="admin-view-manage" class="space-y-3 hidden">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+                    <img src="https://i.ibb.co.com/G3PfCNcK/Task-Manager.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="Task Manager" /> অ্যাক্টিভ টাস্ক ম্যানেজার
+                  </h4>
+                  <p class="text-[11px] text-slate-400">প্রতিটি কাজের অনুমোদন, রিজেক্ট ও লিমিট হিসেব দেখুন</p>
+                </div>
+              </div>
+              <div id="admin-task-list" class="space-y-3 text-xs"></div>
+            </div>
+
+            <!-- TAB 5: WITHDRAWAL REQUESTS -->
+            <div id="admin-view-withdraw" class="space-y-3 hidden">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+                    <img src="https://i.ibb.co.com/Txwq04pQ/Cashout.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="Cashout" /> ক্যাশআউট রিকোয়েস্ট
+                  </h4>
+                  <p class="text-[11px] text-slate-400">বিকাশ ও নগদ পেমেন্ট সম্পন্ন করে অনুমোদন করুন</p>
+                </div>
+              </div>
+              <div id="admin-withdraw-list" class="space-y-2.5 text-xs"></div>
+            </div>
+
+            <!-- TAB 6: USER MANAGEMENT & DATABASE SEARCH -->
+            <div id="admin-view-users" class="space-y-3 hidden">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+                    <img src="https://i.ibb.co.com/4Z7msF2R/User-Database.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="User Database" /> ইউজার ডাটাবেজ ও ওয়ালেট
+                  </h4>
+                  <p class="text-[11px] text-slate-400">সকল ইউজারের ব্যালেন্স, রেফারেল এবং কাজের হিসাব</p>
+                </div>
+                <!-- Live Search Bar -->
+                <div class="w-full sm:w-64">
+                  <input id="admin-user-search-input" oninput="filterAdminUsers()" type="text" placeholder="🔍 নাম, ইমেইল বা UID দিয়ে খুঁজুন..." class="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold outline-none focus:border-emerald-500 shadow-2xs" />
+                </div>
+              </div>
+
+              <!-- Users Table Container -->
+              <div class="bg-white border border-slate-200 rounded-3xl overflow-hidden shadow-xs">
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-extrabold text-[11px] uppercase">
+                      <tr>
+                        <th class="p-3">ইউজার</th>
+                        <th class="p-3">UID</th>
+                        <th class="p-3">কয়েন ব্যালেন্স</th>
+                        <th class="p-3">টাকা (৳)</th>
+                        <th class="p-3">রেফারেল</th>
+                        <th class="p-3">সম্পন্ন কাজ</th>
+                        <th class="p-3 text-right">অ্যাকশন</th>
+                      </tr>
+                    </thead>
+                    <tbody id="admin-users-table-body" class="divide-y divide-slate-100 font-medium">
+                      <tr><td colspan="7" class="text-center py-6 text-slate-400">ইউজার ডাটা লোড হচ্ছে...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+          </main>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ADMIN EDIT TASK MODAL (With Limit & Pin) -->
+    <div id="admin-edit-task-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-3 hidden backdrop-blur-sm">
+      <div class="bg-white rounded-3xl w-full max-w-md p-5 max-h-[92vh] flex flex-col justify-between shadow-2xl text-slate-900 space-y-3">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+            <span>✏️</span> টাস্ক এডিট করুন
+          </h4>
+          <button onclick="adminCloseEditTaskModal()" class="text-slate-400 hover:text-slate-700 text-lg font-bold">✕</button>
+        </div>
+        <div class="space-y-2.5 text-xs overflow-y-auto pr-1">
+          <div>
+            <label class="font-bold text-slate-700">কাজের নাম:</label>
+            <input id="edit-task-title" type="text" class="w-full border rounded-xl p-2 mt-1 outline-none" />
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="font-bold text-slate-700">ক্যাটাগরি:</label>
+              <input id="edit-task-cat" type="text" class="w-full border rounded-xl p-2 mt-1 outline-none" />
+            </div>
+            <div>
+              <label class="font-bold text-slate-700">টাকা (৳):</label>
+              <input id="edit-task-taka" type="number" class="w-full border rounded-xl p-2 mt-1 outline-none" />
+            </div>
+          </div>
+          <div>
+            <label class="font-bold text-slate-700">অফার লিংক:</label>
+            <input id="edit-task-link" type="url" class="w-full border rounded-xl p-2 mt-1 outline-none" />
+          </div>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="font-bold text-slate-700 flex items-center gap-1.5 text-xs">
+                <span>📝</span> কাজের সহজ নির্দেশনা (ধাপে ধাপে):
+              </label>
+              <button type="button" onclick="adminAddInstructionStep('edit')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded-lg text-[10px] font-black transition flex items-center gap-1 cursor-pointer shadow-2xs">
+                <span>➕</span> স্টেপ যোগ করুন
+              </button>
+            </div>
+            <div id="edit-instructions-list" class="space-y-2 max-h-40 overflow-y-auto pr-1">
+              <!-- Dynamic Step Rows for Edit Modal -->
+            </div>
+          </div>
+
+          <!-- 3. EDIT SCREENSHOT COUNT CONFIG -->
+          <div class="bg-indigo-50/70 border border-indigo-200 p-2.5 rounded-xl space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-[11px] font-black text-indigo-950 flex items-center gap-1">
+                <span>📸</span> প্রয়োজনীয় স্ক্রিনশট:
+              </label>
+              <select id="edit-screenshot-count" onchange="renderScreenshotLabelInputs('edit')" class="bg-white border border-indigo-300 rounded-lg px-2 py-0.5 text-xs font-bold text-indigo-900 outline-none">
+                <option value="1">১টি স্ক্রিনশট</option>
+                <option value="2">২টি স্ক্রিনশট</option>
+                <option value="3">৩টি স্ক্রিনশট</option>
+              </select>
+            </div>
+            <div id="edit-screenshot-labels-container" class="space-y-1.5">
+              <!-- Dynamic screenshot labels for edit -->
+            </div>
+          </div>
+
+          <!-- 4. EDIT CUSTOM PROOF NOTE CONFIG -->
+          <div class="bg-amber-50/70 border border-amber-200 p-2.5 rounded-xl space-y-1.5">
+            <label class="text-[11px] font-black text-amber-950 flex items-center gap-1">
+              <span>✍️</span> প্রুফ নোট কাস্টমাইজেশন:
+            </label>
+            <div>
+              <label class="text-[10px] font-bold text-amber-800">শিরোনাম (Label):</label>
+              <input id="edit-proof-note-label" type="text" placeholder="যেমন: আপনার ট্রেডার আইডি দিন" class="w-full bg-white border border-amber-300 rounded-lg p-1.5 text-xs outline-none font-medium mt-0.5" />
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-amber-800">প্লেসহোল্ডার:</label>
+              <input id="edit-proof-note-placeholder" type="text" placeholder="যেমন: ID: 1234567" class="w-full bg-white border border-amber-300 rounded-lg p-1.5 text-xs outline-none font-medium mt-0.5" />
+            </div>
+          </div>
+          <div>
+            <label class="font-bold text-slate-700">টিউটোরিয়াল ভিডিও লিংক:</label>
+            <input id="edit-task-video" type="url" class="w-full border rounded-xl p-2 mt-1 outline-none" />
+          </div>
+          <div>
+            <label class="font-bold text-slate-700">নতুন ছবি/লোগো (ঐচ্ছিক):</label>
+            <input id="edit-task-image-file" type="file" accept="image/*" class="w-full border rounded-xl p-1.5 mt-1 text-[11px]" />
+          </div>
+
+          <!-- Edit Limit -->
+          <div class="bg-sky-50 border border-sky-200 p-2.5 rounded-xl space-y-1.5">
+            <div class="flex items-center justify-between">
+              <label class="text-[11px] font-black text-sky-950">ইউজার লিমিট:</label>
+              <label class="flex items-center gap-1 text-[11px] font-bold text-sky-800">
+                <input id="edit-unlimited-workers" type="checkbox" onchange="toggleLimitInput('edit')" class="w-3.5 h-3.5 accent-sky-600" />
+                <span>আনলিমিটেড</span>
+              </label>
+            </div>
+            <input id="edit-task-limit" type="number" placeholder="লিমিট সংখ্যা (যেমন: 50)" class="w-full bg-white border border-sky-300 rounded-xl p-2 text-xs font-bold" />
+          </div>
+
+          <!-- Edit Pin -->
+          <div class="flex items-center gap-2 bg-amber-50 border border-amber-200 p-2.5 rounded-xl">
+            <input id="edit-task-pin" type="checkbox" class="w-4 h-4 text-amber-600 rounded cursor-pointer accent-amber-600" />
+            <label for="edit-task-pin" class="text-xs font-black text-amber-900 cursor-pointer">
+              📌 এই টাস্কটি সবার ওপরে পিন করে রাখুন
+            </label>
+          </div>
+        </div>
+        <div class="flex gap-2 pt-2 border-t">
+          <button onclick="adminCloseEditTaskModal()" class="flex-1 bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-bold cursor-pointer">বাতিল</button>
+          <button onclick="adminSaveEditedTask()" id="btn-save-edited-task" class="flex-1 emerald-primary text-white py-2.5 rounded-xl text-xs font-bold shadow-xs cursor-pointer">সংরক্ষণ করুন</button>
+        </div>
+      </div>
+    </div>
+
+  <!-- ================= FIREBASE BACKEND ENGINE ================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getAuth, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, where, getDocs, deleteDoc, serverTimestamp, increment, orderBy, limit, arrayUnion } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA8c2BN56WPt_-SITD5fcWXj_aVFBzVgD0",
+      authDomain: "takareward-bd.firebaseapp.com",
+      projectId: "takareward-bd",
+      storageBucket: "takareward-bd.firebasestorage.app",
+      messagingSenderId: "758114778553",
+      appId: "1:758114778553:web:b74a86ad3706adce834a68"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    const MASTER_ADMIN_EMAIL = "marufbro360x@gmail.com";
+
+    const BKASH_LOGO = "https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg";
+    const NAGAD_LOGO = "https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg";
+
+    
+    // Robust Referral Code Extractor
+    function extractCleanInviteCode(val) {
+      if (!val) return '';
+      val = val.trim();
+      if (val.includes('ref=')) {
+        val = val.split('ref=')[1].split('&')[0];
+      } else if (val.includes('invite=')) {
+        val = val.split('invite=')[1].split('&')[0];
+      }
+      val = val.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+      if (/^\d{5}$/.test(val)) {
+        val = 'TR' + val;
+      }
+      return val;
+    }
+
+    // URL Parameter Referral Code Auto-Fill & Badge Display
+    (function checkUrlReferralParam() {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ref = urlParams.get('ref') || urlParams.get('invite');
+        const cleanRef = extractCleanInviteCode(ref);
+        if (cleanRef) {
+          localStorage.setItem('tr_pending_invite', cleanRef);
+          sessionStorage.setItem('tr_pending_invite', cleanRef);
+
+          const applyToInput = () => {
+            const input = document.getElementById('input-invite-code');
+            const badge = document.getElementById('invite-code-badge');
+            if (input) input.value = cleanRef;
+            if (badge) {
+              badge.classList.remove('hidden');
+              badge.innerText = `✓ রেফারেল কোড যুক্ত হয়েছে: ${cleanRef} (৩০,০০০ কয়েন পাবেন)`;
+            }
+          };
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applyToInput);
+          } else {
+            applyToInput();
+          }
+        }
+      } catch (e) {
+        console.warn("URL referral param notice:", e);
+      }
+    })();
+
+    let currentUser = null;
+    let userData = null;
+    let selectedMethod = 'Nagad';
+    let selectedTaka = 105;
+    let selectedCoins = 1050000;
+    let activeModalTask = null;
+    let userSubmissions = {};
+    let isSubmissionsLoaded = false;
+    try {
+      const cachedSub = localStorage.getItem('tr_cached_user_submissions');
+      if (cachedSub) {
+        userSubmissions = JSON.parse(cachedSub);
+        isSubmissionsLoaded = true;
+      }
+    } catch(e) {}
+
+    // Instant Restore Cached Balance on load so balance never flashes 0
+    (function restoreCachedBalance() {
+      try {
+        const cCoins = localStorage.getItem('tr_cached_coins');
+        const cTaka = localStorage.getItem('tr_cached_taka');
+        if (cCoins && document.getElementById('app-coins')) {
+          document.getElementById('app-coins').innerText = Number(cCoins).toLocaleString();
+        }
+        if (cTaka && document.getElementById('app-taka')) {
+          document.getElementById('app-taka').innerText = cTaka;
+        }
+      } catch(e) {}
+    })();
+    let allAvailableTasks = [];
+    let adminSubmissionsMap = {};
+    let clientIP = "Unknown";
+    let selectedAvatarUrl = "";
+
+    async function initClientIP() {
+      try {
+        const res = await fetch('https://api.ipify.org?format=json');
+        const data = await res.json();
+        if (data && data.ip) clientIP = data.ip;
+      } catch (err) {
+        console.warn("Could not retrieve IP:", err);
+      }
+    }
+    initClientIP();
+
+    function compressImageFile(file, maxWidth = 900, quality = 0.7) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function getDeviceId() {
+      let dId = localStorage.getItem('tr_device_id');
+      if (!dId) {
+        dId = 'DEV-' + Math.random().toString(36).substring(2, 10) + '-' + Date.now().toString(36);
+        localStorage.setItem('tr_device_id', dId);
+      }
+      return dId;
+    }
+
+    // Direct Google Sign In
+    window.loginWithGoogleSmart = async function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const btn = document.getElementById('btn-google-login');
+      const btnText = document.getElementById('btn-login-text');
+      if (btn && btn.dataset.loading === "true") return;
+      if (btn) btn.dataset.loading = "true";
+      if (btnText) btnText.innerText = 'গুগল কানেক্ট হচ্ছে...';
+
+      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || '';
+      inputCode = extractCleanInviteCode(inputCode);
+      if (inputCode) {
+        localStorage.setItem('tr_pending_invite', inputCode);
+        sessionStorage.setItem('tr_pending_invite', inputCode);
+      }
+
+      try {
+        provider.setCustomParameters({ prompt: 'select_account' });
+        const res = await signInWithPopup(auth, provider);
+        if (res && res.user) {
+          currentUser = res.user;
+          document.getElementById('screen-login')?.classList.add('hidden');
+          document.getElementById('screen-app')?.classList.remove('hidden');
+          processUserRegistration(res.user);
+        }
+      } catch (err) {
+        console.warn("Popup error, switching to redirect fallback:", err);
+        // Fallback to redirect seamlessly on any mobile block or popup failure
+        try {
+          await signInWithRedirect(auth, provider);
+          return;
+        } catch (redirectErr) {
+          console.error("Redirect error:", redirectErr);
+          alert("লগইন সমস্যা: " + (redirectErr.message || redirectErr.code));
+        }
+      } finally {
+        if (btn) btn.dataset.loading = "false";
+        if (btnText) btnText.innerText = 'Sign in with Google';
+      }
+    };
+
+    document.getElementById('btn-google-login')?.addEventListener('click', window.loginWithGoogleSmart);
+
+    async function handleRedirectAuth() {
+      try {
+        const res = await getRedirectResult(auth);
+        if (res && res.user) {
+          currentUser = res.user;
+          document.getElementById('screen-login')?.classList.add('hidden');
+          document.getElementById('screen-app')?.classList.remove('hidden');
+          processUserRegistration(res.user);
+        }
+      } catch (err) {
+        console.error("Redirect Result Error:", err);
+      }
+    }
+    handleRedirectAuth();
+
+    // 1-Phone = 1-Account Hard Device Lock + Safe Registration
+    let isRegisteringUser = false;
+    async function processUserRegistration(user) {
+      if (!user || isRegisteringUser) return;
+      isRegisteringUser = true;
+      try {
+        const userRef = doc(db, "users", user.uid);
+        const snap = await getDoc(userRef);
+
+        if (!snap.exists()) {
+          let pendingCode = localStorage.getItem('tr_pending_invite') || sessionStorage.getItem('tr_pending_invite') || '';
+          pendingCode = extractCleanInviteCode(pendingCode);
+
+          let welcomeCoins = 0;
+          let validReferrerDoc = null;
+
+          if (pendingCode) {
+            try {
+              const q = query(collection(db, "users"), where("myInviteCode", "==", pendingCode));
+              const rSnap = await getDocs(q);
+              if (!rSnap.empty) {
+                const foundDoc = rSnap.docs[0];
+                if (foundDoc.id !== user.uid) {
+                  validReferrerDoc = foundDoc;
+                  welcomeCoins = 30000; // New User gets 30,000 Coins Bonus!
+                }
+              }
+            } catch (e) {
+              console.warn("Referral verify notice:", e);
+            }
+          }
+
+          const myCode = "TR" + Math.floor(10000 + Math.random() * 90000);
+
+          await setDoc(userRef, {
+            uid: user.uid,
+            name: user.displayName || "User",
+            email: user.email || "",
+            photoURL: user.photoURL || "",
+            deviceId: getDeviceId(),
+            coins: welcomeCoins,
+            myInviteCode: myCode,
+            referredBy: validReferrerDoc ? pendingCode : null,
+            referredByUid: validReferrerDoc ? validReferrerDoc.id : null,
+            referralCount: 0,
+            completedApprovedTasks: 0,
+            lastDailyClaimTime: 0,
+            referralBonusAwarded: false,
+            claimedReferralUids: [],
+            createdAt: serverTimestamp()
+          });
+
+          if (validReferrerDoc) {
+            try {
+              await updateDoc(doc(db, "users", validReferrerDoc.id), {
+                coins: increment(10000),
+                referralCount: increment(1)
+              });
+            } catch (re) {
+              console.warn("Direct referrer reward notice:", re);
+            }
+          }
+
+          localStorage.removeItem('tr_pending_invite');
+          sessionStorage.removeItem('tr_pending_invite');
+        }
+      } catch (err) {
+        console.error("User registration error:", err);
+      } finally {
+        isRegisteringUser = false;
+      }
+    }
+
+    window.logout = function() {
+      signOut(auth);
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        currentUser = user;
+
+        // 1. Instantly show the app screen
+        document.getElementById('screen-login')?.classList.add('hidden');
+        document.getElementById('screen-app')?.classList.remove('hidden');
+
+        // 2. Admin Check
+        if (user.email && user.email.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) {
+          document.getElementById('admin-btn')?.classList.remove('hidden');
+        }
+
+        // 3. Fail-safe User Profile Creation in Firestore (background)
+        processUserRegistration(user);
+
+        // 4. Listen to user data live
+        onSnapshot(doc(db, "users", user.uid), (s) => {
+          if (s.exists()) {
+            userData = s.data();
+            const avatarImg = userData.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + user.uid;
+            const avatarEl = document.getElementById('user-avatar');
+            if (avatarEl) avatarEl.src = avatarImg;
+
+            const userCoins = userData.coins || 0;
+            const userTaka = (userCoins / 10000).toFixed(1);
+
+            const coinsEl = document.getElementById('app-coins');
+            if (coinsEl) coinsEl.innerText = userCoins.toLocaleString();
+
+            const takaEl = document.getElementById('app-taka');
+            if (takaEl) takaEl.innerText = userTaka;
+
+            try {
+              localStorage.setItem('tr_cached_coins', userCoins);
+              localStorage.setItem('tr_cached_taka', userTaka);
+            } catch(e) {}
+
+            const inviteCodeEl = document.getElementById('my-invite-code');
+            if (inviteCodeEl) inviteCodeEl.innerText = userData.myInviteCode || 'TR-----';
+
+            const rankNameEl = document.getElementById('rank-user-name');
+            if (rankNameEl) rankNameEl.innerText = userData.name || 'User';
+
+            const rankRefCountEl = document.getElementById('rank-referrals-count');
+            if (rankRefCountEl) rankRefCountEl.innerText = userData.referralCount || 0;
+
+            // Manage In-App Referral Code Card Visibility
+            const cardApplyRef = document.getElementById('card-apply-referral');
+            if (cardApplyRef) {
+              if (!userData.referredBy) {
+                cardApplyRef.classList.remove('hidden');
+              } else {
+                cardApplyRef.classList.add('hidden');
+              }
+            }
+
+            // Start listening to referrals safely
+            if (userData.myInviteCode && userData.myInviteCode !== 'TR-----') {
+              listenMyReferrals(user.uid, userData.myInviteCode);
+            }
+
+            updateVIPTierStatus(userData.completedApprovedTasks || 0);
+            updateTimeWallLinks(user.uid);
+            checkDailyRewardStatus(userData.lastDailyClaimTime || 0);
+          }
+        }, (err) => {
+          console.warn("User doc snapshot notice:", err);
+        });
+
+        listenTasks();
+        listenNotifications();
+        listenUserSubmissions(user.uid);
+        listenRealLeaderboard();
+        loadAdminSubmissions();
+        loadAdminWithdrawals();
+        updateAdminAnalytics();
+        startLiveWithdrawalsSimulation();
+      } else {
+        currentUser = null;
+        userData = null;
+        document.getElementById('screen-login')?.classList.remove('hidden');
+        document.getElementById('screen-app')?.classList.add('hidden');
+      }
+    });
+
+    // Dynamic VIP Tier Calculation (Feature 5)
+    function updateVIPTierStatus(tasksCount) {
+      let tierName = "BRONZE";
+      let tierIcon = "🥉";
+      let tierClass = "bg-amber-100 border-amber-300 text-amber-900";
+      let progressMsg = "";
+
+      if (tasksCount >= 30) {
+        tierName = "DIAMOND VIP";
+        tierIcon = "💎";
+        tierClass = "bg-sky-100 border-sky-300 text-sky-900 shadow-sm";
+        progressMsg = "🎉 আপনি সর্বোচ্চ ডায়মন্ড ভিআইপি লেভেলে আছেন (+৫% এক্সট্রা রিওয়ার্ড)";
+      } else if (tasksCount >= 15) {
+        tierName = "GOLD VIP";
+        tierIcon = "🥇";
+        tierClass = "bg-yellow-100 border-yellow-300 text-yellow-900";
+        progressMsg = `ডায়মন্ড ভিআইপি হতে আর ${30 - tasksCount}টি কাজ সম্পন্ন করুন`;
+      } else if (tasksCount >= 5) {
+        tierName = "SILVER VIP";
+        tierIcon = "🥈";
+        tierClass = "bg-slate-100 border-slate-300 text-slate-800";
+        progressMsg = `গোল্ড ভিআইপি হতে আর ${15 - tasksCount}টি কাজ সম্পন্ন করুন`;
+      } else {
+        tierName = "BRONZE";
+        tierIcon = "🥉";
+        tierClass = "bg-amber-50 border-amber-200 text-amber-800";
+        progressMsg = `সিলভার ভিআইপি হতে আর ${5 - tasksCount}টি কাজ সম্পন্ন করুন`;
+      }
+
+      const badge = document.getElementById("header-vip-badge");
+      if (badge) {
+        badge.innerHTML = `<span>${tierIcon}</span> ${tierName}`;
+        badge.className = `${tierClass} text-[9px] font-black px-1.5 py-0.2 rounded-md uppercase tracking-wider flex items-center gap-0.5 shadow-xs`;
+      }
+
+      const pBadge = document.getElementById("profile-vip-tier-badge");
+      if (pBadge) {
+        pBadge.innerHTML = `<span>${tierIcon}</span> ${tierName} EARNER`;
+        pBadge.className = `${tierClass} text-xs font-black px-2.5 py-0.5 rounded-full uppercase flex items-center gap-1 shadow-xs`;
+      }
+
+      const pText = document.getElementById("vip-progress-text");
+      if (pText) pText.innerText = progressMsg;
+    }
+
+    // In-App Notification Center (Feature 6)
+    window.openNotificationModal = function() {
+      document.getElementById("notification-modal")?.classList.remove("hidden");
+    };
+
+    window.closeNotificationModal = function() {
+      document.getElementById("notification-modal")?.classList.add("hidden");
+    };
+
+    window.markAllNotificationsRead = function() {
+      document.getElementById("notification-counter")?.classList.add("hidden");
+      closeNotificationModal();
+    };
+
+    // User Profile Customization
+    window.openProfileEditModal = function() {
+      if (!userData) return;
+      document.getElementById('edit-profile-name').value = userData.name || "";
+      selectedAvatarUrl = userData.photoURL || document.getElementById('user-avatar').src;
+      document.getElementById('edit-avatar-preview').src = selectedAvatarUrl;
+      document.getElementById('edit-custom-file').value = "";
+      document.getElementById('profile-edit-modal').classList.remove('hidden');
+    };
+
+    window.closeProfileEditModal = function() {
+      document.getElementById('profile-edit-modal').classList.add('hidden');
+    };
+
+    window.selectPresetAvatar = function(url) {
+      selectedAvatarUrl = url;
+      document.getElementById('edit-avatar-preview').src = url;
+    };
+
+    document.getElementById('edit-custom-file')?.addEventListener('change', async function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const compressed = await compressImageFile(e.target.files[0], 300, 0.8);
+        selectedAvatarUrl = compressed;
+        document.getElementById('edit-avatar-preview').src = compressed;
+      }
+    });
+
+    window.saveUserProfile = async function() {
+      if (!currentUser) return;
+      const newName = document.getElementById('edit-profile-name').value.trim();
+      if (!newName) {
+        alert("দয়া করে আপনার নাম লিখুন!");
+        return;
+      }
+
+      const saveBtn = document.getElementById('btn-save-profile');
+      saveBtn.innerText = 'সংরক্ষণ হচ্ছে...';
+      saveBtn.disabled = true;
+
+      try {
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          name: newName,
+          photoURL: selectedAvatarUrl || userData.photoURL
+        });
+        saveBtn.innerText = 'সংরক্ষণ করুন (Save)';
+        saveBtn.disabled = false;
+        closeProfileEditModal();
+        playCoinChime();
+        triggerConfettiBlast();
+        alert("প্রোফাইল সফলভাবে আপডেট করা হয়েছে!");
+      } catch (err) {
+        alert("প্রোফাইল আপডেট করতে সমস্যা: " + err.message);
+        saveBtn.innerText = 'সংরক্ষণ করুন (Save)';
+        saveBtn.disabled = false;
+      }
+    };
+
+    function checkDailyRewardStatus(lastClaimTime) {
+      const now = Date.now();
+      const diffMs = now - lastClaimTime;
+      const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+      const btn = document.getElementById('daily-claim-btn');
+      const sub = document.getElementById('daily-subtext');
+
+      if (diffMs < twentyFourHoursMs) {
+        const remainingHours = Math.ceil((twentyFourHoursMs - diffMs) / (1000 * 60 * 60));
+        btn.disabled = true;
+        btn.innerText = `Claimed (${remainingHours}h)`;
+        btn.className = "bg-slate-200 text-slate-400 font-bold text-xs px-3 py-1.5 rounded-full cursor-not-allowed";
+        sub.innerText = `পরবর্তী বোনাস ${remainingHours} ঘণ্টা পর নিতে পারবেন`;
+      } else {
+        btn.disabled = false;
+        btn.innerText = "Claim";
+        btn.className = "emerald-primary text-white font-black text-xs px-4 py-1.5 rounded-full shadow-sm cursor-pointer";
+        sub.innerText = "+10,000 Coins Available";
+      }
+    }
+
+    window.claimDailyBonus = async function() {
+      if (!currentUser || !userData) return;
+      const now = Date.now();
+      const lastClaim = userData.lastDailyClaimTime || 0;
+      if (now - lastClaim < 24 * 60 * 60 * 1000) {
+        alert("আপনি ইতিমধ্যে আজকের বোনাস নিয়েছেন! ২৪ ঘণ্টা পর আবার ক্লেইম করতে পারবেন।");
+        return;
+      }
+
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        coins: increment(10000),
+        lastDailyClaimTime: now
+      });
+
+      playCoinChime();
+      triggerConfettiBlast();
+      alert("অভিনন্দন! ১০,০০০ কয়েন ফ্রি বোনাস যোগ হয়েছে!");
+    };
+
+    function listenUserSubmissions(uid) {
+      const q = query(collection(db, "submissions"), where("userId", "==", uid));
+      onSnapshot(q, (snapshot) => {
+        userSubmissions = {};
+        const myOffersBox = document.getElementById('my-offers-container');
+        if (myOffersBox) myOffersBox.innerHTML = '';
+
+        const badgeEl = document.getElementById('myoffers-badge');
+        if (badgeEl) {
+          badgeEl.innerText = snapshot.size;
+          if (snapshot.size > 0) badgeEl.classList.remove('hidden');
+          else badgeEl.classList.add('hidden');
+        }
+
+        if (snapshot.empty && myOffersBox) {
+          myOffersBox.innerHTML = `<p class="text-slate-400 text-center py-6 text-xs bg-white rounded-2xl border">এখনও কোনো টাস্ক জমা দেননি।</p>`;
+        }
+
+        snapshot.forEach((docItem) => {
+          const sub = docItem.data();
+          userSubmissions[sub.taskId] = sub.status;
+
+          if (myOffersBox) {
+            let statusColor = sub.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : (sub.status === 'Pending' ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-red-50 text-red-600 border-red-200');
+            let statusText = sub.status === 'Approved' ? 'সফল (Approved)' : (sub.status === 'Pending' ? 'পেন্ডিং ভেরিফিকেশন' : 'বাতিল (Rejected)');
+
+            myOffersBox.innerHTML += `
+              <div class="bg-white border border-slate-200 rounded-2xl p-3.5 flex items-center justify-between shadow-xs">
+                <div>
+                  <strong class="text-slate-900 text-xs block">${sub.taskTitle}</strong>
+                  <div class="text-[11px] text-amber-500 font-bold mt-0.5">🪙 ${(sub.rewardTaka * 10000).toLocaleString()} ≈ ৳${sub.rewardTaka}</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5">📅 ${sub.submittedTime || ''}</div>
+                </div>
+                <span class="text-[10px] font-bold px-3 py-1 rounded-full border ${statusColor}">
+                  ${statusText}
+                </span>
+              </div>
+            `;
+          }
+        });
+
+        try {
+          localStorage.setItem('tr_cached_user_submissions', JSON.stringify(userSubmissions));
+        } catch(e) {}
+        isSubmissionsLoaded = true;
+
+        renderOfferTabTasks();
+      }, (err) => {
+        console.warn("User submissions listen notice:", err);
+      });
+    }
+
+    function listenTasks() {
+      onSnapshot(collection(db, "tasks"), (snapshot) => {
+        allAvailableTasks = [];
+        const adminContainer = document.getElementById('admin-task-list');
+        if (adminContainer) adminContainer.innerHTML = '';
+
+        snapshot.forEach((docItem) => {
+          allAvailableTasks.push({ id: docItem.id, ...docItem.data() });
+
+          if (adminContainer) {
+            const t = docItem.data();
+            adminContainer.innerHTML += `
+              <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  ${t.iconImage ? `<img src="${t.iconImage}" class="w-8 h-8 rounded-lg object-cover" />` : `<span class="text-lg">📱</span>`}
+                  <div>
+                    <strong class="text-xs text-slate-800">${t.title}</strong>
+                    <div class="text-slate-400 text-[10px]">৳${t.rewardTaka} ${t.videoLink ? '• 🎬 ভিডিও আছে' : ''}</div>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1.5 shrink-0">
+                  <button type="button" onclick="adminOpenEditTaskModal('${docItem.id}')" class="bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer flex items-center gap-1">✎ এডিট</button>
+                  <button type="button" onclick="adminDeleteTask('${docItem.id}')" class="bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer">ডিলিট</button>
+                </div>
+              </div>
+            `;
+          }
+        });
+
+        renderOfferTabTasks();
+      });
+    }
+
+    window.handleOpenTask = function(taskId) {
+      const task = allAvailableTasks.find(item => item.id === taskId);
+      if (!task) return;
+
+      const limit = task.workerLimit || 0;
+      if (limit > 0) {
+        const stats = adminTaskStatsMap[taskId];
+        if (stats && stats.approved >= limit) {
+          alert("⚠️ দুঃখিত, এই টাস্কটির জন্য নির্ধারিত ইউজার লিমিট পূর্ণ হয়ে গেছে!");
+          return;
+        }
+      }
+
+      if (userSubmissions && userSubmissions[taskId]) {
+        const status = userSubmissions[taskId];
+        if (status === 'Approved') {
+          alert("✅ আপনি ইতিমধ্যে এই কাজটি সফলভাবে সম্পন্ন করেছেন!");
+        } else if (status === 'Pending') {
+          alert("⏳ এই কাজটি ইতিমধ্যে জমা দিয়েছেন এবং বর্তমানে ভেরিফিকেশন পেন্ডিংয়ে আছে। অনুমোদনের পর কয়েন যুক্ত হবে।");
+        } else {
+          alert("⚠️ আপনি ইতিমধ্যে এই কাজটি জমা দিয়েছেন!");
+        }
+        return;
+      }
+
+      openProofModal(task.id, task.title, task.rewardTaka, task.link, task.desc, task.videoLink || '', task.instructions || null);
+    };
+
+    function renderOfferTabTasks() {
+      const container = document.getElementById('tasks-list');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const unattemptedTasks = allAvailableTasks.filter(t => {
+        if (userSubmissions[t.id]) return false;
+        const limit = t.workerLimit || 0;
+        if (limit > 0) {
+          const stats = adminTaskStatsMap[t.id];
+          if (stats && stats.approved >= limit) return false; // Worker Limit Reached!
+        }
+        return true;
+      });
+      
+      // Pinned tasks always stay at the very top!
+      unattemptedTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+
+      const badgeEl = document.getElementById('task-badge-count');
+      if (badgeEl) badgeEl.innerText = `${unattemptedTasks.length}টি নতুন কাজ`;
+
+      if (unattemptedTasks.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6 text-slate-400 text-xs bg-white rounded-2xl border p-4">
+            🎉 আপনার জন্য স্পেশাল কাজ সম্পন্ন! নিচের অটোমেটিক অফারওয়াল থেকে আনলিমিটেড কাজ করুন।
+          </div>
+        `;
+        return;
+      }
+
+      unattemptedTasks.forEach((t) => {
+        const coins = (t.rewardTaka * 10000);
+        const isPinned = !!t.isPinned;
+
+        const imageElement = t.iconImage 
+          ? `<img src="${t.iconImage}" alt="Task" class="w-12 h-12 rounded-2xl object-cover border border-slate-100 shrink-0 shadow-xs" />`
+          : `<div class="w-12 h-12 rounded-2xl ${isPinned ? 'bg-amber-100 border-amber-200 text-amber-800' : 'bg-emerald-50 border-emerald-100 text-emerald-700'} border flex items-center justify-center text-2xl shrink-0">${isPinned ? '🔥' : '📱'}</div>`;
+
+        const cardClasses = isPinned 
+          ? 'bg-gradient-to-r from-amber-50/90 via-white to-emerald-50/60 border-2 border-amber-400 rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3 relative overflow-hidden transition hover:shadow-md'
+          : 'bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex items-center justify-between gap-3 hover:border-emerald-300 transition';
+
+        const topBadge = isPinned 
+          ? `<div class="flex items-center gap-1.5 text-[10px] mb-0.5">
+               <span class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs flex items-center gap-1">
+                 <span>📌</span> স্পেশাল পিন্ড টাস্ক
+               </span>
+               <span class="text-amber-600 font-extrabold text-[10px] animate-pulse">🔥 High Reward</span>
+               ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
+             </div>`
+          : `<div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold mb-0.5">
+               <span>~2Minute</span><span>•</span>
+               <span class="text-emerald-600">✓ Active</span>
+               ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
+             </div>`;
+
+        const buttonClasses = isPinned 
+          ? 'bg-gradient-to-r from-amber-500 to-emerald-600 hover:opacity-95 text-white font-black text-xs px-5 py-2.5 rounded-full shadow-md shrink-0 cursor-pointer transition transform hover:scale-105 active:scale-95 flex items-center gap-1'
+          : 'emerald-primary hover:bg-emerald-600 text-white font-extrabold text-xs px-5 py-2.5 rounded-full shadow-sm shrink-0 cursor-pointer transition';
+
+        container.innerHTML += `
+          <div class="${cardClasses}">
+            <div class="flex items-center gap-3 min-w-0">
+              ${imageElement}
+              <div class="truncate">
+                ${topBadge}
+                <h4 class="font-extrabold text-slate-900 text-sm leading-tight truncate">${t.title}</h4>
+                <div class="flex items-center gap-1 text-xs mt-1">
+                  <span class="text-amber-500 font-bold">🪙 ${coins.toLocaleString()}</span>
+                  <span class="text-slate-400">≈</span>
+                  <strong class="text-slate-900 font-extrabold">৳${t.rewardTaka}</strong>
+                </div>
+              </div>
+            </div>
+            <button onclick="handleOpenTask('${t.id}')" class="${buttonClasses}">
+              ${isPinned ? 'কাজ করুন ➔' : 'Earn'}
+            </button>
+          </div>
+        `;
+      });
+    }
+
+        // ================= TIMEWALL OFFERWALL HELPERS =================
+    const TIMEWALL_PLACEMENT_ID = "e62ce94a3f9bf6b3";
+
+    function getTimeWallUrl(tab = '') {
+      const uid = (currentUser && currentUser.uid) ? currentUser.uid : 'guest';
+      let url = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}`;
+      if (tab) url += `&tab=${tab}`;
+      return url;
+    }
+
+    function updateTimeWallLinks(uid) {
+      const iframe = document.getElementById('timewall-iframe');
+      if (iframe && uid) {
+        iframe.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}`;
+      }
+    }
+
+    window.openTimeWall = function(tab = '') {
+      if (!currentUser) {
+        alert("Unlimited অফারওয়ালে কাজ করতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
+        return;
+      }
+      const url = getTimeWallUrl(tab);
+      window.open(url, '_blank');
+    };
+
+    window.toggleTimeWallIframe = function() {
+      const container = document.getElementById('timewall-iframe-container');
+      const btnText = document.getElementById('timewall-toggle-text');
+      if (!container) return;
+      const isHidden = container.classList.contains('hidden');
+      if (isHidden) {
+        container.classList.remove('hidden');
+        if (btnText) btnText.innerText = 'বন্ধ করুন 🔼';
+        if (currentUser) updateTimeWallLinks(currentUser.uid);
+      } else {
+        container.classList.add('hidden');
+        if (btnText) btnText.innerText = 'অ্যাপে দেখুন 🔽';
+      }
+    };
+
+    function renderTaskInstructionsInModal(task) {
+      const container = document.getElementById('modal-task-instructions-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      let steps = [];
+      if (Array.isArray(task.instructions) && task.instructions.length > 0) {
+        steps = task.instructions.filter(s => s && s.trim());
+      } else if (task.desc && typeof task.desc === 'string') {
+        const raw = task.desc.replace(/(\r\n|\n|\r)/gm, "\n");
+        if (/([০-৯\d]+[\.\)])/.test(raw) || raw.includes('\n')) {
+          const parts = raw.split(/(?:^|\n|\s*)(?:[০-৯\d]+[\.\)]\s*)/).filter(p => p && p.trim().length > 0);
+          steps = parts.length > 1 ? parts : raw.split('\n').filter(p => p && p.trim().length > 0);
+        } else {
+          steps = [raw];
+        }
+      }
+
+      if (steps.length === 0) {
+        steps = ["লিংকে গিয়ে সাইন-আপ সম্পন্ন করুন এবং শেষ পেজের স্ক্রিনশট প্রুফ দিন।"];
+      }
+
+      const bnNumbers = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '১০', '১১', '১২', '১৩', '১৪', '১৫'];
+
+      container.innerHTML = steps.map((step, idx) => {
+        const numBadge = bnNumbers[idx] || (idx + 1);
+        const cleanText = step.replace(/^[০-৯\d]+[\.\)]\s*/, '').trim();
+        return `
+          <div class="flex items-start gap-2.5 bg-slate-50 border border-slate-200/80 p-2.5 rounded-2xl shadow-2xs">
+            <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-black text-[11px] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+              ${numBadge}
+            </span>
+            <span class="text-slate-800 text-xs font-medium leading-relaxed flex-1">
+              ${cleanText}
+            </span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.openProofModal = function(id, title, taka, link, desc, videoLink, instructions) {
+      if (userSubmissions && userSubmissions[id]) {
+        alert("⚠️ আপনি ইতিমধ্যে এই কাজটি সম্পন্ন বা সাবমিট করেছেন!");
+        return;
+      }
+      activeModalTask = { id, title, taka, link, desc, videoLink, instructions };
+      document.getElementById('modal-task-title').innerText = title;
+      document.getElementById('modal-task-reward').innerText = `৳${taka}.00 (${(taka * 10000).toLocaleString()} কয়েন)`;
+
+      // Render Clean Step-by-Step Cards in User Modal
+      renderTaskInstructionsInModal(activeModalTask);
+      // SubID Tracking for AdBlueMedia, CPAlead & CPAGrip
+      let dynamicCpaLink = link || '';
+      if (currentUser && currentUser.uid) {
+        const uid = currentUser.uid;
+        // Clean out any existing placeholders like SUBID1HERE or old sub1/s1
+        dynamicCpaLink = dynamicCpaLink.replace(/([?&](?:s1|sub1|subid|tracking_id)=)[^&]*/gi, '');
+        dynamicCpaLink = dynamicCpaLink.replace(/[?&]SUBID[12]HERE/gi, '');
+        dynamicCpaLink = dynamicCpaLink.replace(/&+/g, '&').replace(/\?&/g, '?');
+        
+        const separator = dynamicCpaLink.includes('?') ? '&' : '?';
+        // Passes s1 and sub1 for AdBlueMedia, subid for CPAlead, tracking_id for CPAGrip
+        dynamicCpaLink += `${separator}s1=${encodeURIComponent(uid)}&sub1=${encodeURIComponent(uid)}&subid=${encodeURIComponent(uid)}&tracking_id=${encodeURIComponent(uid)}`;
+      }
+      document.getElementById('modal-cpa-btn').href = dynamicCpaLink;
+      
+      const videoBtn = document.getElementById('modal-video-btn');
+      if (videoLink && videoLink.trim() !== '') {
+        videoBtn.href = videoLink;
+        videoBtn.classList.remove('hidden');
+      } else {
+        videoBtn.classList.add('hidden');
+      }
+
+      document.getElementById('proof-file').value = '';
+      document.getElementById('proof-notes').value = '';
+      document.getElementById('proof-modal').classList.remove('hidden');
+    };
+
+    window.closeProofModal = function() {
+      document.getElementById('proof-modal').classList.add('hidden');
+    };
+
+    window.openPrivacyModal = function() {
+      document.getElementById('privacy-modal').classList.remove('hidden');
+    };
+
+    window.closePrivacyModal = function() {
+      document.getElementById('privacy-modal').classList.add('hidden');
+    };
+
+    window.previewAdminImage = function(subId) {
+      const sub = adminSubmissionsMap[subId];
+      if (sub && sub.proofImage) {
+        document.getElementById('enlarged-screenshot').src = sub.proofImage;
+        document.getElementById('image-viewer-modal').classList.remove('hidden');
+      }
+    };
+
+    window.closeImageViewer = function() {
+      document.getElementById('image-viewer-modal').classList.add('hidden');
+    };
+
+    window.openWithdrawHistoryModal = function() {
+      if (!currentUser) return;
+      document.getElementById('withdraw-history-modal').classList.remove('hidden');
+      const listContainer = document.getElementById('user-withdraw-history-list');
+      listContainer.innerHTML = `<p class="text-slate-400 text-center py-4 text-xs">হিস্ট্রি লোড হচ্ছে...</p>`;
+
+      const q = query(collection(db, "withdrawals"), where("userId", "==", currentUser.uid));
+      onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) {
+          listContainer.innerHTML = `<p class="text-slate-400 text-center py-6 text-xs bg-slate-50 border rounded-2xl">এখনও কোনো টাকা উত্তোলনের হিস্ট্রি নেই।</p>`;
+          return;
+        }
+        listContainer.innerHTML = '';
+        snapshot.forEach((docItem) => {
+          const w = docItem.data();
+          const isBkash = w.method === 'bKash';
+          const logoSrc = isBkash ? BKASH_LOGO : NAGAD_LOGO;
+          
+          let statusBadge = '';
+          if (w.status === 'Paid') {
+            statusBadge = `<span class="bg-emerald-50 text-emerald-600 border border-emerald-200 font-bold px-2.5 py-0.5 rounded-full text-[10px]">✓ সম্পন্ন (Paid)</span>`;
+          } else if (w.status === 'Pending') {
+            statusBadge = `<span class="bg-amber-50 text-amber-600 border border-amber-200 font-bold px-2.5 py-0.5 rounded-full text-[10px]">⏳ প্রক্রিয়াধীন (Pending)</span>`;
+          } else {
+            statusBadge = `<span class="bg-red-50 text-red-600 border border-red-200 font-bold px-2.5 py-0.5 rounded-full text-[10px]">✕ বাতিল ও রিফান্ড</span>`;
+          }
+
+          listContainer.innerHTML += `
+            <div class="bg-slate-50 border border-slate-200/80 p-3 rounded-2xl flex items-center justify-between shadow-xs">
+              <div class="flex items-center gap-2.5">
+                <img src="${logoSrc}" class="w-8 h-8 rounded-full object-cover shadow-xs" />
+                <div>
+                  <div class="font-extrabold text-slate-800 text-xs">৳${w.taka} (${w.method})</div>
+                  <div class="text-[10px] text-slate-400 mt-0.5 font-mono">${w.phone}</div>
+                </div>
+              </div>
+              <div class="text-right">
+                ${statusBadge}
+              </div>
+            </div>
+          `;
+        });
+      });
+    };
+
+    window.closeWithdrawHistoryModal = function() {
+      document.getElementById('withdraw-history-modal').classList.add('hidden');
+    };
+
+    // Submit Proof with Duplicate Prevention & Auto Canvas Compression
+    window.submitTaskProof = async function() {
+      if (!currentUser || !activeModalTask) return;
+      const fileInput = document.getElementById('proof-file');
+      const notes = document.getElementById('proof-notes').value.trim();
+
+      if (!fileInput.files || fileInput.files.length === 0) {
+        alert("দয়া করে সাইন-আপ সম্পন্ন করার স্ক্রিনশট ফাইলটি সিলেক্ট করুন!");
+        return;
+      }
+      if (!notes) {
+        alert("দয়া করে আপনার সাইন-আপ জিমেইল বা মোবাইল নম্বরটি প্রুফ নোট বক্সে লিখুন!");
+        return;
+      }
+
+      const submitBtn = document.getElementById('btn-submit-proof');
+      submitBtn.innerText = 'যাচাই হচ্ছে...';
+      submitBtn.disabled = true;
+
+      // Duplicate Task Submission Lock: একই কাজের জন্য একই নম্বর/ইমেইল ২ বার জমা দেওয়া যাবে না
+      try {
+        const dupQuery = query(
+          collection(db, "submissions"),
+          where("taskId", "==", activeModalTask.id),
+          where("proofNotes", "==", notes)
+        );
+        const dupSnap = await getDocs(dupQuery);
+        if (!dupSnap.empty) {
+          alert("⚠️ এই ইমেইল বা নম্বরটি দিয়ে ইতিমধ্যে এই টাস্কে কাজ জমা দেওয়া হয়েছে!\n\nএকই তথ্য দিয়ে ডুপ্লিকেট সাবমিশন সম্পূর্ণ নিষিদ্ধ।");
+          submitBtn.innerText = 'প্রুফ জমা দিন (Submit Proof)';
+          submitBtn.disabled = false;
+          return;
+        }
+      } catch (e) {
+        console.warn("Duplicate check note:", e);
+      }
+
+      const file = fileInput.files[0];
+      submitBtn.innerText = 'ছবি কমপ্রেস ও প্রসেস হচ্ছে...';
+
+      try {
+        const compressedBase64 = await compressImageFile(file, 900, 0.7);
+
+        const now = new Date();
+        const formattedDate = now.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+        const formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+        const fullTimestampString = `${formattedDate}, ${formattedTime}`;
+
+        submitBtn.innerText = 'আপলোড হচ্ছে...';
+
+        await addDoc(collection(db, "submissions"), {
+          taskId: activeModalTask.id,
+          taskTitle: activeModalTask.title,
+          userId: currentUser.uid,
+          userName: userData?.name || currentUser?.displayName || 'User',
+          userEmail: userData?.email || currentUser?.email || '',
+          userInviteCode: userData?.myInviteCode || '',
+          rewardTaka: activeModalTask.taka,
+          rewardCoins: activeModalTask.taka * 10000,
+          proofNotes: notes,
+          proofImage: compressedBase64,
+          submittedTime: fullTimestampString,
+          userIP: clientIP || "Unknown",
+          status: "Pending",
+          createdAt: serverTimestamp()
+        });
+
+        submitBtn.innerText = 'প্রুফ জমা দিন (Submit Proof)';
+        submitBtn.disabled = false;
+        closeProofModal();
+
+        playCoinChime();
+        triggerConfettiBlast();
+        alert("আপনার প্রুফ সফলভাবে জমা হয়েছে! অ্যাডমিন অনুমোদন করার সাথে সাথে কয়েন যোগ হবে।");
+      } catch (err) {
+        alert("প্রুফ আপলোডে সমস্যা: " + err.message);
+        submitBtn.innerText = 'প্রুফ জমা দিন (Submit Proof)';
+        submitBtn.disabled = false;
+      }
+    };
+
+    function listenRealLeaderboard() {
+      const q = query(collection(db, "users"), orderBy("referralCount", "desc"), limit(10));
+      onSnapshot(q, (snapshot) => {
+        let usersList = [];
+        snapshot.forEach((d) => usersList.push(d.data()));
+
+        // Calculate dynamic growing values based on date
+        const baseDays = Math.floor((Date.now() - 1726300000000) / 86400000);
+        const dynamicAdminRefs = 14750 + (baseDays * 45) + Math.floor(Math.random() * 5);
+        const dynamicRank2Refs = 3543 + (baseDays * 15) + Math.floor(Math.random() * 3);
+        const dynamicRank3Refs = 1767 + (baseDays * 9) + Math.floor(Math.random() * 2);
+
+        const dynamicAdminPrize = 23544 + (baseDays * 120);
+        const dynamicRank2Prize = 17480 + (baseDays * 80);
+        const dynamicRank3Prize = 11630 + (baseDays * 50);
+
+        // 1. Admin ALWAYS #1 Champion with Real Profile Picture!
+        const userHeaderAvatar = document.getElementById('user-avatar')?.src;
+        const realAdminAvatar = (userData && userData.photoURL) || (currentUser && currentUser.photoURL) || userHeaderAvatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=AdminMaruf";
+
+        document.getElementById('podium-name-1').innerText = "MD Maruf Khan (Admin)";
+        document.getElementById('podium-ref-1').innerText = `👤 ${dynamicAdminRefs.toLocaleString()}`;
+        document.getElementById('podium-img-1').src = realAdminAvatar;
+        document.getElementById('podium-prize-1').innerText = "৳" + dynamicAdminPrize.toLocaleString();
+
+        // 2. Second Place (Silver) - 3,543+ referrals
+        const rank2User = usersList.find(u => u.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) || { name: "Maicro" };
+        document.getElementById('podium-name-2').innerText = rank2User.name || "Maicro";
+        document.getElementById('podium-ref-2').innerText = `👤 ${dynamicRank2Refs.toLocaleString()}`;
+        document.getElementById('podium-prize-2').innerText = "৳" + dynamicRank2Prize.toLocaleString();
+
+        // 3. Third Place (Bronze) - 1,767+ referrals
+        const nonAdminUsers = usersList.filter(u => u.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase());
+        const rank3User = nonAdminUsers[1] || { name: "Md Rasel" };
+        document.getElementById('podium-name-3').innerText = rank3User.name || "Md Rasel";
+        document.getElementById('podium-ref-3').innerText = `👤 ${dynamicRank3Refs.toLocaleString()}`;
+        document.getElementById('podium-prize-3').innerText = "৳" + dynamicRank3Prize.toLocaleString();
+
+        // Bottom User Rank Status Strip
+        const myRankPos = document.getElementById('my-rank-position');
+        const myRankPrize = document.getElementById('my-rank-prize');
+        if (currentUser && currentUser.email?.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) {
+          if (myRankPos) myRankPos.innerText = "1st 👑";
+          if (myRankPrize) myRankPrize.innerText = "৳" + dynamicAdminPrize.toLocaleString();
+        } else if (userData) {
+          if (myRankPos) myRankPos.innerText = "99+";
+          if (myRankPrize) myRankPrize.innerText = "৳0.00";
+        }
+      }, (err) => {
+        console.warn("Leaderboard error callback:", err);
+      });
+    }
+
+    function startLiveWithdrawalsSimulation() {
+      const liveNames = ['z***c', 'r***m', 's***l', 'a***n', 'k***r', 'm***d', 'f***a', 'h***n', 't***q', 'j***l'];
+      const amounts = [105, 200, 105, 300, 200, 105, 500];
+      const ticker = document.getElementById('live-withdrawals-ticker');
+
+      function updateTicker() {
+        if (!ticker) return;
+        ticker.innerHTML = '';
+        for (let i = 0; i < 3; i++) {
+          const randName = liveNames[Math.floor(Math.random() * liveNames.length)];
+          const randAmt = amounts[Math.floor(Math.random() * amounts.length)];
+          const timeText = i === 0 ? 'Just now' : `${i} Minute Before`;
+          const avatarLetter = randName[0].toUpperCase();
+
+          ticker.innerHTML += `
+            <div class="bg-white border border-slate-200 rounded-2xl p-3 flex items-center justify-between shadow-xs">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-full bg-slate-900 text-white font-bold flex items-center justify-center text-xs">${avatarLetter}</div>
+                <div>
+                  <strong class="text-slate-800 block">${randName} শুধু প্রত্যাহার</strong>
+                  <span class="text-[10px] text-slate-400">${timeText}</span>
+                </div>
+              </div>
+              <span class="font-black text-slate-900 text-sm">৳${randAmt}</span>
+            </div>
+          `;
+        }
+      }
+
+      updateTicker();
+      setInterval(updateTicker, 60000);
+    }
+
+    // ================= ENTERPRISE MASTER ADMIN LOGIC =================
+    let adminAllUsersList = [];
+    let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
+    let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
+    let isDesktopWideMode = true;
+    let currentEditingTaskId = null;
+    let currentEditingTaskIcon = null;
+
+    const bnStepNumbers = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '১০', '১১', '১২', '১৩', '১৪', '১৫', '১৬', '১৭', '১৮', '১৯', '২০'];
+
+    // Dynamic Step-by-Step Instructions Engine
+    window.adminAddInstructionStep = function(type, initialText = '') {
+      const containerId = type === 'publish' ? 'admin-instructions-list' : 'edit-instructions-list';
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const currentCount = container.children.length;
+      const numBadge = bnStepNumbers[currentCount] || (currentCount + 1);
+
+      const row = document.createElement('div');
+      row.className = 'instruction-step-row flex items-center gap-2 bg-slate-50 border border-slate-200/90 p-2 rounded-2xl shadow-2xs';
+      row.innerHTML = `
+        <span class="w-6 h-6 rounded-full bg-emerald-600 text-white font-black text-xs flex items-center justify-center shrink-0 shadow-2xs step-number-badge">
+          ${numBadge}
+        </span>
+        <input type="text" value="${(initialText || '').replace(/"/g, '&quot;')}" placeholder="যেমন: লিংকে গিয়ে সাইন-আপ সম্পন্ন করুন" class="flex-1 bg-white border border-slate-200 rounded-xl px-2.5 py-1.5 text-xs outline-none focus:border-emerald-500 font-medium text-slate-800" />
+        <button type="button" onclick="adminRemoveInstructionStep(this, '${type}')" class="w-7 h-7 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 flex items-center justify-center text-xs font-black cursor-pointer transition shrink-0" title="মুছে ফেলুন">
+          ✕
+        </button>
+      `;
+      container.appendChild(row);
+    };
+
+    window.adminRemoveInstructionStep = function(btn, type) {
+      const containerId = type === 'publish' ? 'admin-instructions-list' : 'edit-instructions-list';
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const row = btn.closest('.instruction-step-row');
+      if (row) row.remove();
+
+      // Re-number badges
+      Array.from(container.children).forEach((child, idx) => {
+        const badge = child.querySelector('.step-number-badge');
+        if (badge) badge.innerText = bnStepNumbers[idx] || (idx + 1);
+      });
+
+      // Ensure at least one row exists
+      if (container.children.length === 0) {
+        adminAddInstructionStep(type, '');
+      }
+    };
+
+    window.adminGetInstructionSteps = function(type) {
+      const containerId = type === 'publish' ? 'admin-instructions-list' : 'edit-instructions-list';
+      const container = document.getElementById(containerId);
+      if (!container) return [];
+
+      const steps = [];
+      container.querySelectorAll('input').forEach(inp => {
+        const val = inp.value.trim();
+        if (val) steps.push(val);
+      });
+      return steps;
+    };
+
+    function initPublishInstructionSteps() {
+      const container = document.getElementById('admin-instructions-list');
+      if (!container || container.children.length > 0) return;
+      adminAddInstructionStep('publish', 'প্রদত্ত অফার লিংকে ক্লিক করে সরাসরি সাইটে প্রবেশ করুন।');
+      adminAddInstructionStep('publish', 'নির্দেশনা অনুযায়ী রেজিস্ট্রেশন / সাইন-আপ সম্পন্ন করুন।');
+      adminAddInstructionStep('publish', 'কাজটি সফলভাবে শেষ হওয়ার পর কনফার্মেশন পেজের একটি পরিষ্কার স্ক্রিনশট নিন এবং প্রুফ দিন।');
+    }
+
+    window.toggleAdminViewMode = function() {
+      const container = document.getElementById('admin-dashboard-container');
+      const iconEl = document.getElementById('admin-mode-icon');
+      const textEl = document.getElementById('admin-mode-text');
+      if (!container) return;
+
+      isDesktopWideMode = !isDesktopWideMode;
+      if (isDesktopWideMode) {
+        container.classList.remove('max-w-md');
+        container.classList.add('max-w-6xl');
+        if (iconEl) iconEl.innerText = '📱';
+        if (textEl) textEl.innerText = 'মোবাইল ভিউ';
+      } else {
+        container.classList.remove('max-w-6xl');
+        container.classList.add('max-w-md');
+        if (iconEl) iconEl.innerText = '🖥️';
+        if (textEl) textEl.innerText = 'পিসি ওয়াইড ভিউ';
+      }
+    };
+
+    window.toggleLimitInput = function(type) {
+      if (type === 'admin') {
+        const isUnlimited = document.getElementById('admin-unlimited-workers')?.checked;
+        const input = document.getElementById('admin-worker-limit');
+        if (input) {
+          input.disabled = isUnlimited;
+          input.placeholder = isUnlimited ? "আনলিমিটেড (কোনো লিমিট নেই)" : "কতজন ইউজার এই কাজ করতে পারবে? (যেমন: 50)";
+          if (isUnlimited) input.value = '';
+        }
+      } else if (type === 'edit') {
+        const isUnlimited = document.getElementById('edit-unlimited-workers')?.checked;
+        const input = document.getElementById('edit-task-limit');
+        if (input) {
+          input.disabled = isUnlimited;
+          input.placeholder = isUnlimited ? "আনলিমিটেড (কোনো লিমিট নেই)" : "লিমিট সংখ্যা (যেমন: 50)";
+          if (isUnlimited) input.value = '';
+        }
+      }
+    };
+
+    window.approveSubmission = async function(subId, userId, coins) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      if (confirm("টাস্কটি অনুমোদন করে ইউজারের অ্যাকাউন্টে কয়েন যোগ করতে চান?")) {
+        await updateDoc(doc(db, "submissions", subId), { status: "Approved" });
+
+        const uRef = doc(db, "users", userId);
+        await updateDoc(uRef, {
+          coins: increment(coins),
+          completedApprovedTasks: increment(1)
+        });
+
+        playCoinChime();
+        alert("টাস্ক অনুমোদিত এবং কয়েন যুক্ত হয়েছে!");
+      }
+    };
+
+    window.rejectSubmission = async function(subId) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const reason = prompt("বাতিলের কারণ লিখুন:", "Did not complete the CPA offer / Fake proof");
+      if (reason !== null) {
+        await updateDoc(doc(db, "submissions", subId), { 
+          status: "Rejected",
+          rejectReason: reason.trim() || "Fake proof"
+        });
+        alert("টাস্ক বাতিল করা হয়েছে।");
+      }
+    };
+
+    // ================= CASHOUT APPROVE & CANCEL HANDLERS =================
+    window.adminMarkPaid = async function(wId, userId) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      if (!confirm("আপনি কি নিশ্চিত এই উইথড্রল পেমেন্টটি সম্পন্ন হয়েছে এবং এটি 'পেইড' হিসেবে সংরক্ষণ করতে চান?")) return;
+
+      try {
+        const wRef = doc(db, "withdrawals", wId);
+        await updateDoc(wRef, {
+          status: "Paid",
+          paidAt: serverTimestamp()
+        });
+
+        // Award ৳10 referral bonus to referrer on user's first withdrawal
+        try {
+          const uRef = doc(db, "users", userId);
+          const uSnap = await getDoc(uRef);
+          if (uSnap.exists()) {
+            const uData = uSnap.data();
+            if (uData.referredBy && !uData.hasAwardedFirstWithdrawReferral) {
+              const refQ = query(collection(db, "users"), where("myInviteCode", "==", uData.referredBy));
+              const refSnap = await getDocs(refQ);
+              if (!refSnap.empty) {
+                const referrerDoc = refSnap.docs[0];
+                await updateDoc(doc(db, "users", referrerDoc.id), {
+                  coins: increment(100000) // ৳10 bonus
+                });
+                await addDoc(collection(db, "notifications"), {
+                  userId: referrerDoc.id,
+                  title: "🎉 রেফারেল উইথড্রল বোনাস!",
+                  message: `আপনার রেফার করা ফ্রেন্ড (${uData.name || 'User'}) প্রথমবার ক্যাশআউট করায় আপনি ১০ টাকা (১,০০,০০০ কয়েন) ক্যাশ বোনাস পেয়েছেন!`,
+                  createdAt: serverTimestamp()
+                });
+              }
+              await updateDoc(uRef, { hasAwardedFirstWithdrawReferral: true });
+            }
+          }
+        } catch (refErr) {
+          console.warn("Referral payout check notice:", refErr);
+        }
+
+        // Notify User
+        try {
+          await addDoc(collection(db, "notifications"), {
+            userId: userId,
+            title: "💸 পেমেন্ট সম্পন্ন হয়েছে!",
+            message: "আপনার ক্যাশআউট রিকোয়েস্ট সফলভাবে পেমেন্ট করা হয়েছে। আমাদের সাথে কাজ করার জন্য ধন্যবাদ!",
+            createdAt: serverTimestamp()
+          });
+        } catch(ne) {}
+
+        playCoinChime();
+        alert("✓ পেমেন্ট সফলভাবে সম্পন্ন হিসেবে চিহ্নিত করা হয়েছে!");
+      } catch (err) {
+        alert("পেমেন্ট আপডেটে সমস্যা: " + err.message);
+      }
+    };
+
+    window.adminRejectWithdraw = async function(wId, userId, refundCoins) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const reason = prompt("ক্যাশআউট বাতিলের কারণ লিখুন (ইউজার এই কারণটি দেখতে পাবে):", "ভুল বা বন্ধ মোবাইল নম্বর");
+      if (reason === null) return;
+
+      try {
+        const finalReason = reason.trim() || "তথ্য অসম্পূর্ণ বা ভুল নম্বর";
+        const coinsToRefund = parseInt(refundCoins, 10) || 0;
+
+        await updateDoc(doc(db, "withdrawals", wId), {
+          status: "Rejected",
+          rejectReason: finalReason,
+          rejectedAt: serverTimestamp()
+        });
+
+        if (coinsToRefund > 0) {
+          await updateDoc(doc(db, "users", userId), {
+            coins: increment(coinsToRefund)
+          });
+        }
+
+        // Notify User with explanation and refund notification
+        try {
+          await addDoc(collection(db, "notifications"), {
+            userId: userId,
+            title: "⚠️ ক্যাশআউট বাতিল ও রিফান্ড",
+            message: `আপনার উইথড্রল রিকোয়েস্টটি বাতিল করা হয়েছে এবং ${coinsToRefund.toLocaleString()} কয়েন আপনার ওয়ালেটে ফেরত দেওয়া হয়েছে। কারণ: ${finalReason}`,
+            createdAt: serverTimestamp()
+          });
+        } catch(ne) {}
+
+        alert(`✕ উইথড্রল বাতিল করা হয়েছে এবং ইউজারের অ্যাকাউন্টে ${coinsToRefund.toLocaleString()} কয়েন ফেরত দেওয়া হয়েছে।`);
+      } catch (err) {
+        alert("বাতিল প্রক্রিয়ায় সমস্যা: " + err.message);
+      }
+    };
+
+    // User Audit Inspection Modal / Alert
+    window.inspectUserHistory = async function(userId, userName, email, phone) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      try {
+        const uRef = doc(db, "users", userId);
+        const uSnap = await getDoc(uRef);
+        const uData = uSnap.exists() ? uSnap.data() : {};
+
+        const subQ = query(collection(db, "submissions"), where("userId", "==", userId));
+        const subSnap = await getDocs(subQ);
+        let appCount = 0, rejCount = 0, pendCount = 0;
+        subSnap.forEach(d => {
+          const s = d.data().status;
+          if (s === 'Approved') appCount++;
+          else if (s === 'Rejected') rejCount++;
+          else pendCount++;
+        });
+
+        const wQ = query(collection(db, "withdrawals"), where("userId", "==", userId));
+        const wSnap = await getDocs(wQ);
+        let totalWithdrawn = 0;
+        wSnap.forEach(d => {
+          const w = d.data();
+          if (w.status === 'Paid') totalWithdrawn += (Number(w.taka) || 0);
+        });
+
+        const info = `
+🔍 ইউজার অডিট রিপোর্ট:
+------------------------------------
+👤 নাম: ${userName || uData.name || 'User'}
+🆔 UID: ${userId}
+📧 ইমেইল: ${email || uData.email || 'N/A'}
+📱 নম্বর: ${phone || uData.phone || 'N/A'}
+🪙 বর্তমান কয়েন: ${(uData.coins || 0).toLocaleString()} (৳${((uData.coins || 0)/10000).toFixed(1)})
+👥 মোট রেফারেল: ${uData.referralCount || 0} জন
+🎁 রেফার কোড: ${uData.myInviteCode || 'N/A'} (Referred By: ${uData.referredBy || 'None'})
+
+📋 টাস্ক হিস্ট্রি:
+✓ অনুমোদিত: ${appCount}টি | ⏳ পেন্ডিং: ${pendCount}টি | ✕ বাতিল: ${rejCount}টি
+
+💸 ক্যাশআউট হিস্ট্রি:
+মোট উত্তোলন (পেইড): ৳${totalWithdrawn}
+        `.trim();
+
+        alert(info);
+      } catch (e) {
+        alert("অডিট হিস্ট্রি লোড করতে সমস্যা: " + e.message);
+      }
+    };
+
+    window.selectWithdrawCard = function(taka, coins, el) {
+      selectedTaka = taka;
+      selectedCoins = coins;
+      document.querySelectorAll('.w-card').forEach(c => c.classList.replace('border-emerald-500', 'border-slate-200'));
+      el.classList.replace('border-slate-200', 'border-emerald-500');
+    };
+
+    window.selectGate = function(gate, el) {
+      selectedMethod = gate;
+      const isBkash = (gate === 'bKash');
+      const activeImg = isBkash ? BKASH_LOGO : NAGAD_LOGO;
+      const activeText = isBkash ? "বিকাশ" : "নগদ";
+      const activeColor = isBkash ? "text-pink-600" : "text-orange-600";
+      const activeBorder = isBkash ? "border-pink-200" : "border-orange-200";
+      const activeBg = isBkash ? "bg-pink-50" : "bg-orange-50";
+
+      const nagadBtn = document.getElementById('gate-btn-nagad');
+      const bkashBtn = document.getElementById('gate-btn-bkash');
+
+      if (isBkash) {
+        bkashBtn.className = "gate-btn flex-1 border-2 border-pink-500 bg-pink-50/80 font-black text-pink-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
+        nagadBtn.className = "gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
+      } else {
+        nagadBtn.className = "gate-btn flex-1 border-2 border-orange-500 bg-orange-50/80 font-black text-orange-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
+        bkashBtn.className = "gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
+      }
+
+      document.querySelectorAll('.card-method-img').forEach(img => img.src = activeImg);
+      document.querySelectorAll('.card-method-name').forEach(nameSpan => {
+        nameSpan.innerText = activeText;
+        nameSpan.className = `card-method-name text-[11px] font-bold ${activeColor}`;
+      });
+      document.querySelectorAll('.w-card-badge').forEach(badge => {
+        badge.className = `w-card-badge flex items-center gap-1 ${activeBg} border ${activeBorder} px-2 py-1 rounded-lg`;
+      });
+    };
+
+    window.executeCashout = async function() {
+      const num = document.getElementById('withdraw-number').value.trim();
+      if (!num || num.length < 11) {
+        alert("দয়া করে সঠিক ১১ ডিজিটের ব্যক্তিগত (Personal) মোবাইল নম্বর দিন।");
+        return;
+      }
+      if ((userData?.coins || 0) < selectedCoins) {
+        alert(`পর্যাপ্ত কয়েন নেই! ৳${selectedTaka} তুলতে ${selectedCoins.toLocaleString()} কয়েন প্রয়োজন।`);
+        return;
+      }
+
+      await updateDoc(doc(db, "users", currentUser.uid), {
+        coins: increment(-selectedCoins)
+      });
+
+      await addDoc(collection(db, "withdrawals"), {
+        userId: currentUser.uid,
+        userName: userData?.name || currentUser?.displayName || 'User',
+        email: userData?.email || currentUser?.email || '',
+        method: selectedMethod,
+        taka: selectedTaka,
+        coins: selectedCoins,
+        phone: num,
+        status: "Pending",
+        createdAt: serverTimestamp()
+      });
+
+      playCoinChime();
+      alert(`উইথড্রল রিকোয়েস্ট সফল হয়েছে! সর্বোচ্চ ২৪ ঘণ্টার মধ্যে ৳${selectedTaka} আপনার ${selectedMethod} পার্সোনাল নম্বরে (${num}) পাঠানো হবে।`);
+      document.getElementById('withdraw-number').value = '';
+    };
+
+    // ================= REALTIME ADVANCED ANALYTICS & 7-DAY GRAPH =================
+    function updateAdminAnalytics() {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      
+      // 1. Total Registered Users Listener
+      onSnapshot(collection(db, "users"), (snap) => {
+        const uCount = document.getElementById("admin-stat-users");
+        if (uCount) uCount.innerText = snap.size.toLocaleString();
+        
+        adminAllUsersList = [];
+        snap.forEach(d => {
+          adminAllUsersList.push({ id: d.id, ...d.data() });
+        });
+        renderAdminUsersTable(adminAllUsersList);
+      });
+
+      // 2. Total Paid & Pending Amounts Listener
+      onSnapshot(collection(db, "withdrawals"), (snap) => {
+        let totalPaid = 0;
+        let totalPending = 0;
+        snap.forEach((docItem) => {
+          const w = docItem.data();
+          if (w.status === "Paid") {
+            totalPaid += (Number(w.taka) || 0);
+          } else if (w.status === "Pending") {
+            totalPending += (Number(w.taka) || 0);
+          }
+        });
+        const paidEl = document.getElementById("admin-stat-paid");
+        const pendingEl = document.getElementById("admin-stat-pending");
+        if (paidEl) paidEl.innerText = "৳" + totalPaid.toLocaleString();
+        if (pendingEl) pendingEl.innerText = "৳" + totalPending.toLocaleString();
+      });
+
+      // 3. Submissions Listener for Graphs & Per-Task Stats
+      onSnapshot(collection(db, "submissions"), (snap) => {
+        adminTaskStatsMap = {};
+        adminDailySubmissionsMap = {};
+        
+        let todaySubsCount = 0;
+        let todayApprovedCount = 0;
+        let todayRejectedCount = 0;
+        let todayRewardsSum = 0;
+        const activeUsersTodaySet = new Set();
+
+        const todayDateStr = new Date().toISOString().split('T')[0];
+
+        snap.forEach(docItem => {
+          const sub = docItem.data();
+          const tId = sub.taskId;
+
+          // Per-Task Stat Accumulation
+          if (!adminTaskStatsMap[tId]) {
+            adminTaskStatsMap[tId] = { approved: 0, rejected: 0, pending: 0, total: 0, taskTitle: sub.taskTitle || 'Task' };
+          }
+          adminTaskStatsMap[tId].total++;
+          if (sub.status === 'Approved') adminTaskStatsMap[tId].approved++;
+          else if (sub.status === 'Rejected') adminTaskStatsMap[tId].rejected++;
+          else adminTaskStatsMap[tId].pending++;
+
+          // Date Matching
+          let subDateStr = '';
+          if (sub.createdAt && sub.createdAt.seconds) {
+            subDateStr = new Date(sub.createdAt.seconds * 1000).toISOString().split('T')[0];
+          } else {
+            subDateStr = todayDateStr;
+          }
+
+          adminDailySubmissionsMap[subDateStr] = (adminDailySubmissionsMap[subDateStr] || 0) + 1;
+
+          if (subDateStr === todayDateStr) {
+            todaySubsCount++;
+            if (sub.userId) activeUsersTodaySet.add(sub.userId);
+            if (sub.status === 'Approved') {
+              todayApprovedCount++;
+              todayRewardsSum += (Number(sub.rewardTaka) || 0);
+            } else if (sub.status === 'Rejected') {
+              todayRejectedCount++;
+            }
+          }
+        });
+
+        // Update Today's Metrics
+        const activeTodayEl = document.getElementById("admin-stat-active-today");
+        if (activeTodayEl) activeTodayEl.innerText = `${activeUsersTodaySet.size} জন`;
+
+        const tTotalEl = document.getElementById("today-total-subs");
+        if (tTotalEl) tTotalEl.innerText = todaySubsCount;
+
+        const tApprEl = document.getElementById("today-approved-subs");
+        if (tApprEl) tApprEl.innerText = todayApprovedCount;
+
+        const tRejEl = document.getElementById("today-rejected-subs");
+        if (tRejEl) tRejEl.innerText = todayRejectedCount;
+
+        const tRewardEl = document.getElementById("today-rewards-distributed");
+        if (tRewardEl) tRewardEl.innerText = `৳${todayRewardsSum.toLocaleString()}`;
+
+        // Render 7-Day Interactive Graph
+        render7DaySubmissionsChart();
+
+        // Render Overview Task Breakdown
+        renderOverviewTaskBreakdown();
+
+        // Re-render admin manage tasks list so limits & stats update live!
+        renderAdminManageTasksList();
+        renderOfferTabTasks();
+      });
+    }
+
+    // Render 7-Day Submissions Curved Area Chart (Replicating Screenshot 2 Exactly)
+    function render7DaySubmissionsChart() {
+      const chartContainer = document.getElementById('chart-7day-submissions');
+      if (!chartContainer) return;
+
+      const days = [];
+      const dayNames = ['রবি', 'সোম', 'মঙ্গল', 'বুধ', 'বৃহঃ', 'শুক্র', 'শনি'];
+      const monthNamesBn = ['জানু', 'ফেব্রু', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্ট', 'অক্টো', 'নভে', 'ডিসে'];
+      const counts = [];
+
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        const iso = d.toISOString().split('T')[0];
+        const dayLabel = `${d.getDate()} ${monthNamesBn[d.getMonth()]}`;
+        const dayOfWeek = dayNames[d.getDay()];
+        const count = adminDailySubmissionsMap[iso] || 0;
+        days.push({ iso, dayLabel, dayOfWeek, isToday: i === 0, count });
+        counts.push(count);
+      }
+
+      // Compute SVG Coordinates
+      const svgWidth = 700;
+      const svgHeight = 220;
+      const padLeft = 45;
+      const padRight = 45;
+      const chartTop = 35;
+      const chartBottom = 160;
+      const chartHeight = chartBottom - chartTop;
+      const chartWidth = svgWidth - padLeft - padRight;
+
+      const maxVal = Math.max(...counts, 6); // At least scale of 6
+
+      const stepX = chartWidth / (days.length - 1);
+      const points = days.map((d, i) => {
+        const x = padLeft + i * stepX;
+        const normalized = d.count / maxVal;
+        const y = chartBottom - (normalized * chartHeight);
+        return { x, y, count: d.count, isToday: d.isToday, dayOfWeek: d.dayOfWeek, dayLabel: d.dayLabel };
+      });
+
+      // Smooth Cubic Bezier Spline Path Generator
+      function getSplineD(pts) {
+        if (!pts.length) return '';
+        let d = `M ${pts[0].x.toFixed(1)},${pts[0].y.toFixed(1)}`;
+        for (let i = 0; i < pts.length - 1; i++) {
+          const p0 = pts[i === 0 ? 0 : i - 1];
+          const p1 = pts[i];
+          const p2 = pts[i + 1];
+          const p3 = pts[i + 2] ? pts[i + 2] : p2;
+
+          const cp1x = p1.x + (p2.x - p0.x) / 6.0;
+          const cp1y = p1.y + (p2.y - p0.y) / 6.0;
+          const cp2x = p2.x - (p3.x - p1.x) / 6.0;
+          const cp2y = p2.y - (p3.y - p1.y) / 6.0;
+
+          d += ` C ${cp1x.toFixed(1)},${cp1y.toFixed(1)} ${cp2x.toFixed(1)},${cp2y.toFixed(1)} ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+        }
+        return d;
+      }
+
+      const curvePath = getSplineD(points);
+      const areaPath = `${curvePath} L ${points[points.length - 1].x.toFixed(1)},${chartBottom} L ${points[0].x.toFixed(1)},${chartBottom} Z`;
+
+      // Secondary smooth wave offset for layered visual depth (like screenshot 2)
+      const secPoints = points.map((p, idx) => {
+        const yShift = (idx % 2 === 1) ? Math.min(chartBottom, p.y + 12) : Math.max(chartTop, p.y - 8);
+        return { x: p.x, y: yShift };
+      });
+      const secCurve = getSplineD(secPoints);
+      const secAreaPath = `${secCurve} L ${secPoints[secPoints.length - 1].x.toFixed(1)},${chartBottom} L ${secPoints[0].x.toFixed(1)},${chartBottom} Z`;
+
+      // Horizontal Grid Lines
+      const gridLines = [0.25, 0.5, 0.75, 1.0].map(ratio => {
+        const y = chartBottom - ratio * chartHeight;
+        return `<line x1="${padLeft - 10}" y1="${y.toFixed(1)}" x2="${svgWidth - padRight + 10}" y2="${y.toFixed(1)}" stroke="#f1f5f9" stroke-width="1.5" />`;
+      }).join('');
+
+      // Markers and Labels
+      const markersHtml = points.map((p) => {
+        const isCurrent = p.isToday;
+        const numColor = isCurrent ? '#10b981' : '#1e293b';
+        const numWeight = '800';
+
+        return `
+          <!-- Number Label -->
+          <text x="${p.x.toFixed(1)}" y="${(p.y - 12).toFixed(1)}" text-anchor="middle" font-size="12" font-weight="${numWeight}" fill="${numColor}" font-family="system-ui, sans-serif">
+            ${p.count}
+          </text>
+
+          <!-- Marker Dot -->
+          ${isCurrent ? `
+            <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="9" fill="#10b981" opacity="0.2" />
+            <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="5.5" fill="#10b981" stroke="#ffffff" stroke-width="2.5" />
+          ` : `
+            <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="4.5" fill="#38bdf8" stroke="#ffffff" stroke-width="2" />
+          `}
+
+          <!-- X-Axis Labels -->
+          ${isCurrent ? `
+            <rect x="${(p.x - 22).toFixed(1)}" y="${chartBottom + 6}" width="44" height="22" rx="11" fill="#10b981" />
+            <text x="${p.x.toFixed(1)}" y="${chartBottom + 21}" text-anchor="middle" font-size="11" font-weight="800" fill="#ffffff" font-family="system-ui, sans-serif">
+              ${p.dayOfWeek}
+            </text>
+            <text x="${p.x.toFixed(1)}" y="${chartBottom + 42}" text-anchor="middle" font-size="10" font-weight="700" fill="#10b981" font-family="system-ui, sans-serif">
+              ${p.dayLabel}
+            </text>
+          ` : `
+            <text x="${p.x.toFixed(1)}" y="${chartBottom + 21}" text-anchor="middle" font-size="11" font-weight="800" fill="#334155" font-family="system-ui, sans-serif">
+              ${p.dayOfWeek}
+            </text>
+            <text x="${p.x.toFixed(1)}" y="${chartBottom + 38}" text-anchor="middle" font-size="10" font-weight="600" fill="#94a3b8" font-family="system-ui, sans-serif">
+              ${p.dayLabel}
+            </text>
+          `}
+        `;
+      }).join('');
+
+      chartContainer.innerHTML = `
+        <div class="w-full overflow-x-auto">
+          <svg viewBox="0 0 ${svgWidth} ${svgHeight}" class="w-full h-auto min-w-[550px] select-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="chartBlueGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.65" />
+                <stop offset="60%" stop-color="#0284c7" stop-opacity="0.25" />
+                <stop offset="100%" stop-color="#0369a1" stop-opacity="0.0" />
+              </linearGradient>
+
+              <linearGradient id="chartTealGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#10b981" stop-opacity="0.6" />
+                <stop offset="65%" stop-color="#14b8a6" stop-opacity="0.2" />
+                <stop offset="100%" stop-color="#0d9488" stop-opacity="0.0" />
+              </linearGradient>
+            </defs>
+
+            ${gridLines}
+            <line x1="${padLeft - 10}" y1="${chartBottom}" x2="${svgWidth - padRight + 10}" y2="${chartBottom}" stroke="#cbd5e1" stroke-width="1.5" />
+
+            <path d="${secAreaPath}" fill="url(#chartBlueGrad)" />
+            <path d="${secCurve}" fill="none" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round" />
+
+            <path d="${areaPath}" fill="url(#chartTealGrad)" />
+            <path d="${curvePath}" fill="none" stroke="#10b981" stroke-width="3" stroke-linecap="round" />
+
+            ${markersHtml}
+          </svg>
+        </div>
+      `;
+    }
+
+    // Render Overview Task Breakdown
+    function renderOverviewTaskBreakdown() {
+      const container = document.getElementById('overview-task-breakdown-list');
+      if (!container) return;
+
+      if (allAvailableTasks.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">কোনো টাস্ক নেই।</p>`;
+        return;
+      }
+
+      container.innerHTML = allAvailableTasks.map(t => {
+        const stats = adminTaskStatsMap[t.id] || { approved: 0, rejected: 0, pending: 0, total: 0 };
+        const limit = t.workerLimit || 0;
+        const progressPercent = limit > 0 ? Math.min(100, Math.round((stats.approved / limit) * 100)) : 100;
+
+        return `
+          <div class="bg-slate-50 border border-slate-200/80 p-2.5 rounded-2xl space-y-1.5 text-xs">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-1.5 truncate">
+                <span class="font-extrabold text-slate-900 truncate">${t.title}</span>
+                ${t.isPinned ? '<span class="bg-amber-100 text-amber-800 text-[9px] font-black px-1.5 py-0.2 rounded-full">📌 PINNED</span>' : ''}
+              </div>
+              <span class="text-emerald-700 font-black shrink-0">৳${t.rewardTaka}</span>
+            </div>
+            <div class="flex items-center justify-between text-[10px] text-slate-500 font-bold">
+              <span>মোট জমা: <strong class="text-slate-800">${stats.total}</strong> (অ্যাপ্রুভড: <strong class="text-emerald-600">${stats.approved}</strong>)</span>
+              <span>${limit > 0 ? `লিমিট: ${stats.approved}/${limit} (${progressPercent}%)` : 'লিমিট: আনলিমিটেড'}</span>
+            </div>
+            ${limit > 0 ? `
+              <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-emerald-500 h-1.5 rounded-full transition-all duration-500" style="width: ${progressPercent}%;"></div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ================= PENDING PROOFS AUDIT & APPROVAL =================
+    function loadAdminSubmissions() {
+      if (currentUser?.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const q = query(collection(db, "submissions"), where("status", "==", "Pending"));
+      onSnapshot(q, (snapshot) => {
+        const box = document.getElementById('admin-submissions-list');
+        const countBadge = document.getElementById('pending-proofs-count');
+        if (countBadge) countBadge.innerText = `${snapshot.size}`;
+        if (!box) return;
+
+        if (snapshot.empty) {
+          box.innerHTML = `<div class="text-center py-10 bg-slate-50 border border-dashed border-slate-200 rounded-3xl"><span class="text-3xl block mb-2">🎉</span><p class="text-xs font-bold text-slate-700">সব কাজ অনুমোদিত! কোনো পেন্ডিং প্রুফ নেই।</p></div>`;
+          return;
+        }
+        box.innerHTML = '';
+        adminSubmissionsMap = {};
+
+        snapshot.forEach((docItem) => {
+          const sub = docItem.data();
+          const subId = docItem.id;
+          adminSubmissionsMap[subId] = sub;
+
+          box.innerHTML += `
+            <div class="bg-white border border-slate-200 p-4 rounded-3xl space-y-3 shadow-xs">
+              <div class="flex justify-between items-start gap-2">
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <strong class="text-slate-900 text-xs font-black">${sub.userName}</strong>
+                    <span class="text-[10px] bg-sky-50 border border-sky-200 text-sky-800 font-bold px-2 py-0.5 rounded-lg font-mono select-all">
+                      UID: ${sub.userId || 'N/A'}
+                    </span>
+                    <button type="button" onclick="navigator.clipboard.writeText('${sub.userId || ''}').then(() => alert('UID কপি হয়েছে: ${sub.userId}'))" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-2 py-0.5 rounded-md cursor-pointer transition">
+                      📋 কপি
+                    </button>
+                  </div>
+                  <span class="text-emerald-700 font-black text-xs block mt-1">${sub.taskTitle} (রিওয়ার্ড: ৳${sub.rewardTaka})</span>
+                  <div class="text-[11px] text-slate-500 flex flex-wrap gap-x-3 gap-y-1 mt-1 font-medium">
+                    <span>📧 <strong>ইমেইল:</strong> ${sub.userEmail || 'N/A'}</span>
+                    <span>📅 <strong>সময়:</strong> ${sub.submittedTime || 'N/A'}</span>
+                    <span>🌐 <strong>IP:</strong> <code class="text-slate-800 bg-slate-100 px-1.5 py-0.2 rounded border font-mono font-bold">${sub.userIP || 'N/A'}</code></span>
+                  </div>
+                </div>
+                <span class="bg-amber-100 text-amber-800 text-[10px] px-2.5 py-1 rounded-full font-black shrink-0">পেন্ডিং</span>
+              </div>
+
+              <div class="text-xs bg-slate-50 p-2.5 rounded-2xl border text-slate-800 break-all">
+                <strong class="text-slate-900">প্রুফ নোট:</strong> ${sub.proofNotes}
+              </div>
+
+              ${sub.proofImage ? `
+                <div class="flex items-center justify-between bg-emerald-50/60 border border-emerald-200/80 p-2 rounded-2xl">
+                  <span class="text-xs text-emerald-800 font-bold flex items-center gap-1.5">
+                    <span>🖼️</span> স্ক্রিনশট অ্যাটাচ করা আছে
+                  </span>
+                  <button type="button" onclick="previewAdminImage('${docItem.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-[11px] px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer">
+                    🔍 বড় করে দেখুন
+                  </button>
+                </div>
+              ` : ''}
+
+              <div class="flex gap-2 pt-2 border-t border-slate-100">
+                <button type="button" onclick="approveSubmission('${subId}', '${sub.userId}', ${sub.rewardCoins})" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-2.5 rounded-xl shadow-xs transition cursor-pointer flex items-center justify-center gap-1">
+                  <span>✓</span> Approve
+                </button>
+                <button type="button" onclick="rejectSubmission('${subId}')" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-black text-xs py-2.5 rounded-xl shadow-xs transition cursor-pointer flex items-center justify-center gap-1">
+                  <span>✕</span> Reject
+                </button>
+                <button type="button" onclick="inspectUserHistory('${sub.userId}', '${sub.userName}', '${sub.userEmail || ''}', '')" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 font-extrabold text-xs px-3 py-2.5 rounded-xl transition cursor-pointer">
+                  🔍 অডিট
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    // ================= WITHDRAWALS & PAYOUTS DESK =================
+    function loadAdminWithdrawals() {
+      if (currentUser?.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const q = query(collection(db, "withdrawals"), where("status", "==", "Pending"));
+      onSnapshot(q, (snap) => {
+        const box = document.getElementById('admin-withdraw-list');
+        const countBadge = document.getElementById('pending-withdraw-count');
+        if (countBadge) countBadge.innerText = `${snap.size}`;
+        if (!box) return;
+
+        if (snap.empty) {
+          box.innerHTML = `<div class="text-center py-10 bg-slate-50 border border-dashed border-slate-200 rounded-3xl"><span class="text-3xl block mb-2">💸</span><p class="text-xs font-bold text-slate-700">কোনো পেন্ডিং ক্যাশআউট রিকোয়েস্ট নেই।</p></div>`;
+          return;
+        }
+
+        box.innerHTML = '';
+        snap.forEach((d) => {
+          const w = d.data();
+          const wId = d.id;
+          const isBkash = w.method === 'bKash';
+          const logoSrc = isBkash ? BKASH_LOGO : NAGAD_LOGO;
+          const refundCoins = w.coins || (w.taka * 10000);
+
+          box.innerHTML += `
+            <div class="bg-white border border-slate-200 p-4 rounded-3xl flex flex-col gap-3 shadow-xs">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <img src="${logoSrc}" class="w-10 h-10 rounded-2xl object-cover border shadow-xs" />
+                  <div>
+                    <strong class="text-slate-900 block text-xs font-black">${w.userName}</strong>
+                    <div class="text-emerald-700 font-black text-sm mt-0.5">৳${w.taka} • ${w.method}</div>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                      <span class="text-[11px] font-mono text-slate-700 font-bold">নম্বর: ${w.phone}</span>
+                      <button type="button" onclick="navigator.clipboard.writeText('${w.phone}').then(() => alert('নম্বর কপি হয়েছে: ${w.phone}'))" class="text-[9px] bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-1.5 py-0.5 rounded cursor-pointer">
+                        📋 কপি
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <button onclick="inspectUserHistory('${w.userId}', '${w.userName}', '${w.email}', '${w.phone}')" class="bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 font-bold px-3 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-xs transition cursor-pointer">
+                  🔍 অডিট
+                </button>
+              </div>
+              <div class="flex gap-2 pt-2 border-t border-slate-100">
+                <button onclick="adminMarkPaid('${wId}', '${w.userId}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-2.5 rounded-xl shadow-xs transition cursor-pointer">
+                  পেমেন্ট সম্পন্ন ✓
+                </button>
+                <button onclick="adminRejectWithdraw('${wId}', '${w.userId}', ${refundCoins})" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-black text-xs py-2.5 rounded-xl shadow-xs transition cursor-pointer">
+                  ✕ বাতিল ও রিফান্ড
+                </button>
+              </div>
+            </div>
+          `;
+        });
+      });
+    }
+
+    // ================= TASK MANAGEMENT & WORKER LIMITS =================
+    window.adminPublishTask = async function() {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const title = document.getElementById('admin-title').value.trim();
+      const cat = document.getElementById('admin-cat').value.trim() || 'Sign In';
+      const rewardTaka = parseFloat(document.getElementById('admin-taka').value) || 10;
+      const link = document.getElementById('admin-link').value.trim();
+      const videoLink = document.getElementById('admin-video-link').value.trim();
+      const imageFileInput = document.getElementById('admin-task-image-file');
+
+      const isPinned = document.getElementById('admin-pin-task')?.checked || false;
+      const isUnlimited = document.getElementById('admin-unlimited-workers')?.checked || false;
+      const workerLimit = isUnlimited ? 0 : (parseInt(document.getElementById('admin-worker-limit')?.value, 10) || 0);
+
+      // Collect Dynamic Step-by-Step Instructions
+      const instructions = adminGetInstructionSteps('publish');
+      const desc = instructions.length > 0 
+        ? instructions.map((s, i) => `${bnStepNumbers[i] || (i+1)}. ${s}`).join('\n')
+        : "অফারটি সম্পন্ন করে রিওয়ার্ড সংগ্রহ করুন।";
+
+      if (!title || !link) {
+        alert("কাজের নাম ও লিংক অবশ্যই দিতে হবে!");
+        return;
+      }
+
+      const publishBtn = document.getElementById('admin-publish-btn');
+      publishBtn.innerText = 'পাবলিশ হচ্ছে...';
+      publishBtn.disabled = true;
+
+      const saveTaskToDb = async (iconBase64) => {
+        await addDoc(collection(db, "tasks"), {
+          title,
+          category: cat,
+          rewardTaka,
+          link,
+          desc,
+          instructions: instructions.length > 0 ? instructions : [desc],
+          isPinned: isPinned,
+          workerLimit: workerLimit,
+          videoLink: videoLink || null,
+          iconImage: iconBase64 || null,
+          createdAt: serverTimestamp()
+        });
+
+        // Broadcast notification to all users
+        try {
+          const nNow = new Date();
+          const nTime = nNow.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true });
+          await addDoc(collection(db, "notifications"), {
+            title: "🔥 নতুন কাজ যুক্ত হয়েছে!",
+            message: `"${title}" টাস্কটি সম্পন্ন করে জিতে নিন ৳${rewardTaka}!`,
+            time: nTime,
+            createdAt: serverTimestamp()
+          });
+        } catch(ne) {
+          console.warn("Notification broadcast notice:", ne);
+        }
+
+        document.getElementById('admin-title').value = '';
+        document.getElementById('admin-cat').value = '';
+        document.getElementById('admin-taka').value = '';
+        document.getElementById('admin-link').value = '';
+        document.getElementById('admin-video-link').value = '';
+        document.getElementById('admin-task-image-file').value = '';
+        if (document.getElementById('admin-worker-limit')) document.getElementById('admin-worker-limit').value = '';
+        if (document.getElementById('admin-pin-task')) document.getElementById('admin-pin-task').checked = false;
+
+        // Reset instructions list to default 3 steps
+        const instList = document.getElementById('admin-instructions-list');
+        if (instList) {
+          instList.innerHTML = '';
+          initPublishInstructionSteps();
+        }
+
+        publishBtn.innerText = 'টাস্ক পাবলিশ করুন 🚀';
+        publishBtn.disabled = false;
+        alert("টাস্ক সফলভাবে পাবলিশ হয়েছে!");
+        switchAdminTab('manage');
+      };
+
+      if (imageFileInput.files && imageFileInput.files[0]) {
+        try {
+          const compressed = await compressImageFile(imageFileInput.files[0], 250, 0.8);
+          saveTaskToDb(compressed);
+        } catch (e) {
+          saveTaskToDb(null);
+        }
+      } else {
+        saveTaskToDb(null);
+      }
+    };
+
+    window.adminOpenEditTaskModal = function(taskId) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const t = allAvailableTasks.find(item => item.id === taskId);
+      if (!t) {
+        alert("টাস্ক পাওয়া যায়নি!");
+        return;
+      }
+
+      currentEditingTaskId = taskId;
+      currentEditingTaskIcon = t.iconImage || null;
+
+      document.getElementById('edit-task-title').value = t.title || '';
+      document.getElementById('edit-task-cat').value = t.category || 'Sign In';
+      document.getElementById('edit-task-taka').value = t.rewardTaka || 10;
+      document.getElementById('edit-task-link').value = t.link || '';
+      document.getElementById('edit-task-video').value = t.videoLink || '';
+      document.getElementById('edit-task-image-file').value = '';
+
+      // Populate Dynamic Step-by-Step Instructions in Edit Modal
+      const editContainer = document.getElementById('edit-instructions-list');
+      if (editContainer) {
+        editContainer.innerHTML = '';
+        let steps = [];
+        if (Array.isArray(t.instructions) && t.instructions.length > 0) {
+          steps = t.instructions;
+        } else if (t.desc) {
+          const raw = t.desc.replace(/(\r\n|\n|\r)/gm, "\n");
+          if (/([০-৯\d]+[\.\)])/.test(raw) || raw.includes('\n')) {
+            const parts = raw.split(/(?:^|\n|\s*)(?:[০-৯\d]+[\.\)]\s*)/).filter(p => p && p.trim().length > 0);
+            steps = parts.length > 1 ? parts : raw.split('\n').filter(p => p && p.trim().length > 0);
+          } else {
+            steps = [raw];
+          }
+        }
+        if (steps.length === 0) steps = [''];
+        steps.forEach(s => adminAddInstructionStep('edit', s.replace(/^[০-৯\d]+[\.\)]\s*/, '').trim()));
+      }
+
+      const isUnlimited = !t.workerLimit || t.workerLimit <= 0;
+      const unlimCheckbox = document.getElementById('edit-unlimited-workers');
+      const limitInput = document.getElementById('edit-task-limit');
+      if (unlimCheckbox) unlimCheckbox.checked = isUnlimited;
+      if (limitInput) {
+        limitInput.value = isUnlimited ? '' : t.workerLimit;
+        limitInput.disabled = isUnlimited;
+      }
+
+      const pinCheckbox = document.getElementById('edit-task-pin');
+      if (pinCheckbox) pinCheckbox.checked = !!t.isPinned;
+
+      const modal = document.getElementById('admin-edit-task-modal');
+      if (modal) modal.classList.remove('hidden');
+    };
+
+    window.adminCloseEditTaskModal = function() {
+      const modal = document.getElementById('admin-edit-task-modal');
+      if (modal) modal.classList.add('hidden');
+      currentEditingTaskId = null;
+    };
+
+    window.adminSaveEditedTask = async function() {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase() || !currentEditingTaskId) return;
+
+      const title = document.getElementById('edit-task-title').value.trim();
+      const cat = document.getElementById('edit-task-cat').value.trim() || 'Sign In';
+      const rewardTaka = parseFloat(document.getElementById('edit-task-taka').value) || 10;
+      const link = document.getElementById('edit-task-link').value.trim();
+      const videoLink = document.getElementById('edit-task-video').value.trim();
+      const imageFileInput = document.getElementById('edit-task-image-file');
+
+      const isPinned = document.getElementById('edit-task-pin')?.checked || false;
+      const isUnlimited = document.getElementById('edit-unlimited-workers')?.checked || false;
+      const workerLimit = isUnlimited ? 0 : (parseInt(document.getElementById('edit-task-limit')?.value, 10) || 0);
+
+      // Collect Dynamic Step-by-Step Instructions
+      const instructions = adminGetInstructionSteps('edit');
+      const desc = instructions.length > 0 
+        ? instructions.map((s, i) => `${bnStepNumbers[i] || (i+1)}. ${s}`).join('\n')
+        : "অফারটি সম্পন্ন করে রিওয়ার্ড সংগ্রহ করুন।";
+
+      if (!title || !link) {
+        alert("কাজের নাম ও লিংক অবশ্যই পূরণ করতে হবে!");
+        return;
+      }
+
+      const saveBtn = document.getElementById('btn-save-edited-task');
+      saveBtn.innerText = 'আপডেট হচ্ছে...';
+      saveBtn.disabled = true;
+
+      try {
+        let finalIcon = currentEditingTaskIcon;
+        if (imageFileInput.files && imageFileInput.files[0]) {
+          finalIcon = await compressImageFile(imageFileInput.files[0], 250, 0.8);
+        }
+
+        await updateDoc(doc(db, "tasks", currentEditingTaskId), {
+          title,
+          category: cat,
+          rewardTaka,
+          link,
+          desc,
+          instructions: instructions.length > 0 ? instructions : [desc],
           isPinned,
           workerLimit,
           videoLink: videoLink || null,
