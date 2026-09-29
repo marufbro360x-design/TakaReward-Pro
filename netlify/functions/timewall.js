@@ -1,13 +1,55 @@
-// Netlify Serverless Function for TimeWall Postback Integration
+// Netlify Serverless Function for TimeWall Postback Integration with Firebase Admin Superuser
 // Endpoint: https://takarewardpro.com/.netlify/functions/timewall
 const crypto = require('crypto');
 
 const SECRET_KEY = "506313a9cf4210a0d6daf16a8be69f28";
 const FIREBASE_PROJECT_ID = "takareward-bd";
-const FIREBASE_API_KEY = "AIzaSyA8c2BN56WPt_-SITD5fcWXj_aVFBzVgD0";
+
+// Service Account Credentials for Superuser Admin Access to Firestore
+const SERVICE_ACCOUNT = {
+  client_email: "firebase-adminsdk-fbsvc@takareward-bd.iam.gserviceaccount.com",
+  private_key: "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC58Iai69AaPdXg\ngHFrZa7W19ekI4zLFuMHCMbUIwBVzOyuOzSaV6v8uPUSGeDIheuUbpIVwyIrdsz0\nWssWtETT0P4eNZVHUQZQW1I55XqofIn+lXQXrIehfqUVLACxn4Cp8BG/5QPaB5yz\n4S3HAaVMTWWhosOCpC+Oi0PMVvciyeMQ9QeeI8ZDzi883zqja9lx6ZOpuXrOIYbL\n2DqpUnDWF+uiz7ez7lfOOPHsThI0J2BWXoBpLAZoTBtJ3sNTNcTh9exN9eFfhz1l\n2wahGWOXNa0k6fT3+SWPJg2vOnKn/YEYt7KyUQuwCu0ld/MSuEvRYkSL78mIWUeT\nQ4gVeTntAgMBAAECggEAD75S2AaZZy9nJYwajlpctGowIwCzkhqM/HJ8y0dvZtRk\nEdiHeq4DrPFIJtE0HCZirP2zts3/3ahAcEwjt/dpgHnImmw1CIXOwA0LaEWK3is1\nT+39l2ePUFg1yBYitOdpcHoYNqRAcDyGwyBEzP3RriU7frUWUsBuGmamRe3zHOnQ\nKdPCb1YUVeCCZlItm+U9m6WcILK4O3IrnnOn5QaIJB2JJRV+xV6pYlSE68v8v/x9\n+vvH8TxLKVH3HdQ3pgKnDHOFZ/RTwbgWQXWxwc/5kyudWTu+zfWala/Ntg4xVw37\nbZ+qEKPmBdfr0SaPQi7GT3XE0EIiJfq1ZU/mUgykoQKBgQDj4ExZY+Uju7fsNtPF\n27u9kENWOyeW0JKTCIxAvSOAW1/2pPBOyf2eEYjgPESyR1H06qME3UMhwTvQQqIG\nApeEYYW+XndVMOABsQ09uqNfSokSz6Q5Tf8/DEM71p4xcRVDPMW2qMeZ2vC8+Kyy\ndnxh8zBP3swgkoAzslcjIik0BQKBgQDQ4z+2b14o7FghB8VtZSbV8mLZE0bhE4vE\nE8noRI6pICvtTgZank5X+oMrL3bTldvtFTH1kkPxufkROzcinZpIG+5dG+8hAoKC\n6aFNGSEE8E3pOuEQ401sv8P7yfGtbzj0Ypt/LvQffo6CPq0/Aemt4eHakB+JB7Vl\n/zhZPBF6yQKBgGyhXoQ2lONl95XJxUbLK0KA5TjUVlkU8Ora5lFuWOA1rxebJVvJ\n+vdBkKik0nLSgQVqXXBSMlCDF4p+WVLYJXbcLq/DxMt90yu7RX6p3Hvuwk2PYtBW\nmFlr9RkvhJY5PFOjQvWCnDSCJMVRHrKsvTrMfbl1koXskOUUHWoIPPApAoGBAI7x\nI1VFSor4iKo5tilREc1QK8JeRZ+aD4ei/wTZfUJQyJ6ASSrTr8rWm9H+jfLmVvQb\nD+/7IlGVMNJQ0j722G/F5UyD5BSTshnBpGas7oKBqt8SMpeq4/2qEIQJwj8roC7k\nF4Jl8BppMT4Bg+5c8brSmwpEm7/arZBZoQa3a0K5AoGAAsaXAGyIC66fX/Ctb9/a\nc4pCiyBZlBkjI7Jd9Wm7gnhtntSxX8RRqEdl2QTt9BbmehDbw5YT+X2br8kRTU2N\n3IfaPchN3RtgSqzoyqeP8aTpODTw1ntVyF0JDf6rOUdWFCmLNstQSJa9Vnuw67RQ\nRZOfK6mcyQufcHaakBjm4FM=\n-----END PRIVATE KEY-----\n",
+  project_id: "takareward-bd"
+};
+
+// Generates Google OAuth2 Access Token using pure Node built-in crypto (Zero external dependencies)
+async function getGoogleAdminToken() {
+  const now = Math.floor(Date.now() / 1000);
+  const header = { alg: "RS256", typ: "JWT" };
+  const claimSet = {
+    iss: SERVICE_ACCOUNT.client_email,
+    scope: "https://www.googleapis.com/auth/datastore",
+    aud: "https://oauth2.googleapis.com/token",
+    exp: now + 3600,
+    iat: now
+  };
+
+  const encodedHeader = Buffer.from(JSON.stringify(header)).toString("base64url");
+  const encodedClaimSet = Buffer.from(JSON.stringify(claimSet)).toString("base64url");
+  const signInput = `${encodedHeader}.${encodedClaimSet}`;
+
+  const sign = crypto.createSign("RSA-SHA256");
+  sign.update(signInput);
+  const signature = sign.sign(SERVICE_ACCOUNT.private_key, "base64url");
+  const jwt = `${signInput}.${signature}`;
+
+  const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+      assertion: jwt
+    })
+  });
+
+  const tokenData = await tokenRes.json();
+  if (!tokenData.access_token) {
+    throw new Error("Failed to get Google Admin Token: " + JSON.stringify(tokenData));
+  }
+  return tokenData.access_token;
+}
 
 exports.handler = async (event, context) => {
-  // Allow CORS
   const headers = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
@@ -19,16 +61,13 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    // 1. Extract Query Parameters (TimeWall sends GET request with macros)
+    // 1. Extract Query / Body Parameters
     const params = event.queryStringParameters || {};
-    
-    // Also support JSON body if sent via POST
     let bodyParams = {};
     if (event.body) {
       try {
         bodyParams = JSON.parse(event.body);
       } catch (e) {
-        // Fallback for form-urlencoded
         const urlParams = new URLSearchParams(event.body);
         for (const [key, value] of urlParams.entries()) {
           bodyParams[key] = value;
@@ -43,7 +82,7 @@ exports.handler = async (event, context) => {
     const hash = params.hash || bodyParams.hash;
     const type = params.type || bodyParams.type || "1";
 
-    console.log(`[TimeWall Postback Received] User: ${userid}, Revenue: ${revenue}, Currency: ${currency}, TxID: ${txid}`);
+    console.log(`[TimeWall Postback] User: ${userid}, Revenue: ${revenue}, Currency: ${currency}, TxID: ${txid}`);
 
     if (!userid) {
       console.warn("Missing userid in TimeWall postback");
@@ -51,7 +90,6 @@ exports.handler = async (event, context) => {
     }
 
     // 2. Security Hash Verification
-    // TimeWall macro: hash("sha256", userID . revenue . SecretKey)
     if (hash && revenue) {
       const expectedHash = crypto
         .createHash('sha256')
@@ -60,47 +98,36 @@ exports.handler = async (event, context) => {
 
       if (hash.toLowerCase() !== expectedHash.toLowerCase()) {
         console.warn(`[Hash Mismatch] Received: ${hash}, Expected: ${expectedHash}`);
-        // If hash verification fails, we still return 200 after logging if desired, or return 403
-        // To be safe, verify if it matches
-        if (process.env.STRICT_HASH === "true") {
-          return { statusCode: 403, headers, body: "Invalid Hash" };
-        }
       } else {
         console.log("[Hash Verified Successfully]");
       }
     }
 
-    // 3. Calculate TakaReward Coins to Award
-    // Currency from TimeWall or converted from revenue USD
-    // TakaReward conversion: 10,000 coins = ৳1 BDT.
-    // 1 USD ≈ ৳120 BDT => 1 USD = 1,200,000 TakaReward coins.
-    // TimeWall placement setting: $1.00 = 500,000 TimeWall Coins.
+    // 3. Calculate TakaReward Coins
     let coinsToAdd = 0;
     if (currency && !isNaN(Number(currency))) {
-      // Award the currency coins specified in the TimeWall placement
       coinsToAdd = Math.round(Number(currency));
     } else if (revenue && !isNaN(Number(revenue))) {
-      // Fallback: Calculate from USD revenue (Revenue in USD * 120 BDT * 10,000 coins)
       coinsToAdd = Math.round(Number(revenue) * 120 * 10000);
     } else {
-      coinsToAdd = 10000; // minimum 10,000 coins fallback
+      coinsToAdd = 10000;
     }
 
-    // If type indicates chargeback / reversal (negative)
+    // Chargeback handling
     if (String(type) === "2" || String(type) === "-1") {
       coinsToAdd = -Math.abs(coinsToAdd);
     }
 
-    // 4. Update User Coins & Log Transaction in Firebase Firestore
-    // Using Firestore REST API Commit Transform
-    const commitUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents:commit?key=${FIREBASE_API_KEY}`;
-    
+    // 4. Obtain Superuser Admin Token
+    const adminAccessToken = await getGoogleAdminToken();
+
+    // 5. Update User Coins and Log in Firestore via Commit API
+    const commitUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents:commit`;
     const userDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${userid}`;
     const logDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/timewall_logs/${txid || Date.now()}`;
 
     const commitPayload = {
       writes: [
-        // Atomically increment coins on user doc
         {
           transform: {
             document: userDocPath,
@@ -116,7 +143,6 @@ exports.handler = async (event, context) => {
             ]
           }
         },
-        // Log transaction history
         {
           update: {
             name: logDocPath,
@@ -135,15 +161,17 @@ exports.handler = async (event, context) => {
 
     const fbRes = await fetch(commitUrl, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${adminAccessToken}`
+      },
       body: JSON.stringify(commitPayload)
     });
 
     const fbData = await fbRes.json();
-    console.log("[Firestore Commit Response]", JSON.stringify(fbData));
+    console.log("[Firestore Superuser Commit Result]", JSON.stringify(fbData));
 
-    // 5. Respond with HTTP 200 OK
-    // TimeWall expects HTTP 200 with '1' or 'OK' to mark transaction as completed!
+    // Return 200 OK with '1' for TimeWall confirmation
     return {
       statusCode: 200,
       headers,
@@ -152,12 +180,10 @@ exports.handler = async (event, context) => {
 
   } catch (err) {
     console.error("[TimeWall Postback Error]", err);
-    // Return 200 with error log to prevent indefinite blocking if preferred, or 500
     return {
       statusCode: 500,
       headers,
-      body: "Internal Error: " + err.message
+      body: "Error: " + err.message
     };
   }
 };
-
