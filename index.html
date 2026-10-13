@@ -95,7 +95,29 @@
   <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap" rel="stylesheet">
   
   <style>
-    body { font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
+    body { 
+      font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif;
+      background-image: url('https://i.ibb.co.com/d4F5Cr6d/Kawaii-Bunny-in-a-Blossom-Meadow.png');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+    }
+    .app-glass-frame {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .app-glass-header {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .app-glass-nav {
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
     .bg-pastel { background-color: #f8fafc; }
     .emerald-primary { background-color: #00c244; }
     .emerald-primary:hover { background-color: #00a83a; }
@@ -211,13 +233,13 @@
     }
   </script>
 </head>
-<body class="bg-slate-100 text-slate-900 min-h-screen flex justify-center antialiased select-none">
+<body class="text-slate-900 min-h-screen flex justify-center antialiased select-none">
 
   <!-- Mobile App Frame -->
-  <div class="w-full max-w-md bg-white min-h-screen flex flex-col justify-between shadow-2xl relative">
+  <div class="w-full max-w-md app-glass-frame min-h-screen flex flex-col justify-between shadow-2xl relative border-x border-white/50">
 
     <!-- ================= 1. LOGIN SCREEN ================= -->
-    <div id="screen-login" class="flex-1 flex flex-col justify-between p-6 text-center bg-white">
+    <div id="screen-login" class="flex-1 flex flex-col justify-between p-6 text-center bg-transparent">
       <div class="pt-6">
         <h1 class="text-3xl sm:text-4xl font-black text-slate-900 leading-tight">
           Easy way to<br /><span class="text-emerald-500">make money</span><br />online!
@@ -268,7 +290,7 @@
     </div>
 
     <!-- ================= 2. MAIN APP VIEW ================= -->
-    <div id="screen-app" class="flex-1 flex flex-col justify-between hidden pb-16 bg-pastel relative">
+    <div id="screen-app" class="flex-1 flex flex-col justify-between hidden pb-16 bg-transparent relative">
 
       <!-- Header (With VIP Badge, Notification Bell & Profile Customization Trigger) -->
       <header class="bg-white px-3.5 py-2.5 border-b border-slate-200/80 sticky top-0 z-30 flex items-center justify-between shadow-xs">
@@ -736,7 +758,7 @@
       </a>
 
       <!-- Bottom Nav -->
-      <nav class="fixed bottom-0 w-full max-w-md bg-white border-t border-slate-200/80 py-2 px-4 flex justify-around items-center z-20 shadow-lg">
+      <nav class="fixed bottom-0 w-full max-w-md app-glass-nav border-t border-slate-200/80 py-2 px-4 flex justify-around items-center z-20 shadow-lg">
         <button onclick="switchAppTab('offer')" id="nav-btn-offer" class="flex flex-col items-center gap-1 text-emerald-primary font-bold text-xs cursor-pointer">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>
           <span>Offer</span>
