@@ -230,7 +230,7 @@ body{
   box-shadow:0 0 12px rgba(255,95,31,.55); width:0; transition:width 1.2s cubic-bezier(.2,.8,.2,1); }
 
 /* REVEAL */
-.reveal{ opacity:0; transform:translateY(24px) scale(.985); transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+.reveal { opacity: 1 !important; transform: none !important; transition: opacity .4s ease, transform .4s ease; }
 .reveal.in{ opacity:1; transform:none; }
 
 /* HERO */
@@ -406,9 +406,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 .toast.show{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
 
 
-/* Clean RewardJoy Sidebar & Seamless Offerwall Styling */
+/* RewardJoy Desktop Layout & Sidebar Styles */
 .rj-sidebar {
-  width: 240px;
+  width: 250px;
   background: #ffffff;
   border-right: 1px solid #f1f5f9;
   display: flex;
@@ -437,8 +437,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
   border: 1px solid transparent;
 }
 .rj-nav-btn svg {
-  width: 18px;
-  height: 18px;
+  width: 19px;
+  height: 19px;
   stroke-width: 2.2;
 }
 .rj-nav-btn:hover {
@@ -458,13 +458,53 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 .rj-nav-btn.active svg {
   color: #ffffff !important;
 }
-.clean-timewall-frame {
-  width: 100%;
-  min-height: 820px;
-  height: 85vh;
-  border: none;
-  border-radius: 20px;
+.game-card {
   background: #ffffff;
+  border: 1px solid #f1f5f9;
+  border-radius: 24px;
+  padding: 14px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.08);
+  border-color: #ffedd5;
+}
+.game-card-img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 18px;
+  object-fit: cover;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+.partner-card {
+  background: #ffffff;
+  border: 1.5px solid #f1f5f9;
+  border-radius: 22px;
+  padding: 20px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 120px;
+}
+.partner-card:hover {
+  border-color: #fdba74;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.1);
+}
+.live-dot-green {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
 }
 
 
@@ -594,7 +634,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 <body class="bg-slate-100 text-slate-900 min-h-screen antialiased select-none">
 
   <!-- Mobile App Frame -->
-  <!-- ================= MOBILE APP VARIANT (Phone View: strictly < 768px) ================= -->
+  <!-- ================= 1. MOBILE APP VARIANT (Phone View < 768px: 100% UNTOUCHED) ================= -->
   <div id="mobile-app-wrapper" class="w-full max-w-md mx-auto bg-white min-h-screen flex flex-col justify-between shadow-2xl relative md:hidden">
 
     <!-- ================= 1. LOGIN SCREEN ================= -->
@@ -1139,9 +1179,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     </div>
   </div>
+  <!-- ================= END MOBILE APP VARIANT ================= -->
 
   
-  <!-- ================= 2. DESKTOP WEB APP VARIANT (strictly >= 768px) ================= -->
+  <!-- ================= 2. DESKTOP WEB APP VARIANT (RewardJoy Architecture: strictly >= 768px) ================= -->
   <div id="desktop-app-wrapper" class="hidden md:flex flex-col min-h-screen w-full bg-[var(--bg)] text-[var(--text)]">
     <div id="landingView">
   <!-- TOPBAR -->
@@ -1555,46 +1596,37 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
   </main>
 </div>
     
-    <!-- DESKTOP 2: LOGGED-IN WORKSPACE (RewardJoy / CashJoy Pure Design) -->
+    <!-- DESKTOP 2: LOGGED-IN WORKSPACE (RewardJoy Exact Dashboard Layout) -->
     <div id="desktop-screen-app" class="hidden flex-1 flex flex-col min-h-screen w-full bg-[var(--bg)]">
       
-      <!-- Desktop Top Header -->
+      <!-- Desktop Top Header: Clean (NO Redundant Notice Text! NO Coin Amount! ONLY Taka Balance!) -->
       <header class="w-full bg-[var(--surface)] border-b border-[var(--border)] px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 shadow-xs">
         <div class="flex items-center gap-6">
-          <div class="flex items-center gap-2.5 cursor-pointer" onclick="desktopSwitchTab('offers')">
+          <div class="flex items-center gap-2.5 cursor-pointer" onclick="desktopSwitchTab('dashboard')">
             <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-10 h-10 rounded-2xl object-cover border-2 border-orange-500 shadow-sm" />
             <div class="flex items-center">
               <span class="text-2xl font-black font-display tracking-tight text-[var(--text)]">Taka<span class="text-brand-500">Reward</span></span>
               <span class="ml-1 text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-lg border border-emerald-300 dark:border-emerald-800">PRO</span>
             </div>
           </div>
-          <!-- Live Announcement Notice -->
-          <div class="hidden xl:flex items-center gap-2 bg-[var(--surface-2)] border border-[var(--border)] px-4 py-1.5 rounded-full text-xs font-bold text-[var(--text-2)]">
-            <span class="live-dot"></span>
-            <span>TimeWall গেমস ও টাস্ক সম্পন্ন করে সরাসরি বিকাশ ও নগদে টাকা উত্তোলন করুন!</span>
-          </div>
         </div>
 
-        <!-- Top Right User Controls -->
+        <!-- Top Right User Controls (ONLY Money Balance: ● ৳ 22379.0 - NO COIN AMOUNT!) -->
         <div class="flex items-center gap-3.5">
-          <!-- Balance Chip -->
-          <div class="flex items-center gap-3 px-4 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/25">
+          <!-- Green Money Balance Pill -->
+          <div class="flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/25">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
             <div class="flex items-baseline gap-1 font-mono font-extrabold text-sm text-emerald-600 dark:text-emerald-400">
               <span class="text-xs">৳</span><span id="desk-app-taka">0.0</span>
             </div>
-            <div class="h-3.5 w-px bg-emerald-500/30"></div>
-            <div class="flex items-center gap-1 text-xs font-bold text-[var(--text-2)]">
-              <span>🪙</span><span id="desk-app-coins">0</span>
-            </div>
           </div>
 
           <!-- Cashout Button -->
-          <button onclick="switchAppTab('cashout'); openCashoutModalDirect();" class="btn btn-primary !py-2.5 !px-4 text-xs font-bold shadow-sm">
+          <button onclick="switchAppTab('cashout'); openCashoutModalDirect();" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold shadow-sm">
             <i data-lucide="arrow-up-right"></i> Cashout
           </button>
 
-          <!-- Daily Bonus Streak -->
+          <!-- Daily Bonus -->
           <button onclick="claimDailyBonus()" id="desk-daily-claim-btn" class="btn btn-ghost !py-2.5 !px-3.5 text-xs font-bold text-brand-500">
             <i data-lucide="sparkles"></i> Claim ৳১.০০
           </button>
@@ -1617,7 +1649,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </div>
           </div>
 
-          <!-- Admin Button (visible for admin) -->
+          <!-- Admin Button -->
           <button id="desk-admin-btn" onclick="toggleAdminModal()" class="hidden btn btn-ghost !py-2 !px-3 text-xs font-bold !text-amber-500 !border-amber-500/30">
             <i data-lucide="shield"></i> Admin
           </button>
@@ -1625,12 +1657,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       </header>
 
       <!-- Desktop Body Split View -->
-      <div class="flex-1 flex w-full max-w-[1500px] mx-auto overflow-hidden">
+      <div class="flex-1 flex w-full max-w-[1550px] mx-auto overflow-hidden">
         
-        <!-- RewardJoy Style Professional Left Sidebar -->
+        <!-- RewardJoy Professional Left Sidebar (Exact Icons & Clean Text) -->
         <aside class="rj-sidebar">
-          <div class="space-y-2">
-            <button onclick="desktopSwitchTab('offers')" id="desk-nav-offers" class="rj-nav-btn active">
+          <div class="space-y-1.5">
+            <button onclick="desktopSwitchTab('dashboard')" id="desk-nav-dashboard" class="rj-nav-btn active">
+              <i data-lucide="layout-dashboard"></i>
+              <span>Dashboard</span>
+            </button>
+            <button onclick="desktopSwitchTab('offers')" id="desk-nav-offers" class="rj-nav-btn">
               <i data-lucide="file-check-2"></i>
               <span>Offers</span>
             </button>
@@ -1638,21 +1674,17 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <i data-lucide="clipboard-list"></i>
               <span>Surveys</span>
             </button>
-            <button onclick="desktopSwitchTab('myoffers')" id="desk-nav-myoffers" class="rj-nav-btn">
-              <i data-lucide="settings-2"></i>
-              <span>My Offers</span>
-            </button>
             <button onclick="desktopSwitchTab('browsing')" id="desk-nav-browsing" class="rj-nav-btn">
               <i data-lucide="mouse-pointer-click"></i>
               <span>Browsing</span>
             </button>
-            <button onclick="desktopSwitchTab('challenge')" id="desk-nav-challenge" class="rj-nav-btn">
-              <i data-lucide="trophy"></i>
-              <span>Challenge</span>
-            </button>
             <button onclick="desktopSwitchTab('affiliate')" id="desk-nav-affiliate" class="rj-nav-btn">
               <i data-lucide="users"></i>
               <span>Affiliate</span>
+            </button>
+            <button onclick="desktopSwitchTab('challenge')" id="desk-nav-challenge" class="rj-nav-btn">
+              <i data-lucide="trophy"></i>
+              <span>Challenge</span>
             </button>
             <button onclick="desktopSwitchTab('profile')" id="desk-nav-profile" class="rj-nav-btn">
               <i data-lucide="user"></i>
@@ -1660,7 +1692,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </button>
           </div>
 
-          <!-- Sidebar Bottom Clock -->
+          <!-- Sidebar Bottom Clock (RewardJoy exact format) -->
           <div class="pt-6 border-t border-[var(--border)] space-y-3">
             <a href="https://t.me/RewardProAdmin" target="_blank" class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-sky-500/10 border border-sky-500/25 text-sky-600 dark:text-sky-400 font-bold text-xs hover:bg-sky-500/20 transition">
               <i data-lucide="send" class="w-3.5 h-3.5"></i>
@@ -1668,7 +1700,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </a>
             <div class="text-[11px] font-mono text-[var(--text-3)] text-center flex items-center justify-center gap-1.5">
               <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-              <span id="desk-live-clock">10.13 22:00:00</span>
+              <span id="desk-live-clock">2026.10.14 07:47:15</span>
             </div>
           </div>
         </aside>
@@ -1676,49 +1708,248 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         <!-- Right Main Viewport Area -->
         <main class="flex-1 overflow-y-auto px-8 py-8 space-y-8">
           
-          <!-- TAB 1: OFFERS VIEW (CLEAN TIMEWALL GAMES EMBED + PARTNERS) -->
-          <section id="desk-view-offers" class="space-y-8">
-            <!-- Pure Clean TimeWall Games Viewport (NO Clunky Card Headers!) -->
-            <div class="w-full bg-[var(--surface)] border border-[var(--border)] rounded-3xl overflow-hidden shadow-sm">
-              <iframe id="desk-timewall-iframe-games" title="TimeWall Games" src="" class="clean-timewall-frame" scrolling="auto"></iframe>
+          <!-- TAB 1: REWARDJOY DASHBOARD VIEW (Screenshot 9 & 10 Exact Replica) -->
+          <section id="desk-view-dashboard" class="space-y-6">
+            <!-- Greeting Banner -->
+            <div class="card p-5 flex items-center gap-4 bg-[var(--surface)]">
+              <span class="text-3xl">🌙</span>
+              <div>
+                <h3 class="text-xl font-bold font-display text-[var(--text)]">Good evening, <span id="desk-dash-name">User</span> <span class="text-xs px-2 py-0.5 rounded-lg bg-orange-500/10 text-brand-500 font-black ml-1">Lv.0</span></h3>
+                <p class="text-xs text-[var(--text-3)] mt-0.5">Welcome back to TakaReward Pro! Here is your daily overview.</p>
+              </div>
             </div>
 
-            <!-- In-App Custom Verified Micro Tasks -->
-            <div class="space-y-4 pt-2">
-              <div class="flex items-center justify-between">
-                <div>
-                  <h3 class="section-title text-xl flex items-center gap-2">
-                    <span>🔥</span> স্পেশাল ভেরিফায়েড মাইক্রো টাস্ক
-                  </h3>
-                  <p class="text-xs text-[var(--text-3)] mt-0.5">অ্যাডমিন কর্তৃক নির্ধারিত সহজ কাজ সম্পন্ন করে তাৎক্ষণিক আয় করুন</p>
+            <!-- Featured Surveys (3 Cards) -->
+            <div>
+              <div class="flex items-center gap-2 text-xs font-bold text-emerald-500 mb-3">
+                <i data-lucide="clipboard-check" class="w-4 h-4"></i>
+                <span>Featured Surveys</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div onclick="openTimeWall('surveys')" class="card p-4 card-lift flex items-center justify-between cursor-pointer">
+                  <div class="flex items-center gap-2.5">
+                    <div class="clay clay-emerald w-10 h-10"><i data-lucide="clock"></i></div>
+                    <div>
+                      <span class="text-xs text-[var(--text-3)] font-bold">⏱️ 3 Min</span>
+                      <div class="font-extrabold text-sm text-[var(--text)] mt-0.5">Quick Survey</div>
+                    </div>
+                  </div>
+                  <span class="font-mono font-black text-emerald-600 text-sm">৳ 35.00</span>
+                </div>
+
+                <div onclick="openTimeWall('surveys')" class="card p-4 card-lift flex items-center justify-between cursor-pointer">
+                  <div class="flex items-center gap-2.5">
+                    <div class="clay clay-sky w-10 h-10"><i data-lucide="clock"></i></div>
+                    <div>
+                      <span class="text-xs text-[var(--text-3)] font-bold">⏱️ 5 Min</span>
+                      <div class="font-extrabold text-sm text-[var(--text)] mt-0.5">Consumer Poll</div>
+                    </div>
+                  </div>
+                  <span class="font-mono font-black text-emerald-600 text-sm">৳ 45.00</span>
+                </div>
+
+                <div onclick="openTimeWall('surveys')" class="card p-4 card-lift flex items-center justify-between cursor-pointer">
+                  <div class="flex items-center gap-2.5">
+                    <div class="clay clay-violet w-10 h-10"><i data-lucide="clock"></i></div>
+                    <div>
+                      <span class="text-xs text-[var(--text-3)] font-bold">⏱️ 8 Min</span>
+                      <div class="font-extrabold text-sm text-[var(--text)] mt-0.5">Brand Research</div>
+                    </div>
+                  </div>
+                  <span class="font-mono font-black text-emerald-600 text-sm">৳ 65.00</span>
                 </div>
               </div>
-              <div id="desk-tasks-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Injected via JavaScript from Firestore -->
+            </div>
+
+            <!-- Performance Card (Main Balance, Purchase Balance, Referrals) -->
+            <div>
+              <div class="flex items-center gap-2 text-xs font-bold text-indigo-500 mb-3">
+                <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+                <span>Performance</span>
+              </div>
+              <div class="card p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Main Balance -->
+                <div class="space-y-3">
+                  <div class="flex items-center gap-2 text-xs font-bold text-[var(--text-3)]">
+                    <span>👛</span> Main Balance
+                  </div>
+                  <div class="num-display text-3xl font-black text-[var(--text)] font-mono">
+                    ৳ <span id="desk-dash-taka">0.0</span>
+                  </div>
+                  <button onclick="switchAppTab('cashout'); openCashoutModalDirect();" class="btn btn-primary !py-2 text-xs font-bold">
+                    <i data-lucide="arrow-up-right"></i> Cashout
+                  </button>
+                </div>
+
+                <!-- Purchase Balance -->
+                <div class="space-y-3 border-t md:border-t-0 md:border-l border-[var(--border)] pt-4 md:pt-0 md:pl-6">
+                  <div class="flex items-center gap-2 text-xs font-bold text-[var(--text-3)]">
+                    <span>💼</span> Purchase Balance
+                  </div>
+                  <div class="num-display text-3xl font-black text-[var(--text)] font-mono">
+                    ৳ 0.00
+                  </div>
+                  <button onclick="alert('ডিপোজিট সিস্টেম শীঘ্রই চালু হচ্ছে!')" class="btn btn-ghost !py-2 text-xs font-bold">
+                    <i data-lucide="plus"></i> Deposit
+                  </button>
+                </div>
+
+                <!-- Referrals -->
+                <div class="space-y-3 border-t md:border-t-0 md:border-l border-[var(--border)] pt-4 md:pt-0 md:pl-6">
+                  <div class="flex items-center gap-2 text-xs font-bold text-[var(--text-3)]">
+                    <span>👥</span> Referrals
+                  </div>
+                  <div id="desk-dash-refs" class="num-display text-3xl font-black text-[var(--text)] font-mono">
+                    0
+                  </div>
+                  <button onclick="desktopSwitchTab('affiliate')" class="btn btn-ghost !py-2 text-xs font-bold">
+                    <i data-lucide="trending-up"></i> Statistics
+                  </button>
+                </div>
               </div>
             </div>
 
-            <!-- Other Partner Offerwalls -->
+            <!-- Level Up Progress Bar -->
+            <div>
+              <div class="flex items-center gap-2 text-xs font-bold text-blue-500 mb-3">
+                <i data-lucide="award" class="w-4 h-4"></i>
+                <span>Level Up</span>
+              </div>
+              <div class="card p-6 bg-gradient-to-r from-amber-500/10 via-orange-500/5 to-transparent border-amber-300/40 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div class="text-3xl font-black italic text-brand-500 font-display">Lv.0</div>
+                  <span class="text-xs font-bold text-[var(--text-3)]">1,000 coins to level up</span>
+                </div>
+                <div class="w-full bg-[var(--surface-3)] h-2 rounded-full overflow-hidden">
+                  <div class="bg-brand-500 h-full w-1/4 rounded-full"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Daily Challenge $100 Banner (Screenshot 10) -->
+            <div onclick="desktopSwitchTab('challenge')" class="card p-5 bg-gradient-to-r from-orange-500/15 via-amber-500/15 to-orange-500/15 border-orange-400/40 flex items-center justify-between cursor-pointer hover:border-orange-400 transition">
+              <div class="flex items-center gap-4">
+                <div class="text-3xl">🏆</div>
+                <div>
+                  <h4 class="font-extrabold text-base text-[var(--text)]">Daily Challenge</h4>
+                  <p class="text-xs text-[var(--text-3)] font-medium">Rewards For The Top 100 Earners</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-4">
+                <div class="num-display text-3xl font-black text-brand-500">৳১০০+</div>
+                <span class="btn btn-primary !py-2 text-xs font-bold">Join Now ➔</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 2: OFFERS VIEW (Screenshot 2 & 5 Replica: Games Grid on Top + Tasks on Bottom!) -->
+          <section id="desk-view-offers" class="space-y-8 hidden">
+            
+            <!-- Top Subtabs (Offers, Started, Completed) -->
+            <div class="flex items-center justify-between border-b border-[var(--border)] pb-3">
+              <div class="flex gap-2">
+                <button class="btn btn-primary !py-2 text-xs font-bold"><i data-lucide="file-check-2"></i> Offers</button>
+                <button onclick="desktopSwitchTab('myoffers')" class="btn btn-ghost !py-2 text-xs font-bold"><i data-lucide="clock"></i> Started</button>
+                <button onclick="desktopSwitchTab('myoffers')" class="btn btn-ghost !py-2 text-xs font-bold"><i data-lucide="check-circle-2"></i> Completed</button>
+              </div>
+
+              <!-- Device Filters -->
+              <div class="flex items-center gap-3 text-xs font-bold text-[var(--text-2)] bg-[var(--surface-2)] border border-[var(--border)] px-4 py-1.5 rounded-2xl">
+                <span>Devices:</span>
+                <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked class="accent-orange-500" /> Android</label>
+                <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked class="accent-orange-500" /> Apple</label>
+                <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" checked class="accent-orange-500" /> Desktop</label>
+                <span class="bg-brand-500 text-white px-2 py-0.5 rounded-lg text-[10px] font-black">View all</span>
+              </div>
+            </div>
+
+            <!-- SECTION 1: 🎮 Games (Screenshot 2 & 5 Exact Cards with Real Images!) -->
+            <div class="space-y-4">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">🎮</span>
+                <h3 class="section-title text-xl text-[var(--text)]">Games</h3>
+              </div>
+
+              <!-- 6-Column Game Cards Grid (Crazy Aim, Rocket Hit, Free My Cat, Mochi Fall, OneShot Pool, Blast It, etc.) -->
+              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div onclick="openTimeWall('games')" class="game-card">
+                  <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=200&auto=format&fit=crop&q=80" class="game-card-img mb-2.5" alt="Blast it!" />
+                  <h4 class="font-extrabold text-xs text-[var(--text)] truncate">Blast it!</h4>
+                  <div class="text-xs font-black text-brand-500 mt-1 font-mono">৳ 109.00</div>
+                </div>
+
+                <div onclick="openTimeWall('games')" class="game-card">
+                  <img src="https://images.unsplash.com/photo-1579373903781-fd5c0c30c4cd?w=200&auto=format&fit=crop&q=80" class="game-card-img mb-2.5" alt="Rocket Hit" />
+                  <h4 class="font-extrabold text-xs text-[var(--text)] truncate">Rocket Hit</h4>
+                  <div class="text-xs font-black text-brand-500 mt-1 font-mono">৳ 276.00</div>
+                </div>
+
+                <div onclick="openTimeWall('games')" class="game-card">
+                  <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=200&auto=format&fit=crop&q=80" class="game-card-img mb-2.5" alt="Color Bolts" />
+                  <h4 class="font-extrabold text-xs text-[var(--text)] truncate">Color Bolts</h4>
+                  <div class="text-xs font-black text-brand-500 mt-1 font-mono">৳ 218.00</div>
+                </div>
+
+                <div onclick="openTimeWall('games')" class="game-card">
+                  <img src="https://images.unsplash.com/photo-1563089145-599997674d42?w=200&auto=format&fit=crop&q=80" class="game-card-img mb-2.5" alt="Crazy Aim" />
+                  <h4 class="font-extrabold text-xs text-[var(--text)] truncate">Crazy Aim</h4>
+                  <div class="text-xs font-black text-brand-500 mt-1 font-mono">৳ 307.00</div>
+                </div>
+
+                <div onclick="openTimeWall('games')" class="game-card">
+                  <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=200&auto=format&fit=crop&q=80" class="game-card-img mb-2.5" alt="Free My Cat" />
+                  <h4 class="font-extrabold text-xs text-[var(--text)] truncate">Free My Cat</h4>
+                  <div class="text-xs font-black text-brand-500 mt-1 font-mono">৳ 262.00</div>
+                </div>
+
+                <div onclick="openTimeWall('games')" class="game-card">
+                  <img src="https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=200&auto=format&fit=crop&q=80" class="game-card-img mb-2.5" alt="Mochi Fall" />
+                  <h4 class="font-extrabold text-xs text-[var(--text)] truncate">Mochi Fall</h4>
+                  <div class="text-xs font-black text-brand-500 mt-1 font-mono">৳ 118.00</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SECTION 2: 📦 Apps (Our In-App Admin Tasks - Exactly where user drew "task" in green!) -->
             <div class="space-y-4 pt-4 border-t border-[var(--border)]">
-              <h3 class="section-title text-lg flex items-center gap-2">
-                <span>💎</span> Additional Offerwall Partners
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">📦</span>
+                  <h3 class="section-title text-xl text-[var(--text)]">Apps &amp; Tasks</h3>
+                  <span class="chip chip-success !py-0.5 !text-[10px]">Verified Payouts</span>
+                </div>
+              </div>
+
+              <!-- Real Tasks from Admin / Firestore -->
+              <div id="desk-tasks-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Dynamically populated from Firestore -->
+              </div>
+            </div>
+
+            <!-- SECTION 3: 💎 Offer Partners -->
+            <div class="space-y-4 pt-4 border-t border-[var(--border)]">
+              <h3 class="section-title text-xl text-[var(--text)] flex items-center gap-2">
+                <span>💎</span> Offer Partners
               </h3>
               <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div onclick="openTimeWall()" class="partner-card group">
+                  <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-500 font-black text-xl shadow-xs">TW</div>
+                  <h4 class="font-bold text-sm text-[var(--text)] mt-2.5">TimeWall</h4>
+                  <span class="chip chip-success !text-[10px] mt-1">Active Partner</span>
+                </div>
+
                 <div onclick="openBitcoTasksWall()" class="partner-card group">
                   <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-500 font-black text-xl shadow-xs">BT</div>
                   <h4 class="font-bold text-sm text-[var(--text)] mt-2.5">BitcoTasks</h4>
-                  <span class="chip chip-brand !text-[10px] mt-1">Instant Tasks</span>
+                  <span class="chip chip-brand !text-[10px] mt-1">Instant Wall</span>
                 </div>
-                <div onclick="openTimeWall()" class="partner-card group">
-                  <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-500 font-black text-xl shadow-xs">TW</div>
-                  <h4 class="font-bold text-sm text-[var(--text)] mt-2.5">TimeWall Full</h4>
-                  <span class="chip chip-success !text-[10px] mt-1">All Offers</span>
-                </div>
+
                 <div onclick="openToroxInfo()" class="partner-card group">
                   <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/25 flex items-center justify-center text-indigo-500 font-black text-xl shadow-xs">TX</div>
                   <h4 class="font-bold text-sm text-[var(--text)] mt-2.5">Torox</h4>
                   <span class="chip chip-neutral !text-[10px] mt-1">Mobile Games</span>
                 </div>
+
                 <div onclick="alert('Adtowall শীঘ্রই চালু করা হচ্ছে!')" class="partner-card group">
                   <div class="w-12 h-12 rounded-2xl bg-sky-500/10 border border-sky-500/25 flex items-center justify-center text-sky-500 font-black text-xl shadow-xs">AW</div>
                   <h4 class="font-bold text-sm text-[var(--text)] mt-2.5">Adtowall</h4>
@@ -1728,34 +1959,128 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </div>
           </section>
 
-          <!-- TAB 2: SURVEYS VIEW (CLEAN TIMEWALL SURVEYS EMBED) -->
+          <!-- TAB 3: SURVEYS VIEW -->
           <section id="desk-view-surveys" class="space-y-6 hidden">
-            <div class="w-full bg-[var(--surface)] border border-[var(--border)] rounded-3xl overflow-hidden shadow-sm">
-              <iframe id="desk-timewall-iframe-surveys" title="TimeWall Surveys" src="" class="clean-timewall-frame" scrolling="auto"></iframe>
+            <div>
+              <h3 class="section-title text-2xl">Surveys &amp; Market Research</h3>
+              <p class="text-xs text-[var(--text-3)] mt-1">সহজ প্রশ্নের উত্তর দিয়ে বড় অংকের টাকা আয় করুন</p>
             </div>
-          </section>
 
-          <!-- TAB 3: BROWSING VIEW (CLEAN TIMEWALL CLICKS EMBED) -->
-          <section id="desk-view-browsing" class="space-y-6 hidden">
-            <div class="w-full bg-[var(--surface)] border border-[var(--border)] rounded-3xl overflow-hidden shadow-sm">
-              <iframe id="desk-timewall-iframe-clicks" title="TimeWall Clicks" src="" class="clean-timewall-frame" scrolling="auto"></iframe>
-            </div>
-          </section>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div onclick="openTimeWall('surveys')" class="card p-6 card-lift flex flex-col justify-between cursor-pointer">
+                <div>
+                  <div class="clay clay-brand w-12 h-12 mb-4"><i data-lucide="clipboard-check"></i></div>
+                  <span class="chip chip-brand mb-2">+50% BONUS</span>
+                  <h4 class="font-extrabold text-lg text-[var(--text)] mt-1">Prime Surveys Live</h4>
+                  <p class="text-xs text-[var(--text-3)] mt-1.5 leading-relaxed">High qualification rate and instant payout for every survey completed.</p>
+                </div>
+                <div class="flex items-center justify-between pt-6 border-t border-[var(--border)] mt-4">
+                  <span class="font-mono font-black text-emerald-500 text-lg">৳ 38.50</span>
+                  <span class="btn btn-primary !py-2 !px-4 text-xs font-bold">Start Survey</span>
+                </div>
+              </div>
 
-          <!-- TAB 4: MY OFFERS VIEW -->
-          <section id="desk-view-myoffers" class="space-y-6 hidden">
-            <div class="flex items-center justify-between border-b border-[var(--border)] pb-4">
-              <div>
-                <h3 class="section-title text-xl">My Tasks & Submission History</h3>
-                <p class="text-xs text-[var(--text-3)] mt-0.5">আপনার সাবমিট করা সকল কাজের অনুমোদন ও যাচাই স্ট্যাটাস</p>
+              <div onclick="openTimeWall('surveys')" class="card p-6 card-lift flex flex-col justify-between cursor-pointer">
+                <div>
+                  <div class="clay clay-emerald w-12 h-12 mb-4"><i data-lucide="pie-chart"></i></div>
+                  <h4 class="font-extrabold text-lg text-[var(--text)] mt-1">CPX Research Panel</h4>
+                  <p class="text-xs text-[var(--text-3)] mt-1.5 leading-relaxed">Global research studies with guaranteed partial payout even if screened out.</p>
+                </div>
+                <div class="flex items-center justify-between pt-6 border-t border-[var(--border)] mt-4">
+                  <span class="font-mono font-black text-emerald-500 text-lg">৳ 34.90</span>
+                  <span class="btn btn-primary !py-2 !px-4 text-xs font-bold">Start Survey</span>
+                </div>
+              </div>
+
+              <div onclick="openBitcoTasksWall()" class="card p-6 card-lift flex flex-col justify-between cursor-pointer">
+                <div>
+                  <div class="clay clay-sky w-12 h-12 mb-4"><i data-lucide="check-circle"></i></div>
+                  <h4 class="font-extrabold text-lg text-[var(--text)] mt-1">BitLabs Surveys</h4>
+                  <p class="text-xs text-[var(--text-3)] mt-1.5 leading-relaxed">Custom profiled surveys optimized for mobile and desktop users.</p>
+                </div>
+                <div class="flex items-center justify-between pt-6 border-t border-[var(--border)] mt-4">
+                  <span class="font-mono font-black text-emerald-500 text-lg">৳ 45.00</span>
+                  <span class="btn btn-primary !py-2 !px-4 text-xs font-bold">Start Survey</span>
+                </div>
               </div>
             </div>
-            <div id="desk-my-offers-container" class="space-y-3">
-              <!-- Dynamically populated from Firestore -->
+          </section>
+
+          <!-- TAB 4: BROWSING VIEW -->
+          <section id="desk-view-browsing" class="space-y-6 hidden">
+            <div class="flex items-center justify-between border-b border-[var(--border)] pb-4">
+              <div>
+                <h3 class="section-title text-2xl">PTC Browsing &amp; Surf Ads</h3>
+                <p class="text-xs text-[var(--text-3)] mt-1">বিজ্ঞাপনে ক্লিক করে নির্দিষ্ট সময় অপেক্ষা করুন এবং সরাসরি টাকা আর্ন করুন</p>
+              </div>
+              <span class="chip chip-brand">৫টি অ্যাড উপলব্ধ · মোট ৳ ১.৫০</span>
+            </div>
+
+            <!-- Active Surf Countdown Banner -->
+            <div id="desk-surf-timer-banner" class="hidden card p-5 bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-xl flex items-center justify-between">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center font-black text-2xl animate-spin">⏳</div>
+                <div>
+                  <h4 class="font-extrabold text-base">বিজ্ঞাপন দেখা হচ্ছে...</h4>
+                  <p class="text-xs text-white/90">নতুন উইন্ডোতে বিজ্ঞাপন ওপেন রয়েছে। কাউন্টডাউন শেষ হওয়া পর্যন্ত অপেক্ষা করুন:</p>
+                </div>
+              </div>
+              <div class="text-right">
+                <span id="desk-surf-seconds" class="text-3xl font-black font-mono">10</span>
+                <span class="text-xs block font-bold text-white/80">সেকেন্ড বাকি</span>
+              </div>
+            </div>
+
+            <!-- PTC Ads List -->
+            <div class="space-y-3">
+              <div class="card p-5 flex items-center justify-between gap-4 card-lift">
+                <div class="flex items-center gap-4">
+                  <div class="clay clay-amber w-12 h-12"><i data-lucide="globe"></i></div>
+                  <div>
+                    <h4 class="font-extrabold text-sm text-[var(--text)]">EARN $780 PER DAY - NO INVESTMENT</h4>
+                    <div class="flex items-center gap-3 text-xs text-[var(--text-3)] mt-1">
+                      <span class="font-bold text-brand-500 font-mono">৳ 0.875</span>
+                      <span>⏱️ 30s</span>
+                      <span class="chip chip-neutral !py-0.5 !text-[10px]">Frameless</span>
+                    </div>
+                  </div>
+                </div>
+                <button onclick="startSurfAd('https://takarewardpro.com', 30, 8750)" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold">সার্ফ করুন ➔</button>
+              </div>
+
+              <div class="card p-5 flex items-center justify-between gap-4 card-lift">
+                <div class="flex items-center gap-4">
+                  <div class="clay clay-sky w-12 h-12"><i data-lucide="external-link"></i></div>
+                  <div>
+                    <h4 class="font-extrabold text-sm text-[var(--text)]">Winvest.com - Earn 3% Daily Profit - Double Money</h4>
+                    <div class="flex items-center gap-3 text-xs text-[var(--text-3)] mt-1">
+                      <span class="font-bold text-brand-500 font-mono">৳ 0.838</span>
+                      <span>⏱️ 30s</span>
+                      <span class="chip chip-neutral !py-0.5 !text-[10px]">Frameless</span>
+                    </div>
+                  </div>
+                </div>
+                <button onclick="startSurfAd('https://takarewardpro.com', 30, 8380)" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold">সার্ফ করুন ➔</button>
+              </div>
+
+              <div class="card p-5 flex items-center justify-between gap-4 card-lift">
+                <div class="flex items-center gap-4">
+                  <div class="clay clay-emerald w-12 h-12"><i data-lucide="zap"></i></div>
+                  <div>
+                    <h4 class="font-extrabold text-sm text-[var(--text)]">King of the Faucets - Claim Instant Crypto 2026</h4>
+                    <div class="flex items-center gap-3 text-xs text-[var(--text-3)] mt-1">
+                      <span class="font-bold text-brand-500 font-mono">৳ 0.357</span>
+                      <span>⏱️ 15s</span>
+                      <span class="chip chip-neutral !py-0.5 !text-[10px]">Frameless</span>
+                    </div>
+                  </div>
+                </div>
+                <button onclick="startSurfAd('https://takarewardpro.com', 15, 3570)" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold">সার্ফ করুন ➔</button>
+              </div>
             </div>
           </section>
 
-          <!-- TAB 5: LEADERBOARD / CHALLENGE VIEW (CASHJOY / REWARDJOY PROFESSIONAL CARDS) -->
+          <!-- TAB 5: CHALLENGE / LEADERBOARD (CASHJOY / REWARDJOY MULTI-CARD PODIUM) -->
           <section id="desk-view-challenge" class="space-y-6 hidden">
             <div>
               <h3 class="section-title text-2xl flex items-center gap-2">
@@ -1764,7 +2089,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <p class="text-xs text-[var(--text-3)] mt-1">শীর্ষ উপার্জনকারীদের তালিকা ও আকর্ষণীয় নগদ পুরষ্কার</p>
             </div>
 
-            <!-- Top 3 Podium Cards (CashJoy Ultra-Modern Style) -->
+            <!-- Top 3 Podium Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto pt-4">
               <!-- Rank 2: Silver -->
               <div class="card p-6 text-center card-lift flex flex-col justify-between border-sky-300/40">
@@ -1817,7 +2142,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <p class="text-xs text-[var(--text-3)] mt-1">বন্ধুদের রেফার করুন এবং আজীবন ১০% কমিশন ও ৩০,০০০ কয়েন ইনস্ট্যান্ট বোনাস উপভোগ করুন</p>
             </div>
 
-            <!-- Referral Link Card -->
             <div class="card p-6 space-y-4">
               <div class="flex items-center justify-between">
                 <span class="text-xs font-black uppercase text-[var(--text-3)] tracking-wider">Your Unique Referral Link</span>
@@ -1832,7 +2156,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               </div>
             </div>
 
-            <!-- Referral Stats -->
             <div class="grid grid-cols-3 gap-6">
               <div class="card p-5 text-center">
                 <span class="text-xs font-bold text-[var(--text-3)]">TOTAL FRIENDS</span>
@@ -1886,7 +2209,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 </div>
                 <div class="p-3.5 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] space-y-1">
                   <span class="text-[var(--text-3)] font-bold block">Current Balance</span>
-                  <span class="font-black text-brand-500 text-sm">৳<span id="desk-profile-taka">0.0</span> (<span id="desk-profile-coins">0</span> 🪙)</span>
+                  <span class="font-black text-brand-500 text-sm">৳<span id="desk-profile-taka">0.0</span></span>
                 </div>
                 <div class="p-3.5 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] space-y-1">
                   <span class="text-[var(--text-3)] font-bold block">User Account UID</span>
@@ -2989,12 +3312,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     // ==========================================
     // DESKTOP DUAL-VARIANT CONTROLLER & SYNC ENGINE
     // ==========================================
-    window.desktopActiveTab = 'offers';
+    window.desktopActiveTab = 'dashboard';
 
     window.desktopSwitchTab = function(tabName) {
       window.desktopActiveTab = tabName;
 
-      const tabs = ['offers', 'surveys', 'browsing', 'myoffers', 'challenge', 'affiliate', 'profile'];
+      const tabs = ['dashboard', 'offers', 'surveys', 'browsing', 'affiliate', 'challenge', 'profile'];
       tabs.forEach(t => {
         const btn = document.getElementById('desk-nav-' + t);
         const view = document.getElementById('desk-view-' + t);
@@ -3014,47 +3337,17 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         }
       });
 
-      if (tabName === 'myoffers') {
-        renderDesktopMyOffers();
-      } else if (tabName === 'offers') {
+      if (tabName === 'offers') {
         renderDesktopTasks();
-        if (currentUser) updateDesktopTimeWallEmbeds(currentUser.uid);
-      } else if (tabName === 'surveys' || tabName === 'browsing') {
-        if (currentUser) updateDesktopTimeWallEmbeds(currentUser.uid);
       }
       if (window.lucide) lucide.createIcons();
     };
-
-    function updateDesktopTimeWallEmbeds(uid) {
-      if (!uid) return;
-      const gamesFrame = document.getElementById('desk-timewall-iframe-games');
-      const surveysFrame = document.getElementById('desk-timewall-iframe-surveys');
-      const clicksFrame = document.getElementById('desk-timewall-iframe-clicks');
-
-      if (gamesFrame && !gamesFrame.src.includes('timewall.io')) {
-        gamesFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=games`;
-      }
-      if (surveysFrame && !surveysFrame.src.includes('timewall.io')) {
-        surveysFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=surveys`;
-      }
-      if (clicksFrame && !clicksFrame.src.includes('timewall.io')) {
-        clicksFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=clicks`;
-      }
-    }
 
     window.renderDesktopTasks = function() {
       const container = document.getElementById('desk-tasks-list');
       const mobileList = document.getElementById('tasks-list');
       if (!container || !mobileList) return;
       container.innerHTML = mobileList.innerHTML;
-      if (window.lucide) lucide.createIcons();
-    };
-
-    window.renderDesktopMyOffers = function() {
-      const deskContainer = document.getElementById('desk-my-offers-container');
-      const mobContainer = document.getElementById('my-offers-container');
-      if (!deskContainer || !mobContainer) return;
-      deskContainer.innerHTML = mobContainer.innerHTML;
       if (window.lucide) lucide.createIcons();
     };
 
@@ -3091,17 +3384,18 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (m) m.classList.remove('hidden');
     };
 
-    // Live Clock Updater
+    // Live Clock Updater (RewardJoy Exact Format: YYYY.MM.DD HH:MM:SS)
     setInterval(() => {
       const clockEl = document.getElementById('desk-live-clock');
       if (clockEl) {
         const d = new Date();
+        const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
         const hrs = String(d.getHours()).padStart(2, '0');
         const mins = String(d.getMinutes()).padStart(2, '0');
         const secs = String(d.getSeconds()).padStart(2, '0');
-        clockEl.innerText = `${month}.${day} ${hrs}:${mins}:${secs}`;
+        clockEl.innerText = `${year}.${month}.${day} ${hrs}:${mins}:${secs}`;
       }
     }, 1000);
 
@@ -3114,6 +3408,50 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     if (localStorage.getItem('tr_theme') === 'dark') {
       document.documentElement.classList.add('dark');
     }
+
+    // Live Surf Countdown Timer
+    window.surfTimerInterval = null;
+    window.startSurfAd = function(adUrl, seconds, rewardCoins) {
+      if (!currentUser) {
+        alert("বিজ্ঞাপন দেখে কয়েন পেতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
+        return;
+      }
+
+      window.open(adUrl, '_blank');
+
+      const banner = document.getElementById('desk-surf-timer-banner');
+      const secEl = document.getElementById('desk-surf-seconds');
+      if (banner) banner.classList.remove('hidden');
+
+      let remaining = seconds;
+      if (secEl) secEl.innerText = remaining;
+
+      clearInterval(window.surfTimerInterval);
+      window.surfTimerInterval = setInterval(async () => {
+        remaining--;
+        if (secEl) secEl.innerText = remaining;
+
+        if (remaining <= 0) {
+          clearInterval(window.surfTimerInterval);
+          if (banner) banner.classList.add('hidden');
+
+          try {
+            const uRef = doc(db, "users", currentUser.uid);
+            await updateDoc(uRef, {
+              coins: increment(rewardCoins),
+              totalSurfEarnings: increment(rewardCoins)
+            });
+
+            playCoinChime();
+            confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
+            alert(`অভিনন্দন! আপনি বিজ্ঞাপনটি সম্পন্ন করায় ${(rewardCoins/10000).toFixed(2)} টাকা পেয়েছেন!`);
+          } catch (e) {
+            console.error("Surf reward error:", e);
+            alert("কয়েন আপডেট হতে সাময়িক সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+          }
+        }
+      }, 1000);
+    };
 
     // Sync Desktop UI whenever User State changes
     window.syncDesktopUI = function(uData, user) {
@@ -3132,32 +3470,39 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const coins = uData?.coins || 0;
       const taka = (coins / 10000).toFixed(1);
 
-      const dCoins = document.getElementById('desk-app-coins');
+      // Desktop Header (ONLY Money Balance - NO COINS!)
       const dTaka = document.getElementById('desk-app-taka');
       const dAvatar = document.getElementById('desk-user-avatar');
       const dName = document.getElementById('desk-user-name');
       const dLevel = document.getElementById('desk-user-level');
       const dAdminBtn = document.getElementById('desk-admin-btn');
 
-      if (dCoins) dCoins.innerText = coins.toLocaleString();
       if (dTaka) dTaka.innerText = taka;
       if (dAvatar && user.photoURL) dAvatar.src = user.photoURL;
       if (dName) dName.innerText = user.displayName || 'User';
 
+      // Dashboard Tab Sync
+      const dashName = document.getElementById('desk-dash-name');
+      const dashTaka = document.getElementById('desk-dash-taka');
+      const dashRefs = document.getElementById('desk-dash-refs');
+      if (dashName) dashName.innerText = user.displayName || 'User';
+      if (dashTaka) dashTaka.innerText = taka;
+      if (dashRefs) dashRefs.innerText = (uData?.referralCount || 0).toString();
+
+      // Profile Tab Sync
       const pAvatar = document.getElementById('desk-profile-avatar');
       const pName = document.getElementById('desk-profile-name');
       const pEmail = document.getElementById('desk-profile-email');
-      const pCoins = document.getElementById('desk-profile-coins');
       const pTaka = document.getElementById('desk-profile-taka');
       const pUid = document.getElementById('desk-profile-uid');
 
       if (pAvatar && user.photoURL) pAvatar.src = user.photoURL;
       if (pName) pName.innerText = user.displayName || 'User';
       if (pEmail) pEmail.innerText = user.email || 'N/A';
-      if (pCoins) pCoins.innerText = coins.toLocaleString();
       if (pTaka) pTaka.innerText = taka;
       if (pUid) pUid.innerText = user.uid;
 
+      // Referral Link Sync
       const refLink = document.getElementById('desk-referral-link');
       const myInviteCode = document.getElementById('desk-my-invite-code');
       const totalRefCount = document.getElementById('desk-total-ref-count');
@@ -3178,7 +3523,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
 
       renderDesktopTasks();
-      updateDesktopTimeWallEmbeds(user.uid);
       if (window.lucide) lucide.createIcons();
     };
 
