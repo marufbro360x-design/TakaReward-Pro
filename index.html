@@ -609,11 +609,32 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     }
   </script>
 
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Hind Siliguri', 'system-ui', 'sans-serif'],
+            display: ['Sora', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50:'#FFF5EF',100:'#FFE8DA',200:'#FFCDB0',300:'#FFAA7D',
+              400:'#FF8248',500:'#FF5F1F',600:'#F04405',700:'#C73404',
+              800:'#9C2B0B',900:'#7C260D'
+            }
+          },
+          borderRadius: { '4xl':'2rem','5xl':'2.5rem','6xl':'3rem' }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body class="min-h-screen antialiased select-none" style="background:var(--bg)">
@@ -1196,7 +1217,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         <a href="#faq" class="px-3 py-2 text-[13.5px] font-bold rounded-xl hover:bg-[var(--surface-2)] transition-colors" style="color:var(--text-2)">FAQ</a>
       </nav>
 
-      <button id="langBtn" class="lang-btn">
+      <button id="langBtn" type="button" onclick="document.getElementById('langModal').classList.add('show'); if(window.lucide) lucide.createIcons();" class="lang-btn">
         <svg viewBox="0 0 24 16" class="w-6 h-4 rounded-[3px]" style="box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)">
           <rect width="24" height="16" fill="#B22234"/>
           <path d="M0 2.46h24M0 4.92h24M0 7.38h24M0 9.84h24M0 12.3h24M0 14.76h24" stroke="#fff" stroke-width="1.23"/>
@@ -1206,8 +1227,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
       </button>
 
-      <button class="btn btn-ghost hidden sm:inline-flex" onclick="loginWithGoogleSmart(event)"><i data-lucide="log-in"></i> Sign In</button>
-      <button class="btn btn-primary" onclick="loginWithGoogleSmart(event)"><i data-lucide="user-plus"></i> Sign Up</button>
+      <button class="btn btn-ghost hidden sm:inline-flex" onclick="openAuthModal('login')"><i data-lucide="log-in"></i> Sign In</button>
+      <button class="btn btn-primary" onclick="openAuthModal('signup')"><i data-lucide="user-plus"></i> Sign Up</button>
     </div>
   </header>
 
@@ -1307,11 +1328,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <div class="flex-1 h-px" style="background:var(--border)"></div>
               </div>
               <div class="space-y-2.5">
-                <button class="social-btn" onclick="loginWithGoogleSmart(event)">
+                <button type="button" class="social-btn" onclick="loginWithGoogleSmart(event)">
                   <svg viewBox="0 0 48 48" class="w-5 h-5"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 18.9 12 24 12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.3 4.1-4.1 5.5l6.2 5.2C36.9 39.1 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
                   Sign in with Google
                 </button>
-                <button class="social-btn" onclick="loginWithAppleSmart(event)">
+                <button type="button" class="social-btn" onclick="loginWithAppleSmart(event)">
                   <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
                   Sign in with Apple
                 </button>
@@ -1333,10 +1354,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     <section class="px-5 sm:px-8 py-16 sm:py-24">
       <div class="max-w-[1400px] mx-auto">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-          <div class="text-center reveal"><div class="stat-num text-[52px] sm:text-[76px]" data-count="9" data-suffix="M+">0M+</div><div class="text-[13px] sm:text-[15px] font-bold mt-3" style="color:var(--text-2)">Total users</div></div>
-          <div class="text-center reveal" style="transition-delay:.1s"><div class="stat-num text-[52px] sm:text-[76px]" data-prefix="$" data-count="5" data-suffix="M+">$0M+</div><div class="text-[13px] sm:text-[15px] font-bold mt-3" style="color:var(--text-2)">Total rewards paid</div></div>
-          <div class="text-center reveal" style="transition-delay:.2s"><div class="stat-num text-[52px] sm:text-[76px]" data-count="97" data-suffix="%">0%</div><div class="text-[13px] sm:text-[15px] font-bold mt-3" style="color:var(--text-2)">Rewards delivered instantly</div></div>
-          <div class="text-center reveal" style="transition-delay:.3s"><div class="stat-num text-[52px] sm:text-[76px]" data-count="7" data-suffix=" Years+">0 Years+</div><div class="text-[13px] sm:text-[15px] font-bold mt-3" style="color:var(--text-2)">Online time</div></div>
+          <div class="text-center reveal"><div class="stat-num text-[52px] sm:text-[76px]" data-count="9" data-suffix="M+">9M+</div><div class="text-[13px] sm:text-[15px] font-bold mt-3" style="color:var(--text-2)">Total users</div></div>
+          <div class="text-center reveal" style="transition-delay:.1s"><div class="stat-num text-[52px] sm:text-[76px]" data-prefix="$" data-count="5" data-suffix="M+">$5M+</div><div class="text-[13px] sm:text-[15px] font-bold mt-3" style="color:var(--text-2)">Total rewards paid</div></div>
+          <div class="text-center reveal" style="transition-delay:.2s"><div class="stat-num text-[52px] sm:text-[76px]" data-count="97" data-suffix="%">97%</div><div class="text-[13px] sm:text-[15px] font-bold mt-3" style="color:var(--text-2)">Rewards delivered instantly</div></div>
+          <div class="text-center reveal" style="transition-delay:.3s"><div class="stat-num text-[52px] sm:text-[76px]" data-count="7" data-suffix=" Years+">7 Years+</div><div class="text-[13px] sm:text-[15px] font-bold mt-3" style="color:var(--text-2)">Online time</div></div>
         </div>
       </div>
     </section>
@@ -1489,27 +1510,27 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <p class="text-[15px] font-medium leading-relaxed mt-4 max-w-[480px]" style="color:var(--text-2)">Play free games on your phone and get coins for completing various in-game steps.</p>
             </div>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-              <div class="earn-app" onclick="loginWithGoogleSmart(event)">
+              <div class="earn-app" onclick="openAuthModal('signup')">
                 <div class="art"><img src="https://i.ibb.co.com/TydT2Ky/Screenshot-2026-10-04-025242.png" alt="AFK Journey" loading="lazy" /></div>
                 <div class="pt-3"><div class="text-[12.5px] font-extrabold truncate">AFK Journey</div><div class="num-display text-[17px] text-brand-500 mt-0.5">$504</div></div>
               </div>
-              <div class="earn-app" onclick="loginWithGoogleSmart(event)">
+              <div class="earn-app" onclick="openAuthModal('signup')">
                 <div class="art"><img src="https://i.ibb.co.com/23vKWhJC/Screenshot-2026-10-04-025422.png" alt="Mafia City" loading="lazy" /></div>
                 <div class="pt-3"><div class="text-[12.5px] font-extrabold truncate">Mafia City</div><div class="num-display text-[17px] text-brand-500 mt-0.5">$422</div></div>
               </div>
-              <div class="earn-app" onclick="loginWithGoogleSmart(event)">
+              <div class="earn-app" onclick="openAuthModal('signup')">
                 <div class="art"><img src="https://i.ibb.co.com/39TstJrj/Screenshot-2026-10-04-025524.png" alt="Candy Match" loading="lazy" /></div>
                 <div class="pt-3"><div class="text-[12.5px] font-extrabold truncate">Candy Match</div><div class="num-display text-[17px] text-brand-500 mt-0.5">$111</div></div>
               </div>
-              <div class="earn-app" onclick="loginWithGoogleSmart(event)">
+              <div class="earn-app" onclick="openAuthModal('signup')">
                 <div class="art"><img src="https://i.ibb.co.com/mV2VgwW9/Screenshot-2026-10-04-025721.png" alt="Dice Dreams" loading="lazy" /></div>
                 <div class="pt-3"><div class="text-[12.5px] font-extrabold truncate">Dice Dreams</div><div class="num-display text-[17px] text-brand-500 mt-0.5">$49</div></div>
               </div>
-              <div class="earn-app" onclick="loginWithGoogleSmart(event)">
+              <div class="earn-app" onclick="openAuthModal('signup')">
                 <div class="art"><img src="https://i.ibb.co.com/6c8zdK2c/Screenshot-2026-10-04-025813.png" alt="Grat Bear" loading="lazy" /></div>
                 <div class="pt-3"><div class="text-[12.5px] font-extrabold truncate">Grat Bear</div><div class="num-display text-[17px] text-brand-500 mt-0.5">$178</div></div>
               </div>
-              <div class="earn-app" onclick="loginWithGoogleSmart(event)">
+              <div class="earn-app" onclick="openAuthModal('signup')">
                 <div class="art"><img src="https://i.ibb.co.com/Lzwm8N5j/Screenshot-2026-10-04-025946.png" alt="Castle Clash" loading="lazy" /></div>
                 <div class="pt-3"><div class="text-[12.5px] font-extrabold truncate">Castle Clash</div><div class="num-display text-[17px] text-brand-500 mt-0.5">$295</div></div>
               </div>
@@ -1543,7 +1564,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               </div>
               <h3 class="section-title text-[30px] sm:text-[36px] mt-6">What are you waiting for?</h3>
               <p class="text-[14.5px] font-medium mt-3 max-w-[340px] mx-auto" style="color:var(--text-2)">Join the people getting cashout right now!</p>
-              <button class="btn btn-primary mt-6 !py-3.5 !px-7 !text-[14px]" onclick="loginWithGoogleSmart(event)"><i data-lucide="rocket"></i> Start earning now</button>
+              <button class="btn btn-primary mt-6 !py-3.5 !px-7 !text-[14px]" onclick="openAuthModal('signup')"><i data-lucide="rocket"></i> Start earning now</button>
             </div>
 
             <div>
@@ -1551,7 +1572,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <div class="flex items-center gap-3"><span class="live-dot"></span><h3 class="section-title text-[24px]">Live cashout</h3></div>
               </div>
               <div class="space-y-2.5" id="landingLiveCashoutsContainer">
-                <!-- Rendered dynamically -->
+                <div class="cash-row"><div class="cash-avatar" style="background:#059669"><span>T</span></div><div class="flex-1"><div class="text-sm font-bold">Tanvir H.</div><div class="text-xs text-[var(--text-3)]">bKash Personal · Just now</div></div><div class="num-display text-[17px] font-bold text-emerald-500">৳500.00</div></div>
+                <div class="cash-row"><div class="cash-avatar" style="background:#ea580c"><span>S</span></div><div class="flex-1"><div class="text-sm font-bold">Sumon A.</div><div class="text-xs text-[var(--text-3)]">Nagad Personal · 1m ago</div></div><div class="num-display text-[17px] font-bold text-emerald-500">৳350.00</div></div>
+                <div class="cash-row"><div class="cash-avatar" style="background:#7c3aed"><span>R</span></div><div class="flex-1"><div class="text-sm font-bold">Rifat K.</div><div class="text-xs text-[var(--text-3)]">bKash Personal · 3m ago</div></div><div class="num-display text-[17px] font-bold text-emerald-500">৳200.00</div></div>
+                <div class="cash-row"><div class="cash-avatar" style="background:#0284c7"><span>M</span></div><div class="flex-1"><div class="text-sm font-bold">Mehedi S.</div><div class="text-xs text-[var(--text-3)]">Nagad Personal · 5m ago</div></div><div class="num-display text-[17px] font-bold text-emerald-500">৳105.00</div></div>
               </div>
             </div>
           </div>
@@ -1584,7 +1608,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p class="text-[12.5px] font-semibold" style="color:var(--text-3)">© 2026 TakaReward Pro. All rights reserved.</p>
         <div class="flex items-center gap-4">
-          <span class="text-xs text-[var(--text-3)] font-bold">Admin: marufclaud@gmail.com</span>
+          <span class="text-xs text-[var(--text-3)] font-bold">Admin: marufbro360x@gmail.com</span>
         </div>
       </div>
     </footer>
@@ -2225,6 +2249,80 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     </div>
 
   </div>
+  
+  <!-- DESKTOP AUTH MODAL (Sign Up / Sign In Popup like CashJoy) -->
+  <div id="authModal" class="modal-backdrop">
+    <div class="modal-panel max-w-[440px]">
+      <div class="flex items-center justify-between mb-5">
+        <div class="flex items-center gap-2">
+          <h3 id="authTitle" class="section-title text-[22px]">Sign up for TakaReward Pro</h3>
+        </div>
+        <button type="button" onclick="closeAuthModal()" class="icon-btn !w-9 !h-9"><i data-lucide="x"></i></button>
+      </div>
+
+      <div class="flex gap-1 p-1 rounded-2xl mb-5 bg-[var(--surface-2)]">
+        <button type="button" id="authTabSignup" class="tab flex-1 active !py-2 text-[13px]" onclick="switchAuthTab('signup')">Sign Up</button>
+        <button type="button" id="authTabLogin" class="tab flex-1 !py-2 text-[13px]" onclick="switchAuthTab('login')">Sign In</button>
+      </div>
+
+      <form id="modalAuthForm" class="space-y-3.5" onsubmit="handleFirebaseEmailAuth(event)">
+        <div id="authNameField">
+          <label class="label">Full Name</label>
+          <input id="authNameInput" type="text" class="input" placeholder="e.g. Maruf Hasan" />
+        </div>
+        <div>
+          <label class="label">Email Address</label>
+          <input id="authEmailInput" type="email" class="input" placeholder="name@example.com" required />
+        </div>
+        <div>
+          <label class="label">Password</label>
+          <input id="authPassInput" type="password" class="input" placeholder="••••••••" required />
+        </div>
+
+        <button type="submit" id="authSubmitBtn" class="btn btn-primary w-full !py-3.5 !text-[14px]">
+          <i data-lucide="zap"></i> <span id="authBtnText">Create free account</span>
+        </button>
+      </form>
+
+      <div class="flex items-center gap-3 my-5">
+        <div class="flex-1 h-px bg-[var(--border)]"></div>
+        <span class="text-[11px] font-extrabold tracking-wider text-[var(--text-3)]">OR SIGN IN WITH</span>
+        <div class="flex-1 h-px bg-[var(--border)]"></div>
+      </div>
+
+      <div class="space-y-2.5">
+        <button type="button" class="social-btn" onclick="closeAuthModal(); loginWithGoogleSmart(event);">
+          <svg viewBox="0 0 48 48" class="w-5 h-5"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 18.9 12 24 12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.3 4.1-4.1 5.5l6.2 5.2C36.9 39.1 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+          Sign in with Google
+        </button>
+        <button type="button" class="social-btn" onclick="closeAuthModal(); loginWithAppleSmart(event);">
+          <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
+          Sign in with Apple
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LANGUAGE MODAL -->
+  <div id="langModal" class="modal-backdrop">
+    <div class="modal-panel">
+      <div class="flex items-center justify-between mb-6">
+        <div><h3 class="section-title text-[22px]">Select your language</h3><p class="text-[13px] font-medium mt-1 text-[var(--text-2)]">Choose your preferred display language</p></div>
+        <button type="button" onclick="document.getElementById('langModal').classList.remove('show')" class="icon-btn !w-10 !h-10"><i data-lucide="x"></i></button>
+      </div>
+      <div id="langGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5">
+        <button type="button" class="lang-opt" onclick="selectDesktopLang('English')"><span class="text-[14px] font-bold flex-1 text-left">English</span></button>
+        <button type="button" class="lang-opt" onclick="selectDesktopLang('বাংলা')"><span class="text-[14px] font-bold flex-1 text-left">বাংলা</span></button>
+        <button type="button" class="lang-opt" onclick="selectDesktopLang('हिन्दी')"><span class="text-[14px] font-bold flex-1 text-left">हिन्दी</span></button>
+        <button type="button" class="lang-opt" onclick="selectDesktopLang('العربية')"><span class="text-[14px] font-bold flex-1 text-left">العربية</span></button>
+        <button type="button" class="lang-opt" onclick="selectDesktopLang('Español')"><span class="text-[14px] font-bold flex-1 text-left">Español</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING THEME TOGGLE BUTTON (LANDING PAGE) -->
+  <button id="landingThemeBtn" type="button" onclick="toggleTheme()" class="hidden md:grid fab-theme" aria-label="Toggle theme"><i data-lucide="moon" class="app-theme-icon"></i></button>
+
   <!-- ================= END DESKTOP WEB APP VARIANT ================= -->
 
 
@@ -3015,7 +3113,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-    import { getAuth, signInWithPopup, OAuthProvider, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+    import { getAuth, signInWithPopup, OAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signInWithRedirect, getRedirectResult, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, addDoc, onSnapshot, query, where, getDocs, deleteDoc, serverTimestamp, increment, orderBy, limit, arrayUnion } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
 
     const firebaseConfig = {
@@ -3309,6 +3407,110 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     // ==========================================
     window.desktopActiveTab = 'dashboard';
 
+    function refreshAllLucideIcons() {
+      try {
+        if (window.lucide && typeof window.lucide.createIcons === 'function') {
+          window.lucide.createIcons();
+        }
+      } catch (e) {}
+    }
+
+    // Call immediately and on DOMContentLoaded / load so Landing Page icons NEVER miss!
+    refreshAllLucideIcons();
+    window.addEventListener('DOMContentLoaded', refreshAllLucideIcons);
+    window.addEventListener('load', refreshAllLucideIcons);
+    setTimeout(refreshAllLucideIcons, 250);
+    setTimeout(refreshAllLucideIcons, 800);
+
+    // Language Selector Modal
+    window.selectDesktopLang = function(label) {
+      const lbl = document.getElementById('currentLangLabel');
+      if (lbl) lbl.textContent = label;
+      document.getElementById('langModal')?.classList.remove('show');
+    };
+
+    // Auth Modal (Sign Up / Sign In Popup like CashJoy)
+    window.authMode = 'signup';
+    window.openAuthModal = function(mode = 'signup') {
+      window.authMode = mode;
+      window.switchAuthTab(mode);
+      document.getElementById('authModal')?.classList.add('show');
+      refreshAllLucideIcons();
+    };
+
+    window.closeAuthModal = function() {
+      document.getElementById('authModal')?.classList.remove('show');
+    };
+
+    window.switchAuthTab = function(mode) {
+      window.authMode = mode;
+      const isSignup = mode === 'signup';
+      const titleEl = document.getElementById('authTitle');
+      const tabSignup = document.getElementById('authTabSignup');
+      const tabLogin = document.getElementById('authTabLogin');
+      const nameField = document.getElementById('authNameField');
+      const btnText = document.getElementById('authBtnText');
+
+      if (titleEl) titleEl.textContent = isSignup ? 'Sign up for TakaReward Pro' : 'Welcome Back!';
+      if (tabSignup) tabSignup.classList.toggle('active', isSignup);
+      if (tabLogin) tabLogin.classList.toggle('active', !isSignup);
+      if (nameField) nameField.style.display = isSignup ? 'block' : 'none';
+      if (btnText) btnText.textContent = isSignup ? 'Create free account' : 'Sign in to Dashboard';
+      refreshAllLucideIcons();
+    };
+
+    window.handleHeroSubmit = function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const email = document.getElementById('heroEmail')?.value || '';
+      const authEmailInput = document.getElementById('authEmailInput');
+      if (authEmailInput) authEmailInput.value = email;
+      window.openAuthModal('signup');
+      return false;
+    };
+
+    window.handleFirebaseEmailAuth = async function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const email = document.getElementById('authEmailInput')?.value?.trim() || '';
+      const pass = document.getElementById('authPassInput')?.value || '';
+      const name = document.getElementById('authNameInput')?.value?.trim() || '';
+      const btnText = document.getElementById('authBtnText');
+
+      if (!email || !pass) {
+        alert("অনুগ্রহ করে ইমেইল ও পাসওয়ার্ড দিন!");
+        return;
+      }
+
+      const origText = btnText ? btnText.textContent : 'Submit';
+      if (btnText) btnText.textContent = 'প্রসেসিং হচ্ছে...';
+
+      try {
+        if (window.authMode === 'signup') {
+          const res = await createUserWithEmailAndPassword(auth, email, pass);
+          if (res && res.user) {
+            if (name) {
+              try {
+                await updateProfile(res.user, { displayName: name });
+              } catch (upErr) {}
+            }
+            currentUser = res.user;
+            await processUserRegistration(res.user);
+          }
+        } else {
+          const res = await signInWithEmailAndPassword(auth, email, pass);
+          if (res && res.user) {
+            currentUser = res.user;
+            await processUserRegistration(res.user);
+          }
+        }
+        window.closeAuthModal();
+      } catch (err) {
+        console.error("Email auth error:", err);
+        alert("লগইন/সাইন-আপ সমস্যা: " + (err.message || err.code));
+      } finally {
+        if (btnText) btnText.textContent = origText;
+      }
+    };
+
     // Apple Auth Provider
     const appleProvider = new OAuthProvider('apple.com');
     window.loginWithAppleSmart = async function(e) {
@@ -3329,6 +3531,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           alert("Apple Sign-in Error: " + (rErr.message || rErr.code));
         }
       }
+    };
+
+    window.handleGoogleSignIn = function(e) {
+      window.closeAuthModal();
+      window.loginWithGoogleSmart(e);
     };
 
     window.desktopSwitchTab = function(tabName) {
@@ -3357,7 +3564,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (tabName === 'offers') {
         renderDesktopTasks();
       }
-      if (window.lucide) lucide.createIcons();
+      refreshAllLucideIcons();
     };
 
     window.renderDesktopTasks = function() {
@@ -3365,7 +3572,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const mobileList = document.getElementById('tasks-list');
       if (!container || !mobileList) return;
       container.innerHTML = mobileList.innerHTML;
-      if (window.lucide) lucide.createIcons();
+      refreshAllLucideIcons();
     };
 
     window.openBitcoTasksWall = function() {
@@ -3419,8 +3626,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     // Theme toggler
     window.toggleTheme = function() {
       document.documentElement.classList.toggle('dark');
-      localStorage.setItem('tr_theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-      if (window.lucide) lucide.createIcons();
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('tr_theme', isDark ? 'dark' : 'light');
+      document.querySelectorAll('.app-theme-icon').forEach(icon => {
+        icon.setAttribute('data-lucide', isDark ? 'sun' : 'moon');
+      });
+      refreshAllLucideIcons();
     };
     if (localStorage.getItem('tr_theme') === 'dark') {
       document.documentElement.classList.add('dark');
@@ -3474,15 +3685,19 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.syncDesktopUI = function(uData, user) {
       const landing = document.getElementById('landingView');
       const app = document.getElementById('desktop-screen-app');
+      const landingThemeBtn = document.getElementById('landingThemeBtn');
 
       if (!user) {
         if (landing) landing.classList.remove('hidden');
         if (app) app.classList.add('hidden');
+        if (landingThemeBtn) landingThemeBtn.classList.remove('hidden');
+        refreshAllLucideIcons();
         return;
       }
 
       if (landing) landing.classList.add('hidden');
       if (app) app.classList.remove('hidden');
+      if (landingThemeBtn) landingThemeBtn.classList.add('hidden');
 
       const coins = uData?.coins || 0;
       const taka = (coins / 10000).toFixed(1);
@@ -3496,13 +3711,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       if (dTaka) dTaka.innerText = taka;
       if (dAvatar && user.photoURL) dAvatar.src = user.photoURL;
-      if (dName) dName.innerText = user.displayName || 'User';
+      if (dName) dName.innerText = (uData?.name || user.displayName || 'User');
 
       // Dashboard Tab Sync
       const dashName = document.getElementById('desk-dash-name');
       const dashTaka = document.getElementById('desk-dash-taka');
       const dashRefs = document.getElementById('desk-dash-refs');
-      if (dashName) dashName.innerText = user.displayName || 'User';
+      if (dashName) dashName.innerText = (uData?.name || user.displayName || 'User');
       if (dashTaka) dashTaka.innerText = taka;
       if (dashRefs) dashRefs.innerText = (uData?.referralCount || 0).toString();
 
@@ -3514,7 +3729,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const pUid = document.getElementById('desk-profile-uid');
 
       if (pAvatar && user.photoURL) pAvatar.src = user.photoURL;
-      if (pName) pName.innerText = user.displayName || 'User';
+      if (pName) pName.innerText = (uData?.name || user.displayName || 'User');
       if (pEmail) pEmail.innerText = user.email || 'N/A';
       if (pTaka) pTaka.innerText = taka;
       if (pUid) pUid.innerText = user.uid;
@@ -3525,7 +3740,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const totalRefCount = document.getElementById('desk-total-ref-count');
       const totalRefCoins = document.getElementById('desk-total-ref-coins');
 
-      const code = uData?.inviteCode || ('TR' + user.uid.slice(0, 5).toUpperCase());
+      const code = uData?.myInviteCode || uData?.inviteCode || ('TR' + user.uid.slice(0, 5).toUpperCase());
       if (refLink) refLink.value = `https://takarewardpro.com/?ref=${code}`;
       if (myInviteCode) myInviteCode.innerText = code;
       if (totalRefCount) totalRefCount.innerText = (uData?.referralCount || 0) + ' জন';
@@ -3540,7 +3755,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
 
       renderDesktopTasks();
-      if (window.lucide) lucide.createIcons();
+      refreshAllLucideIcons();
     };
 
 
