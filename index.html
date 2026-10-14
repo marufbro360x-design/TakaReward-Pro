@@ -406,6 +406,25 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 .toast.show{ opacity:1; pointer-events:auto; transform:translateX(-50%) translateY(0); }
 
 
+
+    /* Crop TimeWall Top Blue Header & Left Sidebar Icons */
+    .timewall-clean-crop {
+      position: relative;
+      width: 100%;
+      height: 700px;
+      overflow: hidden;
+      border-radius: 1rem;
+      background: #ffffff;
+    }
+    .timewall-clean-crop iframe {
+      position: absolute;
+      top: -52px;
+      left: -74px;
+      width: calc(100% + 74px);
+      height: calc(100% + 52px);
+      border: 0;
+    }
+
 /* RewardJoy Desktop Layout & Sidebar Styles */
 .rj-sidebar {
   width: 250px;
@@ -1659,12 +1678,48 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           <!-- Theme Toggle -->
           <button class="icon-btn !w-10 !h-10 theme-toggle-btn" onclick="toggleTheme()"><i data-lucide="moon" class="app-theme-icon"></i></button>
 
-          <!-- User Profile Pill -->
-          <div onclick="desktopSwitchTab('profile')" class="flex items-center gap-2.5 px-3 py-1.5 rounded-2xl cursor-pointer bg-[var(--surface-2)] border border-[var(--border)] hover:border-brand-500/40 transition">
-            <img id="desk-user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-8 h-8 rounded-full border border-orange-400 object-cover" alt="User" />
-            <div class="text-left hidden lg:block">
-              <div id="desk-user-name" class="font-bold text-xs truncate max-w-[100px]">User</div>
-              <div id="desk-user-level" class="text-[10px] font-bold text-brand-500">Lv. 0</div>
+          <!-- User Profile Avatar + RewardJoy Dropdown Menu (Exact Match to image_75dbc7.jpg) -->
+          <div class="relative" id="desk-user-menu-wrap">
+            <div onclick="toggleDeskUserDropdown(event)" class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-2xl cursor-pointer bg-[var(--surface-2)] border border-[var(--border)] hover:border-brand-500/40 transition">
+              <img id="desk-user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-8 h-8 rounded-full border border-orange-400 object-cover" alt="User" />
+              <div class="text-left hidden lg:block">
+                <div id="desk-user-name" class="font-bold text-xs truncate max-w-[100px]">User</div>
+                <div id="desk-user-level" class="text-[10px] font-bold text-brand-500">Lv. 0</div>
+              </div>
+            </div>
+
+            <!-- Dropdown Card (image_75dbc7.jpg Exact Replica) -->
+            <div id="desk-user-dropdown" class="hidden absolute right-0 mt-3 w-64 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-2xl p-5 z-50 text-slate-800 dark:text-slate-100">
+              <div class="flex flex-col items-center pb-4 border-b border-slate-100 dark:border-slate-800">
+                <img id="desk-dropdown-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-16 h-16 rounded-full object-cover shadow-sm border border-slate-200" alt="User" />
+                <div id="desk-dropdown-name" class="font-bold text-sm text-slate-800 dark:text-white mt-2.5 truncate max-w-[200px]">User</div>
+              </div>
+
+              <div class="py-2 space-y-1 text-[13px] font-medium text-slate-700 dark:text-slate-200">
+                <button type="button" onclick="closeDeskUserDropdown(); desktopSwitchTab('profile');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer block">
+                  Account
+                </button>
+                <button type="button" onclick="closeDeskUserDropdown(); openWithdrawHistoryModal();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer block">
+                  History
+                </button>
+                <button type="button" onclick="closeDeskUserDropdown(); desktopSwitchTab('affiliate');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer block">
+                  Advertise
+                </button>
+                <div class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer">
+                  <span>Currency</span>
+                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">৳ BDT <span class="text-[10px]">⌄</span></span>
+                </div>
+                <div class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer">
+                  <span>Interface</span>
+                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">New <span class="text-[10px]">⌄</span></span>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+                <button type="button" onclick="closeDeskUserDropdown(); handleDesktopLogout();" class="w-full text-left px-3 py-2 rounded-xl text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/30 font-semibold text-[13px] transition cursor-pointer block">
+                  Logout
+                </button>
+              </div>
             </div>
           </div>
 
@@ -2105,7 +2160,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </div>
           </section>
 
-          <!-- TAB 3: SURVEYS VIEW (Clean RewardJoy Surveys + Live TimeWall Surveys Wall) -->
+          <!-- TAB 3: SURVEYS VIEW (Cleanly Arranged Survey Cards + Cropped TimeWall Surveys with NO Blue Bar or Left Sidebar!) -->
           <section id="desk-view-surveys" class="space-y-6 hidden">
             <div>
               <div class="flex items-center gap-2.5 mb-3">
@@ -2115,7 +2170,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <span class="text-[15px] font-bold text-[var(--text)]">Featured Surveys</span>
               </div>
 
-              <div class="card p-3.5 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs">
+              <div class="card p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                   <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
                     <div class="flex items-center gap-4">
@@ -2149,87 +2204,53 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     </div>
                     <span class="font-extrabold text-[#f97316] text-[17px]">৳ 44.8</span>
                   </div>
+
+                  <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
+                    <div class="flex items-center gap-4">
+                      <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
+                      <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
+                        <span>6 Min</span>
+                      </div>
+                    </div>
+                    <span class="font-extrabold text-[#f97316] text-[17px]">৳ 124.5</span>
+                  </div>
+
+                  <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
+                    <div class="flex items-center gap-4">
+                      <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
+                      <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
+                        <span>8 Min</span>
+                      </div>
+                    </div>
+                    <span class="font-extrabold text-[#f97316] text-[17px]">৳ 152.0</span>
+                  </div>
+
+                  <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
+                    <div class="flex items-center gap-4">
+                      <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
+                      <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
+                        <span>10 Min</span>
+                      </div>
+                    </div>
+                    <span class="font-extrabold text-[#f97316] text-[17px]">৳ 89.2</span>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <!-- Live TimeWall Surveys Embed -->
-            <div class="w-full bg-[var(--surface)] border border-[var(--border)] rounded-2xl overflow-hidden shadow-2xs">
-              <iframe id="desk-timewall-iframe-surveys" title="TimeWall Surveys" src="" class="w-full min-h-[680px] border-0" scrolling="auto"></iframe>
+            <!-- Cropped TimeWall Surveys (Blue Top Bar & Left Icon Sidebar Completely Hidden!) -->
+            <div class="timewall-clean-crop border border-[var(--border)] shadow-2xs">
+              <iframe id="desk-timewall-iframe-surveys" title="Surveys" src="" scrolling="auto"></iframe>
             </div>
           </section>
 
-          <!-- TAB 4: BROWSING VIEW -->
+          <!-- TAB 4: BROWSING VIEW (Fake PTC Cards Removed! Direct Clean Cropped TimeWall Clicks/Browsing!) -->
           <section id="desk-view-browsing" class="space-y-6 hidden">
-            <div class="flex items-center justify-between border-b border-[var(--border)] pb-4">
-              <div>
-                <h3 class="section-title text-2xl">PTC Browsing &amp; Surf Ads</h3>
-                <p class="text-xs text-[var(--text-3)] mt-1">বিজ্ঞাপনে ক্লিক করে নির্দিষ্ট সময় অপেক্ষা করুন এবং সরাসরি টাকা আর্ন করুন</p>
-              </div>
-              <span class="chip chip-brand">৫টি অ্যাড উপলব্ধ · মোট ৳ ১.৫০</span>
-            </div>
-
-            <!-- Active Surf Countdown Banner -->
-            <div id="desk-surf-timer-banner" class="hidden card p-5 bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-xl flex items-center justify-between">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center font-black text-2xl animate-spin">⏳</div>
-                <div>
-                  <h4 class="font-extrabold text-base">বিজ্ঞাপন দেখা হচ্ছে...</h4>
-                  <p class="text-xs text-white/90">নতুন উইন্ডোতে বিজ্ঞাপন ওপেন রয়েছে। কাউন্টডাউন শেষ হওয়া পর্যন্ত অপেক্ষা করুন:</p>
-                </div>
-              </div>
-              <div class="text-right">
-                <span id="desk-surf-seconds" class="text-3xl font-black font-mono">10</span>
-                <span class="text-xs block font-bold text-white/80">সেকেন্ড বাকি</span>
-              </div>
-            </div>
-
-            <!-- PTC Ads List -->
-            <div class="space-y-3">
-              <div class="card p-5 flex items-center justify-between gap-4 card-lift">
-                <div class="flex items-center gap-4">
-                  <div class="clay clay-amber w-12 h-12"><i data-lucide="globe"></i></div>
-                  <div>
-                    <h4 class="font-extrabold text-sm text-[var(--text)]">EARN $780 PER DAY - NO INVESTMENT</h4>
-                    <div class="flex items-center gap-3 text-xs text-[var(--text-3)] mt-1">
-                      <span class="font-bold text-brand-500 font-mono">৳ 0.875</span>
-                      <span>⏱️ 30s</span>
-                      <span class="chip chip-neutral !py-0.5 !text-[10px]">Frameless</span>
-                    </div>
-                  </div>
-                </div>
-                <button onclick="startSurfAd('https://takarewardpro.com', 30, 8750)" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold">সার্ফ করুন ➔</button>
-              </div>
-
-              <div class="card p-5 flex items-center justify-between gap-4 card-lift">
-                <div class="flex items-center gap-4">
-                  <div class="clay clay-sky w-12 h-12"><i data-lucide="external-link"></i></div>
-                  <div>
-                    <h4 class="font-extrabold text-sm text-[var(--text)]">Winvest.com - Earn 3% Daily Profit - Double Money</h4>
-                    <div class="flex items-center gap-3 text-xs text-[var(--text-3)] mt-1">
-                      <span class="font-bold text-brand-500 font-mono">৳ 0.838</span>
-                      <span>⏱️ 30s</span>
-                      <span class="chip chip-neutral !py-0.5 !text-[10px]">Frameless</span>
-                    </div>
-                  </div>
-                </div>
-                <button onclick="startSurfAd('https://takarewardpro.com', 30, 8380)" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold">সার্ফ করুন ➔</button>
-              </div>
-
-              <div class="card p-5 flex items-center justify-between gap-4 card-lift">
-                <div class="flex items-center gap-4">
-                  <div class="clay clay-emerald w-12 h-12"><i data-lucide="zap"></i></div>
-                  <div>
-                    <h4 class="font-extrabold text-sm text-[var(--text)]">King of the Faucets - Claim Instant Crypto 2026</h4>
-                    <div class="flex items-center gap-3 text-xs text-[var(--text-3)] mt-1">
-                      <span class="font-bold text-brand-500 font-mono">৳ 0.357</span>
-                      <span>⏱️ 15s</span>
-                      <span class="chip chip-neutral !py-0.5 !text-[10px]">Frameless</span>
-                    </div>
-                  </div>
-                </div>
-                <button onclick="startSurfAd('https://takarewardpro.com', 15, 3570)" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold">সার্ফ করুন ➔</button>
-              </div>
+            <div class="timewall-clean-crop border border-[var(--border)] shadow-2xs" style="height: 760px;">
+              <iframe id="desk-timewall-iframe-clicks" title="Browsing" src="" scrolling="auto"></iframe>
             </div>
           </section>
 
@@ -2325,59 +2346,151 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </div>
           </section>
 
-          <!-- TAB 7: PROFILE SETTINGS VIEW -->
+          <!-- TAB 7: PROFILE SETTINGS VIEW (Exact 1:1 RewardJoy Profile & Setting UI from image_75d4fa.png & image_75d822.png + Auto IP Country Tracker) -->
           <section id="desk-view-profile" class="space-y-6 hidden">
-            <div>
-              <h3 class="section-title text-2xl flex items-center gap-2">
-                <span>👤</span> Account Profile &amp; Wallet Settings
-              </h3>
-            </div>
-
-            <div class="card p-6 space-y-6 max-w-3xl">
-              <div class="flex items-center gap-6">
-                <div class="relative">
-                  <img id="desk-profile-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-20 h-20 rounded-3xl border-4 border-[var(--border)] object-cover shadow-sm" />
-                  <button onclick="openProfileEditModal()" class="absolute -bottom-1 -right-1 bg-[var(--surface)] border border-[var(--border)] p-1.5 rounded-full shadow-xs cursor-pointer hover:scale-105 transition"><i data-lucide="camera" class="w-3.5 h-3.5"></i></button>
-                </div>
-                <div class="space-y-1">
-                  <h3 id="desk-profile-name" class="text-2xl font-black font-display text-[var(--text)]">User</h3>
-                  <div class="flex items-center gap-2 text-xs font-bold text-[var(--text-3)]">
-                    <span id="desk-profile-level-badge" class="chip chip-brand">Lv. 0</span>
-                    <span>1,000 coins to level up</span>
+            <div class="card p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs space-y-8">
+              
+              <!-- Top Row: Avatar + Name + Level Progress on Left | Main Balance + Cashout on Right -->
+              <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                <div class="flex items-center gap-6">
+                  <div class="relative shrink-0">
+                    <img id="desk-profile-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-28 h-28 rounded-full border-2 border-slate-100 dark:border-slate-700 object-cover shadow-sm" alt="Profile" />
+                    <button type="button" onclick="openProfileEditModal()" class="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-slate-200/90 dark:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center shadow-xs hover:scale-105 transition cursor-pointer">
+                      <i data-lucide="camera" class="w-4 h-4"></i>
+                    </button>
                   </div>
-                  <div class="w-64 progress mt-2">
-                    <i style="width:25%"></i>
+                  <div class="space-y-1.5">
+                    <h3 id="desk-profile-name" class="text-2xl font-extrabold text-[var(--text)]">User</h3>
+                    <div id="desk-profile-level-badge" class="text-base font-bold text-[#a16207] dark:text-amber-400">Lv.0</div>
+                    <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">1000 coins to level up</div>
+                    <div class="w-60 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-2">
+                      <div class="h-full bg-[#f97316] w-1/4 rounded-full"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Main Balance & Soft Peach Cashout Button -->
+                <div class="flex items-center gap-8">
+                  <div>
+                    <div class="flex items-center gap-1.5 text-xs font-medium text-slate-400">
+                      <span class="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-950/50 text-rose-500 inline-flex items-center justify-center text-[11px]">🐷</span>
+                      <span>Main Balance</span>
+                    </div>
+                    <div class="text-2xl font-extrabold text-[var(--text)] mt-1">
+                      ৳ <span id="desk-profile-taka">0.0</span>
+                    </div>
+                  </div>
+                  <button type="button" onclick="switchAppTab('cashout'); openCashoutModalDirect();" class="bg-orange-50 hover:bg-orange-100 dark:bg-orange-950/40 text-[#f97316] font-semibold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 transition cursor-pointer">
+                    <span>↗</span>
+                    <span>Cashout</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Section 1: Profile Bar -->
+              <div class="space-y-5">
+                <div class="bg-[#f8fafc] dark:bg-[var(--surface-2)] px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  Profile
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-16 px-4 text-xs">
+                  <!-- Email -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-medium">
+                      <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">✉</span>
+                      <span>Email</span>
+                    </div>
+                    <span id="desk-profile-email" class="font-semibold text-[var(--text)]">user@gmail.com</span>
+                  </div>
+
+                  <!-- Country (Auto IP Tracked!) -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-medium">
+                      <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">🌐</span>
+                      <span>Country</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <img id="desk-profile-country-flag-img" src="https://flagcdn.com/w20/bd.png" class="w-5 h-3.5 object-cover rounded-xs shadow-2xs" alt="Flag" />
+                      <span id="desk-profile-country-name" class="font-semibold text-[var(--text)]">Bangladesh</span>
+                      <button type="button" onclick="detectUserCountryByIP(true)" title="Auto-detect country by IP" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Offer Token -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-medium">
+                      <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">👤</span>
+                      <span>Offer Token</span>
+                      <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-bold inline-flex items-center justify-center">i</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span id="desk-profile-uid" class="font-mono font-semibold text-[var(--text)]">fe4......e0f</span>
+                      <button type="button" onclick="copyProfileOfferToken()" class="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 cursor-pointer" title="Copy Offer Token">
+                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div class="grid grid-cols-2 gap-4 pt-4 border-t border-[var(--border)] text-xs">
-                <div class="p-3.5 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] space-y-1">
-                  <span class="text-[var(--text-3)] font-bold block">Email Address</span>
-                  <span id="desk-profile-email" class="font-extrabold text-[var(--text)] font-mono text-xs">user@gmail.com</span>
+              <!-- Section 2: Setting Bar (Exact Match to image_75d822.png) -->
+              <div class="space-y-5">
+                <div class="bg-[#f8fafc] dark:bg-[var(--surface-2)] px-4 py-2.5 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  Setting
                 </div>
-                <div class="p-3.5 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] space-y-1">
-                  <span class="text-[var(--text-3)] font-bold block">Country</span>
-                  <span class="font-extrabold text-[var(--text)] flex items-center gap-1.5">🇧🇩 Bangladesh</span>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] space-y-1">
-                  <span class="text-[var(--text-3)] font-bold block">Current Balance</span>
-                  <span class="font-black text-brand-500 text-sm">৳<span id="desk-profile-taka">0.0</span></span>
-                </div>
-                <div class="p-3.5 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] space-y-1">
-                  <span class="text-[var(--text-3)] font-bold block">User Account UID</span>
-                  <span id="desk-profile-uid" class="font-mono text-[11px] text-[var(--text-3)] truncate block">...</span>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-16 px-4 text-xs">
+                  <!-- Wallet -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-medium">
+                      <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">👛</span>
+                      <span>Wallet</span>
+                      <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-bold inline-flex items-center justify-center">i</span>
+                    </div>
+                    <button type="button" onclick="openCashoutModalDirect()" class="text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+                      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                    </button>
+                  </div>
+
+                  <!-- 2 Factor Authentication -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-medium">
+                      <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">🛡️</span>
+                      <span>2 Factor Authentication</span>
+                    </div>
+                    <div class="inline-flex rounded-full bg-slate-200 dark:bg-slate-800 p-0.5 text-[11px] font-semibold">
+                      <button type="button" id="tfa-btn-on" onclick="toggleProfileSetting('tfa', true)" class="px-2.5 py-0.5 rounded-full text-slate-500 cursor-pointer">On</button>
+                      <button type="button" id="tfa-btn-off" onclick="toggleProfileSetting('tfa', false)" class="px-2.5 py-0.5 rounded-full bg-[#f97316] text-white cursor-pointer">Off</button>
+                    </div>
+                  </div>
+
+                  <div class="hidden md:block"></div>
+
+                  <!-- Sound of Frameless Ads -->
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-medium">
+                      <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">🔊</span>
+                      <span>Sound of Frameless Ads</span>
+                    </div>
+                    <div class="inline-flex rounded-full bg-slate-200 dark:bg-slate-800 p-0.5 text-[11px] font-semibold">
+                      <button type="button" id="sound-btn-on" onclick="toggleProfileSetting('sound', true)" class="px-2.5 py-0.5 rounded-full text-slate-500 cursor-pointer">On</button>
+                      <button type="button" id="sound-btn-off" onclick="toggleProfileSetting('sound', false)" class="px-2.5 py-0.5 rounded-full bg-slate-300 dark:bg-slate-700 text-white cursor-pointer">Off</button>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div class="pt-4 flex justify-end">
-                <button onclick="switchAppTab('cashout'); openCashoutModalDirect();" class="btn btn-primary !py-3 !px-6 font-bold">
-                  <i data-lucide="wallet"></i> টাকা উত্তোলন করুন (Cashout)
+              <!-- Bottom Delete Account Bar -->
+              <div class="bg-rose-50/50 dark:bg-rose-950/20 rounded-xl p-3.5 flex justify-center">
+                <button type="button" onclick="alert('অ্যাকাউন্ট ডিলিট রিকোয়েস্টের জন্য অনুগ্রহ করে অ্যাডমিন সাপোর্টে যোগাযোগ করুন।')" class="border border-rose-400 text-rose-500 hover:bg-rose-500 hover:text-white font-medium text-xs px-10 py-2 rounded-lg transition cursor-pointer">
+                  Delete Account
                 </button>
               </div>
+
             </div>
           </section>
-
         </main>
       </div>
     </div>
@@ -4037,6 +4150,137 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     };
 
+    
+    // Top-Right User Avatar Dropdown Menu (image_75dbc7.jpg)
+    window.toggleDeskUserDropdown = function(e) {
+      if (e && e.stopPropagation) e.stopPropagation();
+      const dd = document.getElementById('desk-user-dropdown');
+      if (dd) dd.classList.toggle('hidden');
+    };
+
+    window.closeDeskUserDropdown = function() {
+      document.getElementById('desk-user-dropdown')?.classList.add('hidden');
+    };
+
+    document.addEventListener('click', function(e) {
+      const wrap = document.getElementById('desk-user-menu-wrap');
+      const dd = document.getElementById('desk-user-dropdown');
+      if (wrap && dd && !wrap.contains(e.target)) {
+        dd.classList.add('hidden');
+      }
+    });
+
+    window.handleDesktopLogout = async function() {
+      try {
+        await signOut(auth);
+        window.location.reload();
+      } catch (e) {
+        console.error("Logout error:", e);
+      }
+    };
+
+    window.fullOfferTokenUid = '';
+    window.copyProfileOfferToken = function() {
+      const token = window.fullOfferTokenUid || currentUser?.uid || '';
+      if (token) {
+        navigator.clipboard.writeText(token).then(() => {
+          alert("Offer Token কপি করা হয়েছে!");
+        });
+      }
+    };
+
+    window.toggleProfileSetting = function(type, isOn) {
+      const onBtn = document.getElementById(type + '-btn-on');
+      const offBtn = document.getElementById(type + '-btn-off');
+      if (!onBtn || !offBtn) return;
+      if (isOn) {
+        onBtn.className = "px-2.5 py-0.5 rounded-full bg-[#f97316] text-white cursor-pointer";
+        offBtn.className = "px-2.5 py-0.5 rounded-full text-slate-500 cursor-pointer";
+      } else {
+        onBtn.className = "px-2.5 py-0.5 rounded-full text-slate-500 cursor-pointer";
+        offBtn.className = "px-2.5 py-0.5 rounded-full bg-[#f97316] text-white cursor-pointer";
+      }
+    };
+
+    // Automatic IP Address Country Detection for Profile Setup
+    const COUNTRY_NAMES_MAP = {
+      BD: "Bangladesh", US: "United States", GB: "United Kingdom", IN: "India",
+      PK: "Pakistan", SA: "Saudi Arabia", AE: "United Arab Emirates", MY: "Malaysia",
+      SG: "Singapore", CA: "Canada", AU: "Australia", DE: "Germany", FR: "France",
+      IT: "Italy", ES: "Spain", BR: "Brazil", ID: "Indonesia", PH: "Philippines",
+      NG: "Nigeria", EG: "Egypt", TR: "Turkey", QA: "Qatar", KW: "Kuwait", OM: "Oman"
+    };
+
+    window.applyDetectedCountry = function(countryName, countryCode) {
+      if (!countryName && countryCode) {
+        countryName = COUNTRY_NAMES_MAP[countryCode.toUpperCase()] || countryCode.toUpperCase();
+      }
+      if (!countryName) return;
+      const codeLower = (countryCode || 'bd').toLowerCase();
+      const nameEl = document.getElementById('desk-profile-country-name');
+      const flagImg = document.getElementById('desk-profile-country-flag-img');
+      if (nameEl) nameEl.innerText = countryName;
+      if (flagImg && codeLower.length === 2) {
+        flagImg.src = `https://flagcdn.com/w20/${codeLower}.png`;
+      }
+      localStorage.setItem('tr_detected_country', JSON.stringify({ name: countryName, code: codeLower }));
+    };
+
+    window.detectUserCountryByIP = async function(showNotice = false) {
+      try {
+        const cached = localStorage.getItem('tr_detected_country');
+        if (cached && !showNotice) {
+          const parsed = JSON.parse(cached);
+          if (parsed && parsed.name && parsed.code) {
+            window.applyDetectedCountry(parsed.name, parsed.code);
+          }
+        }
+      } catch (e) {}
+
+      // Try 1: ipwho.is (fast, CORS-friendly, returns country & country_code)
+      try {
+        const res = await fetch('https://ipwho.is/', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.country && data.country_code) {
+            window.applyDetectedCountry(data.country, data.country_code);
+            if (showNotice) alert(`IP ট্র্যাকিং সফল: আপনার দেশ (${data.country}) অটোমেটিক সিলেক্ট হয়েছে!`);
+            return;
+          }
+        }
+      } catch (e1) {}
+
+      // Try 2: ipapi.co/json/
+      try {
+        const res2 = await fetch('https://ipapi.co/json/', { cache: 'no-store' });
+        if (res2.ok) {
+          const data2 = await res2.json();
+          if (data2 && data2.country_name && data2.country_code) {
+            window.applyDetectedCountry(data2.country_name, data2.country_code);
+            if (showNotice) alert(`IP ট্র্যাকিং সফল: আপনার দেশ (${data2.country_name}) অটোমেটিক সিলেক্ট হয়েছে!`);
+            return;
+          }
+        }
+      } catch (e2) {}
+
+      // Try 3: api.country.is
+      try {
+        const res3 = await fetch('https://api.country.is/', { cache: 'no-store' });
+        if (res3.ok) {
+          const data3 = await res3.json();
+          if (data3 && data3.country) {
+            const cName = COUNTRY_NAMES_MAP[data3.country.toUpperCase()] || data3.country;
+            window.applyDetectedCountry(cName, data3.country);
+            if (showNotice) alert(`IP ট্র্যাকিং সফল: আপনার দেশ (${cName}) অটোমেটিক সিলেক্ট হয়েছে!`);
+            return;
+          }
+        }
+      } catch (e3) {}
+    };
+
+    // Trigger IP country detection automatically on load
+    window.detectUserCountryByIP(false);
+
     window.openCashoutModalDirect = function() {
       const m = document.getElementById('cashout-modal');
       if (m) {
@@ -4245,7 +4489,15 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (pName) pName.innerText = (uData?.name || user.displayName || 'User');
       if (pEmail) pEmail.innerText = user.email || 'N/A';
       if (pTaka) pTaka.innerText = taka;
-      if (pUid) pUid.innerText = user.uid;
+      window.fullOfferTokenUid = user.uid || '';
+      if (pUid && user.uid) {
+        pUid.innerText = user.uid.length > 8 ? (user.uid.slice(0, 3) + '......' + user.uid.slice(-3)) : user.uid;
+      }
+
+      const ddAvatar = document.getElementById('desk-dropdown-avatar');
+      const ddName = document.getElementById('desk-dropdown-name');
+      if (ddAvatar && user.photoURL) ddAvatar.src = user.photoURL;
+      if (ddName) ddName.innerText = (uData?.name || user.displayName || 'User');
 
       // Referral Link Sync
       const refLink = document.getElementById('desk-referral-link');
@@ -4274,6 +4526,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (surveysFrame && user.uid && !surveysFrame.src.includes('timewall.io')) {
         surveysFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${user.uid}&tab=surveys`;
       }
+      const clicksFrame = document.getElementById('desk-timewall-iframe-clicks');
+      if (clicksFrame && user.uid && !clicksFrame.src.includes('timewall.io')) {
+        clicksFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${user.uid}&tab=clicks`;
+      }
+      window.detectUserCountryByIP(false);
 
       if (window.updateDesktopGreetingByLocalTime) window.updateDesktopGreetingByLocalTime();
       renderDesktopTasks();
