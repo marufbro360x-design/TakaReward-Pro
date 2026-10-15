@@ -1668,7 +1668,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           </div>
 
           <!-- Cashout Button -->
-          <button onclick="switchAppTab('cashout'); openCashoutModalDirect();" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold shadow-sm">
+          <button onclick="desktopSwitchTab('withdraw');" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold shadow-sm">
             <i data-lucide="arrow-up-right"></i> Cashout
           </button>
 
@@ -1767,6 +1767,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             <button onclick="desktopSwitchTab('challenge')" id="desk-nav-challenge" class="rj-nav-btn">
               <i data-lucide="trophy"></i>
               <span>Challenge</span>
+            </button>
+            <button onclick="desktopSwitchTab('withdraw')" id="desk-nav-withdraw" class="rj-nav-btn">
+              <i data-lucide="wallet"></i>
+              <span>Cashout</span>
             </button>
             <button onclick="desktopSwitchTab('profile')" id="desk-nav-profile" class="rj-nav-btn">
               <i data-lucide="user"></i>
@@ -1867,7 +1871,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   <div class="num-display text-3xl font-black text-[var(--text)] font-mono">
                     ৳ <span id="desk-dash-taka">0.0</span>
                   </div>
-                  <button onclick="switchAppTab('cashout'); openCashoutModalDirect();" class="btn btn-primary !py-2 text-xs font-bold">
+                  <button onclick="desktopSwitchTab('withdraw');" class="btn btn-primary !py-2 text-xs font-bold">
                     <i data-lucide="arrow-up-right"></i> Cashout
                   </button>
                 </div>
@@ -2271,7 +2275,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                       ৳ <span id="desk-profile-taka">0.0</span>
                     </div>
                   </div>
-                  <button type="button" onclick="switchAppTab('cashout'); openCashoutModalDirect();" class="bg-orange-50 hover:bg-orange-100 dark:bg-orange-950/40 text-[#f97316] font-semibold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 transition cursor-pointer">
+                  <button type="button" onclick="desktopSwitchTab('withdraw');" class="bg-orange-50 hover:bg-orange-100 dark:bg-orange-950/40 text-[#f97316] font-semibold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 transition cursor-pointer">
                     <span>↗</span>
                     <span>Cashout</span>
                   </button>
@@ -2340,7 +2344,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                       <span>Wallet</span>
                       <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-bold inline-flex items-center justify-center">i</span>
                     </div>
-                    <button type="button" onclick="openCashoutModalDirect()" class="text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer">
+                    <button type="button" onclick="openRjWalletModal()" class="text-slate-500 hover:text-slate-800 dark:hover:text-white cursor-pointer">
                       <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                     </button>
                   </div>
@@ -2382,6 +2386,235 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
             </div>
           </section>
+
+          <!-- TAB 8: REWARDJOY WITHDRAW VIEW (Exact 1:1 Replica of rewardjoy.com/dashboard/withdraw from Video) -->
+          <section id="desk-view-withdraw" class="space-y-6 hidden">
+            
+            <!-- Top Row: Cash & Gift Cards Tabs on Left | History Button on Right -->
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <button type="button" id="rj-wtab-cash" onclick="switchRjWithdrawCategory('cash')" class="w-48 py-3 px-5 rounded-xl bg-[#fff7ed] dark:bg-orange-950/40 border border-orange-200/70 dark:border-orange-800/50 flex items-center justify-center gap-2.5 text-[#f97316] font-bold text-sm shadow-2xs transition cursor-pointer">
+                  <span class="text-base">👛</span>
+                  <span>Cash</span>
+                </button>
+                <button type="button" id="rj-wtab-gift" onclick="switchRjWithdrawCategory('gift')" class="w-48 py-3 px-5 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] flex items-center justify-center gap-2.5 text-slate-500 dark:text-slate-400 font-bold text-sm shadow-2xs hover:text-slate-700 transition cursor-pointer">
+                  <span class="text-base">🎁</span>
+                  <span>Gift Cards</span>
+                </button>
+              </div>
+
+              <div class="flex items-center gap-2.5">
+                <button type="button" id="rj-withdraw-back-btn" onclick="showRjWithdrawStep1()" class="hidden bg-white dark:bg-[var(--surface)] border border-slate-200 dark:border-[var(--border)] text-slate-600 dark:text-slate-300 font-bold text-xs px-4 py-2.5 rounded-xl shadow-2xs hover:bg-slate-50 transition cursor-pointer">
+                  ← All Methods
+                </button>
+                <button type="button" onclick="openWithdrawHistoryModal()" class="bg-white dark:bg-[var(--surface)] border border-slate-200 dark:border-[var(--border)] text-slate-700 dark:text-slate-200 font-bold text-xs px-4 py-2.5 rounded-xl shadow-2xs hover:border-orange-400 transition cursor-pointer flex items-center gap-1.5">
+                  <span>📋</span>
+                  <span>History &gt;</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 1: FIAT & CRYPTO VERTICAL GRADIENT CARDS (frame_09.jpg Exact Replica) -->
+            <div id="rj-withdraw-step-cards" class="space-y-7 pt-1">
+              
+              <!-- FIAT SECTION -->
+              <div class="space-y-4">
+                <div class="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-bold text-sm tracking-wide">
+                  <span class="text-slate-400 font-mono text-base">$€</span>
+                  <span>FIAT</span>
+                </div>
+
+                <div class="flex flex-wrap gap-5">
+                  <!-- bKash Card (Pink-Magenta Gradient with Origami Bird) -->
+                  <div onclick="openRjWithdrawForm('bKash')" class="w-48 h-60 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #f48fb1 0%, #d81b60 65%, #ad1457 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <!-- White bKash Origami Bird SVG -->
+                      <svg class="w-16 h-16 text-white drop-shadow-xs" viewBox="0 0 64 64" fill="currentColor">
+                        <path d="M28 14L12 25l16 6V14zm2 0v17l18-6-18-11zm-2 19l-10 4 10 15V33zm2 0v19l14-14-14-5zm16-4l-14 4 11 11 11-9-8-6z"/>
+                      </svg>
+                    </div>
+                    <span class="text-white font-bold text-sm tracking-wide">bKash</span>
+                  </div>
+
+                  <!-- Nagad Card (Orange-Coral Gradient) -->
+                  <div onclick="openRjWithdrawForm('Nagad')" class="w-48 h-60 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #fdba74 0%, #f97316 60%, #ea580c 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center border border-white/40 shadow-inner">
+                        <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" alt="Nagad" class="w-12 h-12 rounded-full object-cover" />
+                      </div>
+                    </div>
+                    <span class="text-white font-bold text-sm tracking-wide">Nagad</span>
+                  </div>
+
+                  <!-- Bank Transfer Card (Soft Coral-Pink Gradient with Classical Bank Icon) -->
+                  <div onclick="openRjWithdrawForm('Bank Transfer')" class="w-48 h-60 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #fca5a5 0%, #fb7185 65%, #f43f5e 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <svg class="w-14 h-14 text-white drop-shadow-xs" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 2L2 7v2h20V7L12 2zm-7 9v7H3v2h18v-2h-2v-7h-2v7h-2v-7h-2v7h-2v-7H9v7H7v-7H5z"/>
+                      </svg>
+                    </div>
+                    <span class="text-white font-bold text-sm tracking-wide">Bank Transfer</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CRYPTO SECTION -->
+              <div class="space-y-4 pt-2">
+                <div class="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-bold text-sm tracking-wide">
+                  <span class="w-5 h-5 rounded-full border border-slate-400 inline-flex items-center justify-center text-[11px] font-extrabold text-slate-500">₿</span>
+                  <span>CRYPTO</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-5 max-w-6xl">
+                  <!-- Bitcoin -->
+                  <div onclick="openRjWithdrawForm('Bitcoin')" class="h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #fdba74 0%, #f59e0b 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <span class="text-white font-black text-5xl drop-shadow-xs">₿</span>
+                    </div>
+                    <span class="text-white font-bold text-xs tracking-wide">Bitcoin</span>
+                  </div>
+
+                  <!-- Ethereum -->
+                  <div onclick="openRjWithdrawForm('Ethereum')" class="h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #c4b5fd 0%, #8b5cf6 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <svg class="w-12 h-12 text-white" viewBox="0 0 32 32" fill="currentColor"><path d="M16 4l-8 13 8 5 8-5-8-13zm0 20l-8-5 8 11 8-11-8 5z"/></svg>
+                    </div>
+                    <span class="text-white font-bold text-xs tracking-wide">Ethereum</span>
+                  </div>
+
+                  <!-- USDT -->
+                  <div onclick="openRjWithdrawForm('USDT')" class="h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #5eead4 0%, #14b8a6 65%, #0d9488 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <span class="text-white font-black text-5xl drop-shadow-xs">₮</span>
+                    </div>
+                    <span class="text-white font-bold text-xs tracking-wide">USDT</span>
+                  </div>
+
+                  <!-- USDC -->
+                  <div onclick="openRjWithdrawForm('USDC')" class="h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #93c5fd 0%, #3b82f6 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <div class="w-12 h-12 rounded-full border-4 border-white flex items-center justify-center text-white font-black text-2xl">$</div>
+                    </div>
+                    <span class="text-white font-bold text-xs tracking-wide">USDC</span>
+                  </div>
+
+                  <!-- FaucetPay -->
+                  <div onclick="openRjWithdrawForm('FaucetPay')" class="h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #93c5fd 0%, #6366f1 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <span class="text-white font-black text-4xl tracking-tighter">FP</span>
+                    </div>
+                    <span class="text-white font-bold text-xs tracking-wide">FaucetPay</span>
+                  </div>
+
+                  <!-- Litecoin -->
+                  <div onclick="openRjWithdrawForm('Litecoin')" class="h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #cbd5e1 0%, #64748b 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <span class="text-white font-black text-5xl">Ł</span>
+                    </div>
+                    <span class="text-white font-bold text-xs tracking-wide">Litecoin</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- LOADING SPINNER (frame_12.jpg Exact Replica) -->
+            <div id="rj-withdraw-loading" class="hidden bg-white dark:bg-[var(--surface)] rounded-2xl border border-slate-100 dark:border-[var(--border)] h-96 flex items-center justify-center shadow-2xs">
+              <div class="w-9 h-9 border-4 border-slate-200 border-t-slate-600 rounded-full animate-spin"></div>
+            </div>
+
+            <!-- STEP 2: WITHDRAW FORM CARD (frame_18.jpg, frame_98.jpg & frame_104.jpg Exact Replica) -->
+            <div id="rj-withdraw-step-form" class="hidden bg-white dark:bg-[var(--surface)] rounded-2xl border border-slate-100 dark:border-[var(--border)] p-8 max-w-4xl shadow-2xs space-y-5">
+              
+              <!-- Choose Withdraw Method -->
+              <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">Choose Withdraw Method</label>
+                <div onclick="openRjMethodPickerModal()" class="w-full border border-slate-200 dark:border-[var(--border)] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer hover:border-slate-300 transition bg-white dark:bg-[var(--surface-2)]">
+                  <div class="flex items-center gap-2.5" id="rj-form-method-display">
+                    <span class="w-6 h-6 rounded-full bg-[#e2136e] text-white inline-flex items-center justify-center text-xs font-bold">🦅</span>
+                    <span class="text-xs font-semibold text-slate-800 dark:text-white">bKash</span>
+                    <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-pink-100 text-[#e2136e]">BDT</span>
+                  </div>
+                  <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+              </div>
+
+              <!-- Phone Number (Read-only box with Pencil icon -> opens Wallet Setup Modal) -->
+              <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">Phone Number</label>
+                <div onclick="openRjWalletModal()" class="w-full bg-[#f4f5f7] dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer hover:border-slate-300 transition">
+                  <span id="rj-form-phone-val" class="text-xs font-medium text-slate-700 dark:text-slate-200">--</span>
+                  <svg class="w-4 h-4 text-slate-500 hover:text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+              </div>
+
+              <!-- Account Holder Name -->
+              <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">Account Holder Name</label>
+                <div onclick="openRjWalletModal()" class="w-full bg-[#f4f5f7] dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer hover:border-slate-300 transition">
+                  <span id="rj-form-holder-val" class="text-xs font-medium text-slate-700 dark:text-slate-200">--</span>
+                  <svg class="w-4 h-4 text-slate-500 hover:text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+              </div>
+
+              <!-- bKash mobile number / Method Account -->
+              <div class="space-y-2">
+                <label id="rj-form-account-label" class="block text-xs font-bold text-slate-700 dark:text-slate-200">bKash mobile number</label>
+                <div onclick="openRjWalletModal()" class="w-full bg-[#f4f5f7] dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer hover:border-slate-300 transition">
+                  <span id="rj-form-account-val" class="text-xs font-medium text-slate-700 dark:text-slate-200">--</span>
+                  <svg class="w-4 h-4 text-slate-500 hover:text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+              </div>
+
+              <!-- Email -->
+              <div class="space-y-2">
+                <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">Email</label>
+                <div onclick="openRjWalletModal()" class="w-full bg-[#f4f5f7] dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer hover:border-slate-300 transition">
+                  <span id="rj-form-email-val" class="text-xs font-medium text-slate-700 dark:text-slate-200">--</span>
+                  <svg class="w-4 h-4 text-slate-500 hover:text-slate-800" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                </div>
+              </div>
+
+              <!-- Coins (Available: X coins) -->
+              <div class="space-y-2 pt-1">
+                <div class="flex items-center justify-between">
+                  <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">
+                    Coins (Available: <span id="rj-form-avail-coins" class="text-[#f97316] font-extrabold">0</span> coins)
+                  </label>
+                  <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="setRjCoinAmount(1050000)" class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳105</button>
+                    <button type="button" onclick="setRjCoinAmount(2000000)" class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳200</button>
+                    <button type="button" onclick="setRjCoinAmount(3000000)" class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳300</button>
+                    <button type="button" onclick="setRjCoinAmount(5000000)" class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳500</button>
+                  </div>
+                </div>
+                <input id="rj-form-coins-input" type="number" oninput="updateRjCalculatedBdt()" placeholder="Minimum withdrawal 1050000 coins (৳105)" class="w-full bg-white dark:bg-[var(--surface-2)] border border-slate-200 dark:border-[var(--border)] rounded-lg px-4 py-3 text-xs font-semibold text-slate-800 dark:text-white outline-none focus:border-[#f97316] transition" />
+              </div>
+
+              <!-- bKash (BDT) Calculated Output -->
+              <div class="space-y-1.5">
+                <label id="rj-form-bdt-label" class="block text-xs font-bold text-slate-700 dark:text-slate-200">bKash <span class="text-[10px] font-normal text-slate-500">(BDT)</span></label>
+                <div class="w-full bg-[#f4f5f7] dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 rounded-lg px-4 py-3 text-xs font-bold text-slate-700 dark:text-slate-200" id="rj-form-bdt-output">
+                  0
+                </div>
+                <div class="text-[11px] text-slate-400 font-medium pt-0.5">Range: 105.00-50000.00 BDT</div>
+              </div>
+
+              <!-- Transaction Fee & You Will Get -->
+              <div class="space-y-1 pt-2 text-xs">
+                <div class="text-slate-600 dark:text-slate-300">Transaction Fee: <strong class="text-slate-900 dark:text-white font-extrabold">0 BDT</strong></div>
+                <div class="text-slate-600 dark:text-slate-300">You Will Get: <strong id="rj-form-you-will-get" class="text-slate-900 dark:text-white font-extrabold">0 BDT</strong></div>
+              </div>
+
+              <!-- Bottom Center Orange Confirm Button -->
+              <div class="pt-4 flex justify-center">
+                <button type="button" onclick="submitRjDesktopWithdraw()" class="bg-[#f97316] hover:bg-orange-600 text-white font-semibold text-xs px-12 py-3 rounded-lg shadow-sm transition cursor-pointer">
+                  Confirm
+                </button>
+              </div>
+
+            </div>
+
+          </section>
         </main>
       </div>
     </div>
@@ -2413,104 +2646,99 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     </div>
   </div>
 
-  <!-- DESKTOP CASHOUT MODAL (#cashout-modal) -->
-  <div id="cashout-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden backdrop-blur-xs">
-    <div class="bg-[var(--surface)] border border-[var(--border)] rounded-3xl w-full max-w-md p-6 space-y-5 shadow-2xl text-[var(--text)]">
-      <div class="flex items-center justify-between border-b border-[var(--border)] pb-3.5">
-        <div class="flex items-center gap-2.5">
-          <div class="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-500 font-black">৳</div>
-          <div>
-            <h3 class="font-extrabold text-base text-[var(--text)]">Cashout / Withdraw Balance</h3>
-            <p class="text-[11px] text-[var(--text-3)]">Available Balance: <strong class="text-emerald-500 font-mono">৳ <span id="desk-modal-cashout-taka">0.0</span></strong></p>
-          </div>
-        </div>
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="openWithdrawHistoryModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs px-3 py-1.5 rounded-full shadow-xs transition cursor-pointer">
-            History &gt;
-          </button>
-          <button type="button" onclick="closeCashoutModalDirect()" class="icon-btn !w-8 !h-8">✕</button>
-        </div>
+  <!-- REWARDJOY RED SLIDE-IN VALIDATION TOAST (frame_55.jpg Exact Replica) -->
+  <div id="rj-error-toast" class="fixed top-24 right-6 z-[120] bg-[#e11d48]/95 text-white px-5 py-3.5 rounded-lg shadow-xl flex items-start gap-2.5 max-w-xs text-xs font-medium transition-all duration-300 opacity-0 pointer-events-none translate-x-8">
+    <span class="w-4 h-4 rounded-full bg-white text-[#e11d48] font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">✕</span>
+    <span id="rj-error-toast-msg">Please enter an 11-digit bKash number starting with 013-019.</span>
+  </div>
+
+  <!-- REWARDJOY CASH METHOD PICKER MODAL (frame_15.jpg Exact Replica) -->
+  <div id="rj-method-picker-modal" class="fixed inset-0 bg-black/50 z-[105] hidden items-center justify-center p-4 backdrop-blur-[2px]">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-[380px] p-6 shadow-2xl border border-slate-100 dark:border-slate-800 space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-base text-slate-800 dark:text-white">Cash</h3>
+        <button type="button" onclick="closeRjMethodPickerModal()" class="w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 flex items-center justify-center text-xs cursor-pointer">✕</button>
       </div>
 
-      <!-- Payment Gate Selector (Nagad & bKash) -->
-      <div class="flex gap-3">
-        <button type="button" onclick="selectDesktopGate('Nagad')" id="desk-gate-btn-nagad" class="flex-1 border-2 border-orange-500 bg-orange-50/80 dark:bg-orange-950/30 font-black text-orange-600 py-3 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer">
-          <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" alt="Nagad" class="w-6 h-6 rounded-full object-cover shadow-xs" />
-          <span>নগদ (Nagad)</span>
-        </button>
-        <button type="button" onclick="selectDesktopGate('bKash')" id="desk-gate-btn-bkash" class="flex-1 border-2 border-slate-200 dark:border-slate-700 bg-[var(--surface-2)] font-bold text-[var(--text-2)] py-3 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer">
-          <img src="https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg" alt="bKash" class="w-6 h-6 rounded-full object-cover shadow-xs" />
-          <span>বিকাশ (bKash)</span>
-        </button>
+      <div class="relative">
+        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs">🔍</span>
+        <input id="rj-method-search-input" type="text" oninput="filterRjMethodsList()" placeholder="Search" class="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg pl-9 pr-3 py-2 text-xs text-slate-700 dark:text-slate-200 outline-none focus:border-[#f97316]" />
       </div>
 
-      <!-- 2x2 Amount Package Grid -->
-      <div class="grid grid-cols-2 gap-3">
-        <div onclick="selectDesktopWithdrawCard(105, 1050000, this)" class="desk-w-card cursor-pointer bg-[var(--surface-2)] border-2 border-emerald-500 rounded-2xl p-4 shadow-xs flex flex-col justify-between transition">
-          <div class="flex items-center justify-between">
-            <span class="text-2xl font-black text-[var(--text)] font-mono">৳105</span>
-            <div class="desk-w-badge flex items-center gap-1 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-lg">
-              <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" class="w-3.5 h-3.5 rounded-full object-cover desk-card-method-img" />
-              <span class="desk-card-method-name text-[10px] font-bold text-orange-600">নগদ</span>
-            </div>
-          </div>
-          <div class="mt-2.5 text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400">Instant Payout · ৳105.00</div>
-        </div>
-
-        <div onclick="selectDesktopWithdrawCard(200, 2000000, this)" class="desk-w-card cursor-pointer bg-[var(--surface-2)] border-2 border-[var(--border)] rounded-2xl p-4 shadow-xs flex flex-col justify-between transition">
-          <div class="flex items-center justify-between">
-            <span class="text-2xl font-black text-[var(--text)] font-mono">৳200</span>
-            <div class="desk-w-badge flex items-center gap-1 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-lg">
-              <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" class="w-3.5 h-3.5 rounded-full object-cover desk-card-method-img" />
-              <span class="desk-card-method-name text-[10px] font-bold text-orange-600">নগদ</span>
-            </div>
-          </div>
-          <div class="mt-2.5 text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400">Standard Payout · ৳200.00</div>
-        </div>
-
-        <div onclick="selectDesktopWithdrawCard(300, 3000000, this)" class="desk-w-card cursor-pointer bg-[var(--surface-2)] border-2 border-[var(--border)] rounded-2xl p-4 shadow-xs flex flex-col justify-between transition">
-          <div class="flex items-center justify-between">
-            <span class="text-2xl font-black text-[var(--text)] font-mono">৳300</span>
-            <div class="desk-w-badge flex items-center gap-1 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-lg">
-              <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" class="w-3.5 h-3.5 rounded-full object-cover desk-card-method-img" />
-              <span class="desk-card-method-name text-[10px] font-bold text-orange-600">নগদ</span>
-            </div>
-          </div>
-          <div class="mt-2.5 text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400">Fast Payout · ৳300.00</div>
-        </div>
-
-        <div onclick="selectDesktopWithdrawCard(500, 5000000, this)" class="desk-w-card cursor-pointer bg-[var(--surface-2)] border-2 border-[var(--border)] rounded-2xl p-4 shadow-xs flex flex-col justify-between transition">
-          <div class="flex items-center justify-between">
-            <span class="text-2xl font-black text-[var(--text)] font-mono">৳500</span>
-            <div class="desk-w-badge flex items-center gap-1 bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-lg">
-              <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" class="w-3.5 h-3.5 rounded-full object-cover desk-card-method-img" />
-              <span class="desk-card-method-name text-[10px] font-bold text-orange-600">নগদ</span>
-            </div>
-          </div>
-          <div class="mt-2.5 text-[11px] font-extrabold text-emerald-600 dark:text-emerald-400">VIP Payout · ৳500.00</div>
-        </div>
+      <div id="rj-methods-list-container" class="space-y-1 max-h-80 overflow-y-auto pr-1">
+        <!-- Populated dynamically by renderRjMethodsList() -->
       </div>
-
-      <!-- Mobile Number Input -->
-      <div class="space-y-2">
-        <label class="text-xs font-bold text-[var(--text-2)] flex items-center justify-between">
-          <span>উইথড্রল মোবাইল নম্বর:</span>
-          <span class="text-brand-500 text-[11px] font-bold">ব্যক্তিগত (Personal) অ্যাকাউন্ট</span>
-        </label>
-        <input id="desk-withdraw-number" type="tel" placeholder="01XXXXXXXXX (Personal Number)" class="input font-mono font-bold" />
-        <div class="bg-amber-500/10 border border-amber-500/25 rounded-xl p-2.5 text-[11px] text-amber-700 dark:text-amber-300 flex items-start gap-2 leading-relaxed">
-          <span class="text-sm shrink-0">⚠️</span>
-          <span><strong>সতর্কতা:</strong> উইথড্র শুধুমাত্র <strong>পার্সোনাল (Personal)</strong> বিকাশ বা নগদ নম্বরে গ্রহণযোগ্য। এজেন্ট নম্বরে টাকা পাঠানো হবে না।</span>
-        </div>
-      </div>
-
-      <button type="button" onclick="executeDesktopCashout()" class="btn btn-primary w-full !py-3.5 text-sm font-black shadow-lg">
-        <i data-lucide="arrow-up-right"></i> Cashout Now (<span id="desk-cashout-btn-amount">৳105</span>)
-      </button>
     </div>
   </div>
 
-  
+  <!-- REWARDJOY WALLET SETUP MODAL (frame_25.jpg - frame_75.jpg Exact Replica) -->
+  <div id="rj-wallet-setup-modal" class="fixed inset-0 bg-black/50 z-[110] hidden items-center justify-center p-4 backdrop-blur-[2px]">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-[540px] p-7 shadow-2xl border border-slate-100 dark:border-slate-800 space-y-4 relative max-h-[92vh] overflow-y-auto">
+      <button type="button" onclick="closeRjWalletModal()" class="absolute top-5 right-5 w-7 h-7 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-slate-700 flex items-center justify-center text-xs cursor-pointer">✕</button>
+
+      <!-- Wallet Method Dropdown -->
+      <div class="space-y-1.5 pt-2">
+        <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">Wallet</label>
+        <div onclick="closeRjWalletModal(); openRjMethodPickerModal(true);" class="w-full border border-slate-200 dark:border-slate-700 rounded-lg px-3.5 py-2.5 flex items-center justify-between cursor-pointer hover:border-slate-300 bg-white dark:bg-slate-800">
+          <div class="flex items-center gap-2" id="rj-wallet-modal-method-badge">
+            <span class="w-5 h-5 rounded-full bg-[#e2136e] text-white inline-flex items-center justify-center text-[10px] font-bold">🦅</span>
+            <span class="text-xs font-semibold text-slate-800 dark:text-white">bKash</span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-pink-100 text-[#e2136e]">BDT</span>
+          </div>
+          <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+
+      <!-- bKash mobile number / Account Input -->
+      <div class="space-y-1.5">
+        <label id="rj-wallet-modal-acc-label" class="block text-xs font-bold text-slate-700 dark:text-slate-200">bKash mobile number</label>
+        <input id="rj-wallet-modal-acc-input" type="text" placeholder="Fill your bKash Account" class="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white outline-none focus:border-[#f97316]" />
+      </div>
+
+      <!-- Phone Number with Country Prefix -->
+      <div class="space-y-1.5">
+        <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">Phone Number</label>
+        <div class="grid grid-cols-[180px_1fr] gap-2.5">
+          <div class="border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg px-3 py-2.5 flex items-center justify-between text-xs font-medium text-slate-700 dark:text-slate-200">
+            <div class="flex items-center gap-2 truncate">
+              <img src="https://flagcdn.com/w20/bd.png" class="w-4 h-3 object-cover rounded-xs" alt="BD" />
+              <span class="truncate">Bangladesh (+880)</span>
+            </div>
+            <svg class="w-3.5 h-3.5 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <input id="rj-wallet-modal-phone-input" type="tel" placeholder="Fill your Phone Number" class="w-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 rounded-lg px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white outline-none focus:border-[#f97316]" />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="space-y-1.5">
+        <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">Email</label>
+        <input id="rj-wallet-modal-email-input" type="email" placeholder="Email address" class="w-full border border-slate-200 dark:border-slate-700 bg-[#eff6ff]/60 dark:bg-slate-800 rounded-lg px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white outline-none focus:border-[#f97316]" />
+      </div>
+
+      <!-- Account Holder Name -->
+      <div class="space-y-1.5">
+        <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">Account Holder Name</label>
+        <input id="rj-wallet-modal-holder-input" type="text" placeholder="Full Name" class="w-full border border-slate-200 dark:border-slate-700 bg-[#eff6ff]/60 dark:bg-slate-800 rounded-lg px-3.5 py-2.5 text-xs font-medium text-slate-800 dark:text-white outline-none focus:border-[#f97316]" />
+      </div>
+
+      <!-- Ownership Confirmation Checkbox -->
+      <label class="flex items-start gap-2.5 pt-1 cursor-pointer select-none">
+        <input id="rj-wallet-modal-confirm-chk" type="checkbox" checked class="mt-0.5 w-4 h-4 accent-[#f97316] rounded cursor-pointer shrink-0" />
+        <span id="rj-wallet-modal-confirm-text" class="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed">
+          I hereby confirm that the provided details of the above bKash account are real and that I am its sole owner.
+        </span>
+      </label>
+
+      <!-- Bottom Orange Next Button -->
+      <div class="pt-3 flex justify-center">
+        <button type="button" onclick="saveRjWalletDetails()" class="bg-[#f97316] hover:bg-orange-600 text-white font-semibold text-xs px-12 py-2.5 rounded-lg shadow-sm transition cursor-pointer">
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- LANGUAGE MODAL -->
   <div id="langModal" class="modal-backdrop">
     <div class="modal-panel">
@@ -3746,7 +3974,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.desktopSwitchTab = function(tabName) {
       window.desktopActiveTab = tabName;
 
-      const tabs = ['dashboard', 'offers', 'surveys', 'browsing', 'affiliate', 'challenge', 'profile'];
+      const tabs = ['dashboard', 'offers', 'surveys', 'browsing', 'affiliate', 'challenge', 'profile', 'withdraw'];
       tabs.forEach(t => {
         const btn = document.getElementById('desk-nav-' + t);
         const view = document.getElementById('desk-view-' + t);
@@ -3768,6 +3996,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       if (tabName === 'offers') {
         renderDesktopTasks();
+      }
+      if (tabName === 'withdraw' && window.showRjWithdrawStep1) {
+        window.showRjWithdrawStep1();
+        if (window.syncRjWithdrawFormUI) window.syncRjWithdrawFormUI();
       }
       if (window.ensureDesktopTimeWallFrames) {
         window.ensureDesktopTimeWallFrames(tabName);
@@ -4006,17 +4238,395 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     // Trigger IP country detection automatically on load
     window.detectUserCountryByIP(false);
 
-    window.openCashoutModalDirect = function() {
-      const m = document.getElementById('cashout-modal');
-      if (m) {
-        m.classList.remove('hidden');
-        const takaEl = document.getElementById('desk-modal-cashout-taka');
-        if (takaEl) {
-          const coins = userData?.coins || 0;
-          takaEl.innerText = (coins / 10000).toFixed(1);
-        }
-        refreshAllLucideIcons();
+    // ==========================================
+    // REWARDJOY 1:1 DESKTOP WITHDRAW & WALLET ENGINE
+    // ==========================================
+    window.RJ_WITHDRAW_METHODS = [
+      { id: 'bKash', name: 'bKash', tag: 'BDT', tagBg: 'bg-pink-100 text-[#e2136e]', iconBg: 'bg-[#e2136e]', iconText: '🦅', label: 'bKash mobile number', placeholder: 'Fill your bKash Account', isBdMobile: true },
+      { id: 'Nagad', name: 'Nagad', tag: 'BDT', tagBg: 'bg-orange-100 text-orange-600', iconBg: 'bg-[#f97316]', iconText: '🍊', label: 'Nagad mobile number', placeholder: 'Fill your Nagad Account', isBdMobile: true },
+      { id: 'Bank Transfer', name: 'Bank Transfer', tag: 'BDT', tagBg: 'bg-rose-100 text-rose-600', iconBg: 'bg-rose-500', iconText: '🏛️', label: 'Bank Account Number & Bank Name', placeholder: 'Enter Bank Name & Account Number', isBdMobile: false },
+      { id: 'Bitcoin', name: 'Bitcoin', tag: 'BTC', tagBg: 'bg-amber-100 text-amber-600', iconBg: 'bg-amber-500', iconText: '₿', label: 'Bitcoin (BTC) Wallet Address', placeholder: 'Enter your BTC Address', isBdMobile: false },
+      { id: 'Ethereum', name: 'Ethereum', tag: 'ETH', tagBg: 'bg-indigo-100 text-indigo-600', iconBg: 'bg-indigo-500', iconText: '♦', label: 'Ethereum (ETH) Wallet Address', placeholder: 'Enter your ETH Address', isBdMobile: false },
+      { id: 'USDT', name: 'USDT', tag: 'USDT', tagBg: 'bg-teal-100 text-teal-600', iconBg: 'bg-teal-500', iconText: '₮', label: 'USDT (TRC20/BEP20) Wallet Address', placeholder: 'Enter your USDT Address', isBdMobile: false },
+      { id: 'USDC', name: 'USDC', tag: 'USDC', tagBg: 'bg-sky-100 text-sky-600', iconBg: 'bg-sky-500', iconText: '$', label: 'USDC Wallet Address', placeholder: 'Enter your USDC Address', isBdMobile: false },
+      { id: 'FaucetPay', name: 'FaucetPay', tag: 'FP', tagBg: 'bg-indigo-100 text-indigo-600', iconBg: 'bg-indigo-600', iconText: 'FP', label: 'FaucetPay Email / Address', placeholder: 'Enter your FaucetPay Email', isBdMobile: false },
+      { id: 'Litecoin', name: 'Litecoin', tag: 'LTC', tagBg: 'bg-slate-200 text-slate-700', iconBg: 'bg-slate-500', iconText: 'Ł', label: 'Litecoin (LTC) Wallet Address', placeholder: 'Enter your LTC Address', isBdMobile: false }
+    ];
+
+    window.currentRjMethod = 'bKash';
+    window.reopenWalletModalAfterPick = false;
+
+    window.getRjMethodObj = function(methodId) {
+      return window.RJ_WITHDRAW_METHODS.find(m => m.id === methodId) || window.RJ_WITHDRAW_METHODS[0];
+    };
+
+    window.showRjErrorToast = function(msg) {
+      const toast = document.getElementById('rj-error-toast');
+      const msgEl = document.getElementById('rj-error-toast-msg');
+      if (!toast || !msgEl) return;
+      msgEl.innerText = msg;
+      toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-x-8');
+      toast.classList.add('opacity-100', 'translate-x-0');
+      clearTimeout(window.rjErrorToastTimer);
+      window.rjErrorToastTimer = setTimeout(() => {
+        toast.classList.add('opacity-0', 'pointer-events-none', 'translate-x-8');
+        toast.classList.remove('opacity-100', 'translate-x-0');
+      }, 4000);
+    };
+
+    window.switchRjWithdrawCategory = function(cat) {
+      const cashBtn = document.getElementById('rj-wtab-cash');
+      const giftBtn = document.getElementById('rj-wtab-gift');
+      if (cat === 'gift') {
+        alert("🎁 আপনার অঞ্চলে বর্তমানে Cash (bKash, Nagad, Bank Transfer ও Crypto) উত্তোলন সক্রিয় রয়েছে!");
+        return;
       }
+      if (cashBtn && giftBtn) {
+        cashBtn.className = "w-48 py-3 px-5 rounded-xl bg-[#fff7ed] dark:bg-orange-950/40 border border-orange-200/70 dark:border-orange-800/50 flex items-center justify-center gap-2.5 text-[#f97316] font-bold text-sm shadow-2xs transition cursor-pointer";
+        giftBtn.className = "w-48 py-3 px-5 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] flex items-center justify-center gap-2.5 text-slate-500 dark:text-slate-400 font-bold text-sm shadow-2xs hover:text-slate-700 transition cursor-pointer";
+      }
+      window.showRjWithdrawStep1();
+    };
+
+    window.showRjWithdrawStep1 = function() {
+      document.getElementById('rj-withdraw-step-cards')?.classList.remove('hidden');
+      document.getElementById('rj-withdraw-loading')?.classList.add('hidden');
+      document.getElementById('rj-withdraw-step-form')?.classList.add('hidden');
+      document.getElementById('rj-withdraw-back-btn')?.classList.add('hidden');
+    };
+
+    window.openRjWithdrawForm = function(methodId) {
+      window.currentRjMethod = methodId || 'bKash';
+      selectedMethod = window.currentRjMethod;
+      document.getElementById('rj-withdraw-step-cards')?.classList.add('hidden');
+      document.getElementById('rj-withdraw-step-form')?.classList.add('hidden');
+      const loader = document.getElementById('rj-withdraw-loading');
+      if (loader) loader.classList.remove('hidden');
+
+      setTimeout(() => {
+        if (loader) loader.classList.add('hidden');
+        document.getElementById('rj-withdraw-step-form')?.classList.remove('hidden');
+        document.getElementById('rj-withdraw-back-btn')?.classList.remove('hidden');
+        window.syncRjWithdrawFormUI();
+      }, 280);
+    };
+
+    window.syncRjWithdrawFormUI = function() {
+      const m = window.getRjMethodObj(window.currentRjMethod);
+      const displayEl = document.getElementById('rj-form-method-display');
+      if (displayEl) {
+        displayEl.innerHTML = `
+          <span class="w-6 h-6 rounded-full ${m.iconBg} text-white inline-flex items-center justify-center text-xs font-bold">${m.iconText}</span>
+          <span class="text-xs font-semibold text-slate-800 dark:text-white">${m.name}</span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${m.tagBg}">${m.tag}</span>
+        `;
+      }
+
+      const accLabel = document.getElementById('rj-form-account-label');
+      if (accLabel) accLabel.innerText = m.label;
+
+      const bdtLabel = document.getElementById('rj-form-bdt-label');
+      if (bdtLabel) bdtLabel.innerHTML = `${m.name} <span class="text-[10px] font-normal text-slate-500">(BDT)</span>`;
+
+      // Load saved wallet details from userData or localStorage
+      let savedWallet = {};
+      try {
+        savedWallet = JSON.parse(localStorage.getItem('tr_saved_wallet_' + (currentUser?.uid || 'guest')) || '{}');
+      } catch (e) {}
+
+      const phoneVal = userData?.walletPhone || savedWallet.phone || '--';
+      const holderVal = userData?.walletHolderName || savedWallet.holderName || '--';
+      const accVal = (userData?.walletAccounts && userData.walletAccounts[m.id]) || (savedWallet.accounts && savedWallet.accounts[m.id]) || userData?.walletAccount || savedWallet.account || '--';
+      const emailVal = userData?.walletEmail || savedWallet.email || currentUser?.email || '--';
+
+      const pEl = document.getElementById('rj-form-phone-val');
+      const hEl = document.getElementById('rj-form-holder-val');
+      const aEl = document.getElementById('rj-form-account-val');
+      const eEl = document.getElementById('rj-form-email-val');
+
+      if (pEl) pEl.innerText = phoneVal;
+      if (hEl) hEl.innerText = holderVal;
+      if (aEl) aEl.innerText = accVal;
+      if (eEl) eEl.innerText = emailVal;
+
+      const availCoinsEl = document.getElementById('rj-form-avail-coins');
+      if (availCoinsEl) availCoinsEl.innerText = (userData?.coins || 0).toLocaleString();
+
+      window.updateRjCalculatedBdt();
+    };
+
+    window.setRjCoinAmount = function(coinsAmt) {
+      const inp = document.getElementById('rj-form-coins-input');
+      if (inp) {
+        inp.value = coinsAmt;
+        window.updateRjCalculatedBdt();
+      }
+    };
+
+    window.updateRjCalculatedBdt = function() {
+      const inp = document.getElementById('rj-form-coins-input');
+      const outEl = document.getElementById('rj-form-bdt-output');
+      const getEl = document.getElementById('rj-form-you-will-get');
+      const rawCoins = parseInt(inp?.value || '0', 10);
+      if (!rawCoins || rawCoins <= 0) {
+        if (outEl) outEl.innerText = '0';
+        if (getEl) getEl.innerText = '0 BDT';
+        return;
+      }
+      const bdt = (rawCoins / 10000);
+      const bdtFormatted = Number.isInteger(bdt) ? bdt.toString() : bdt.toFixed(2);
+      if (outEl) outEl.innerText = bdtFormatted;
+      if (getEl) getEl.innerText = bdtFormatted + ' BDT';
+    };
+
+    window.openRjMethodPickerModal = function(fromWalletModal = false) {
+      window.reopenWalletModalAfterPick = !!fromWalletModal;
+      const modal = document.getElementById('rj-method-picker-modal');
+      const searchInp = document.getElementById('rj-method-search-input');
+      if (searchInp) searchInp.value = '';
+      window.renderRjMethodsList('');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+
+    window.closeRjMethodPickerModal = function() {
+      const modal = document.getElementById('rj-method-picker-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+      if (window.reopenWalletModalAfterPick) {
+        window.reopenWalletModalAfterPick = false;
+        window.openRjWalletModal();
+      }
+    };
+
+    window.filterRjMethodsList = function() {
+      const q = document.getElementById('rj-method-search-input')?.value || '';
+      window.renderRjMethodsList(q);
+    };
+
+    window.renderRjMethodsList = function(queryStr) {
+      const container = document.getElementById('rj-methods-list-container');
+      if (!container) return;
+      const q = (queryStr || '').toLowerCase().trim();
+      const filtered = window.RJ_WITHDRAW_METHODS.filter(m =>
+        m.name.toLowerCase().includes(q) || m.tag.toLowerCase().includes(q)
+      );
+      container.innerHTML = filtered.map(m => `
+        <div onclick="selectRjMethodFromPicker('${m.id}')" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition">
+          <span class="w-6 h-6 rounded-full ${m.iconBg} text-white inline-flex items-center justify-center text-xs font-bold shrink-0">${m.iconText}</span>
+          <span class="text-xs font-semibold text-slate-800 dark:text-slate-100">${m.name}</span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${m.tagBg}">${m.tag}</span>
+        </div>
+      `).join('');
+    };
+
+    window.selectRjMethodFromPicker = function(methodId) {
+      window.currentRjMethod = methodId;
+      selectedMethod = methodId;
+      window.syncRjWithdrawFormUI();
+      window.closeRjMethodPickerModal();
+    };
+
+    window.openRjWalletModal = function() {
+      const m = window.getRjMethodObj(window.currentRjMethod);
+      const badgeEl = document.getElementById('rj-wallet-modal-method-badge');
+      if (badgeEl) {
+        badgeEl.innerHTML = `
+          <span class="w-5 h-5 rounded-full ${m.iconBg} text-white inline-flex items-center justify-center text-[10px] font-bold">${m.iconText}</span>
+          <span class="text-xs font-semibold text-slate-800 dark:text-white">${m.name}</span>
+          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${m.tagBg}">${m.tag}</span>
+        `;
+      }
+
+      const accLbl = document.getElementById('rj-wallet-modal-acc-label');
+      const accInp = document.getElementById('rj-wallet-modal-acc-input');
+      const confirmTxt = document.getElementById('rj-wallet-modal-confirm-text');
+      if (accLbl) accLbl.innerText = m.label;
+      if (accInp) accInp.placeholder = m.placeholder;
+      if (confirmTxt) confirmTxt.innerText = `I hereby confirm that the provided details of the above ${m.name} account are real and that I am its sole owner.`;
+
+      let savedWallet = {};
+      try {
+        savedWallet = JSON.parse(localStorage.getItem('tr_saved_wallet_' + (currentUser?.uid || 'guest')) || '{}');
+      } catch (e) {}
+
+      const existingAcc = (userData?.walletAccounts && userData.walletAccounts[m.id]) || (savedWallet.accounts && savedWallet.accounts[m.id]) || '';
+      const existingPhone = userData?.walletPhone || savedWallet.phone || '';
+      const existingEmail = userData?.walletEmail || savedWallet.email || currentUser?.email || '';
+      const existingHolder = userData?.walletHolderName || savedWallet.holderName || userData?.name || currentUser?.displayName || '';
+
+      if (accInp) accInp.value = existingAcc;
+      const phoneInp = document.getElementById('rj-wallet-modal-phone-input');
+      const emailInp = document.getElementById('rj-wallet-modal-email-input');
+      const holderInp = document.getElementById('rj-wallet-modal-holder-input');
+
+      if (phoneInp) phoneInp.value = existingPhone;
+      if (emailInp) emailInp.value = existingEmail;
+      if (holderInp) holderInp.value = existingHolder;
+
+      const modal = document.getElementById('rj-wallet-setup-modal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+
+    window.closeRjWalletModal = function() {
+      const modal = document.getElementById('rj-wallet-setup-modal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    };
+
+    window.saveRjWalletDetails = async function() {
+      const m = window.getRjMethodObj(window.currentRjMethod);
+      const accVal = (document.getElementById('rj-wallet-modal-acc-input')?.value || '').trim();
+      const phoneVal = (document.getElementById('rj-wallet-modal-phone-input')?.value || '').trim();
+      const emailVal = (document.getElementById('rj-wallet-modal-email-input')?.value || '').trim();
+      const holderVal = (document.getElementById('rj-wallet-modal-holder-input')?.value || '').trim();
+      const isConfirmed = document.getElementById('rj-wallet-modal-confirm-chk')?.checked;
+
+      // Validate 11-digit BD mobile number for bKash / Nagad (exact match to frame_55.jpg!)
+      if (m.isBdMobile) {
+        const bdRegex = /^01[3-9]\d{8}$/;
+        if (!bdRegex.test(accVal)) {
+          window.showRjErrorToast(`Please enter an 11-digit ${m.name} number starting with 013-019.`);
+          return;
+        }
+      } else if (!accVal || accVal.length < 5) {
+        window.showRjErrorToast(`Please enter a valid ${m.name} account / wallet address.`);
+        return;
+      }
+
+      if (!phoneVal || phoneVal.length < 10) {
+        window.showRjErrorToast("Please enter a valid Phone Number.");
+        return;
+      }
+      if (!emailVal || !emailVal.includes('@')) {
+        window.showRjErrorToast("Please enter a valid Email address.");
+        return;
+      }
+      if (!holderVal) {
+        window.showRjErrorToast("Please enter the Account Holder Name.");
+        return;
+      }
+      if (!isConfirmed) {
+        window.showRjErrorToast(`Please confirm that you are the sole owner of this ${m.name} account.`);
+        return;
+      }
+
+      // Save to localStorage immediately
+      const storageKey = 'tr_saved_wallet_' + (currentUser?.uid || 'guest');
+      let savedWallet = {};
+      try {
+        savedWallet = JSON.parse(localStorage.getItem(storageKey) || '{}');
+      } catch (e) {}
+      savedWallet.phone = phoneVal;
+      savedWallet.email = emailVal;
+      savedWallet.holderName = holderVal;
+      savedWallet.account = accVal;
+      savedWallet.accounts = savedWallet.accounts || {};
+      savedWallet.accounts[m.id] = accVal;
+      localStorage.setItem(storageKey, JSON.stringify(savedWallet));
+
+      // Also update in-memory userData and Firestore
+      if (userData) {
+        userData.walletPhone = phoneVal;
+        userData.walletEmail = emailVal;
+        userData.walletHolderName = holderVal;
+        userData.walletAccount = accVal;
+        userData.walletAccounts = userData.walletAccounts || {};
+        userData.walletAccounts[m.id] = accVal;
+      }
+
+      if (currentUser?.uid) {
+        try {
+          const updatePayload = {
+            walletPhone: phoneVal,
+            walletEmail: emailVal,
+            walletHolderName: holderVal,
+            walletAccount: accVal,
+            [`walletAccounts.${m.id}`]: accVal
+          };
+          await updateDoc(doc(db, "users", currentUser.uid), updatePayload);
+        } catch (e) {
+          console.warn("Firestore wallet save notice:", e);
+        }
+      }
+
+      window.syncRjWithdrawFormUI();
+      window.closeRjWalletModal();
+      playCoinChime();
+    };
+
+    window.submitRjDesktopWithdraw = async function() {
+      if (!currentUser) {
+        alert("উইথড্র করার জন্য অনুগ্রহ করে প্রথমে লগইন করুন!");
+        return;
+      }
+      const m = window.getRjMethodObj(window.currentRjMethod);
+      const accVal = (document.getElementById('rj-form-account-val')?.innerText || '').trim();
+      const holderVal = (document.getElementById('rj-form-holder-val')?.innerText || '').trim();
+      const phoneVal = (document.getElementById('rj-form-phone-val')?.innerText || '').trim();
+
+      if (!accVal || accVal === '--') {
+        window.showRjErrorToast(`Please set up your ${m.name} wallet details first by clicking the edit icon.`);
+        window.openRjWalletModal();
+        return;
+      }
+
+      const coinsInput = document.getElementById('rj-form-coins-input');
+      const coinsToWithdraw = parseInt(coinsInput?.value || '0', 10);
+
+      if (!coinsToWithdraw || coinsToWithdraw < 1050000) {
+        window.showRjErrorToast("Minimum withdrawal is 1,050,000 coins (৳105.00 BDT).");
+        return;
+      }
+
+      const currentCoins = userData?.coins || 0;
+      if (coinsToWithdraw > currentCoins) {
+        window.showRjErrorToast(`Insufficient coins! You have ${currentCoins.toLocaleString()} coins available.`);
+        return;
+      }
+
+      const takaAmount = Number((coinsToWithdraw / 10000).toFixed(2));
+
+      try {
+        await updateDoc(doc(db, "users", currentUser.uid), {
+          coins: increment(-coinsToWithdraw)
+        });
+
+        await addDoc(collection(db, "withdrawals"), {
+          userId: currentUser.uid,
+          userName: holderVal !== '--' ? holderVal : (userData?.name || currentUser?.displayName || 'User'),
+          email: userData?.email || currentUser?.email || '',
+          method: m.name,
+          taka: takaAmount,
+          coins: coinsToWithdraw,
+          phone: accVal,
+          contactPhone: phoneVal,
+          status: "Pending",
+          createdAt: serverTimestamp()
+        });
+
+        if (coinsInput) coinsInput.value = '';
+        window.updateRjCalculatedBdt();
+        playCoinChime();
+        triggerConfettiBlast();
+        alert(`✅ উইথড্রল রিকোয়েস্ট সফল হয়েছে! সর্বোচ্চ ২৪ ঘণ্টার মধ্যে ৳${takaAmount} আপনার ${m.name} একাউন্টে (${accVal}) পাঠানো হবে।`);
+      } catch (err) {
+        console.error("Desktop withdraw error:", err);
+        alert("উইথড্রল রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে: " + (err.message || err));
+      }
+    };
+
+    window.openCashoutModalDirect = function() {
+      window.desktopSwitchTab('withdraw');
     };
 
     window.closeCashoutModalDirect = function() {
@@ -4244,6 +4854,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         }
       }
 
+      if (window.syncRjWithdrawFormUI) window.syncRjWithdrawFormUI();
       const modalCashoutTaka = document.getElementById('desk-modal-cashout-taka');
       if (modalCashoutTaka) modalCashoutTaka.innerText = taka;
 
