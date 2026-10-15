@@ -2387,18 +2387,26 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </div>
           </section>
 
-          <!-- TAB 8: REWARDJOY WITHDRAW VIEW (Exact 1:1 Replica of rewardjoy.com/dashboard/withdraw from Video) -->
+          <!-- TAB 8: REWARDJOY WITHDRAW VIEW (Exact 1:1 Replica of rewardjoy.com/dashboard/withdraw) -->
           <section id="desk-view-withdraw" class="space-y-6 hidden">
             
-            <!-- Top Row: Cash & Gift Cards Tabs on Left | History Button on Right -->
+            <!-- Top Row: Professional SVG Cash & Gift Cards Tabs on Left | History Button on Right (Exact match to image_d53f82.png) -->
             <div class="flex flex-wrap items-center justify-between gap-4">
-              <div class="flex items-center gap-3">
-                <button type="button" id="rj-wtab-cash" onclick="switchRjWithdrawCategory('cash')" class="w-48 py-3 px-5 rounded-xl bg-[#fff7ed] dark:bg-orange-950/40 border border-orange-200/70 dark:border-orange-800/50 flex items-center justify-center gap-2.5 text-[#f97316] font-bold text-sm shadow-2xs transition cursor-pointer">
-                  <span class="text-base">👛</span>
+              <div class="flex items-center gap-4">
+                <!-- Cash Button (Soft Peach bg, Solid Orange Wallet SVG + Orange Text) -->
+                <button type="button" id="rj-wtab-cash" onclick="switchRjWithdrawCategory('cash')" class="w-52 py-3.5 px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] transition cursor-pointer">
+                  <svg class="w-5 h-5 text-[#f97316] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21 7.28V5c0-1.1-.9-2-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-2.28A2 2 0 0 0 22 15V9a2 2 0 0 0-1-1.72zM20 9v6h-7V9h7zM5 19V5h14v2h-6c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h6v2H5z"/>
+                    <circle cx="16" cy="12" r="1.5"/>
+                  </svg>
                   <span>Cash</span>
                 </button>
-                <button type="button" id="rj-wtab-gift" onclick="switchRjWithdrawCategory('gift')" class="w-48 py-3 px-5 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] flex items-center justify-center gap-2.5 text-slate-500 dark:text-slate-400 font-bold text-sm shadow-2xs hover:text-slate-700 transition cursor-pointer">
-                  <span class="text-base">🎁</span>
+
+                <!-- Gift Cards Button (Pure White bg, Solid Gray Gift-Card Ribbon SVG + Gray Text) -->
+                <button type="button" id="rj-wtab-gift" onclick="switchRjWithdrawCategory('gift')" class="w-52 py-3.5 px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer">
+                  <svg class="w-5 h-5 text-[#9ca3af] shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm-9 14H4v-5h7v5zm0-7H4V6h7v5zm9 7h-7v-5h7v5zm0-7h-7V6h7v5z"/>
+                  </svg>
                   <span>Gift Cards</span>
                 </button>
               </div>
@@ -2407,60 +2415,44 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <button type="button" id="rj-withdraw-back-btn" onclick="showRjWithdrawStep1()" class="hidden bg-white dark:bg-[var(--surface)] border border-slate-200 dark:border-[var(--border)] text-slate-600 dark:text-slate-300 font-bold text-xs px-4 py-2.5 rounded-xl shadow-2xs hover:bg-slate-50 transition cursor-pointer">
                   ← All Methods
                 </button>
-                <button type="button" onclick="openWithdrawHistoryModal()" class="bg-white dark:bg-[var(--surface)] border border-slate-200 dark:border-[var(--border)] text-slate-700 dark:text-slate-200 font-bold text-xs px-4 py-2.5 rounded-xl shadow-2xs hover:border-orange-400 transition cursor-pointer flex items-center gap-1.5">
-                  <span>📋</span>
+                <button type="button" onclick="openWithdrawHistoryModal()" class="bg-white dark:bg-[var(--surface)] border border-slate-200 dark:border-[var(--border)] text-slate-700 dark:text-slate-200 font-bold text-xs px-4 py-2.5 rounded-xl shadow-2xs hover:border-orange-400 transition cursor-pointer flex items-center gap-2">
+                  <svg class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
                   <span>History &gt;</span>
                 </button>
               </div>
             </div>
 
-            <!-- STEP 1: FIAT & CRYPTO VERTICAL GRADIENT CARDS (frame_09.jpg Exact Replica) -->
+            <!-- STEP 1: FIAT & CRYPTO VERTICAL GRADIENT CARDS (image_d53f82.png Exact Replica) -->
             <div id="rj-withdraw-step-cards" class="space-y-7 pt-1">
               
-              <!-- FIAT SECTION -->
+              <!-- FIAT SECTION (ONLY bKash & Bank Transfer - Nagad Removed!) -->
               <div class="space-y-4">
-                <div class="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-bold text-sm tracking-wide">
-                  <span class="text-slate-400 font-mono text-base">$€</span>
+                <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-semibold text-sm tracking-wide">
+                  <svg class="w-5 h-5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
                   <span>FIAT</span>
                 </div>
 
                 <div class="flex flex-wrap gap-5">
-                  <!-- bKash Card (Pink-Magenta Gradient with Origami Bird) -->
-                  <div onclick="openRjWithdrawForm('bKash')" class="w-48 h-60 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #f48fb1 0%, #d81b60 65%, #ad1457 100%);">
-                    <div class="flex-1 flex items-center justify-center">
-                      <!-- White bKash Origami Bird SVG -->
-                      <svg class="w-16 h-16 text-white drop-shadow-xs" viewBox="0 0 64 64" fill="currentColor">
-                        <path d="M28 14L12 25l16 6V14zm2 0v17l18-6-18-11zm-2 19l-10 4 10 15V33zm2 0v19l14-14-14-5zm16-4l-14 4 11 11 11-9-8-6z"/>
-                      </svg>
-                    </div>
-                    <span class="text-white font-bold text-sm tracking-wide">bKash</span>
-                  </div>
-
-                  <!-- Nagad Card (Orange-Coral Gradient) -->
-                  <div onclick="openRjWithdrawForm('Nagad')" class="w-48 h-60 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #fdba74 0%, #f97316 60%, #ea580c 100%);">
-                    <div class="flex-1 flex items-center justify-center">
-                      <div class="w-16 h-16 rounded-full bg-white/20 backdrop-blur-xs flex items-center justify-center border border-white/40 shadow-inner">
-                        <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" alt="Nagad" class="w-12 h-12 rounded-full object-cover" />
-                      </div>
-                    </div>
-                    <span class="text-white font-bold text-sm tracking-wide">Nagad</span>
+                  <!-- bKash Card using User's Exact Uploaded Image (https://i.ibb.co.com/0jm6s6V5/Screenshot-2026-10-15-032733.png) -->
+                  <div onclick="openRjWithdrawForm('bKash')" class="w-44 h-56 rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 relative" style="background: linear-gradient(180deg, #f48fb1 0%, #d81b60 65%, #ad1457 100%);">
+                    <img src="https://i.ibb.co.com/0jm6s6V5/Screenshot-2026-10-15-032733.png" alt="bKash" class="w-full h-full object-cover block" />
                   </div>
 
                   <!-- Bank Transfer Card (Soft Coral-Pink Gradient with Classical Bank Icon) -->
-                  <div onclick="openRjWithdrawForm('Bank Transfer')" class="w-48 h-60 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #fca5a5 0%, #fb7185 65%, #f43f5e 100%);">
+                  <div onclick="openRjWithdrawForm('Bank Transfer')" class="w-44 h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #fca5a5 0%, #fb7185 65%, #f43f5e 100%);">
                     <div class="flex-1 flex items-center justify-center">
                       <svg class="w-14 h-14 text-white drop-shadow-xs" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2L2 7v2h20V7L12 2zm-7 9v7H3v2h18v-2h-2v-7h-2v7h-2v-7h-2v7h-2v-7H9v7H7v-7H5z"/>
                       </svg>
                     </div>
-                    <span class="text-white font-bold text-sm tracking-wide">Bank Transfer</span>
+                    <span class="text-white font-semibold text-sm tracking-wide">Bank Transfer</span>
                   </div>
                 </div>
               </div>
 
               <!-- CRYPTO SECTION -->
               <div class="space-y-4 pt-2">
-                <div class="flex items-center gap-2 text-slate-600 dark:text-slate-300 font-bold text-sm tracking-wide">
+                <div class="flex items-center gap-2 text-slate-700 dark:text-slate-200 font-semibold text-sm tracking-wide">
                   <span class="w-5 h-5 rounded-full border border-slate-400 inline-flex items-center justify-center text-[11px] font-extrabold text-slate-500">₿</span>
                   <span>CRYPTO</span>
                 </div>
@@ -2471,7 +2463,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     <div class="flex-1 flex items-center justify-center">
                       <span class="text-white font-black text-5xl drop-shadow-xs">₿</span>
                     </div>
-                    <span class="text-white font-bold text-xs tracking-wide">Bitcoin</span>
+                    <span class="text-white font-semibold text-xs tracking-wide">Bitcoin</span>
                   </div>
 
                   <!-- Ethereum -->
@@ -2479,7 +2471,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     <div class="flex-1 flex items-center justify-center">
                       <svg class="w-12 h-12 text-white" viewBox="0 0 32 32" fill="currentColor"><path d="M16 4l-8 13 8 5 8-5-8-13zm0 20l-8-5 8 11 8-11-8 5z"/></svg>
                     </div>
-                    <span class="text-white font-bold text-xs tracking-wide">Ethereum</span>
+                    <span class="text-white font-semibold text-xs tracking-wide">Ethereum</span>
                   </div>
 
                   <!-- USDT -->
@@ -2487,7 +2479,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     <div class="flex-1 flex items-center justify-center">
                       <span class="text-white font-black text-5xl drop-shadow-xs">₮</span>
                     </div>
-                    <span class="text-white font-bold text-xs tracking-wide">USDT</span>
+                    <span class="text-white font-semibold text-xs tracking-wide">USDT</span>
                   </div>
 
                   <!-- USDC -->
@@ -2495,7 +2487,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     <div class="flex-1 flex items-center justify-center">
                       <div class="w-12 h-12 rounded-full border-4 border-white flex items-center justify-center text-white font-black text-2xl">$</div>
                     </div>
-                    <span class="text-white font-bold text-xs tracking-wide">USDC</span>
+                    <span class="text-white font-semibold text-xs tracking-wide">USDC</span>
                   </div>
 
                   <!-- FaucetPay -->
@@ -2503,7 +2495,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     <div class="flex-1 flex items-center justify-center">
                       <span class="text-white font-black text-4xl tracking-tighter">FP</span>
                     </div>
-                    <span class="text-white font-bold text-xs tracking-wide">FaucetPay</span>
+                    <span class="text-white font-semibold text-xs tracking-wide">FaucetPay</span>
                   </div>
 
                   <!-- Litecoin -->
@@ -2511,7 +2503,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     <div class="flex-1 flex items-center justify-center">
                       <span class="text-white font-black text-5xl">Ł</span>
                     </div>
-                    <span class="text-white font-bold text-xs tracking-wide">Litecoin</span>
+                    <span class="text-white font-semibold text-xs tracking-wide">Litecoin</span>
                   </div>
                 </div>
               </div>
@@ -2522,7 +2514,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <div class="w-9 h-9 border-4 border-slate-200 border-t-slate-600 rounded-full animate-spin"></div>
             </div>
 
-            <!-- STEP 2: WITHDRAW FORM CARD (frame_18.jpg, frame_98.jpg & frame_104.jpg Exact Replica) -->
+            <!-- STEP 2: WITHDRAW FORM CARD (frame_18.jpg, frame_98.jpg & frame_104.jpg Exact Replica - Minimum 200 TK!) -->
             <div id="rj-withdraw-step-form" class="hidden bg-white dark:bg-[var(--surface)] rounded-2xl border border-slate-100 dark:border-[var(--border)] p-8 max-w-4xl shadow-2xs space-y-5">
               
               <!-- Choose Withdraw Method -->
@@ -2530,7 +2522,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">Choose Withdraw Method</label>
                 <div onclick="openRjMethodPickerModal()" class="w-full border border-slate-200 dark:border-[var(--border)] rounded-lg px-4 py-3 flex items-center justify-between cursor-pointer hover:border-slate-300 transition bg-white dark:bg-[var(--surface-2)]">
                   <div class="flex items-center gap-2.5" id="rj-form-method-display">
-                    <span class="w-6 h-6 rounded-full bg-[#e2136e] text-white inline-flex items-center justify-center text-xs font-bold">🦅</span>
+                    <img src="https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg" class="w-6 h-6 rounded-full object-cover" alt="bKash" />
                     <span class="text-xs font-semibold text-slate-800 dark:text-white">bKash</span>
                     <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-pink-100 text-[#e2136e]">BDT</span>
                   </div>
@@ -2574,20 +2566,20 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 </div>
               </div>
 
-              <!-- Coins (Available: X coins) -->
+              <!-- Coins (Available: X coins) - Minimum 200 TK (2,000,000 coins) -->
               <div class="space-y-2 pt-1">
                 <div class="flex items-center justify-between">
                   <label class="block text-xs font-bold text-slate-700 dark:text-slate-200">
                     Coins (Available: <span id="rj-form-avail-coins" class="text-[#f97316] font-extrabold">0</span> coins)
                   </label>
                   <div class="flex items-center gap-1.5">
-                    <button type="button" onclick="setRjCoinAmount(1050000)" class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳105</button>
-                    <button type="button" onclick="setRjCoinAmount(2000000)" class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳200</button>
-                    <button type="button" onclick="setRjCoinAmount(3000000)" class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳300</button>
-                    <button type="button" onclick="setRjCoinAmount(5000000)" class="text-[10px] font-bold px-2 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳500</button>
+                    <button type="button" onclick="setRjCoinAmount(2000000)" class="text-[10px] font-bold px-2.5 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳200</button>
+                    <button type="button" onclick="setRjCoinAmount(3000000)" class="text-[10px] font-bold px-2.5 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳300</button>
+                    <button type="button" onclick="setRjCoinAmount(5000000)" class="text-[10px] font-bold px-2.5 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳500</button>
+                    <button type="button" onclick="setRjCoinAmount(10000000)" class="text-[10px] font-bold px-2.5 py-0.5 rounded bg-orange-50 text-[#f97316] border border-orange-200 hover:bg-orange-100 cursor-pointer">৳1000</button>
                   </div>
                 </div>
-                <input id="rj-form-coins-input" type="number" oninput="updateRjCalculatedBdt()" placeholder="Minimum withdrawal 1050000 coins (৳105)" class="w-full bg-white dark:bg-[var(--surface-2)] border border-slate-200 dark:border-[var(--border)] rounded-lg px-4 py-3 text-xs font-semibold text-slate-800 dark:text-white outline-none focus:border-[#f97316] transition" />
+                <input id="rj-form-coins-input" type="number" oninput="updateRjCalculatedBdt()" placeholder="Minimum withdrawal 2000000 coins (৳200)" class="w-full bg-white dark:bg-[var(--surface-2)] border border-slate-200 dark:border-[var(--border)] rounded-lg px-4 py-3 text-xs font-semibold text-slate-800 dark:text-white outline-none focus:border-[#f97316] transition" />
               </div>
 
               <!-- bKash (BDT) Calculated Output -->
@@ -2596,7 +2588,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <div class="w-full bg-[#f4f5f7] dark:bg-slate-800/70 border border-slate-200/80 dark:border-slate-700 rounded-lg px-4 py-3 text-xs font-bold text-slate-700 dark:text-slate-200" id="rj-form-bdt-output">
                   0
                 </div>
-                <div class="text-[11px] text-slate-400 font-medium pt-0.5">Range: 105.00-50000.00 BDT</div>
+                <div class="text-[11px] text-slate-400 font-medium pt-0.5">Range: 200.00-50000.00 BDT</div>
               </div>
 
               <!-- Transaction Fee & You Will Get -->
@@ -4242,15 +4234,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     // REWARDJOY 1:1 DESKTOP WITHDRAW & WALLET ENGINE
     // ==========================================
     window.RJ_WITHDRAW_METHODS = [
-      { id: 'bKash', name: 'bKash', tag: 'BDT', tagBg: 'bg-pink-100 text-[#e2136e]', iconBg: 'bg-[#e2136e]', iconText: '🦅', label: 'bKash mobile number', placeholder: 'Fill your bKash Account', isBdMobile: true },
-      { id: 'Nagad', name: 'Nagad', tag: 'BDT', tagBg: 'bg-orange-100 text-orange-600', iconBg: 'bg-[#f97316]', iconText: '🍊', label: 'Nagad mobile number', placeholder: 'Fill your Nagad Account', isBdMobile: true },
-      { id: 'Bank Transfer', name: 'Bank Transfer', tag: 'BDT', tagBg: 'bg-rose-100 text-rose-600', iconBg: 'bg-rose-500', iconText: '🏛️', label: 'Bank Account Number & Bank Name', placeholder: 'Enter Bank Name & Account Number', isBdMobile: false },
-      { id: 'Bitcoin', name: 'Bitcoin', tag: 'BTC', tagBg: 'bg-amber-100 text-amber-600', iconBg: 'bg-amber-500', iconText: '₿', label: 'Bitcoin (BTC) Wallet Address', placeholder: 'Enter your BTC Address', isBdMobile: false },
-      { id: 'Ethereum', name: 'Ethereum', tag: 'ETH', tagBg: 'bg-indigo-100 text-indigo-600', iconBg: 'bg-indigo-500', iconText: '♦', label: 'Ethereum (ETH) Wallet Address', placeholder: 'Enter your ETH Address', isBdMobile: false },
-      { id: 'USDT', name: 'USDT', tag: 'USDT', tagBg: 'bg-teal-100 text-teal-600', iconBg: 'bg-teal-500', iconText: '₮', label: 'USDT (TRC20/BEP20) Wallet Address', placeholder: 'Enter your USDT Address', isBdMobile: false },
-      { id: 'USDC', name: 'USDC', tag: 'USDC', tagBg: 'bg-sky-100 text-sky-600', iconBg: 'bg-sky-500', iconText: '$', label: 'USDC Wallet Address', placeholder: 'Enter your USDC Address', isBdMobile: false },
-      { id: 'FaucetPay', name: 'FaucetPay', tag: 'FP', tagBg: 'bg-indigo-100 text-indigo-600', iconBg: 'bg-indigo-600', iconText: 'FP', label: 'FaucetPay Email / Address', placeholder: 'Enter your FaucetPay Email', isBdMobile: false },
-      { id: 'Litecoin', name: 'Litecoin', tag: 'LTC', tagBg: 'bg-slate-200 text-slate-700', iconBg: 'bg-slate-500', iconText: 'Ł', label: 'Litecoin (LTC) Wallet Address', placeholder: 'Enter your LTC Address', isBdMobile: false }
+      { id: 'bKash', name: 'bKash', tag: 'BDT', tagBg: 'bg-pink-100 text-[#e2136e]', iconHtml: `<img src="https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg" class="w-6 h-6 rounded-full object-cover shrink-0" alt="bKash" />`, label: 'bKash mobile number', placeholder: 'Fill your bKash Account', isBdMobile: true, isEnabled: true },
+      { id: 'Bank Transfer', name: 'Bank Transfer', tag: 'BDT', tagBg: 'bg-rose-100 text-rose-600', iconHtml: `<span class="w-6 h-6 rounded-full bg-rose-500 text-white inline-flex items-center justify-center text-[11px] font-bold shrink-0">🏛</span>`, label: 'Bank Account Number & Bank Name', placeholder: 'Enter Bank Name & Account Number', isBdMobile: false, isEnabled: false },
+      { id: 'Bitcoin', name: 'Bitcoin', tag: 'BTC', tagBg: 'bg-amber-100 text-amber-600', iconHtml: `<span class="w-6 h-6 rounded-full bg-amber-500 text-white inline-flex items-center justify-center text-xs font-bold shrink-0">₿</span>`, label: 'Bitcoin (BTC) Wallet Address', placeholder: 'Enter your BTC Address', isBdMobile: false, isEnabled: false },
+      { id: 'Ethereum', name: 'Ethereum', tag: 'ETH', tagBg: 'bg-indigo-100 text-indigo-600', iconHtml: `<span class="w-6 h-6 rounded-full bg-indigo-500 text-white inline-flex items-center justify-center text-xs font-bold shrink-0">♦</span>`, label: 'Ethereum (ETH) Wallet Address', placeholder: 'Enter your ETH Address', isBdMobile: false, isEnabled: false },
+      { id: 'USDT', name: 'USDT', tag: 'USDT', tagBg: 'bg-teal-100 text-teal-600', iconHtml: `<span class="w-6 h-6 rounded-full bg-teal-500 text-white inline-flex items-center justify-center text-xs font-bold shrink-0">₮</span>`, label: 'USDT (TRC20/BEP20) Wallet Address', placeholder: 'Enter your USDT Address', isBdMobile: false, isEnabled: false },
+      { id: 'USDC', name: 'USDC', tag: 'USDC', tagBg: 'bg-sky-100 text-sky-600', iconHtml: `<span class="w-6 h-6 rounded-full bg-sky-500 text-white inline-flex items-center justify-center text-xs font-bold shrink-0">$</span>`, label: 'USDC Wallet Address', placeholder: 'Enter your USDC Address', isBdMobile: false, isEnabled: false },
+      { id: 'FaucetPay', name: 'FaucetPay', tag: 'FP', tagBg: 'bg-indigo-100 text-indigo-600', iconHtml: `<span class="w-6 h-6 rounded-full bg-indigo-600 text-white inline-flex items-center justify-center text-[10px] font-bold shrink-0">FP</span>`, label: 'FaucetPay Email / Address', placeholder: 'Enter your FaucetPay Email', isBdMobile: false, isEnabled: false },
+      { id: 'Litecoin', name: 'Litecoin', tag: 'LTC', tagBg: 'bg-slate-200 text-slate-700', iconHtml: `<span class="w-6 h-6 rounded-full bg-slate-500 text-white inline-flex items-center justify-center text-xs font-bold shrink-0">Ł</span>`, label: 'Litecoin (LTC) Wallet Address', placeholder: 'Enter your LTC Address', isBdMobile: false, isEnabled: false }
     ];
 
     window.currentRjMethod = 'bKash';
@@ -4275,15 +4266,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
     window.switchRjWithdrawCategory = function(cat) {
-      const cashBtn = document.getElementById('rj-wtab-cash');
-      const giftBtn = document.getElementById('rj-wtab-gift');
       if (cat === 'gift') {
-        alert("🎁 আপনার অঞ্চলে বর্তমানে Cash (bKash, Nagad, Bank Transfer ও Crypto) উত্তোলন সক্রিয় রয়েছে!");
+        window.showRjErrorToast("এটি এখন বন্ধ আছে, অন্য ওয়ে ট্রাই করুন।");
         return;
-      }
-      if (cashBtn && giftBtn) {
-        cashBtn.className = "w-48 py-3 px-5 rounded-xl bg-[#fff7ed] dark:bg-orange-950/40 border border-orange-200/70 dark:border-orange-800/50 flex items-center justify-center gap-2.5 text-[#f97316] font-bold text-sm shadow-2xs transition cursor-pointer";
-        giftBtn.className = "w-48 py-3 px-5 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] flex items-center justify-center gap-2.5 text-slate-500 dark:text-slate-400 font-bold text-sm shadow-2xs hover:text-slate-700 transition cursor-pointer";
       }
       window.showRjWithdrawStep1();
     };
@@ -4296,8 +4281,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
     window.openRjWithdrawForm = function(methodId) {
-      window.currentRjMethod = methodId || 'bKash';
-      selectedMethod = window.currentRjMethod;
+      if (methodId !== 'bKash') {
+        window.showRjErrorToast("এটি এখন বন্ধ আছে, অন্য ওয়ে ট্রাই করুন।");
+        return;
+      }
+      window.currentRjMethod = 'bKash';
+      selectedMethod = 'bKash';
       document.getElementById('rj-withdraw-step-cards')?.classList.add('hidden');
       document.getElementById('rj-withdraw-step-form')?.classList.add('hidden');
       const loader = document.getElementById('rj-withdraw-loading');
@@ -4316,7 +4305,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const displayEl = document.getElementById('rj-form-method-display');
       if (displayEl) {
         displayEl.innerHTML = `
-          <span class="w-6 h-6 rounded-full ${m.iconBg} text-white inline-flex items-center justify-center text-xs font-bold">${m.iconText}</span>
+          ${m.iconHtml}
           <span class="text-xs font-semibold text-slate-800 dark:text-white">${m.name}</span>
           <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${m.tagBg}">${m.tag}</span>
         `;
@@ -4328,7 +4317,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const bdtLabel = document.getElementById('rj-form-bdt-label');
       if (bdtLabel) bdtLabel.innerHTML = `${m.name} <span class="text-[10px] font-normal text-slate-500">(BDT)</span>`;
 
-      // Load saved wallet details from userData or localStorage
       let savedWallet = {};
       try {
         savedWallet = JSON.parse(localStorage.getItem('tr_saved_wallet_' + (currentUser?.uid || 'guest')) || '{}');
@@ -4416,17 +4404,24 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         m.name.toLowerCase().includes(q) || m.tag.toLowerCase().includes(q)
       );
       container.innerHTML = filtered.map(m => `
-        <div onclick="selectRjMethodFromPicker('${m.id}')" class="flex items-center gap-3 px-3.5 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition">
-          <span class="w-6 h-6 rounded-full ${m.iconBg} text-white inline-flex items-center justify-center text-xs font-bold shrink-0">${m.iconText}</span>
-          <span class="text-xs font-semibold text-slate-800 dark:text-slate-100">${m.name}</span>
-          <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${m.tagBg}">${m.tag}</span>
+        <div onclick="selectRjMethodFromPicker('${m.id}')" class="flex items-center justify-between px-3.5 py-3 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 cursor-pointer transition">
+          <div class="flex items-center gap-3">
+            ${m.iconHtml}
+            <span class="text-xs font-semibold text-slate-800 dark:text-slate-100">${m.name}</span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${m.tagBg}">${m.tag}</span>
+          </div>
+          ${!m.isEnabled ? '<span class="text-[10px] font-semibold text-slate-400">বন্ধ আছে</span>' : ''}
         </div>
       `).join('');
     };
 
     window.selectRjMethodFromPicker = function(methodId) {
-      window.currentRjMethod = methodId;
-      selectedMethod = methodId;
+      if (methodId !== 'bKash') {
+        window.showRjErrorToast("এটি এখন বন্ধ আছে, অন্য ওয়ে ট্রাই করুন।");
+        return;
+      }
+      window.currentRjMethod = 'bKash';
+      selectedMethod = 'bKash';
       window.syncRjWithdrawFormUI();
       window.closeRjMethodPickerModal();
     };
@@ -4436,7 +4431,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const badgeEl = document.getElementById('rj-wallet-modal-method-badge');
       if (badgeEl) {
         badgeEl.innerHTML = `
-          <span class="w-5 h-5 rounded-full ${m.iconBg} text-white inline-flex items-center justify-center text-[10px] font-bold">${m.iconText}</span>
+          ${m.iconHtml}
           <span class="text-xs font-semibold text-slate-800 dark:text-white">${m.name}</span>
           <span class="text-[10px] font-bold px-1.5 py-0.5 rounded ${m.tagBg}">${m.tag}</span>
         `;
@@ -4491,7 +4486,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const holderVal = (document.getElementById('rj-wallet-modal-holder-input')?.value || '').trim();
       const isConfirmed = document.getElementById('rj-wallet-modal-confirm-chk')?.checked;
 
-      // Validate 11-digit BD mobile number for bKash / Nagad (exact match to frame_55.jpg!)
       if (m.isBdMobile) {
         const bdRegex = /^01[3-9]\d{8}$/;
         if (!bdRegex.test(accVal)) {
@@ -4520,7 +4514,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return;
       }
 
-      // Save to localStorage immediately
       const storageKey = 'tr_saved_wallet_' + (currentUser?.uid || 'guest');
       let savedWallet = {};
       try {
@@ -4534,7 +4527,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       savedWallet.accounts[m.id] = accVal;
       localStorage.setItem(storageKey, JSON.stringify(savedWallet));
 
-      // Also update in-memory userData and Firestore
       if (userData) {
         userData.walletPhone = phoneVal;
         userData.walletEmail = emailVal;
@@ -4570,6 +4562,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return;
       }
       const m = window.getRjMethodObj(window.currentRjMethod);
+      if (m.id !== 'bKash') {
+        window.showRjErrorToast("এটি এখন বন্ধ আছে, অন্য ওয়ে ট্রাই করুন।");
+        return;
+      }
+
       const accVal = (document.getElementById('rj-form-account-val')?.innerText || '').trim();
       const holderVal = (document.getElementById('rj-form-holder-val')?.innerText || '').trim();
       const phoneVal = (document.getElementById('rj-form-phone-val')?.innerText || '').trim();
@@ -4583,8 +4580,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const coinsInput = document.getElementById('rj-form-coins-input');
       const coinsToWithdraw = parseInt(coinsInput?.value || '0', 10);
 
-      if (!coinsToWithdraw || coinsToWithdraw < 1050000) {
-        window.showRjErrorToast("Minimum withdrawal is 1,050,000 coins (৳105.00 BDT).");
+      // Web minimum withdrawal is 200 TK (2,000,000 coins)
+      if (!coinsToWithdraw || coinsToWithdraw < 2000000) {
+        window.showRjErrorToast("সর্বনিম্ন উইথড্র ২০০ টাকা (2,000,000 coins)!");
         return;
       }
 
