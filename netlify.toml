@@ -1,0 +1,4 @@
+[[redirects]]
+  from = "/api/zeydoo"
+  to = "/.netlify/functions/zeydoo"
+  status = 200
