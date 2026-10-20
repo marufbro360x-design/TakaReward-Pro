@@ -14,8 +14,8 @@
   <script>
     (function() {
       // 1. Domain Lock: takarewardpro.com ছাড়া নকল সাইটে কোড বসালে আসল সাইটে রিডাইরেক্ট করবে
-   const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "takarewardpro.netlify.app", "takareward-pro.vercel.app", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
-     if (!allowedDomains.includes(window.location.hostname) && !window.location.hostname.endsWith(".vercel.app")) {
+      const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "takarewardpro.netlify.app", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
+      if (!allowedDomains.includes(window.location.hostname)) {
         document.addEventListener("DOMContentLoaded", function() {
           document.body.innerHTML = `
             <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding:20px;">
@@ -1937,120 +1937,213 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </div>
           </section>
 
-          <!-- TAB 2: OFFERS VIEW (100% Real Direct TimeWall Games + Admin Tasks followed seamlessly by Real Direct TimeWall Tasks) -->
+          <!-- TAB 2: OFFERS VIEW (1. New Offers in RewardJoy Style | 2. Games | 3. Unlimited Offerwall) -->
           <section id="desk-view-offers" class="space-y-8 hidden">
 
-            <!-- SECTION 1: Games (Direct Live TimeWall Games - TimeWall handles QR Code & Tracking directly!) -->
+            <!-- SECTION 1: New Offers (Admin Custom Tasks & Zeydoo Auto-Offers in Exact RewardJoy Card Style!) -->
             <div class="space-y-4">
               <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2">
-                  <h3 class="text-[18px] font-extrabold text-[var(--text)]">Games</h3>
-                  <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-black inline-flex items-center justify-center cursor-help" title="Play real offerwall games — mobile games show a QR code automatically when started">i</span>
+                <div class="flex items-center gap-2.5">
+                  <h3 class="text-[18px] font-extrabold text-[var(--text)]">New Offers</h3>
+                  <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-black inline-flex items-center justify-center cursor-help" title="Complete high-paying verified offers & instant auto-tracking CPA tasks">i</span>
+                  <span id="desk-new-offers-count" class="bg-orange-500/10 text-[#f97316] border border-orange-500/20 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">0 Active</span>
                 </div>
 
-                <!-- Right Device Filter Pills + Orange View All Button -->
+                <!-- Right Device Filter Pills + My Offers History + Orange View All Button -->
                 <div class="flex flex-wrap items-center gap-2.5">
+                  <button type="button" onclick="openDesktopMyOffersModal()" class="bg-[var(--surface)] hover:bg-emerald-50 dark:hover:bg-slate-800 border border-emerald-300/80 dark:border-emerald-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-extrabold text-emerald-600 dark:text-emerald-400 cursor-pointer shadow-2xs transition">
+                    <span>📋</span>
+                    <span>My Offers</span>
+                    <span id="desk-myoffers-count-badge" class="bg-emerald-600 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full">0</span>
+                  </button>
+
                   <label class="bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs">
                     <svg class="w-3.5 h-3.5 text-slate-400 fill-current" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1367 1.0989L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/></svg>
                     <span>Android</span>
-                    <input type="checkbox" checked class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
+                    <input type="checkbox" checked onchange="renderDesktopTasks()" id="desk-filter-android" class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
                   </label>
 
                   <label class="bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs">
                     <svg class="w-3.5 h-3.5 text-slate-400 fill-current" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
                     <span>iOS</span>
-                    <input type="checkbox" checked class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
+                    <input type="checkbox" checked onchange="renderDesktopTasks()" id="desk-filter-ios" class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
                   </label>
 
                   <label class="bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs">
                     <svg class="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
                     <span>Desktop</span>
-                    <input type="checkbox" checked class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
+                    <input type="checkbox" checked onchange="renderDesktopTasks()" id="desk-filter-desktop" class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
                   </label>
 
+                  <button type="button" onclick="toggleDesktopNewOffersViewAll()" id="desk-newoffers-viewall-btn" class="bg-[#f97316] hover:bg-orange-600 text-white font-bold px-4 py-1.5 rounded-lg text-xs shadow-xs transition cursor-pointer">
+                    View All
+                  </button>
+                </div>
+              </div>
+
+              <!-- RewardJoy Style Carousel / Grid Wrapper with Hover Left/Right Arrows -->
+              <div class="relative group">
+                <button type="button" onclick="scrollDesktopNewOffers(-1)" class="hidden group-hover:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-lg items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+
+                <div id="desk-tasks-list" class="flex gap-4 overflow-x-auto pb-2 pt-1 snap-x hide-scrollbar scroll-smooth">
+                  <!-- Populated dynamically by renderDesktopTasks() in exact RewardJoy square card style -->
+                </div>
+
+                <button type="button" onclick="scrollDesktopNewOffers(1)" class="hidden group-hover:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-lg items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- SECTION 2: 🎮 Games (Moved Down Here as Requested; Old TimeWall Tasks Iframe Removed!) -->
+            <div class="space-y-4 pt-2">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-2">
+                  <span class="text-xl">🎮</span>
+                  <h3 class="text-[18px] font-extrabold text-[var(--text)]">Games</h3>
+                  <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-black inline-flex items-center justify-center cursor-help" title="Play real offerwall games — mobile games show a QR code automatically when started">i</span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2.5">
                   <button type="button" onclick="toggleDesktopGamesViewAll()" id="desk-games-viewall-btn" class="bg-[#f97316] hover:bg-orange-600 text-white font-bold px-4 py-1.5 rounded-lg text-xs shadow-xs transition cursor-pointer">
                     View All
                   </button>
                 </div>
               </div>
 
-              <!-- Direct Live Cropped TimeWall Games Container (Real Offerwall Games & Real Offerwall QR Codes!) -->
+              <!-- Direct Live Cropped TimeWall Games Container -->
               <div id="desk-games-crop-box" class="timewall-clean-crop border border-[var(--border)] shadow-2xs transition-all duration-300" style="height: 520px;">
                 <iframe id="desk-timewall-iframe-games" title="TimeWall Live Games" src="" scrolling="auto"></iframe>
               </div>
             </div>
 
-            <!-- SECTION 2: 📦 Apps & Tasks (First: Our Admin Tasks | Right Below with NO separate title: Direct Live TimeWall Tasks!) -->
-            <div class="space-y-4 pt-2">
-              <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2">
-                  <span class="text-xl">📦</span>
-                  <h3 class="text-[18px] font-extrabold text-[var(--text)]">Apps &amp; Tasks</h3>
-                  <span class="chip chip-success !py-0.5 !text-[10px]">Verified Payouts</span>
-                </div>
-              </div>
-
-              <!-- 1. Our Admin-Published Tasks First (From Firestore) -->
-              <div id="desk-tasks-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <!-- Populated dynamically by renderDesktopTasks() with ONLY Admin tasks -->
-              </div>
-
-              <!-- 2. Direct Live TimeWall Tasks Immediately Below (NO separate heading, 100% tracked & paid by TimeWall!) -->
-              <div id="desk-tasks-crop-box" class="timewall-clean-crop border border-[var(--border)] shadow-2xs" style="height: 680px;">
-                <iframe id="desk-timewall-iframe-tasks" title="TimeWall Live Tasks" src="" scrolling="auto"></iframe>
-              </div>
-            </div>
-
-            <!-- SECTION 3: Offer Partners (Exact 1:1 RewardJoy Pastel Partner Cards) -->
+            <!-- SECTION 3: Unlimited Offerwall (RewardJoy Pastel Partner Cards) -->
             <div class="space-y-4 pt-4">
-              <h3 class="text-[18px] font-extrabold text-[var(--text)]">Offer Partners</h3>
-              <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-                <div onclick="openTimeWall()" class="rounded-2xl p-6 flex flex-col items-center justify-between h-40 cursor-pointer border border-emerald-100 dark:border-emerald-900/40 bg-gradient-to-b from-white to-emerald-50/80 dark:from-slate-900 dark:to-emerald-950/30 hover:shadow-md transition">
-                  <div class="flex-1 flex items-center justify-center">
-                    <div class="flex items-center font-black text-xl tracking-tight">
-                      <span class="text-slate-700 dark:text-slate-200 italic mr-1">time</span>
-                      <span class="bg-[#10b981] text-white px-2 py-0.5 rounded-md not-italic">wall</span>
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-6 h-6 rounded-lg bg-[#6366f1] flex items-center justify-center text-white shadow-2xs rotate-45">
+                    <svg class="w-3.5 h-3.5 -rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
+                  </div>
+                  <h3 class="text-[18px] font-extrabold text-[var(--text)]">Unlimited Offerwall</h3>
+                  <span class="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">VERIFIED</span>
+                </div>
+                <span class="text-xs text-slate-400 font-medium">Scroll to view all ➔</span>
+              </div>
+
+              <!-- Horizontal Scrollable / Responsive Grid of All 10 Offer Partners -->
+              <div class="relative group">
+                <button type="button" onclick="document.getElementById('desk-offerwall-partners-scroll')?.scrollBy({left:-380,behavior:'smooth'})" class="hidden group-hover:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-md items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+
+                <div id="desk-offerwall-partners-scroll" class="flex gap-4 overflow-x-auto pb-3 pt-1 snap-x hide-scrollbar scroll-smooth">
+                  
+                  <!-- 1. Timewall (LIVE) -->
+                  <div onclick="openTimeWall()" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-emerald-900/40 bg-gradient-to-b from-white via-white to-[#e6f9f0] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center">
+                      <div class="flex items-center font-black text-2xl tracking-tight">
+                        <span class="text-[#4a3f35] dark:text-slate-200 italic mr-1">time</span>
+                        <span class="bg-[#2eb85c] text-white px-2 py-0.5 rounded-md not-italic shadow-2xs">wall</span>
+                      </div>
                     </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Timewall</span>
                   </div>
-                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Timewall</span>
+
+                  <!-- 2. Torox (Bull Logo + TOROX) -->
+                  <div onclick="openPartnerWall('Torox')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-indigo-900/40 bg-gradient-to-b from-white via-white to-[#efeaff] dark:from-slate-900 dark:to-indigo-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-2">
+                      <svg class="w-8 h-8 text-[#7c3aed]" viewBox="0 0 36 36" fill="currentColor">
+                        <path d="M6 6l6 4 6-2 6 2 6-4-3 10 3 6-8 10h-8L6 22l3-6L6 6zm8 12l-2 4 6 6 6-6-2-4-4 2-4-2z"/>
+                      </svg>
+                      <span class="text-[#0f172a] dark:text-white font-black text-lg tracking-widest">TOROX</span>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Torox</span>
+                  </div>
+
+                  <!-- 3. ayeT-Studios -->
+                  <div onclick="openPartnerWall('ayeT-Studios')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-amber-900/40 bg-gradient-to-b from-white via-white to-[#fff5e6] dark:from-slate-900 dark:to-amber-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center">
+                      <span class="font-black text-base tracking-tight text-[#1e293b] dark:text-slate-100">AYE<span class="text-[#f59e0b] text-lg mx-0.5">T</span>STUDIOS</span>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">ayeT-Studios</span>
+                  </div>
+
+                  <!-- 4. Lootably -->
+                  <div onclick="openPartnerWall('Lootably')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-rose-900/40 bg-gradient-to-b from-white via-white to-[#ffeceb] dark:from-slate-900 dark:to-rose-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-2">
+                      <span class="text-2xl">🎁</span>
+                      <span class="font-extrabold text-xl text-slate-900 dark:text-slate-100 tracking-tight">lootably</span>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Lootably</span>
+                  </div>
+
+                  <!-- 5. GemiAd -->
+                  <div onclick="openPartnerWall('GemiAd')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-purple-900/40 bg-gradient-to-b from-white via-white to-[#f3ebff] dark:from-slate-900 dark:to-purple-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-2">
+                      <div class="grid grid-cols-2 gap-1">
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#7c3aed]"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#7c3aed]"></span>
+                        <span class="w-2.5 h-2.5 rounded-xs bg-[#7c3aed]"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-[#7c3aed]"></span>
+                      </div>
+                      <span class="font-extrabold text-xl text-[#0f172a] dark:text-slate-100">Gemi<span class="font-normal">Ad</span></span>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">GemiAd</span>
+                  </div>
+
+                  <!-- 6. TyrAds -->
+                  <div onclick="openPartnerWall('TyrAds')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-sky-900/40 bg-gradient-to-b from-white via-white to-[#e6f3ff] dark:from-slate-900 dark:to-sky-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-2">
+                      <div class="w-7 h-7 rounded-lg bg-sky-500 flex items-center justify-center text-white font-black text-sm shadow-2xs">▲</div>
+                      <span class="font-extrabold text-xl text-slate-900 dark:text-white">TýrAds</span>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">TyrAds</span>
+                  </div>
+
+                  <!-- 7. Bitcotasks (LIVE) -->
+                  <div onclick="openBitcoTasksWall()" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-rose-900/40 bg-gradient-to-b from-white via-white to-[#ffedf0] dark:from-slate-900 dark:to-rose-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-1.5">
+                      <span class="w-8 h-8 rounded-full bg-amber-500 text-white font-black text-base flex items-center justify-center shadow-xs">₿</span>
+                      <div class="leading-none text-left">
+                        <span class="font-black text-sm text-amber-500 block">TASKS.COM</span>
+                        <span class="text-[9px] text-slate-500 font-semibold">bitcotasks.com</span>
+                      </div>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Bitcotasks</span>
+                  </div>
+
+                  <!-- 8. MM Wall -->
+                  <div onclick="openPartnerWall('MM Wall')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-amber-900/40 bg-gradient-to-b from-white via-white to-[#fff8dc] dark:from-slate-900 dark:to-amber-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center">
+                      <span class="font-black text-xl text-[#f59e0b] tracking-tight">MM Wall</span>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Mmwall</span>
+                  </div>
+
+                  <!-- 9. Monlix -->
+                  <div onclick="openPartnerWall('Monlix')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-emerald-900/40 bg-gradient-to-b from-white via-white to-[#e8fbf3] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center">
+                      <span class="font-black text-xl text-[#1e1b4b] dark:text-white tracking-wide">Monli<span class="text-[#10b981]">x</span></span>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Monlix</span>
+                  </div>
+
+                  <!-- 10. Adtowall -->
+                  <div onclick="openPartnerWall('Adtowall')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-indigo-900/40 bg-gradient-to-b from-white via-white to-[#eef0ff] dark:from-slate-900 dark:to-indigo-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-1.5">
+                      <span class="font-black text-xl text-[#14b8a6]">▲</span>
+                      <span class="font-semibold text-xl text-[#1e1b4b] dark:text-white">dtowall</span>
+                    </div>
+                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Adtowall</span>
+                  </div>
+
                 </div>
 
-                <div onclick="openToroxInfo()" class="rounded-2xl p-6 flex flex-col items-center justify-between h-40 cursor-pointer border border-indigo-100 dark:border-indigo-900/40 bg-gradient-to-b from-white to-indigo-50/80 dark:from-slate-900 dark:to-indigo-950/30 hover:shadow-md transition">
-                  <div class="flex-1 flex items-center justify-center gap-1.5">
-                    <span class="text-indigo-600 dark:text-indigo-400 font-black text-xl tracking-wider">⚡ TOROX</span>
-                  </div>
-                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Torox</span>
-                </div>
-
-                <div onclick="openTimeWall()" class="rounded-2xl p-6 flex flex-col items-center justify-between h-40 cursor-pointer border border-amber-100 dark:border-amber-900/40 bg-gradient-to-b from-white to-amber-50/80 dark:from-slate-900 dark:to-amber-950/30 hover:shadow-md transition">
-                  <div class="flex-1 flex items-center justify-center">
-                    <span class="font-black text-sm tracking-tight text-slate-800 dark:text-slate-100">aye<span class="text-amber-500">T</span>-Studios</span>
-                  </div>
-                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">ayeT-Studios</span>
-                </div>
-
-                <div onclick="openTimeWall()" class="rounded-2xl p-6 flex flex-col items-center justify-between h-40 cursor-pointer border border-orange-100 dark:border-orange-900/40 bg-gradient-to-b from-white to-orange-50/80 dark:from-slate-900 dark:to-orange-950/30 hover:shadow-md transition">
-                  <div class="flex-1 flex items-center justify-center gap-1.5">
-                    <span class="text-lg">🎁</span>
-                    <span class="font-extrabold text-lg text-slate-900 dark:text-slate-100">lootably</span>
-                  </div>
-                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Lootably</span>
-                </div>
-
-                <div onclick="openTimeWall()" class="rounded-2xl p-6 flex flex-col items-center justify-between h-40 cursor-pointer border border-purple-100 dark:border-purple-900/40 bg-gradient-to-b from-white to-purple-50/80 dark:from-slate-900 dark:to-purple-950/30 hover:shadow-md transition">
-                  <div class="flex-1 flex items-center justify-center gap-1.5">
-                    <span class="text-purple-600 font-black text-lg">❖</span>
-                    <span class="font-extrabold text-lg text-slate-800 dark:text-slate-100">GemiAd</span>
-                  </div>
-                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">GemiAd</span>
-                </div>
-
-                <div onclick="openBitcoTasksWall()" class="rounded-2xl p-6 flex flex-col items-center justify-between h-40 cursor-pointer border border-sky-100 dark:border-sky-900/40 bg-gradient-to-b from-white to-sky-50/80 dark:from-slate-900 dark:to-sky-950/30 hover:shadow-md transition">
-                  <div class="flex-1 flex items-center justify-center">
-                    <span class="font-black text-base text-sky-600 dark:text-sky-400">🪙 BitcoTasks</span>
-                  </div>
-                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-400">Bitcotasks</span>
-                </div>
+                <button type="button" onclick="document.getElementById('desk-offerwall-partners-scroll')?.scrollBy({left:380,behavior:'smooth'})" class="hidden group-hover:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-md items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
               </div>
             </div>
           </section>
@@ -2970,16 +3063,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       </div>
     </div>
 
-    <!-- ================= 8. IN-APP SCREENSHOT VIEWER MODAL ================= -->
-    <div id="image-viewer-modal" class="fixed inset-0 bg-black/90 z-50 flex flex-col items-center justify-center p-4 hidden backdrop-blur-md">
-      <div class="w-full max-w-sm flex justify-between items-center text-white mb-2">
-        <span class="text-xs font-bold">স্ক্রিনশট প্রুফ প্রিভিউ</span>
-        <button onclick="closeImageViewer()" class="text-white text-2xl font-bold bg-white/20 rounded-full w-8 h-8 flex items-center justify-center cursor-pointer">✕</button>
-      </div>
-      <div class="w-full max-w-sm max-h-[75vh] overflow-auto bg-black rounded-2xl border border-white/20 flex items-center justify-center">
-        <img id="enlarged-screenshot" src="" alt="Proof Screenshot" class="max-w-full h-auto object-contain rounded-xl" />
-      </div>
-    </div>
+<!-- image-viewer-modal moved above z-[250] -->
 
     <!-- ================= 9. ADMIN USER INSPECTION MODAL ================= -->
     <div id="admin-user-inspect-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
@@ -3305,14 +3389,177 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <div id="admin-submissions-list" class="space-y-2.5 text-xs"></div>
             </div>
 
-            <!-- TAB 3: ADD NEW TASK (With Worker Limit & Pin Option) -->
-            <div id="admin-view-add" class="bg-white border border-slate-200 rounded-3xl p-5 space-y-3.5 hidden shadow-xs">
-              <div class="border-b pb-2">
-                <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
-                  <img src="https://i.ibb.co.com/MHvfRnH/New-Task.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="New Task" /> নতুন CPA টাস্ক তৈরি করুন
-                </h4>
-                <p class="text-[11px] text-slate-400">নতুন অফার তৈরি করে বাজেট ও ইউজার লিমিট নির্ধারণ করুন</p>
+            <!-- TAB 3: ADD NEW TASK (Auto CPA Offer Importer 50% Profit + Manual Proof Task Creator) -->
+            <div id="admin-view-add" class="bg-white border border-slate-200 rounded-3xl p-5 space-y-4 hidden shadow-xs">
+              
+              <!-- Mode Switcher: Auto Zeydoo CPA Importer vs Manual Proof Task -->
+              <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
+                <div>
+                  <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
+                    <img src="https://i.ibb.co.com/MHvfRnH/New-Task.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="New Task" /> নতুন অফার ও টাস্ক পাবলিশার
+                  </h4>
+                  <p class="text-[11px] text-slate-400">Zeydoo অটো-পোস্টব্যাক অফার অথবা ম্যানুয়াল স্ক্রিনশট প্রুফ টাস্ক তৈরি করুন</p>
+                </div>
+                <div class="inline-flex rounded-2xl bg-slate-100 p-1 border border-slate-200">
+                  <button type="button" id="admin-mode-btn-auto" onclick="switchAdminTaskCreatorMode('auto')" class="px-3 py-1.5 rounded-xl text-xs font-black bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-xs cursor-pointer transition">
+                    ⚡ Zeydoo অটো অফার (50%)
+                  </button>
+                  <button type="button" id="admin-mode-btn-manual" onclick="switchAdminTaskCreatorMode('manual')" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer transition">
+                    📝 ম্যানুয়াল প্রুফ টাস্ক
+                  </button>
+                </div>
               </div>
+
+              <!-- ================= BOX 1: AUTO CPA OFFER IMPORTER & 50% PROFIT AUTO-POSTER ================= -->
+              <div id="admin-auto-cpa-importer-box" class="bg-gradient-to-br from-orange-50/90 via-amber-50/60 to-emerald-50/60 border-2 border-orange-300 rounded-3xl p-4 sm:p-5 space-y-4 shadow-xs">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div class="flex items-center gap-2">
+                    <span class="w-9 h-9 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 text-white flex items-center justify-center text-lg shadow-sm font-black">⚡</span>
+                    <div>
+                      <h5 class="font-black text-xs sm:text-sm text-slate-900 flex items-center gap-1.5">
+                        <span>Auto CPA Offer Importer &amp; 50% Profit Auto-Poster</span>
+                        <span class="bg-emerald-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">AUTO POSTBACK</span>
+                      </h5>
+                      <p class="text-[11px] text-slate-600">শুধু Zeydoo অফার লিংক পেস্ট করুন — লোগো, নাম ও ৫০% রিওয়ার্ড অটোমেটিক সিলেক্ট হয়ে পাবলিশ হবে!</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 1: Paste Zeydoo Link -->
+                <div class="space-y-1.5">
+                  <label class="text-[11px] font-black text-slate-800 flex items-center justify-between">
+                    <span>১. Zeydoo অফার লিংক পেস্ট করুন (Paste Offer Link):</span>
+                    <span class="text-[10px] text-emerald-700 font-bold">✓ {SOURCE_ID} ও {CLICK_ID} অটো ট্র্যাক হবে</span>
+                  </label>
+                  <div class="flex gap-2">
+                    <input id="zeydoo-auto-link-input" type="url" oninput="handleZeydooLinkAutoDetect(this.value)" placeholder="https://1buv.com/link?z=12072679&var={SOURCE_ID}&ymid={CLICK_ID}" class="flex-1 bg-white border-2 border-orange-300 focus:border-orange-500 rounded-2xl p-3 text-xs font-mono font-bold text-slate-800 outline-none shadow-2xs transition" />
+                  </div>
+                </div>
+
+                <!-- Step 2: 50% Profit Auto-Calculator & Quick Rate Presets -->
+                <div class="bg-white/90 border border-orange-200/90 rounded-2xl p-3.5 space-y-3">
+                  <div class="flex flex-wrap items-center justify-between gap-2">
+                    <span class="text-[11px] font-black text-slate-800">২. অফারের মূল রেট ও অটো ৫০% ইউজার রিওয়ার্ড ক্যালকুলেটর:</span>
+                    <div class="flex flex-wrap gap-1">
+                      <button type="button" onclick="setZeydooNetworkUsd(0.035)" class="text-[10px] font-extrabold px-2 py-1 rounded-lg bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-700 border border-slate-200 cursor-pointer transition">$0.035 (৳২)</button>
+                      <button type="button" onclick="setZeydooNetworkUsd(0.085)" class="text-[10px] font-extrabold px-2 py-1 rounded-lg bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-700 border border-slate-200 cursor-pointer transition">$0.085 (৳৫)</button>
+                      <button type="button" onclick="setZeydooNetworkUsd(0.17)" class="text-[10px] font-extrabold px-2 py-1 rounded-lg bg-orange-100 text-orange-800 border border-orange-300 cursor-pointer transition">$0.17 (৳১০)</button>
+                      <button type="button" onclick="setZeydooNetworkUsd(0.34)" class="text-[10px] font-extrabold px-2 py-1 rounded-lg bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-700 border border-slate-200 cursor-pointer transition">$0.34 (৳২০)</button>
+                      <button type="button" onclick="setZeydooNetworkUsd(0.50)" class="text-[10px] font-extrabold px-2 py-1 rounded-lg bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-700 border border-slate-200 cursor-pointer transition">$0.50 (৳৩০)</button>
+                      <button type="button" onclick="setZeydooNetworkUsd(1.00)" class="text-[10px] font-extrabold px-2 py-1 rounded-lg bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-700 border border-slate-200 cursor-pointer transition">$1.00 (৳৬০)</button>
+                    </div>
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div class="bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+                      <label class="text-[10px] font-bold text-slate-500 block">Zeydoo পেআউট ($ USD):</label>
+                      <input id="zeydoo-network-usd" type="number" step="0.001" value="0.17" oninput="recalcZeydoo50Split('usd')" class="w-full bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs font-black text-slate-900 mt-1 outline-none focus:border-orange-500" />
+                    </div>
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-2.5">
+                      <label class="text-[10px] font-black text-emerald-800 block">ইউজার পাবে (50% অটো টাকা ৳):</label>
+                      <input id="zeydoo-user-50-taka" type="number" step="0.5" value="10" oninput="recalcZeydoo50Split('taka')" class="w-full bg-white border border-emerald-400 rounded-lg px-2.5 py-1.5 text-xs font-black text-emerald-700 mt-1 outline-none" />
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5 flex flex-col justify-between">
+                      <span class="text-[10px] font-black text-amber-900 block">আপনার ৫০% প্রফিট ও ইউজার কয়েন:</span>
+                      <div class="text-xs font-black text-amber-700 mt-1" id="zeydoo-profit-summary-text">
+                        লাভ: ৳10 | ইউজার: 100,000 🪙
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Step 3: Auto Visual Preset Selector (RewardJoy 3D Icons) & Live Preview -->
+                <div class="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-4 items-center bg-white/90 border border-orange-200/80 rounded-2xl p-3.5">
+                  <div class="space-y-2.5">
+                    <div class="flex items-center justify-between">
+                      <label class="text-[11px] font-black text-slate-800">৩. অটো অফার থিম ও লোগো (১-ক্লিকে পরিবর্তনযোগ্য):</label>
+                      <span class="text-[10px] text-slate-400 font-bold">লিংক পেস্ট করলে অটো সিলেক্ট হয়</span>
+                    </div>
+                    <div class="grid grid-cols-3 sm:grid-cols-6 gap-2" id="zeydoo-preset-buttons">
+                      <button type="button" onclick="selectZeydooPreset('gift')" class="zey-preset-btn border-2 border-orange-500 bg-orange-50/70 rounded-xl p-2 flex flex-col items-center gap-1 cursor-pointer transition">
+                        <span class="text-xl">🎁</span>
+                        <span class="text-[10px] font-extrabold text-slate-800">Click Box</span>
+                      </button>
+                      <button type="button" onclick="selectZeydooPreset('wheel')" class="zey-preset-btn border border-slate-200 bg-slate-50 rounded-xl p-2 flex flex-col items-center gap-1 cursor-pointer transition">
+                        <span class="text-xl">🎯</span>
+                        <span class="text-[10px] font-extrabold text-slate-800">Spin Wheel</span>
+                      </button>
+                      <button type="button" onclick="selectZeydooPreset('chest')" class="zey-preset-btn border border-slate-200 bg-slate-50 rounded-xl p-2 flex flex-col items-center gap-1 cursor-pointer transition">
+                        <span class="text-xl">🧰</span>
+                        <span class="text-[10px] font-extrabold text-slate-800">Prize Chest</span>
+                      </button>
+                      <button type="button" onclick="selectZeydooPreset('survey')" class="zey-preset-btn border border-slate-200 bg-slate-50 rounded-xl p-2 flex flex-col items-center gap-1 cursor-pointer transition">
+                        <span class="text-xl">📊</span>
+                        <span class="text-[10px] font-extrabold text-slate-800">Survey</span>
+                      </button>
+                      <button type="button" onclick="selectZeydooPreset('app')" class="zey-preset-btn border border-slate-200 bg-slate-50 rounded-xl p-2 flex flex-col items-center gap-1 cursor-pointer transition">
+                        <span class="text-xl">📱</span>
+                        <span class="text-[10px] font-extrabold text-slate-800">Smart App</span>
+                      </button>
+                      <button type="button" onclick="selectZeydooPreset('game')" class="zey-preset-btn border border-slate-200 bg-slate-50 rounded-xl p-2 flex flex-col items-center gap-1 cursor-pointer transition">
+                        <span class="text-xl">🎮</span>
+                        <span class="text-[10px] font-extrabold text-slate-800">Play Game</span>
+                      </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                      <div>
+                        <label class="text-[10px] font-bold text-slate-600">অটো অফার নাম (চাইলে এডিট করুন):</label>
+                        <input id="zeydoo-auto-title" type="text" value="Click to claim your bonus prize!" oninput="updateZeydooLiveCardPreview()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-2 text-xs font-bold text-slate-900 mt-0.5 outline-none focus:border-orange-500" />
+                      </div>
+                      <div>
+                        <label class="text-[10px] font-bold text-slate-600">কাস্টম লোগো আপলোড (ঐচ্ছিক):</label>
+                        <input id="zeydoo-custom-logo-file" type="file" accept="image/*" onchange="handleZeydooCustomLogoUpload(this)" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-1 text-[11px] mt-0.5 file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-[10px] file:font-bold file:bg-orange-100 file:text-orange-700" />
+                      </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-1">
+                      <label class="flex items-center gap-1.5 text-xs font-black text-amber-900 cursor-pointer">
+                        <input id="zeydoo-auto-pin" type="checkbox" checked class="w-4 h-4 accent-orange-500 rounded cursor-pointer" />
+                        <span>📌 সবার ওপরে পিন করে রাখুন</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <!-- Live RewardJoy Card Preview -->
+                  <div class="flex flex-col items-center">
+                    <span class="text-[10px] font-extrabold text-slate-400 uppercase mb-1.5">RewardJoy লাইভ প্রিভিউ</span>
+                    <div class="w-40 bg-white border border-slate-200 rounded-2xl p-2.5 shadow-sm">
+                      <div class="w-full aspect-square rounded-xl overflow-hidden relative bg-slate-900">
+                        <img id="zeydoo-preview-img" src="" alt="Preview" class="w-full h-full object-cover block" />
+                        <div class="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-xs px-2 py-0.5 rounded-full flex items-center gap-1 text-white text-[10px]">
+                          <span>🤖</span><span>🍎</span><span>💻</span>
+                        </div>
+                      </div>
+                      <div id="zeydoo-preview-title" class="text-[12px] font-bold text-slate-800 truncate mt-2">Click to claim your bonus!</div>
+                      <div id="zeydoo-preview-reward" class="text-[15px] font-extrabold text-[#f97316] mt-0.5">৳10</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Zeydoo Postback URL Copy Box -->
+                <div class="bg-slate-900 text-white p-3 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
+                  <div class="min-w-0 flex-1">
+                    <span class="text-[10px] text-emerald-400 font-extrabold block uppercase">🔗 Zeydoo ড্যাশবোর্ডের জন্য Postback URL (50% Auto Payout):</span>
+                    <code id="zeydoo-postback-url-code" class="text-[11px] text-slate-200 font-mono break-all select-all">https://takarewardpro.com/api/zeydoo?userid={var}&amp;ymid={ymid}&amp;payout={amount50%}</code>
+                  </div>
+                  <button type="button" onclick="navigator.clipboard.writeText('https://takarewardpro.com/api/zeydoo?userid={var}&ymid={ymid}&payout={amount50%}').then(() => alert('✅ Zeydoo Postback URL কপি হয়েছে! এটি Zeydoo-তে বসিয়ে দিন।'))" class="bg-emerald-500 hover:bg-emerald-600 text-white font-black text-[11px] px-3 py-2 rounded-xl shrink-0 cursor-pointer transition">
+                    📋 Postback কপি
+                  </button>
+                </div>
+
+                <button type="button" onclick="adminPublishZeydooAutoOffer()" id="btn-publish-zeydoo-auto" class="w-full bg-gradient-to-r from-orange-500 via-amber-500 to-emerald-600 hover:opacity-95 text-white font-black py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-md cursor-pointer transition flex items-center justify-center gap-2">
+                  <span>⚡ ১-ক্লিকে অটো অফার পাবলিশ করুন (Auto Publish 50% Reward)</span>
+                  <span>🚀</span>
+                </button>
+              </div>
+
+              <!-- ================= BOX 2: MANUAL TASK FORM (Requires Screenshot Proof & Admin Approval) ================= -->
+              <div id="admin-manual-task-creator-box" class="space-y-3.5 hidden pt-2 border-t border-slate-200">
+                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl text-xs text-emerald-900 font-bold flex items-center gap-2">
+                  <span>📝</span>
+                  <span>ম্যানুয়াল প্রুফ টাস্ক: এই অফারগুলোতে ইউজার কাজ শেষে স্ক্রিনশট ও প্রুফ নোট জমা দেবে এবং আপনি পেন্ডিং প্রুফ থেকে Approve করবেন।</span>
+                </div>
 
               <div>
                 <label class="text-[11px] font-bold text-slate-700">কাজের নাম (Title):</label>
@@ -3386,8 +3633,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               </div>
 
               <button onclick="adminPublishTask()" id="admin-publish-btn" class="w-full emerald-primary hover:bg-emerald-600 text-white font-extrabold py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-md cursor-pointer transition">
-                টাস্ক পাবলিশ করুন 🚀
+                ম্যানুয়াল প্রুফ টাস্ক পাবলিশ করুন 🚀
               </button>
+              </div>
             </div>
 
             <!-- TAB 4: MANAGE TASKS (Detailed Stats per Task & 1-Click Controls) -->
@@ -3534,6 +3782,114 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           <button onclick="adminCloseEditTaskModal()" class="flex-1 bg-slate-200 text-slate-700 py-2.5 rounded-xl text-xs font-bold cursor-pointer">বাতিল</button>
           <button onclick="adminSaveEditedTask()" id="btn-save-edited-task" class="flex-1 emerald-primary text-white py-2.5 rounded-xl text-xs font-bold shadow-xs cursor-pointer">সংরক্ষণ করুন</button>
         </div>
+      </div>
+    </div>
+
+    <!-- ================= UPGRADED IN-ADMIN SCREENSHOT VIEWER MODAL (z-[250] Opens Right Inside Admin Panel!) ================= -->
+    <div id="image-viewer-modal" class="fixed inset-0 bg-slate-950/90 z-[250] flex flex-col items-center justify-center p-4 hidden backdrop-blur-md">
+      <div class="w-full max-w-lg bg-slate-900 border border-slate-700 rounded-3xl p-4 shadow-2xl flex flex-col max-h-[92vh]">
+        <div class="flex justify-between items-center text-white pb-3 border-b border-slate-800">
+          <div>
+            <span class="text-xs font-black text-emerald-400 flex items-center gap-1.5">🖼️ স্ক্রিনশট প্রুফ প্রিভিউ (অ্যাডমিন ভিউয়ার)</span>
+            <p id="enlarged-screenshot-meta" class="text-[11px] text-slate-300 mt-0.5 font-medium"></p>
+          </div>
+          <button type="button" onclick="closeImageViewer()" class="text-white text-lg font-black bg-slate-800 hover:bg-red-500 rounded-xl w-9 h-9 flex items-center justify-center cursor-pointer transition" title="প্রিভিউ বন্ধ করুন">✕</button>
+        </div>
+
+        <div class="flex-1 overflow-auto bg-black rounded-2xl border border-slate-800 my-3 flex items-center justify-center p-2 min-h-[260px]">
+          <img id="enlarged-screenshot" src="" alt="Proof Screenshot" class="max-w-full max-h-[65vh] h-auto object-contain rounded-xl" />
+        </div>
+
+        <div id="enlarged-screenshot-actions" class="flex items-center gap-2.5 pt-1">
+          <button type="button" id="viewer-approve-btn" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs py-2.5 rounded-xl shadow-xs cursor-pointer transition">
+            ✓ এখানেই Approve করুন
+          </button>
+          <button type="button" id="viewer-reject-btn" class="flex-1 bg-red-600 hover:bg-red-700 text-white font-black text-xs py-2.5 rounded-xl shadow-xs cursor-pointer transition">
+            ✕ এখানেই Reject করুন
+          </button>
+          <button type="button" onclick="closeImageViewer()" class="bg-slate-700 hover:bg-slate-600 text-white font-bold text-xs px-4 py-2.5 rounded-xl cursor-pointer transition">
+            ফিরে যান
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ZEYDOO AUTO-TRACKING OFFER MODAL (No Screenshot Proof Required!) ================= -->
+    <div id="zeydoo-auto-modal" class="fixed inset-0 bg-black/65 z-[140] flex items-center justify-center p-4 hidden backdrop-blur-xs">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md p-6 space-y-4 shadow-2xl text-slate-900 dark:text-white border border-slate-100 dark:border-slate-800">
+        <div class="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div class="flex items-center gap-3">
+            <img id="zey-modal-logo" src="" alt="Offer" class="w-14 h-14 rounded-2xl object-cover border border-orange-200 shadow-sm shrink-0" />
+            <div>
+              <span class="bg-orange-500/15 text-[#f97316] border border-orange-500/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider inline-flex items-center gap-1">
+                <span>⚡</span> Auto-Verified Offer
+              </span>
+              <h3 id="zey-modal-title" class="font-extrabold text-base text-slate-900 dark:text-white mt-1 leading-snug">Offer Title</h3>
+            </div>
+          </div>
+          <button type="button" onclick="closeZeydooAutoModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white flex items-center justify-center font-bold cursor-pointer">✕</button>
+        </div>
+
+        <div class="bg-gradient-to-r from-orange-50 to-emerald-50 dark:from-slate-800 dark:to-slate-800/70 border border-orange-200/80 dark:border-slate-700 rounded-2xl p-3.5 flex items-center justify-between">
+          <div>
+            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 block">অফার রিওয়ার্ড (Instant Postback):</span>
+            <span id="zey-modal-coins" class="text-xs font-extrabold text-amber-600">🪙 100,000 কয়েন</span>
+          </div>
+          <span id="zey-modal-taka" class="text-2xl font-black text-[#f97316]">৳10.00</span>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div class="font-extrabold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+            <span>🚀</span> কীভাবে অটোমেটিক টাকা পাবেন (স্ক্রিনশট লাগবে না):
+          </div>
+          <div class="space-y-1.5 text-slate-600 dark:text-slate-300">
+            <div class="flex items-start gap-2 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700">
+              <span class="w-5 h-5 rounded-full bg-[#f97316] text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">১</span>
+              <span>নিচের <strong>"অফার শুরু করুন ➔"</strong> বাটনে ক্লিক করে সাইটে প্রবেশ করুন।</span>
+            </div>
+            <div class="flex items-start gap-2 bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-700">
+              <span class="w-5 h-5 rounded-full bg-[#f97316] text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">২</span>
+              <span>সেখানে দেওয়া নির্দেশনা অনুযায়ী কাজটি (সার্ভে / রেজিস্ট্রেশন / অ্যাপ ওপেন) সম্পন্ন করুন।</span>
+            </div>
+            <div class="flex items-start gap-2 bg-emerald-50/70 dark:bg-emerald-950/30 p-2.5 rounded-xl border border-emerald-200/80 dark:border-emerald-800/50">
+              <span class="w-5 h-5 rounded-full bg-emerald-600 text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5">✓</span>
+              <span>কাজ শেষ হওয়া মাত্রই <strong>Postback URL</strong>-এর মাধ্যমে অটোমেটিক আপনার একাউন্টে কয়েন যুক্ত হয়ে যাবে এবং কাজটি <strong>Complete</strong> হয়ে History-তে চলে যাবে!</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Auto-Tracking Status Banner -->
+        <div id="zey-modal-live-status" class="hidden bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700 rounded-2xl p-3 text-xs text-amber-900 dark:text-amber-300 flex items-center gap-2.5 font-bold">
+          <div class="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin shrink-0"></div>
+          <span id="zey-modal-status-text">⏳ আপনার কাজের কনফার্মেশন ট্র্যাক করা হচ্ছে... কাজটি সম্পন্ন করলেই এখানে অটোমেটিক Complete লেখা আসবে!</span>
+        </div>
+
+        <button type="button" id="zey-modal-start-btn" onclick="startZeydooTrackedOffer()" class="w-full bg-gradient-to-r from-[#f97316] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-black py-3.5 rounded-2xl text-sm shadow-lg shadow-orange-500/25 cursor-pointer transition flex items-center justify-center gap-2">
+          <span>🚀 অফার শুরু করুন (Start Offer) ➔</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= DESKTOP MY OFFERS / TASKS HISTORY MODAL ================= -->
+    <div id="desk-myoffers-modal" class="fixed inset-0 bg-black/60 z-[135] flex items-center justify-center p-4 hidden backdrop-blur-xs">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-lg p-6 space-y-4 shadow-2xl text-slate-900 dark:text-white border border-slate-100 dark:border-slate-800 max-h-[85vh] flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div>
+            <h3 class="font-extrabold text-base flex items-center gap-2">
+              <span>📋</span> My Offers &amp; Completed Tasks History
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">আপনার সম্পন্ন করা অটো অফার এবং জমা দেওয়া প্রুফ টাস্কের তালিকা</p>
+          </div>
+          <button type="button" onclick="closeDesktopMyOffersModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold cursor-pointer">✕</button>
+        </div>
+
+        <div id="desk-myoffers-list-container" class="flex-1 overflow-y-auto space-y-2.5 pr-1 hide-scrollbar">
+          <p class="text-slate-400 text-center py-8 text-xs">হিস্ট্রি লোড হচ্ছে...</p>
+        </div>
+
+        <button type="button" onclick="closeDesktopMyOffersModal()" class="w-full bg-slate-900 dark:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer">
+          বন্ধ করুন
+        </button>
       </div>
     </div>
 
@@ -4032,20 +4388,33 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     };
 
+    window.isNewOffersViewAllExpanded = false;
+
+    window.toggleDesktopNewOffersViewAll = function() {
+      window.isNewOffersViewAllExpanded = !window.isNewOffersViewAllExpanded;
+      const btn = document.getElementById('desk-newoffers-viewall-btn');
+      if (btn) {
+        btn.innerText = window.isNewOffersViewAllExpanded ? 'Show Carousel' : 'View All';
+      }
+      window.renderDesktopTasks();
+    };
+
+    window.scrollDesktopNewOffers = function(dir) {
+      const container = document.getElementById('desk-tasks-list');
+      if (container) {
+        container.scrollBy({ left: dir * 420, behavior: 'smooth' });
+      }
+    };
+
     window.ensureDesktopTimeWallFrames = function(tabName) {
       const uid = currentUser?.uid;
       if (!uid) return;
       const gamesFrame = document.getElementById('desk-timewall-iframe-games');
-      const tasksFrame = document.getElementById('desk-timewall-iframe-tasks');
       const surveysFrame = document.getElementById('desk-timewall-iframe-surveys');
       const clicksFrame = document.getElementById('desk-timewall-iframe-clicks');
 
-      // Preload Games & Tasks frames so Offers tab is instant and 100% live from TimeWall
       if (gamesFrame && !gamesFrame.src.includes('timewall.io')) {
         gamesFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=games`;
-      }
-      if (tasksFrame && !tasksFrame.src.includes('timewall.io')) {
-        tasksFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=tasks`;
       }
       if (tabName === 'surveys' && surveysFrame && !surveysFrame.src.includes('timewall.io')) {
         surveysFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=surveys`;
@@ -4057,17 +4426,75 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.renderDesktopTasks = function() {
       const container = document.getElementById('desk-tasks-list');
-      const mobileList = document.getElementById('tasks-list');
       if (!container) return;
 
-      // Render ONLY our Admin-published tasks here; live TimeWall tasks load directly below in #desk-timewall-iframe-tasks!
-      if (mobileList && !mobileList.innerHTML.includes('আপনার জন্য স্পেশাল কাজ সম্পন্ন')) {
-        container.innerHTML = mobileList.innerHTML;
-        container.classList.remove('hidden');
+      if (window.isNewOffersViewAllExpanded) {
+        container.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 pt-1";
       } else {
-        container.innerHTML = '';
-        container.classList.add('hidden');
+        container.className = "flex gap-4 overflow-x-auto pb-2 pt-1 snap-x hide-scrollbar scroll-smooth";
       }
+
+      const unattemptedTasks = (allAvailableTasks || []).filter(t => {
+        if (userSubmissions && userSubmissions[t.id]) return false;
+        const limit = t.workerLimit || 0;
+        if (limit > 0 && adminTaskStatsMap && adminTaskStatsMap[t.id] && adminTaskStatsMap[t.id].approved >= limit) {
+          return false;
+        }
+        return true;
+      });
+
+      unattemptedTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+
+      const countBadge = document.getElementById('desk-new-offers-count');
+      if (countBadge) countBadge.innerText = `${unattemptedTasks.length} Active`;
+
+      if (unattemptedTasks.length === 0) {
+        container.className = "w-full";
+        container.innerHTML = `
+          <div class="w-full bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center text-xs text-slate-400">
+            🎉 বর্তমানে সকল নতুন অফার সম্পন্ন হয়েছে! নিচের Games অথবা Unlimited Offerwall থেকে আনলিমিটেড আয় করুন।
+          </div>
+        `;
+        return;
+      }
+
+      const cardWidthClass = window.isNewOffersViewAllExpanded ? "w-full" : "w-[172px] sm:w-[186px] shrink-0 snap-start";
+
+      container.innerHTML = unattemptedTasks.map(t => {
+        const isAuto = !!t.isAutoPostback || t.taskType === 'zeydoo';
+        const isPinned = !!t.isPinned;
+        const fallbackImg = isAuto ? window.getZeydooPresetSvg('gift') : window.getZeydooPresetSvg('app');
+        const imgSrc = t.iconImage || fallbackImg;
+
+        const topBadgeHtml = isAuto
+          ? `<span class="absolute top-2 left-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs flex items-center gap-0.5">⚡ AUTO</span>`
+          : (isPinned
+              ? `<span class="absolute top-2 left-2 bg-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">📌 TOP</span>`
+              : `<span class="absolute top-2 left-2 bg-emerald-600/90 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">✓ VERIFIED</span>`);
+
+        return `
+          <div onclick="handleOpenTask('${t.id}')" class="${cardWidthClass} bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] rounded-2xl p-3 shadow-2xs hover:shadow-lg hover:-translate-y-1 hover:border-orange-400/60 transition-all duration-200 cursor-pointer flex flex-col justify-between group/card">
+            <div>
+              <div class="w-full aspect-square rounded-xl overflow-hidden relative bg-slate-900 shadow-2xs">
+                <img src="${imgSrc}" alt="${(t.title || 'Offer').replace(/"/g, '&quot;')}" class="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300 block" loading="lazy" />
+                ${topBadgeHtml}
+                <!-- RewardJoy Device Icons Pill at Bottom-Right -->
+                <div class="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-xs px-2 py-1 rounded-full flex items-center gap-1.5 text-white shadow-xs">
+                  <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1367 1.0989L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/></svg>
+                  <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
+                  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                </div>
+              </div>
+              <div class="text-[13px] font-bold text-[var(--text)] truncate mt-2.5" title="${(t.title || '').replace(/"/g, '&quot;')}">${t.title}</div>
+            </div>
+            <div class="flex items-center justify-between mt-1">
+              <span class="text-[16px] font-extrabold text-[#f97316]">৳${t.rewardTaka}</span>
+              <span class="text-[10px] font-bold text-slate-400 group-hover/card:text-[#f97316] transition">${isAuto ? 'Instant ⚡' : 'Earn ➔'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
       refreshAllLucideIcons();
     };
 
@@ -4080,6 +4507,24 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const apiKey = "z5sl477w3rf17t5kh4q25jfox7n1n";
       const url = `https://bitcotasks.com/offerwall/${apiKey}/${uid}`;
       window.open(url, '_blank');
+    };
+
+    window.TOROX_APP_ID = ""; // Paste your Torox App/Placement ID here once approved!
+    window.AYET_ADSLOT_ID = "30412"; // ayeT-Studios Web Placement #25558 Adslot #30412
+    window.openPartnerWall = function(partnerName) {
+      if (!currentUser) {
+        alert(partnerName + " অফারওয়ালে কাজ করতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
+        return;
+      }
+      if (partnerName === 'Torox' && window.TOROX_APP_ID) {
+        window.open(`https://torox.io/ifr/show/${window.TOROX_APP_ID}/${currentUser.uid}/0`, '_blank');
+        return;
+      }
+      if (partnerName === 'ayeT-Studios' && window.AYET_ADSLOT_ID) {
+        window.open(`https://offerwall.ayet.io/offers?adSlot=${window.AYET_ADSLOT_ID}&externalIdentifier=${currentUser.uid}`, '_blank');
+        return;
+      }
+      window.showRjErrorToast(`${partnerName} অফারওয়াল বর্তমানে রিভিউধীন রয়েছে। অনুগ্রহ করে Timewall বা Bitcotasks ব্যবহার করুন!`);
     };
 
     window.openToroxInfo = function() {
@@ -5072,92 +5517,296 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     };
 
+    const MONETAG_DIRECT_AD_LINK = "https://uplcm.com/4/12077628";
+    let isClaimingDailyAd = false;
+
     function checkDailyRewardStatus(lastClaimTime) {
       const now = Date.now();
       const diffMs = now - lastClaimTime;
       const twentyFourHoursMs = 24 * 60 * 60 * 1000;
       const btn = document.getElementById('daily-claim-btn');
       const sub = document.getElementById('daily-subtext');
+      const deskBtn = document.getElementById('desk-daily-claim-btn');
 
       if (diffMs < twentyFourHoursMs) {
         const remainingHours = Math.ceil((twentyFourHoursMs - diffMs) / (1000 * 60 * 60));
-        btn.disabled = true;
-        btn.innerText = `Claimed (${remainingHours}h)`;
-        btn.className = "bg-slate-200 text-slate-400 font-bold text-xs px-3 py-1.5 rounded-full cursor-not-allowed";
-        sub.innerText = `পরবর্তী বোনাস ${remainingHours} ঘণ্টা পর নিতে পারবেন`;
+        if (btn) {
+          btn.disabled = true;
+          btn.innerText = `Claimed (${remainingHours}h)`;
+          btn.className = "bg-slate-200 text-slate-400 font-bold text-xs px-3 py-1.5 rounded-full cursor-not-allowed";
+        }
+        if (sub) {
+          sub.innerText = `পরবর্তী বোনাস ${remainingHours} ঘণ্টা পর নিতে পারবেন`;
+        }
+        if (deskBtn) {
+          deskBtn.disabled = true;
+          deskBtn.innerHTML = `<span>✓ Claimed (${remainingHours}h)</span>`;
+          deskBtn.className = "btn btn-ghost !py-2.5 !px-3.5 text-xs font-bold text-slate-400 cursor-not-allowed opacity-75";
+        }
       } else {
-        btn.disabled = false;
-        btn.innerText = "Claim";
-        btn.className = "emerald-primary text-white font-black text-xs px-4 py-1.5 rounded-full shadow-sm cursor-pointer";
-        sub.innerText = "+10,000 Coins Available";
+        if (btn && !isClaimingDailyAd) {
+          btn.disabled = false;
+          btn.innerText = "Claim";
+          btn.className = "emerald-primary text-white font-black text-xs px-4 py-1.5 rounded-full shadow-sm cursor-pointer";
+        }
+        if (sub && !isClaimingDailyAd) {
+          sub.innerText = "+10,000 Coins Available";
+        }
+        if (deskBtn && !isClaimingDailyAd) {
+          deskBtn.disabled = false;
+          deskBtn.innerHTML = `<i data-lucide="sparkles"></i> Claim ৳১.০০`;
+          deskBtn.className = "btn btn-ghost !py-2.5 !px-3.5 text-xs font-bold text-brand-500 cursor-pointer";
+          refreshAllLucideIcons();
+        }
       }
     }
 
     window.claimDailyBonus = async function() {
-      if (!currentUser || !userData) return;
+      if (!currentUser || !userData) {
+        alert("বোনাস ক্লেইম করতে অনুগ্রহ করে প্রথমে লগইন করুন!");
+        return;
+      }
+      if (isClaimingDailyAd) return;
+
       const now = Date.now();
       const lastClaim = userData.lastDailyClaimTime || 0;
       if (now - lastClaim < 24 * 60 * 60 * 1000) {
-        alert("আপনি ইতিমধ্যে আজকের বোনাস নিয়েছেন! ২৪ ঘণ্টা পর আবার ক্লেইম করতে পারবেন।");
+        const remH = Math.ceil(((24 * 60 * 60 * 1000) - (now - lastClaim)) / (1000 * 60 * 60));
+        alert(`আপনি ইতিমধ্যে আজকের বোনাস নিয়েছেন! ${remH} ঘণ্টা পর আবার ক্লেইম করতে পারবেন।`);
         return;
       }
 
-      await updateDoc(doc(db, "users", currentUser.uid), {
-        coins: increment(10000),
-        lastDailyClaimTime: now
-      });
+      // Open Monetag Direct Link Ad in a new tab immediately on click
+      window.open(MONETAG_DIRECT_AD_LINK, '_blank');
 
-      playCoinChime();
-      triggerConfettiBlast();
-      alert("অভিনন্দন! ১০,০০০ কয়েন ফ্রি বোনাস যোগ হয়েছে!");
+      isClaimingDailyAd = true;
+      const btn = document.getElementById('daily-claim-btn');
+      const sub = document.getElementById('daily-subtext');
+      const deskBtn = document.getElementById('desk-daily-claim-btn');
+
+      let secLeft = 5;
+      const updateAdCountdownUI = () => {
+        if (btn) {
+          btn.disabled = true;
+          btn.innerText = `Ad (${secLeft}s)...`;
+        }
+        if (sub) {
+          sub.innerText = `⏳ বিজ্ঞাপন যাচাই হচ্ছে (${secLeft} সেকেন্ড অপেক্ষা করুন)...`;
+        }
+        if (deskBtn) {
+          deskBtn.disabled = true;
+          deskBtn.innerHTML = `<span>⏳ Ad Viewing (${secLeft}s)...</span>`;
+        }
+      };
+      updateAdCountdownUI();
+
+      const timer = setInterval(async () => {
+        secLeft--;
+        if (secLeft > 0) {
+          updateAdCountdownUI();
+        } else {
+          clearInterval(timer);
+          try {
+            const claimTs = Date.now();
+            await updateDoc(doc(db, "users", currentUser.uid), {
+              coins: increment(10000),
+              lastDailyClaimTime: claimTs
+            });
+            isClaimingDailyAd = false;
+            checkDailyRewardStatus(claimTs);
+            playCoinChime();
+            triggerConfettiBlast();
+            alert("🎉 অভিনন্দন! বিজ্ঞাপন দেখা সম্পন্ন হয়েছে এবং ১.০০ টাকা (১০,০০০ কয়েন) ফ্রি বোনাস আপনার একাউন্টে যোগ হয়েছে!");
+          } catch (err) {
+            isClaimingDailyAd = false;
+            checkDailyRewardStatus(userData?.lastDailyClaimTime || 0);
+            alert("বোনাস যোগ করতে সমস্যা হয়েছে: " + err.message);
+          }
+        }
+      }, 1000);
     };
 
-    function listenUserSubmissions(uid) {
-      const q = query(collection(db, "submissions"), where("userId", "==", uid));
+    let manualSubmissionsList = [];
+    let zeydooAutoCompletionsList = [];
+    let zeydooCompletedMap = {};
+    let knownZeydooLogIds = new Set();
+    let isFirstZeydooSnapshot = true;
+
+    function renderCombinedMyOffersHistory() {
+      const myOffersBox = document.getElementById('my-offers-container');
+      const deskMyOffersBox = document.getElementById('desk-myoffers-list-container');
+
+      const combined = [...zeydooAutoCompletionsList, ...manualSubmissionsList];
+      const totalCount = combined.length;
+
+      const badgeEl = document.getElementById('myoffers-badge');
+      if (badgeEl) {
+        badgeEl.innerText = totalCount;
+        if (totalCount > 0) badgeEl.classList.remove('hidden');
+        else badgeEl.classList.add('hidden');
+      }
+
+      const deskBadgeEl = document.getElementById('desk-myoffers-count-badge');
+      if (deskBadgeEl) {
+        deskBadgeEl.innerText = totalCount;
+      }
+
+      if (totalCount === 0) {
+        const emptyHtml = `<p class="text-slate-400 text-center py-6 text-xs bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">এখনও কোনো অফার বা টাস্ক সম্পন্ন করেননি।</p>`;
+        if (myOffersBox) myOffersBox.innerHTML = emptyHtml;
+        if (deskMyOffersBox) deskMyOffersBox.innerHTML = emptyHtml;
+        return;
+      }
+
+      const htmlItems = combined.map(sub => {
+        const isAuto = !!sub.isAutoPostback;
+        let statusColor = sub.status === 'Approved'
+          ? 'bg-emerald-50 text-emerald-600 border-emerald-200'
+          : (sub.status === 'Pending' ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-red-50 text-red-600 border-red-200');
+        let statusText = sub.status === 'Approved'
+          ? (isAuto ? '✓ Complete (Auto Postback)' : '✓ সফল (Approved)')
+          : (sub.status === 'Pending' ? '⏳ পেন্ডিং ভেরিফিকেশন' : '✕ বাতিল (Rejected)');
+
+        return `
+          <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl p-3.5 flex items-center justify-between gap-3 shadow-xs">
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5">
+                ${isAuto ? `<span class="bg-orange-500/15 text-[#f97316] text-[9px] font-black px-1.5 py-0.2 rounded">⚡ AUTO</span>` : ''}
+                <strong class="text-slate-900 dark:text-white text-xs block truncate">${sub.taskTitle}</strong>
+              </div>
+              <div class="text-[11px] text-amber-500 font-bold mt-0.5">🪙 ${Number(sub.rewardCoins || (sub.rewardTaka * 10000)).toLocaleString()} ≈ ৳${sub.rewardTaka}</div>
+              <div class="text-[10px] text-slate-400 mt-0.5">📅 ${sub.submittedTime || ''}</div>
+            </div>
+            <span class="text-[10px] font-extrabold px-3 py-1 rounded-full border shrink-0 ${statusColor}">
+              ${statusText}
+            </span>
+          </div>
+        `;
+      }).join('');
+
+      if (myOffersBox) myOffersBox.innerHTML = htmlItems;
+      if (deskMyOffersBox) deskMyOffersBox.innerHTML = htmlItems;
+    }
+
+    function rebuildUserSubmissionsMap() {
+      const nextMap = {};
+      manualSubmissionsList.forEach(s => {
+        if (s.taskId) nextMap[s.taskId] = s.status;
+      });
+      Object.keys(zeydooCompletedMap).forEach(tId => {
+        nextMap[tId] = 'Approved';
+      });
+      userSubmissions = nextMap;
+      try {
+        localStorage.setItem('tr_cached_user_submissions', JSON.stringify(userSubmissions));
+      } catch(e) {}
+    }
+
+    function listenZeydooLogs(uid) {
+      const q = query(collection(db, "zeydoo_logs"), where("userId", "==", uid));
       onSnapshot(q, (snapshot) => {
-        userSubmissions = {};
-        const myOffersBox = document.getElementById('my-offers-container');
-        if (myOffersBox) myOffersBox.innerHTML = '';
-
-        const badgeEl = document.getElementById('myoffers-badge');
-        if (badgeEl) {
-          badgeEl.innerText = snapshot.size;
-          if (snapshot.size > 0) badgeEl.classList.remove('hidden');
-          else badgeEl.classList.add('hidden');
-        }
-
-        if (snapshot.empty && myOffersBox) {
-          myOffersBox.innerHTML = `<p class="text-slate-400 text-center py-6 text-xs bg-white rounded-2xl border">এখনও কোনো টাস্ক জমা দেননি।</p>`;
-        }
+        zeydooCompletedMap = {};
+        zeydooAutoCompletionsList = [];
 
         snapshot.forEach((docItem) => {
-          const sub = docItem.data();
-          userSubmissions[sub.taskId] = sub.status;
+          const log = docItem.data();
+          const clickId = String(log.clickid || docItem.id || '');
+          let matchedTaskId = null;
 
-          if (myOffersBox) {
-            let statusColor = sub.status === 'Approved' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : (sub.status === 'Pending' ? 'bg-amber-50 text-amber-600 border-amber-200' : 'bg-red-50 text-red-600 border-red-200');
-            let statusText = sub.status === 'Approved' ? 'সফল (Approved)' : (sub.status === 'Pending' ? 'পেন্ডিং ভেরিফিকেশন' : 'বাতিল (Rejected)');
-
-            myOffersBox.innerHTML += `
-              <div class="bg-white border border-slate-200 rounded-2xl p-3.5 flex items-center justify-between shadow-xs">
-                <div>
-                  <strong class="text-slate-900 text-xs block">${sub.taskTitle}</strong>
-                  <div class="text-[11px] text-amber-500 font-bold mt-0.5">🪙 ${(sub.rewardTaka * 10000).toLocaleString()} ≈ ৳${sub.rewardTaka}</div>
-                  <div class="text-[10px] text-slate-400 mt-0.5">📅 ${sub.submittedTime || ''}</div>
-                </div>
-                <span class="text-[10px] font-bold px-3 py-1 rounded-full border ${statusColor}">
-                  ${statusText}
-                </span>
-              </div>
-            `;
+          // Extract taskId if clickid was formatted as uid__taskId__timestamp
+          if (clickId.includes('__')) {
+            const parts = clickId.split('__');
+            if (parts.length >= 2 && parts[1]) {
+              matchedTaskId = parts[1];
+            }
           }
+
+          // Fallback: if admin tested with a single active Zeydoo task or stored last started taskId locally
+          if (!matchedTaskId) {
+            try {
+              const lastStarted = localStorage.getItem('tr_last_started_zeydoo_' + uid);
+              if (lastStarted) matchedTaskId = lastStarted;
+            } catch(e) {}
+          }
+
+          const matchedTask = matchedTaskId ? allAvailableTasks.find(t => t.id === matchedTaskId) : null;
+          const coinsAdded = Number(log.coins) || (matchedTask ? matchedTask.rewardTaka * 10000 : 10000);
+          const takaAdded = Number((coinsAdded / 10000).toFixed(2));
+          const title = matchedTask ? matchedTask.title : 'Zeydoo Instant CPA Offer';
+
+          if (matchedTaskId) {
+            zeydooCompletedMap[matchedTaskId] = 'Approved';
+            if (adminTaskStatsMap) {
+              if (!adminTaskStatsMap[matchedTaskId]) {
+                adminTaskStatsMap[matchedTaskId] = { approved: 0, rejected: 0, pending: 0, total: 0, taskTitle: title };
+              }
+              adminTaskStatsMap[matchedTaskId].approved++;
+              adminTaskStatsMap[matchedTaskId].total++;
+            }
+          }
+
+          let timeStr = 'Auto Verified';
+          if (log.createdAt) {
+            try {
+              const d = new Date(log.createdAt);
+              if (!isNaN(d.getTime())) {
+                timeStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+              }
+            } catch(e) {}
+          }
+
+          zeydooAutoCompletionsList.push({
+            taskId: matchedTaskId || docItem.id,
+            taskTitle: title,
+            rewardTaka: takaAdded,
+            rewardCoins: coinsAdded,
+            submittedTime: timeStr,
+            status: 'Approved',
+            isAutoPostback: true
+          });
+
+          // If this is a newly arrived postback while user is online, celebrate & update modal!
+          if (!isFirstZeydooSnapshot && !knownZeydooLogIds.has(docItem.id)) {
+            playCoinChime();
+            triggerConfettiBlast();
+            const statusBanner = document.getElementById('zey-modal-live-status');
+            const statusText = document.getElementById('zey-modal-status-text');
+            const startBtn = document.getElementById('zey-modal-start-btn');
+            if (statusBanner && statusText) {
+              statusBanner.classList.remove('hidden', 'bg-amber-50', 'text-amber-900', 'border-amber-300');
+              statusBanner.classList.add('bg-emerald-50', 'text-emerald-800', 'border-emerald-300');
+              statusText.innerText = `✅ Complete! আপনার একাউন্টে ৳${takaAdded} (${coinsAdded.toLocaleString()} কয়েন) যোগ হয়েছে এবং কাজটি History-তে চলে গেছে!`;
+            }
+            if (startBtn) {
+              startBtn.innerHTML = `<span>✓ Complete (সফলভাবে সম্পন্ন হয়েছে)</span>`;
+              startBtn.className = "w-full bg-emerald-600 text-white font-black py-3.5 rounded-2xl text-sm shadow-md cursor-default flex items-center justify-center gap-2";
+            }
+          }
+          knownZeydooLogIds.add(docItem.id);
         });
 
-        try {
-          localStorage.setItem('tr_cached_user_submissions', JSON.stringify(userSubmissions));
-        } catch(e) {}
-        isSubmissionsLoaded = true;
+        isFirstZeydooSnapshot = false;
+        rebuildUserSubmissionsMap();
+        renderCombinedMyOffersHistory();
+        renderOfferTabTasks();
+      }, (err) => {
+        console.warn("Zeydoo logs listen notice:", err);
+      });
+    }
 
+    function listenUserSubmissions(uid) {
+      listenZeydooLogs(uid);
+      const q = query(collection(db, "submissions"), where("userId", "==", uid));
+      onSnapshot(q, (snapshot) => {
+        manualSubmissionsList = [];
+        snapshot.forEach((docItem) => {
+          const sub = docItem.data();
+          manualSubmissionsList.push(sub);
+        });
+
+        isSubmissionsLoaded = true;
+        rebuildUserSubmissionsMap();
+        renderCombinedMyOffersHistory();
         renderOfferTabTasks();
       }, (err) => {
         console.warn("User submissions listen notice:", err);
@@ -5197,6 +5846,90 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
+    let activeZeydooAutoTask = null;
+
+    window.openDesktopMyOffersModal = function() {
+      renderCombinedMyOffersHistory();
+      document.getElementById('desk-myoffers-modal')?.classList.remove('hidden');
+    };
+
+    window.closeDesktopMyOffersModal = function() {
+      document.getElementById('desk-myoffers-modal')?.classList.add('hidden');
+    };
+
+    window.openZeydooAutoModal = function(task) {
+      activeZeydooAutoTask = task;
+      const logoEl = document.getElementById('zey-modal-logo');
+      const titleEl = document.getElementById('zey-modal-title');
+      const coinsEl = document.getElementById('zey-modal-coins');
+      const takaEl = document.getElementById('zey-modal-taka');
+      const statusBanner = document.getElementById('zey-modal-live-status');
+      const statusText = document.getElementById('zey-modal-status-text');
+      const startBtn = document.getElementById('zey-modal-start-btn');
+
+      if (logoEl) logoEl.src = task.iconImage || window.getZeydooPresetSvg('gift');
+      if (titleEl) titleEl.innerText = task.title || 'Instant CPA Offer';
+      const coins = Math.round((Number(task.rewardTaka) || 10) * 10000);
+      if (coinsEl) coinsEl.innerText = `🪙 ${coins.toLocaleString()} কয়েন`;
+      if (takaEl) takaEl.innerText = `৳${task.rewardTaka}`;
+
+      if (statusBanner) {
+        statusBanner.className = "hidden bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700 rounded-2xl p-3 text-xs text-amber-900 dark:text-amber-300 flex items-center gap-2.5 font-bold";
+      }
+      if (statusText) {
+        statusText.innerText = "⏳ আপনার কাজের কনফার্মেশন ট্র্যাক করা হচ্ছে... কাজটি সম্পন্ন করলেই এখানে অটোমেটিক Complete লেখা আসবে!";
+      }
+      if (startBtn) {
+        startBtn.innerHTML = `<span>🚀 অফার শুরু করুন (Start Offer) ➔</span>`;
+        startBtn.className = "w-full bg-gradient-to-r from-[#f97316] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-black py-3.5 rounded-2xl text-sm shadow-lg shadow-orange-500/25 cursor-pointer transition flex items-center justify-center gap-2";
+      }
+
+      document.getElementById('zeydoo-auto-modal')?.classList.remove('hidden');
+    };
+
+    window.closeZeydooAutoModal = function() {
+      document.getElementById('zeydoo-auto-modal')?.classList.add('hidden');
+    };
+
+    window.startZeydooTrackedOffer = function() {
+      if (!currentUser || !activeZeydooAutoTask) {
+        alert("অফারে অংশ নিতে অনুগ্রহ করে প্রথমে লগইন করুন!");
+        return;
+      }
+      const uid = currentUser.uid;
+      const taskId = activeZeydooAutoTask.id;
+      const clickToken = `${uid}__${taskId}__${Date.now()}`;
+
+      try {
+        localStorage.setItem('tr_last_started_zeydoo_' + uid, taskId);
+      } catch(e) {}
+
+      let url = activeZeydooAutoTask.link || '';
+      // Replace Zeydoo macros {SOURCE_ID} -> uid and {CLICK_ID} -> clickToken
+      url = url.replace(/\{SOURCE_ID\}/gi, encodeURIComponent(uid));
+      url = url.replace(/\{var\}/gi, encodeURIComponent(uid));
+      url = url.replace(/\{CLICK_ID\}/gi, encodeURIComponent(clickToken));
+      url = url.replace(/\{ymid\}/gi, encodeURIComponent(clickToken));
+
+      // Ensure var= and ymid= are present even if admin pasted a link without macro placeholders
+      const sep = url.includes('?') ? '&' : '?';
+      if (!/[?&]var=/i.test(url)) {
+        url += `${sep}var=${encodeURIComponent(uid)}`;
+      } else {
+        url = url.replace(/([?&]var=)[^&]*/i, `$1${encodeURIComponent(uid)}`);
+      }
+      if (!/[?&]ymid=/i.test(url)) {
+        url += `&ymid=${encodeURIComponent(clickToken)}`;
+      } else {
+        url = url.replace(/([?&]ymid=)[^&]*/i, `$1${encodeURIComponent(clickToken)}`);
+      }
+
+      window.open(url, '_blank');
+
+      const statusBanner = document.getElementById('zey-modal-live-status');
+      if (statusBanner) statusBanner.classList.remove('hidden');
+    };
+
     window.handleOpenTask = function(taskId) {
       const task = allAvailableTasks.find(item => item.id === taskId);
       if (!task) return;
@@ -5222,6 +5955,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return;
       }
 
+      // Route Zeydoo / Auto-Postback Tasks to Instant Auto-Tracking Modal (No Screenshot Proof!)
+      if (task.isAutoPostback || task.taskType === 'zeydoo') {
+        openZeydooAutoModal(task);
+        return;
+      }
+
+      // Route Manual Admin Tasks to Screenshot Proof Modal as before
       openProofModal(task.id, task.title, task.rewardTaka, task.link, task.desc, task.videoLink || '', task.instructions || null);
     };
 
@@ -5268,16 +6008,17 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           ? 'bg-gradient-to-r from-amber-50/90 via-white to-emerald-50/60 border-2 border-amber-400 rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3 relative overflow-hidden transition hover:shadow-md'
           : 'bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex items-center justify-between gap-3 hover:border-emerald-300 transition';
 
+        const isAutoTask = !!t.isAutoPostback || t.taskType === 'zeydoo';
         const topBadge = isPinned 
           ? `<div class="flex items-center gap-1.5 text-[10px] mb-0.5">
                <span class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs flex items-center gap-1">
-                 <span>📌</span> স্পেশাল পিন্ড টাস্ক
+                 <span>📌</span> ${isAutoTask ? '⚡ অটো অফার' : 'স্পেশাল পিন্ড টাস্ক'}
                </span>
-               <span class="text-amber-600 font-extrabold text-[10px] animate-pulse">🔥 High Reward</span>
+               <span class="text-amber-600 font-extrabold text-[10px] animate-pulse">${isAutoTask ? '⚡ Auto Pay' : '🔥 High Reward'}</span>
                ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
              </div>`
           : `<div class="flex items-center gap-1.5 text-[10px] text-slate-400 font-bold mb-0.5">
-               <span>~2Minute</span><span>•</span>
+               <span>${isAutoTask ? '⚡ Instant Auto' : '~2Minute'}</span><span>•</span>
                <span class="text-emerald-600">✓ Active</span>
                ${t.videoLink ? `<span class="bg-red-50 text-red-600 px-1.5 py-0.2 rounded text-[9px] font-bold">▶ গাইড</span>` : ''}
              </div>`;
@@ -5412,6 +6153,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         const separator = dynamicCpaLink.includes('?') ? '&' : '?';
         // Passes s1 and sub1 for AdBlueMedia, subid for CPAlead, tracking_id for CPAGrip
         dynamicCpaLink += `${separator}s1=${encodeURIComponent(uid)}&sub1=${encodeURIComponent(uid)}&subid=${encodeURIComponent(uid)}&tracking_id=${encodeURIComponent(uid)}`;
+        
+        // Zeydoo Smart Tracking Macro & Parameter ({CLICK_ID} / {ymid})
+        dynamicCpaLink = dynamicCpaLink.replace(/\{CLICK_ID\}/gi, encodeURIComponent(uid));
+        dynamicCpaLink = dynamicCpaLink.replace(/\{ymid\}/gi, encodeURIComponent(uid));
+        if (!dynamicCpaLink.includes('ymid=')) {
+          dynamicCpaLink += `&ymid=${encodeURIComponent(uid)}`;
+        }
       }
       document.getElementById('modal-cpa-btn').href = dynamicCpaLink;
       
@@ -5444,6 +6192,24 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const sub = adminSubmissionsMap[subId];
       if (sub && sub.proofImage) {
         document.getElementById('enlarged-screenshot').src = sub.proofImage;
+        const metaEl = document.getElementById('enlarged-screenshot-meta');
+        if (metaEl) {
+          metaEl.innerText = `${sub.userName || 'User'} • ${sub.taskTitle || 'Task'} (৳${sub.rewardTaka || 0}) • প্রুফ নোট: ${sub.proofNotes || 'N/A'}`;
+        }
+        const appBtn = document.getElementById('viewer-approve-btn');
+        const rejBtn = document.getElementById('viewer-reject-btn');
+        if (appBtn) {
+          appBtn.onclick = async () => {
+            await window.approveSubmission(subId, sub.userId, sub.rewardCoins);
+            window.closeImageViewer();
+          };
+        }
+        if (rejBtn) {
+          rejBtn.onclick = async () => {
+            await window.rejectSubmission(subId);
+            window.closeImageViewer();
+          };
+        }
         document.getElementById('image-viewer-modal').classList.remove('hidden');
       }
     };
@@ -6455,6 +7221,254 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
+    // ================= ZEYDOO AUTO CPA OFFER IMPORTER & 50% PROFIT AUTO-POSTER =================
+    const ZEYDOO_3D_PRESETS = {
+      gift: {
+        title: "Click to claim your bonus prize!",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="gBg" cx="50%" cy="40%" r="65%"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#0f172a"/></radialGradient><linearGradient id="boxW" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cbd5e1"/></linearGradient><linearGradient id="ribR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="100%" stop-color="#c9184a"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gBg)"/><circle cx="120" cy="115" r="78" fill="#ef4444" opacity="0.18"/><polygon points="55,105 120,78 185,105 185,180 120,208 55,180" fill="url(#boxW)"/><polygon points="55,105 120,132 120,208 55,180" fill="#e2e8f0"/><polygon points="120,132 185,105 185,180 120,208" fill="#cbd5e1"/><polygon points="50,92 120,64 190,92 120,120" fill="#f8fafc"/><polygon points="106,70 134,70 134,205 106,205" fill="url(#ribR)"/><ellipse cx="102" cy="66" rx="24" ry="13" transform="rotate(-20 102 66)" fill="url(#ribR)"/><ellipse cx="138" cy="66" rx="24" ry="13" transform="rotate(20 138 66)" fill="url(#ribR)"/><circle cx="120" cy="70" r="10" fill="#a4133c"/></svg>`)
+      },
+      wheel: {
+        title: "Spin & Win Instant Cash Reward!",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="wBg" cx="50%" cy="45%" r="65%"><stop offset="0%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#0f766e"/></radialGradient></defs><rect width="240" height="240" rx="36" fill="url(#wBg)"/><circle cx="120" cy="122" r="80" fill="#042f2e" opacity="0.3"/><circle cx="120" cy="120" r="74" fill="#ffffff" stroke="#cbd5e1" stroke-width="6"/><path d="M120,120 L120,46 A74,74 0 0,1 184,83 Z" fill="#ef4444"/><path d="M120,120 L184,83 A74,74 0 0,1 184,157 Z" fill="#f8fafc"/><path d="M120,120 L184,157 A74,74 0 0,1 120,194 Z" fill="#ef4444"/><path d="M120,120 L120,194 A74,74 0 0,1 56,157 Z" fill="#f8fafc"/><path d="M120,120 L56,157 A74,74 0 0,1 56,83 Z" fill="#ef4444"/><path d="M120,120 L56,83 A74,74 0 0,1 120,46 Z" fill="#f8fafc"/><circle cx="120" cy="120" r="16" fill="#f59e0b" stroke="#ffffff" stroke-width="4"/><polygon points="120,32 110,52 130,52" fill="#facc15" stroke="#78350f" stroke-width="2"/></svg>`)
+      },
+      chest: {
+        title: "Playable: Open Golden Treasure Chest!",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="cBg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#451a03"/><stop offset="100%" stop-color="#1c1917"/></radialGradient><linearGradient id="goldG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fde047"/><stop offset="100%" stop-color="#ca8a04"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#cBg)"/><circle cx="120" cy="115" r="76" fill="#f59e0b" opacity="0.22"/><rect x="52" y="105" width="136" height="75" rx="14" fill="#92400e" stroke="url(#goldG)" stroke-width="6"/><path d="M52,105 Q120,55 188,105 Z" fill="#b45309" stroke="url(#goldG)" stroke-width="6"/><rect x="106" y="95" width="28" height="34" rx="6" fill="url(#goldG)"/><circle cx="120" cy="112" r="5" fill="#451a03"/><circle cx="88" cy="84" r="10" fill="#fde047"/><circle cx="152" cy="84" r="10" fill="#fde047"/></svg>`)
+      },
+      survey: {
+        title: "Quick Finance & Social Survey Offer",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="sBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#sBg)"/><rect x="64" y="46" width="112" height="148" rx="16" fill="#ffffff"/><rect x="92" y="34" width="56" height="24" rx="8" fill="#f59e0b"/><circle cx="90" cy="92" r="10" fill="#10b981"/><rect x="110" y="86" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="126" r="10" fill="#10b981"/><rect x="110" y="120" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="160" r="10" fill="#f97316"/><rect x="110" y="154" width="36" height="10" rx="5" fill="#cbd5e1"/></svg>`)
+      },
+      app: {
+        title: "Smart App Install & Action Bonus",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="aBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient><linearGradient id="wGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#2563eb"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#aBg)"/><text x="120" y="158" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="900" font-size="118" fill="url(#wGrad)">W</text></svg>`)
+      },
+      game: {
+        title: "Play & Complete Instant Level Task",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="gmBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gmBg)"/><rect x="46" y="76" width="148" height="90" rx="42" fill="#ffffff"/><rect x="74" y="106" width="28" height="10" rx="4" fill="#7c3aed"/><rect x="83" y="97" width="10" height="28" rx="4" fill="#7c3aed"/><circle cx="152" cy="104" r="8" fill="#ef4444"/><circle cx="168" cy="118" r="8" fill="#f59e0b"/><circle cx="136" cy="118" r="8" fill="#10b981"/><circle cx="152" cy="132" r="8" fill="#3b82f6"/></svg>`)
+      }
+    };
+
+    window.currentZeydooPresetKey = 'gift';
+    window.currentZeydooCustomLogo = null;
+
+    window.getZeydooPresetSvg = function(key) {
+      return (ZEYDOO_3D_PRESETS[key] || ZEYDOO_3D_PRESETS.gift).svg;
+    };
+
+    window.switchAdminTaskCreatorMode = function(mode) {
+      const autoBox = document.getElementById('admin-auto-cpa-importer-box');
+      const manualBox = document.getElementById('admin-manual-task-creator-box');
+      const btnAuto = document.getElementById('admin-mode-btn-auto');
+      const btnManual = document.getElementById('admin-mode-btn-manual');
+
+      if (mode === 'manual') {
+        autoBox?.classList.add('hidden');
+        manualBox?.classList.remove('hidden');
+        if (btnManual) btnManual.className = "px-3 py-1.5 rounded-xl text-xs font-black bg-emerald-600 text-white shadow-xs cursor-pointer transition";
+        if (btnAuto) btnAuto.className = "px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer transition";
+      } else {
+        autoBox?.classList.remove('hidden');
+        manualBox?.classList.add('hidden');
+        if (btnAuto) btnAuto.className = "px-3 py-1.5 rounded-xl text-xs font-black bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-xs cursor-pointer transition";
+        if (btnManual) btnManual.className = "px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer transition";
+        window.updateZeydooLiveCardPreview();
+      }
+    };
+
+    window.selectZeydooPreset = function(presetKey, keepTitle = false) {
+      window.currentZeydooPresetKey = presetKey;
+      window.currentZeydooCustomLogo = null;
+      const preset = ZEYDOO_3D_PRESETS[presetKey] || ZEYDOO_3D_PRESETS.gift;
+      const titleInp = document.getElementById('zeydoo-auto-title');
+      if (titleInp && !keepTitle) {
+        const linkVal = document.getElementById('zeydoo-auto-link-input')?.value || '';
+        const zMatch = linkVal.match(/[?&]z=(\d+)/i);
+        const zSuffix = zMatch ? ` #${zMatch[1].slice(-4)}` : '';
+        titleInp.value = preset.title + zSuffix;
+      }
+
+      const keys = ['gift', 'wheel', 'chest', 'survey', 'app', 'game'];
+      const btns = document.querySelectorAll('#zeydoo-preset-buttons .zey-preset-btn');
+      btns.forEach((b, idx) => {
+        if (keys[idx] === presetKey) {
+          b.className = "zey-preset-btn border-2 border-orange-500 bg-orange-50/70 rounded-xl p-2 flex flex-col items-center gap-1 cursor-pointer transition";
+        } else {
+          b.className = "zey-preset-btn border border-slate-200 bg-slate-50 rounded-xl p-2 flex flex-col items-center gap-1 cursor-pointer transition";
+        }
+      });
+
+      window.updateZeydooLiveCardPreview();
+    };
+
+    window.setZeydooNetworkUsd = function(usdVal) {
+      const usdInp = document.getElementById('zeydoo-network-usd');
+      if (usdInp) {
+        usdInp.value = usdVal;
+        window.recalcZeydoo50Split('usd');
+      }
+    };
+
+    window.recalcZeydoo50Split = function(source) {
+      const usdInp = document.getElementById('zeydoo-network-usd');
+      const takaInp = document.getElementById('zeydoo-user-50-taka');
+      const summaryEl = document.getElementById('zeydoo-profit-summary-text');
+
+      if (source === 'usd') {
+        const usd = parseFloat(usdInp?.value || '0') || 0;
+        const totalBdt = usd * 120;
+        const user50Bdt = Math.max(0.5, Number((totalBdt * 0.5).toFixed(1)));
+        if (takaInp) takaInp.value = user50Bdt;
+      } else {
+        const userBdt = parseFloat(takaInp?.value || '0') || 0;
+        const impliedUsd = Number(((userBdt * 2) / 120).toFixed(3));
+        if (usdInp) usdInp.value = impliedUsd;
+      }
+
+      const finalUserTaka = parseFloat(takaInp?.value || '0') || 0;
+      const finalCoins = Math.round(finalUserTaka * 10000);
+      if (summaryEl) {
+        summaryEl.innerText = `লাভ: ৳${finalUserTaka} | ইউজার: ${finalCoins.toLocaleString()} 🪙`;
+      }
+      window.updateZeydooLiveCardPreview();
+    };
+
+    window.handleZeydooCustomLogoUpload = async function(input) {
+      if (input.files && input.files[0]) {
+        try {
+          window.currentZeydooCustomLogo = await compressImageFile(input.files[0], 250, 0.85);
+          window.updateZeydooLiveCardPreview();
+        } catch(e) {}
+      }
+    };
+
+    window.updateZeydooLiveCardPreview = function() {
+      const prevImg = document.getElementById('zeydoo-preview-img');
+      const prevTitle = document.getElementById('zeydoo-preview-title');
+      const prevReward = document.getElementById('zeydoo-preview-reward');
+
+      const titleVal = document.getElementById('zeydoo-auto-title')?.value || 'Click to claim your bonus!';
+      const takaVal = document.getElementById('zeydoo-user-50-taka')?.value || '10';
+      const imgSrc = window.currentZeydooCustomLogo || window.getZeydooPresetSvg(window.currentZeydooPresetKey);
+
+      if (prevImg) prevImg.src = imgSrc;
+      if (prevTitle) prevTitle.innerText = titleVal;
+      if (prevReward) prevReward.innerText = `৳${takaVal}`;
+    };
+
+    window.handleZeydooLinkAutoDetect = function(rawUrl) {
+      const url = (rawUrl || '').trim();
+      if (!url) return;
+
+      // Auto-select preset based on Zone ID (z=...) so every pasted link gets a distinct 3D icon & title automatically
+      const zMatch = url.match(/[?&]z=(\d+)/i);
+      const keys = ['gift', 'wheel', 'chest', 'survey', 'app', 'game'];
+      if (zMatch && zMatch[1]) {
+        const zNum = parseInt(zMatch[1], 10) || 0;
+        const autoPreset = keys[zNum % keys.length];
+        window.selectZeydooPreset(autoPreset, false);
+      } else {
+        window.updateZeydooLiveCardPreview();
+      }
+
+      // If URL has payout/rate/amount query param, auto-calculate 50% split
+      const payMatch = url.match(/[?&](?:payout|rate|amount|price)=([0-9.]+)/i);
+      if (payMatch && payMatch[1]) {
+        const val = parseFloat(payMatch[1]);
+        if (!isNaN(val) && val > 0) {
+          window.setZeydooNetworkUsd(val);
+        }
+      }
+    };
+
+    window.adminPublishZeydooAutoOffer = async function() {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const rawLink = (document.getElementById('zeydoo-auto-link-input')?.value || '').trim();
+      if (!rawLink) {
+        alert("অনুগ্রহ করে প্রথমে Zeydoo অফার লিংকটি পেস্ট করুন!");
+        return;
+      }
+
+      const title = (document.getElementById('zeydoo-auto-title')?.value || 'Click to claim your bonus prize!').trim();
+      const rewardTaka = parseFloat(document.getElementById('zeydoo-user-50-taka')?.value || '10') || 10;
+      const networkUsd = parseFloat(document.getElementById('zeydoo-network-usd')?.value || '0.17') || 0.17;
+      const isPinned = document.getElementById('zeydoo-auto-pin')?.checked || false;
+      const iconImage = window.currentZeydooCustomLogo || window.getZeydooPresetSvg(window.currentZeydooPresetKey);
+
+      const btn = document.getElementById('btn-publish-zeydoo-auto');
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = "⚡ অটো অফার পাবলিশ হচ্ছে...";
+      }
+
+      try {
+        const instructions = [
+          "নিচের 'অফার শুরু করুন' বাটনে ক্লিক করে সরাসরি অফার পেজে যান।",
+          "সেখানে দেওয়া নির্দেশনা অনুযায়ী কাজটি (সার্ভে / রেজিস্ট্রেশন / অ্যাপ) সম্পন্ন করুন।",
+          "কাজটি শেষ হওয়ার সাথে সাথে Postback URL-এর মাধ্যমে অটোমেটিক আপনার একাউন্টে কয়েন যুক্ত হয়ে যাবে!"
+        ];
+
+        await addDoc(collection(db, "tasks"), {
+          title,
+          category: "Zeydoo Auto",
+          rewardTaka,
+          networkPayoutUsd: networkUsd,
+          profitSplitPercent: 50,
+          link: rawLink,
+          desc: instructions.join('\n'),
+          instructions,
+          isPinned,
+          isAutoPostback: true,
+          taskType: "zeydoo",
+          workerLimit: 0,
+          videoLink: null,
+          iconImage,
+          createdAt: serverTimestamp()
+        });
+
+        try {
+          const nNow = new Date();
+          const nTime = nNow.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true });
+          await addDoc(collection(db, "notifications"), {
+            title: "⚡ নতুন ইনস্ট্যান্ট অটো অফার!",
+            message: `"${title}" সম্পন্ন করে অটোমেটিক জিতে নিন ৳${rewardTaka}! (কোনো স্ক্রিনশট লাগবে না)`,
+            time: nTime,
+            createdAt: serverTimestamp()
+          });
+        } catch(ne) {}
+
+        const linkInp = document.getElementById('zeydoo-auto-link-input');
+        if (linkInp) linkInp.value = '';
+        window.currentZeydooCustomLogo = null;
+        const customFileInp = document.getElementById('zeydoo-custom-logo-file');
+        if (customFileInp) customFileInp.value = '';
+
+        playCoinChime();
+        triggerConfettiBlast();
+        alert(`🎉 সফলভাবে অটো অফার পাবলিশ হয়েছে!\n\nনাম: ${title}
+ইউজার ৫০% রিওয়ার্ড: ৳${rewardTaka} (${(rewardTaka * 10000).toLocaleString()} কয়েন)`);
+        switchAdminTab('manage');
+      } catch (err) {
+        alert("অটো অফার পাবলিশে সমস্যা: " + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `<span>⚡ ১-ক্লিকে অটো অফার পাবলিশ করুন (Auto Publish 50% Reward)</span><span>🚀</span>`;
+        }
+      }
+    };
+
+    // Initialize live preview on load
+    setTimeout(() => {
+      if (window.updateZeydooLiveCardPreview) window.updateZeydooLiveCardPreview();
+    }, 300);
+
     // ================= TASK MANAGEMENT & WORKER LIMITS =================
     window.adminPublishTask = async function() {
       if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
@@ -6712,6 +7726,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <div class="truncate">
                   <div class="flex items-center gap-1.5 flex-wrap">
                     <strong class="text-slate-900 text-xs font-black truncate">${t.title}</strong>
+                    ${(t.isAutoPostback || t.taskType === 'zeydoo') ? '<span class="bg-orange-100 text-orange-800 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-orange-300">⚡ AUTO 50%</span>' : ''}
                     ${t.isPinned ? '<span class="bg-amber-100 text-amber-800 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-amber-300">📌 PINNED</span>' : ''}
                     ${isFull ? '<span class="bg-red-100 text-red-700 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-red-200">🔴 স্লট পূর্ণ (Full)</span>' : '<span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-emerald-200">🟢 রানিং</span>'}
                   </div>
