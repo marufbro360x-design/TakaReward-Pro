@@ -14,8 +14,8 @@
   <script>
     (function() {
       // 1. Domain Lock: takarewardpro.com ছাড়া নকল সাইটে কোড বসালে আসল সাইটে রিডাইরেক্ট করবে
-      const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "takarewardpro.netlify.app", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
-      if (!allowedDomains.includes(window.location.hostname)) {
+   const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "takarewardpro.netlify.app", "takareward-pro.vercel.app", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
+     if (!allowedDomains.includes(window.location.hostname) && !window.location.hostname.endsWith(".vercel.app")) {
         document.addEventListener("DOMContentLoaded", function() {
           document.body.innerHTML = `
             <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding:20px;">
