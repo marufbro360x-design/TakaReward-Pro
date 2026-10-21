@@ -91,6 +91,35 @@
   <meta name="apple-mobile-web-app-title" content="TakaReward Pro">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://takareward-bd.firebaseapp.com" crossorigin>
+  <script>
+    // Instant Mobile Auth & Modal Stub (Prevents dead clicks before Firebase ES Module finishes loading on slow 3G/4G)
+    window.__pendingAuthAction = null;
+    window.openAuthModal = window.openAuthModal || function(mode) {
+      var m = document.getElementById('authModal');
+      if (m) m.classList.add('show');
+      window.__pendingAuthAction = { type: 'modal', mode: mode || 'signup' };
+    };
+    window.closeAuthModal = window.closeAuthModal || function() {
+      var m = document.getElementById('authModal');
+      if (m) m.classList.remove('show');
+    };
+    window.loginWithGoogleSmart = window.loginWithGoogleSmart || function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      var btn = e && (e.currentTarget || e.target);
+      if (btn) {
+        btn.dataset.origHtml = btn.innerHTML;
+        btn.innerHTML = '<span>⏳ গুগল কানেক্ট হচ্ছে...</span>';
+      }
+      window.__pendingAuthAction = { type: 'google' };
+    };
+    window.handleHeroSubmit = window.handleHeroSubmit || function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      window.openAuthModal('signup');
+      return false;
+    };
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1284,14 +1313,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
   <div id="desktop-app-wrapper" class="flex flex-col min-h-screen w-full relative z-10 text-[var(--text)]" style="background:transparent">
     <div id="landingView">
-  <!-- TOPBAR -->
+  <!-- TOPBAR (Mobile: Clean RewardJoy Header with Logo Icon Only + Sign In / Sign Up; Desktop: Full Unchanged Header) -->
   <header id="topbar" class="topbar">
-    <div class="max-w-[1400px] mx-auto px-5 sm:px-8 py-4 flex items-center gap-4">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-8 py-3 sm:py-4 flex items-center gap-2.5 sm:gap-4">
       <div class="cj-logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">
         <div class="flex items-center gap-2.5">
-          <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-10 h-10 rounded-2xl object-cover border-2 border-orange-500 shadow-md shadow-orange-500/20" />
-          <span class="font-display font-black text-2xl tracking-tight text-slate-900 dark:text-white">Taka<span class="text-brand-500">Reward</span></span>
-          <span class="text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-lg border border-emerald-300 dark:border-emerald-800">PRO</span>
+          <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-10 h-10 rounded-full md:rounded-2xl object-cover border-2 border-orange-500 shadow-md shadow-orange-500/20" />
+          <span class="hidden md:inline font-display font-black text-2xl tracking-tight text-slate-900 dark:text-white">Taka<span class="text-brand-500">Reward</span></span>
+          <span class="hidden md:inline-block text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-lg border border-emerald-300 dark:border-emerald-800">PRO</span>
         </div>
       </div>
 
@@ -1304,7 +1333,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         <a href="#faq" class="px-3 py-2 text-[13.5px] font-bold rounded-xl hover:bg-[var(--surface-2)] transition-colors" style="color:var(--text-2)">FAQ</a>
       </nav>
 
-      <button id="langBtn" type="button" onclick="document.getElementById('langModal').classList.add('show'); if(window.lucide) lucide.createIcons();" class="lang-btn">
+      <button id="langBtn" type="button" onclick="document.getElementById('langModal').classList.add('show'); if(window.lucide) lucide.createIcons();" class="lang-btn !hidden md:!inline-flex">
         <svg viewBox="0 0 24 16" class="w-6 h-4 rounded-[3px]" style="box-shadow:inset 0 0 0 1px rgba(0,0,0,.08)">
           <rect width="24" height="16" fill="#B22234"/>
           <path d="M0 2.46h24M0 4.92h24M0 7.38h24M0 9.84h24M0 12.3h24M0 14.76h24" stroke="#fff" stroke-width="1.23"/>
@@ -1314,28 +1343,80 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
       </button>
 
-      <button class="btn btn-ghost !py-2 !px-3 sm:!py-2.5 sm:!px-4 !text-xs sm:!text-[13.5px]" onclick="openAuthModal('login')">Sign In</button>
-      <button class="btn btn-primary" onclick="openAuthModal('signup')"><i data-lucide="user-plus"></i> Sign Up</button>
+      <button type="button" class="btn btn-ghost !py-2.5 !px-4 sm:!py-2.5 sm:!px-4 !text-[13px] sm:!text-[13.5px] !rounded-xl !bg-[#FFF3EB] !text-[#FF5F1F] !border-transparent md:!bg-[var(--surface-2)] md:!text-[var(--text-2)] md:!border-[var(--border)] font-bold" onclick="openAuthModal('login')">Sign In</button>
+      <button type="button" class="btn btn-primary !py-2.5 !px-4 sm:!py-2.5 sm:!px-4 !text-[13px] sm:!text-[13.5px] !rounded-xl font-bold" onclick="openAuthModal('signup')"><i data-lucide="user-plus" class="hidden md:inline-block"></i> Sign Up</button>
     </div>
   </header>
 
   <main class="relative z-10">
     <!-- HERO -->
-    <section class="relative px-5 sm:px-8 pt-12 sm:pt-20 pb-16">
+    <section class="relative px-4 sm:px-8 pt-8 sm:pt-20 pb-12 sm:pb-16">
       <div class="max-w-[1400px] mx-auto">
         <div class="text-center max-w-[880px] mx-auto reveal">
-          <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style="background:var(--brand-soft);border:1px solid rgba(255,95,31,.22)">
+          <div class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6" style="background:var(--brand-soft);border:1px solid rgba(255,95,31,.22)">
             <span class="live-dot"></span>
             <span class="text-[12px] font-bold" style="color:var(--brand)">Active micro-jobs & instant verified rewards</span>
           </div>
-          <h1 class="section-title text-[52px] sm:text-[76px] lg:text-[92px]">Earn <span class="grad-text">Smarter</span></h1>
-          <p class="text-[16px] sm:text-[18px] font-medium mt-5 max-w-[600px] mx-auto leading-relaxed" style="color:var(--text-2)">
-            Earn real cash with high-paying games, apps, and micro-tasks — built for real users.
+          <h1 class="section-title text-[34px] sm:text-[76px] lg:text-[92px] relative inline-block">
+            <span class="sm:hidden text-[#FDBA74] text-xl absolute -left-6 -bottom-1">✦</span>
+            Earn <span class="sm:hidden text-slate-800 dark:text-white">Smarter</span><span class="hidden sm:inline grad-text">Smarter</span>
+            <span class="sm:hidden text-[#FDBA74] text-2xl absolute -right-6 -top-2">✦</span>
+          </h1>
+          <p class="text-[14.5px] sm:text-[18px] font-medium mt-3.5 sm:mt-5 max-w-[340px] sm:max-w-[600px] mx-auto leading-relaxed" style="color:var(--text-2)">
+            Earn more with high-paying games, apps, and surveys — built for real users
           </p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-center mt-14 lg:mt-20">
-          <div class="relative h-[440px] sm:h-[520px] reveal">
+        <div class="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-8 sm:gap-10 lg:gap-14 items-center mt-7 sm:mt-14 lg:mt-20">
+          <!-- MOBILE HERO SHOWCASE (Exact 1:1 Match to rewardjoy.com Mobile Screenshot image_8b5c99.png) -->
+          <div class="sm:hidden space-y-6">
+            <div class="grid grid-cols-3 gap-2.5 items-center px-1 pt-2">
+              <!-- Card 1: Color Bolts -->
+              <div onclick="openAuthModal('signup')" class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 shadow-md border border-slate-100 dark:border-slate-800 text-left cursor-pointer active:scale-95 transition">
+                <div class="w-full aspect-square rounded-xl overflow-hidden bg-slate-900">
+                  <img src="https://i.ibb.co.com/39TstJrj/Screenshot-2026-10-04-025524.png" alt="Color Bolts" class="w-full h-full object-cover" />
+                </div>
+                <div class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 truncate mt-2">Color Bolts...</div>
+                <div class="text-[14px] font-black text-slate-900 dark:text-white mt-0.5">৳2,694</div>
+              </div>
+
+              <!-- Card 2: Bubble Pop (Center Elevated) -->
+              <div onclick="openAuthModal('signup')" class="bg-white dark:bg-slate-900 rounded-2xl p-3 shadow-xl border border-orange-200/80 dark:border-slate-700 text-left -my-3 z-10 cursor-pointer active:scale-95 transition">
+                <div class="w-full aspect-square rounded-xl overflow-hidden bg-blue-950">
+                  <img src="https://i.ibb.co.com/TydT2Ky/Screenshot-2026-10-04-025242.png" alt="Bubble Pop" class="w-full h-full object-cover" />
+                </div>
+                <div class="text-[12px] font-bold text-slate-700 dark:text-slate-200 truncate mt-2.5">Bubble Pop...</div>
+                <div class="text-[16px] font-black text-slate-900 dark:text-white mt-0.5">৳1,644</div>
+              </div>
+
+              <!-- Card 3: Rocket Hit -->
+              <div onclick="openAuthModal('signup')" class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 shadow-md border border-slate-100 dark:border-slate-800 text-left cursor-pointer active:scale-95 transition">
+                <div class="w-full aspect-square rounded-xl overflow-hidden bg-slate-900">
+                  <img src="https://i.ibb.co.com/23vKWhJC/Screenshot-2026-10-04-025422.png" alt="Rocket Hit" class="w-full h-full object-cover" />
+                </div>
+                <div class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 truncate mt-2">Rocket Hit</div>
+                <div class="text-[14px] font-black text-slate-900 dark:text-white mt-0.5">৳5,203</div>
+              </div>
+            </div>
+
+            <!-- Trustpilot Rating Block (Exact Match to image_8b5c99.png) -->
+            <div class="text-center space-y-2 pt-2">
+              <div class="flex items-center justify-center gap-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300">
+                <span class="text-[#00b67a] text-lg leading-none">★</span>
+                <span class="font-bold text-slate-800 dark:text-white">Trustpilot</span>
+                <span>Rated <strong class="text-[#f97316]">Great</strong> by 1,455 users</span>
+              </div>
+              <div class="flex items-center justify-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-200">
+                <span>Score: <strong class="text-slate-900 dark:text-white">4.9</strong></span>
+                <div class="flex items-center gap-0.5 text-[#00b67a] text-lg leading-none">
+                  <span>★</span><span>★</span><span>★</span><span>★</span><span class="text-slate-300 dark:text-slate-600">★</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- DESKTOP HERO SHOWCASE (100% Unchanged on Desktop) -->
+          <div class="hidden sm:block relative h-[440px] sm:h-[520px] reveal">
             <div class="float-card bob-a absolute left-[4%] top-[12%] w-[170px] sm:w-[195px] z-20">
               <div class="app-icon"><img src="https://i.ibb.co.com/hx3LqDgY/Screenshot-2026-10-04-015532.png" alt="Monopoly Go" loading="lazy" /></div>
               <div class="pt-3 px-1">
@@ -2963,28 +3044,56 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
   </div>
   
-  <!-- DESKTOP AUTH MODAL (Direct Google & Apple Login Only - NO Password Form!) -->
+  <!-- UNIFIED MOBILE & DESKTOP AUTH MODAL (1-Click Google/Apple + Instant Email Sign In / Sign Up) -->
   <div id="authModal" class="modal-backdrop">
     <div class="modal-panel max-w-[420px]">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2.5">
           <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-9 h-9 rounded-xl object-cover border border-orange-500 shadow-xs" />
-          <h3 id="authTitle" class="section-title text-[21px]">Sign in to TakaReward Pro</h3>
+          <h3 id="authTitle" class="section-title text-[20px] sm:text-[21px]">Sign in to TakaReward Pro</h3>
         </div>
-        <button type="button" onclick="closeAuthModal()" class="icon-btn !w-9 !h-9"><i data-lucide="x"></i></button>
+        <button type="button" onclick="closeAuthModal()" class="icon-btn !w-9 !h-9">✕</button>
       </div>
-      <p class="text-[13px] font-medium mb-6" style="color:var(--text-2)">Continue directly with your Google or Apple account to start earning instantly.</p>
 
-      <div class="space-y-3">
-        <button type="button" class="social-btn !py-3.5 !text-[14px]" onclick="closeAuthModal(); loginWithGoogleSmart(event);">
+      <!-- Mode Switch Tabs: Sign Up / Sign In -->
+      <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] mb-4">
+        <button type="button" id="authTabSignup" onclick="switchAuthTab('signup')" class="tab active !py-2 text-xs font-extrabold">Sign Up</button>
+        <button type="button" id="authTabLogin" onclick="switchAuthTab('login')" class="tab !py-2 text-xs font-extrabold">Sign In</button>
+      </div>
+
+      <!-- 1-Click Google & Apple Buttons -->
+      <div class="space-y-2.5">
+        <button type="button" class="social-btn !py-3.5 !text-[14px] border-2 border-orange-500/30 hover:border-orange-500 shadow-xs" onclick="loginWithGoogleSmart(event)">
           <svg viewBox="0 0 48 48" class="w-5 h-5"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 18.9 12 24 12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.3 4.1-4.1 5.5l6.2 5.2C36.9 39.1 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
-          Sign in with Google
+          <span>Continue with Google</span>
         </button>
-        <button type="button" class="social-btn !py-3.5 !text-[14px]" onclick="closeAuthModal(); loginWithAppleSmart(event);">
+        <button type="button" class="social-btn !py-3 !text-[13.5px]" onclick="loginWithAppleSmart(event)">
           <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
-          Sign in with Apple
+          <span>Continue with Apple</span>
         </button>
       </div>
+
+      <div class="flex items-center gap-3 my-4">
+        <div class="flex-1 h-px" style="background:var(--border)"></div>
+        <span class="text-[10.5px] font-extrabold tracking-wider" style="color:var(--text-3)">OR WITH EMAIL</span>
+        <div class="flex-1 h-px" style="background:var(--border)"></div>
+      </div>
+
+      <!-- Email & Password Form (Works in 100% of browsers even if popups are blocked) -->
+      <form onsubmit="handleFirebaseEmailAuth(event)" class="space-y-3">
+        <div id="authNameField">
+          <input id="authNameInput" type="text" class="input !py-2.5 !text-xs" placeholder="Your Full Name (Optional)" />
+        </div>
+        <div>
+          <input id="authEmailInput" type="email" class="input !py-2.5 !text-xs" placeholder="Email address" required />
+        </div>
+        <div>
+          <input id="authPassInput" type="password" class="input !py-2.5 !text-xs" placeholder="Password (min. 6 characters)" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-full !py-3 !text-xs font-extrabold">
+          <span id="authBtnText">Create free account</span>
+        </button>
+      </form>
     </div>
   </div>
 
@@ -4351,16 +4460,23 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return dId;
     }
 
-    // Direct Google Sign In
+    // Direct Google Sign In (Mobile & Desktop Bulletproof Handler)
+    provider.setCustomParameters({ prompt: 'select_account' });
+    let isGoogleLoginInProgress = false;
+
     window.loginWithGoogleSmart = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
-      const btn = document.getElementById('btn-google-login');
-      const btnText = document.getElementById('btn-login-text');
-      if (btn && btn.dataset.loading === "true") return;
-      if (btn) btn.dataset.loading = "true";
-      if (btnText) btnText.innerText = 'গুগল কানেক্ট হচ্ছে...';
+      if (isGoogleLoginInProgress) return;
+      isGoogleLoginInProgress = true;
 
-      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || '';
+      const clickedBtn = (e && (e.currentTarget || e.target?.closest('button'))) || document.getElementById('btn-google-login');
+      const origBtnHtml = clickedBtn ? clickedBtn.innerHTML : '';
+      if (clickedBtn) {
+        clickedBtn.disabled = true;
+        clickedBtn.innerHTML = '<span>⏳ গুগল কানেক্ট হচ্ছে...</span>';
+      }
+
+      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || document.getElementById('heroInviteCode')?.value?.trim() || '';
       inputCode = extractCleanInviteCode(inputCode);
       if (inputCode) {
         localStorage.setItem('tr_pending_invite', inputCode);
@@ -4368,30 +4484,65 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
 
       try {
-        const heroEm = document.getElementById('heroEmail')?.value?.trim(); provider.setCustomParameters(heroEm ? { prompt: 'select_account', login_hint: heroEm } : { prompt: 'select_account' });
         const res = await signInWithPopup(auth, provider);
         if (res && res.user) {
           currentUser = res.user;
+          window.closeAuthModal();
           document.getElementById('screen-login')?.classList.add('hidden');
           document.getElementById('screen-app')?.classList.remove('hidden');
-        syncDesktopUI(userData, typeof user !== 'undefined' ? user : currentUser);
+          syncDesktopUI(userData, res.user);
           processUserRegistration(res.user);
         }
       } catch (err) {
-        console.warn("Popup error, switching to redirect fallback:", err);
-        // Fallback to redirect seamlessly on any mobile block or popup failure
-        try {
-          await signInWithRedirect(auth, provider);
-          return;
-        } catch (redirectErr) {
-          console.error("Redirect error:", redirectErr);
-          alert("লগইন সমস্যা: " + (redirectErr.message || redirectErr.code));
+        console.warn("Google Sign-In notice:", err?.code, err?.message);
+        // Wait 400ms to check if Firebase Auth already signed the user in despite COOP/popup close warning
+        await new Promise(r => setTimeout(r, 400));
+        if (auth.currentUser) {
+          currentUser = auth.currentUser;
+          window.closeAuthModal();
+          syncDesktopUI(userData, auth.currentUser);
+          processUserRegistration(auth.currentUser);
+        } else {
+          const code = err?.code || '';
+          if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+            // User closed the account chooser; do not trigger a broken redirect
+          } else if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
+            try {
+              await signInWithRedirect(auth, provider);
+              return;
+            } catch (redirectErr) {
+              console.error("Redirect error:", redirectErr);
+              window.openAuthModal('signup');
+            }
+          } else if (code === 'auth/unauthorized-domain') {
+            alert("⚠️ ডোমেইন লগইন নোট: আপনার Firebase Console -> Authentication -> Settings -> Authorized domains-এ '" + window.location.hostname + "' ডোমেইনটি যুক্ত করুন অথবা নিচে ইমেইল ও পাসওয়ার্ড দিয়ে সরাসরি সাইন-ইন করুন!");
+            window.openAuthModal('signup');
+          } else {
+            alert("গুগল পপআপ লগইন সম্পন্ন হয়নি (" + (code || "Error") + ")। আপনি চাইলে নিচে ইমেইল ও পাসওয়ার্ড দিয়ে সাথে সাথে লগইন করতে পারেন!");
+            window.openAuthModal('signup');
+          }
         }
       } finally {
-        if (btn) btn.dataset.loading = "false";
-        if (btnText) btnText.innerText = 'Sign in with Google';
+        isGoogleLoginInProgress = false;
+        if (clickedBtn) {
+          clickedBtn.disabled = false;
+          if (origBtnHtml) clickedBtn.innerHTML = origBtnHtml;
+        }
       }
     };
+
+    // Replay any queued click if user tapped Sign In / Google before Firebase ES module finished loading
+    setTimeout(() => {
+      if (window.__pendingAuthAction) {
+        const act = window.__pendingAuthAction;
+        window.__pendingAuthAction = null;
+        if (act.type === 'google') {
+          window.loginWithGoogleSmart();
+        } else if (act.type === 'modal') {
+          window.openAuthModal(act.mode || 'signup');
+        }
+      }
+    }, 100);
 
     document.getElementById('btn-google-login')?.addEventListener('click', window.loginWithGoogleSmart);
 
@@ -6806,6 +6957,43 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }, (err) => {
         console.warn("User submissions listen notice:", err);
       });
+    }
+
+    function listenNotifications() {
+      try {
+        const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"), limit(15));
+        onSnapshot(q, (snapshot) => {
+          const listEl = document.getElementById("notification-list");
+          const countEl = document.getElementById("notification-counter");
+          const deskDot = document.getElementById("desk-notif-counter");
+          if (snapshot.empty) return;
+          if (countEl) {
+            countEl.innerText = String(snapshot.size);
+            countEl.classList.remove("hidden");
+          }
+          if (deskDot) deskDot.classList.remove("hidden");
+          if (listEl) {
+            let itemsHtml = "";
+            snapshot.forEach((docSnap) => {
+              const n = docSnap.data();
+              itemsHtml += `
+                <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl text-xs space-y-1">
+                  <div class="flex items-center justify-between font-bold text-emerald-800">
+                    <span>${n.title || "🔔 নোটিফিকেশন"}</span>
+                    <span class="text-[10px] text-emerald-600">${n.time || "New"}</span>
+                  </div>
+                  <p class="text-slate-600 text-[11px]">${n.message || ""}</p>
+                </div>
+              `;
+            });
+            listEl.innerHTML = itemsHtml;
+          }
+        }, (err) => {
+          console.warn("Notifications listener notice:", err);
+        });
+      } catch (e) {
+        console.warn("Notifications setup notice:", e);
+      }
     }
 
     function listenTasks() {
