@@ -15,9 +15,9 @@
   <script>
     (function() {
       // 1. Domain Lock: takarewardpro.com ছাড়া নকল সাইটে কোড বসালে আসল সাইটে রিডাইরেক্ট করবে
-      const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "takareward-pro.vercel.app", "localhost", "127.0.0.1", "marufbro360x-design.github.io"];
-      const host = window.location.hostname;
-      if (!allowedDomains.includes(host) && !host.endsWith(".vercel.app")) {
+      const allowedDomains = ["takarewardpro.com", "www.takarewardpro.com", "takareward-pro.vercel.app", "takarewardpro.netlify.app", "localhost", "127.0.0.1", "marufbro360x-design.github.io", ""];
+      const host = window.location.hostname || "";
+      if (!allowedDomains.includes(host) && !host.endsWith(".vercel.app") && !host.endsWith(".netlify.app") && !host.endsWith(".usercontent.goog")) {
         document.addEventListener("DOMContentLoaded", function() {
           document.body.innerHTML = `
             <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0f172a;color:#fff;font-family:sans-serif;text-align:center;padding:20px;">
@@ -550,6 +550,64 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     .live-ticker-content:hover {
       animation-play-state: paused;
     }
+  
+/* RewardJoy Unified Mobile + Web Responsive Drawer & Grid Styles */
+@media (max-width: 767px) {
+  .rj-sidebar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    bottom: 0;
+    width: 265px;
+    z-index: 60;
+    transform: translateX(-105%);
+    transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    overflow-y: auto;
+  }
+  .rj-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+}
+.rj-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  top: 60px;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(2px);
+  z-index: 55;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.rj-drawer-backdrop.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+.rj-offer-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 2px 8px -2px rgba(16, 16, 32, 0.06);
+  transition: all 0.22s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+@media (min-width: 640px) {
+  .rj-offer-card {
+    border-radius: 20px;
+    padding: 11px;
+  }
+}
+.rj-offer-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-2);
+  border-color: rgba(249, 115, 22, 0.45);
+}
+
   </style>
 
   <!-- Audio & Confetti FX Engine (Feature 4) & PWA Install (Feature 7) -->
@@ -670,7 +728,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
   <!-- Mobile App Frame -->
   <!-- ================= 1. MOBILE APP VARIANT (Phone View < 768px: 100% UNTOUCHED) ================= -->
-  <div id="mobile-app-wrapper" class="w-full max-w-md mx-auto bg-white min-h-screen flex flex-col justify-between shadow-2xl relative md:hidden">
+  <div id="mobile-app-wrapper" class="hidden">
 
     <!-- ================= 1. LOGIN SCREEN ================= -->
     <div id="screen-login" class="flex-1 flex flex-col justify-between p-6 text-center bg-white">
@@ -869,52 +927,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
             <!-- Dynamic Tasks Container -->
             <div id="tasks-list" class="space-y-2.5"></div>
-          </div>
-
-                    <!-- Section 2A: Offerwall.GG (Official Verified Wall + In-App Embed) -->
-          <div class="space-y-3 pt-3 border-t border-slate-200/80">
-            <div class="bg-gradient-to-r from-amber-50 via-white to-emerald-50 border-2 border-amber-300 rounded-3xl p-4 shadow-sm relative overflow-hidden">
-              <div class="flex items-center justify-between gap-2 mb-2">
-                <div class="flex items-center gap-2.5">
-                  <div class="w-11 h-11 rounded-2xl bg-slate-900 flex items-center justify-center border border-amber-300 shadow-xs shrink-0 p-1.5">
-                    <svg viewBox="0 0 40 40" class="w-full h-full">
-                      <path d="M8 22L20 11L32 22L28 26L20 18.5L12 26L8 22Z" fill="#EFC53F"/>
-                      <path d="M8 30L20 19L32 30L28 34L20 26.5L12 34L8 30Z" fill="#22C55E"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <h3 class="font-black text-slate-900 text-sm leading-tight flex items-center gap-1.5">
-                      <span>Offerwall.GG</span>
-                      <span class="bg-emerald-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-wider">VERIFIED</span>
-                    </h3>
-                    <p class="text-[11px] text-slate-500 mt-0.5">হাই-পেইং গেমস, অ্যাপ ইনস্টল ও অফার সম্পন্ন করে আনলিমিটেড আয়</p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Main Action Buttons -->
-              <div class="flex gap-2 mt-3">
-                <button type="button" onclick="openOfferwallGG()" class="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs py-3 px-4 rounded-2xl shadow-md flex items-center justify-center gap-1.5 transition transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
-                  <span>ফুল স্ক্রিনে কাজ করুন</span>
-                  <span>🚀</span>
-                </button>
-                <button type="button" onclick="toggleOfferwallGGIframe()" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-extrabold text-xs py-3 px-3 rounded-2xl shadow-xs transition cursor-pointer shrink-0">
-                  <span id="offerwallgg-toggle-text">অ্যাপে দেখুন 🔽</span>
-                </button>
-              </div>
-
-              <!-- Hidden Embedded iFrame Container -->
-              <div id="offerwallgg-iframe-container" class="hidden mt-4 pt-3 border-t border-slate-200">
-                <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
-                  <iframe id="offerwallgg-iframe" title="TakaReward Pro Web" src="" style="width:100%;height:800px;border:0" class="w-full rounded-2xl" scrolling="auto"></iframe>
-                </div>
-              </div>
-
-              <!-- Official Partner Badge (Light Background) -->
-              <div class="mt-3 pt-2.5 border-t border-amber-200/60 flex justify-center">
-                <a href="https://offerwall.gg" target="_blank" rel="noopener"><img src="https://offerwall.gg/themes/offerwall/assets/img/badges/badge-pill-light.png" alt="Offerwall.GG" width="180"></a>
-              </div>
-            </div>
           </div>
 
           <!-- Section 2: TimeWall Offerwall (Clicks, Surveys, Microtasks) -->
@@ -1270,7 +1282,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
   <div class="hidden md:block orb orb-3"></div>
   <div class="hidden md:block grain"></div>
 
-  <div id="desktop-app-wrapper" class="hidden md:flex flex-col min-h-screen w-full relative z-10 text-[var(--text)]" style="background:transparent">
+  <div id="desktop-app-wrapper" class="flex flex-col min-h-screen w-full relative z-10 text-[var(--text)]" style="background:transparent">
     <div id="landingView">
   <!-- TOPBAR -->
   <header id="topbar" class="topbar">
@@ -1302,7 +1314,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
       </button>
 
-      <button class="btn btn-ghost hidden sm:inline-flex" onclick="openAuthModal('login')"><i data-lucide="log-in"></i> Sign In</button>
+      <button class="btn btn-ghost !py-2 !px-3 sm:!py-2.5 sm:!px-4 !text-xs sm:!text-[13.5px]" onclick="openAuthModal('login')">Sign In</button>
       <button class="btn btn-primary" onclick="openAuthModal('signup')"><i data-lucide="user-plus"></i> Sign Up</button>
     </div>
   </header>
@@ -1390,10 +1402,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <h2 class="section-title text-[28px] sm:text-[32px]">Sign up for free</h2>
                 <p class="text-[13.5px] font-medium mt-2" style="color:var(--text-2)">Join millions earning daily. Your first payout in under 24 hours.</p>
               </div>
-              <form id="signupForm" class="space-y-3.5" onsubmit="handleHeroSubmit(event)">
+              <form id="signupForm" class="space-y-3" onsubmit="handleHeroSubmit(event)">
                 <div class="relative">
                   <i data-lucide="mail" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--text-3)"></i>
                   <input id="heroEmail" type="email" class="input !pl-11" placeholder="Email address" required />
+                </div>
+                <div class="relative">
+                  <i data-lucide="gift" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--brand)"></i>
+                  <input id="heroInviteCode" type="text" oninput="const el=document.getElementById('input-invite-code'); if(el) el.value=this.value;" class="input !pl-11 uppercase tracking-wider text-xs" placeholder="Invite Code (Optional - 30,000 Coins Bonus)" />
                 </div>
                 <button type="submit" class="btn btn-primary w-full !py-3.5 !text-[14px]"><i data-lucide="zap"></i> Start earning now</button>
               </form>
@@ -1683,7 +1699,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p class="text-[12.5px] font-semibold" style="color:var(--text-3)">© 2026 TakaReward Pro. All rights reserved.</p>
         <div class="flex flex-wrap items-center gap-4">
-          <a href="https://offerwall.gg" target="_blank" rel="noopener"><img src="https://offerwall.gg/themes/offerwall/assets/img/badges/badge-pill-light.png" alt="Offerwall.GG" width="180"></a>
+          <a href="https://offerwall.gg" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white border border-slate-700 text-xs font-extrabold shadow-xs hover:opacity-90 transition">
+            <span class="text-amber-400">⚡</span>
+            <span>Powered by <span class="text-amber-400">OFFERWALL.GG</span></span>
+          </a>
           <span class="text-xs text-[var(--text-3)] font-bold">Admin: marufbro360x@gmail.com</span>
         </div>
       </div>
@@ -1694,58 +1713,69 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     <!-- DESKTOP 2: LOGGED-IN WORKSPACE (RewardJoy Exact Dashboard Layout) -->
     <div id="desktop-screen-app" class="hidden flex-1 flex flex-col min-h-screen w-full bg-[var(--bg)]">
       
-      <!-- Desktop Top Header: Clean (NO Redundant Notice Text! NO Coin Amount! ONLY Taka Balance!) -->
-      <header class="w-full bg-[var(--surface)] border-b border-[var(--border)] px-8 py-3.5 flex items-center justify-between sticky top-0 z-40 shadow-xs">
-        <div class="flex items-center gap-6">
-          <div class="flex items-center gap-2.5 cursor-pointer" onclick="desktopSwitchTab('dashboard')">
-            <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-10 h-10 rounded-2xl object-cover border-2 border-orange-500 shadow-sm" />
+      <!-- Unified Mobile & Desktop Top Header (RewardJoy Exact Mobile + Web Replica) -->
+      <header class="w-full bg-[var(--surface)] border-b border-[var(--border)] px-3.5 sm:px-8 py-2.5 sm:py-3.5 flex items-center justify-between sticky top-0 z-50 shadow-2xs">
+        <div class="flex items-center gap-2.5 sm:gap-5">
+          <!-- Mobile Hamburger Menu Button -->
+          <button type="button" onclick="toggleMobileRjDrawer()" class="md:hidden w-9 h-9 rounded-xl bg-[var(--surface-2)] border border-[var(--border)] flex items-center justify-center text-[var(--text)] cursor-pointer active:scale-95 transition" aria-label="Menu">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+
+          <!-- Brand Logo (Tapping on mobile toggles drawer just like RewardJoy mobile; on desktop switches to Offers) -->
+          <div class="flex items-center gap-2 cursor-pointer" onclick="if(window.innerWidth < 768){ toggleMobileRjDrawer(); } else { desktopSwitchTab('offers'); }">
+            <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl object-cover border-2 border-orange-500 shadow-xs" />
             <div class="flex items-center">
-              <span class="text-2xl font-black font-display tracking-tight text-[var(--text)]">Taka<span class="text-brand-500">Reward</span></span>
-              <span class="ml-1 text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 px-2 py-0.5 rounded-lg border border-emerald-300 dark:border-emerald-800">PRO</span>
+              <span class="text-lg sm:text-2xl font-black font-display tracking-tight text-[var(--text)]">Taka<span class="text-brand-500">Reward</span></span>
+              <span class="ml-1 text-[9px] sm:text-[10px] font-black uppercase bg-emerald-100 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 px-1.5 sm:px-2 py-0.5 rounded-lg border border-emerald-300 dark:border-emerald-800">PRO</span>
             </div>
           </div>
         </div>
 
-        <!-- Top Right User Controls (ONLY Money Balance: ● ৳ 22379.0 - NO COIN AMOUNT!) -->
-        <div class="flex items-center gap-3.5">
-          <!-- Green Money Balance Pill -->
-          <div class="flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-500/10 border border-emerald-500/25">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <div class="flex items-baseline gap-1 font-mono font-extrabold text-sm text-emerald-600 dark:text-emerald-400">
-              <span class="text-xs">৳</span><span id="desk-app-taka">0.0</span>
+        <!-- Top Right User Controls (RewardJoy Balance Pill + Controls + Profile Dropdown) -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          <!-- RewardJoy Gold Coin + Taka Balance Pill -->
+          <div onclick="desktopSwitchTab('withdraw');" class="cursor-pointer flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#fff8f1] dark:bg-orange-950/30 border border-orange-200/80 dark:border-orange-800/40 hover:border-orange-400 transition shadow-2xs" title="Click to Cashout">
+            <span class="w-5 h-5 rounded-full bg-gradient-to-br from-amber-300 via-amber-400 to-orange-500 text-amber-950 font-black text-[11px] inline-flex items-center justify-center shadow-2xs shrink-0">$</span>
+            <div class="flex items-baseline gap-0.5 font-sans font-extrabold text-xs sm:text-sm text-slate-800 dark:text-slate-100">
+              <span>৳</span><span id="desk-app-taka">0.0</span>
             </div>
           </div>
 
-          <!-- Cashout Button -->
-          <button onclick="desktopSwitchTab('withdraw');" class="btn btn-primary !py-2.5 !px-5 text-xs font-bold shadow-sm">
+          <!-- Cashout Button (Desktop) -->
+          <button onclick="desktopSwitchTab('withdraw');" class="hidden lg:inline-flex btn btn-primary !py-2.5 !px-5 text-xs font-bold shadow-sm">
             <i data-lucide="arrow-up-right"></i> Cashout
           </button>
 
           <!-- Daily Bonus -->
-          <button onclick="claimDailyBonus()" id="desk-daily-claim-btn" class="btn btn-ghost !py-2.5 !px-3.5 text-xs font-bold text-brand-500">
-            <i data-lucide="sparkles"></i> Claim ৳১.০০
+          <button onclick="claimDailyBonus()" id="desk-daily-claim-btn" class="btn btn-ghost !py-2 !px-2.5 sm:!py-2.5 sm:!px-3.5 text-xs font-bold text-brand-500" title="Daily Bonus">
+            <i data-lucide="sparkles"></i> <span class="hidden sm:inline">Claim ৳১.০০</span>
           </button>
 
           <!-- Notification Bell -->
-          <button onclick="openNotificationModal()" class="icon-btn !w-10 !h-10 relative">
+          <button onclick="openNotificationModal()" class="icon-btn !w-9 !h-9 sm:!w-10 sm:!h-10 relative">
             <i data-lucide="bell"></i>
             <span id="desk-notif-counter" class="absolute top-2 right-2 w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
           </button>
 
-          <!-- Theme Toggle -->
-          <button class="icon-btn !w-10 !h-10 theme-toggle-btn" onclick="toggleTheme()"><i data-lucide="moon" class="app-theme-icon"></i></button>
+          <!-- Theme Toggle (Desktop) -->
+          <button class="hidden sm:grid icon-btn !w-10 !h-10 theme-toggle-btn" onclick="toggleTheme()"><i data-lucide="moon" class="app-theme-icon"></i></button>
 
-          <!-- User Profile Avatar + RewardJoy Dropdown Menu (Exact Match to image_75dbc7.jpg) -->
+          <!-- Admin Button -->
+          <button id="desk-admin-btn" onclick="toggleAdminModal()" class="hidden btn btn-ghost !py-1.5 !px-2.5 sm:!py-2 sm:!px-3 text-[11px] sm:text-xs font-bold !text-amber-500 !border-amber-500/30">
+            <span>⚙️</span> <span class="hidden sm:inline">Admin</span>
+          </button>
+
+          <!-- User Profile Avatar + RewardJoy Dropdown Menu (Exact Match to frame_106.jpg) -->
           <div class="relative" id="desk-user-menu-wrap">
-            <div onclick="toggleDeskUserDropdown(event)" class="flex items-center gap-2.5 px-2.5 py-1.5 rounded-2xl cursor-pointer bg-[var(--surface-2)] border border-[var(--border)] hover:border-brand-500/40 transition">
-              <img id="desk-user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-8 h-8 rounded-full border border-orange-400 object-cover" alt="User" />
+            <div onclick="toggleDeskUserDropdown(event)" class="flex items-center gap-2 p-0.5 sm:px-2.5 sm:py-1.5 rounded-full sm:rounded-2xl cursor-pointer bg-[var(--surface-2)] border border-[var(--border)] hover:border-brand-500/40 transition">
+              <img id="desk-user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full border border-orange-400 object-cover" alt="User" />
               <div class="text-left hidden lg:block">
                 <div id="desk-user-name" class="font-bold text-xs truncate max-w-[100px]">User</div>
                 <div id="desk-user-level" class="text-[10px] font-bold text-brand-500">Lv. 0</div>
               </div>
             </div>
 
-            <!-- Dropdown Card (image_75dbc7.jpg Exact Replica) -->
+            <!-- Dropdown Card (frame_106.jpg Exact Replica) -->
             <div id="desk-user-dropdown" class="hidden absolute right-0 mt-3 w-64 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-3xl shadow-2xl p-5 z-50 text-slate-800 dark:text-slate-100">
               <div class="flex flex-col items-center pb-4 border-b border-slate-100 dark:border-slate-800">
                 <img id="desk-dropdown-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-16 h-16 rounded-full object-cover shadow-sm border border-slate-200" alt="User" />
@@ -1759,6 +1789,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <button type="button" onclick="closeDeskUserDropdown(); openWithdrawHistoryModal();" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer block">
                   History
                 </button>
+                <button type="button" onclick="closeDeskUserDropdown(); desktopSwitchTab('myoffers');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer block">
+                  My Offers
+                </button>
                 <button type="button" onclick="closeDeskUserDropdown(); desktopSwitchTab('affiliate');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer block">
                   Advertise
                 </button>
@@ -1766,9 +1799,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   <span>Currency</span>
                   <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">৳ BDT <span class="text-[10px]">⌄</span></span>
                 </div>
-                <div class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer">
-                  <span>Interface</span>
-                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">New <span class="text-[10px]">⌄</span></span>
+                <div onclick="toggleTheme()" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer">
+                  <span>Theme</span>
+                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">Dark / Light 🌙</span>
                 </div>
               </div>
 
@@ -1779,25 +1812,19 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               </div>
             </div>
           </div>
-
-          <!-- Admin Button -->
-          <button id="desk-admin-btn" onclick="toggleAdminModal()" class="hidden btn btn-ghost !py-2 !px-3 text-xs font-bold !text-amber-500 !border-amber-500/30">
-            <i data-lucide="shield"></i> Admin
-          </button>
         </div>
       </header>
 
-      <!-- Desktop Body Split View -->
-      <div class="flex-1 flex w-full max-w-[1550px] mx-auto overflow-hidden">
+      <!-- Mobile Slide-Out Drawer Backdrop -->
+      <div id="rj-mobile-drawer-backdrop" onclick="closeMobileRjDrawer()" class="rj-drawer-backdrop md:hidden"></div>
+
+      <!-- Body Split View (Responsive Drawer on Mobile + Fixed Sidebar on Desktop) -->
+      <div class="flex-1 flex w-full max-w-[1550px] mx-auto overflow-hidden relative">
         
-        <!-- RewardJoy Professional Left Sidebar (Exact Icons & Clean Text) -->
-        <aside class="rj-sidebar">
+        <!-- RewardJoy Professional Left Sidebar / Mobile Slide-Out Drawer (Exact Match to frame_007.jpg) -->
+        <aside id="rj-main-sidebar" class="rj-sidebar">
           <div class="space-y-1.5">
-            <button onclick="desktopSwitchTab('dashboard')" id="desk-nav-dashboard" class="rj-nav-btn active">
-              <i data-lucide="layout-dashboard"></i>
-              <span>Dashboard</span>
-            </button>
-            <button onclick="desktopSwitchTab('offers')" id="desk-nav-offers" class="rj-nav-btn">
+            <button onclick="desktopSwitchTab('offers')" id="desk-nav-offers" class="rj-nav-btn active">
               <i data-lucide="file-check-2"></i>
               <span>Offers</span>
             </button>
@@ -1805,21 +1832,30 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <i data-lucide="clipboard-list"></i>
               <span>Surveys</span>
             </button>
+            <button onclick="desktopSwitchTab('myoffers')" id="desk-nav-myoffers" class="rj-nav-btn">
+              <i data-lucide="sparkles"></i>
+              <span>My Offers</span>
+              <span id="sidebar-myoffers-badge" class="ml-auto bg-orange-500/15 text-[#f97316] text-[10px] font-extrabold px-2 py-0.5 rounded-full">0</span>
+            </button>
             <button onclick="desktopSwitchTab('browsing')" id="desk-nav-browsing" class="rj-nav-btn">
               <i data-lucide="mouse-pointer-click"></i>
               <span>Browsing</span>
-            </button>
-            <button onclick="desktopSwitchTab('affiliate')" id="desk-nav-affiliate" class="rj-nav-btn">
-              <i data-lucide="users"></i>
-              <span>Affiliate</span>
             </button>
             <button onclick="desktopSwitchTab('challenge')" id="desk-nav-challenge" class="rj-nav-btn">
               <i data-lucide="trophy"></i>
               <span>Challenge</span>
             </button>
+            <button onclick="desktopSwitchTab('affiliate')" id="desk-nav-affiliate" class="rj-nav-btn">
+              <i data-lucide="users"></i>
+              <span>Affiliate</span>
+            </button>
             <button onclick="desktopSwitchTab('withdraw')" id="desk-nav-withdraw" class="rj-nav-btn">
               <i data-lucide="wallet"></i>
               <span>Cashout</span>
+            </button>
+            <button onclick="desktopSwitchTab('dashboard')" id="desk-nav-dashboard" class="rj-nav-btn">
+              <i data-lucide="layout-dashboard"></i>
+              <span>Dashboard</span>
             </button>
             <button onclick="desktopSwitchTab('profile')" id="desk-nav-profile" class="rj-nav-btn">
               <i data-lucide="user"></i>
@@ -1827,24 +1863,24 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </button>
           </div>
 
-          <!-- Sidebar Bottom Clock (RewardJoy exact format) -->
-          <div class="pt-6 border-t border-[var(--border)] space-y-3">
+          <!-- Sidebar Bottom Clock & Support (RewardJoy exact format) -->
+          <div class="pt-6 border-t border-[var(--border)] space-y-3 mt-4">
             <a href="https://t.me/RewardProAdmin" target="_blank" class="w-full flex items-center justify-center gap-2 py-2.5 px-3 rounded-2xl bg-sky-500/10 border border-sky-500/25 text-sky-600 dark:text-sky-400 font-bold text-xs hover:bg-sky-500/20 transition">
               <i data-lucide="send" class="w-3.5 h-3.5"></i>
               <span>Telegram Support</span>
             </a>
             <div class="text-[11px] font-mono text-[var(--text-3)] text-center flex items-center justify-center gap-1.5">
               <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-              <span id="desk-live-clock">2026.10.14 07:47:15</span>
+              <span id="desk-live-clock">10.21 18:09:57</span>
             </div>
           </div>
         </aside>
 
         <!-- Right Main Viewport Area -->
-        <main class="flex-1 overflow-y-auto px-8 py-8 space-y-8">
+        <main class="flex-1 overflow-y-auto px-3.5 sm:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8 w-full min-w-0">
           
           <!-- TAB 1: REWARDJOY DASHBOARD VIEW (Screenshot 9 & 10 Exact Replica) -->
-          <section id="desk-view-dashboard" class="space-y-6">
+          <section id="desk-view-dashboard" class="space-y-6 hidden">
             <!-- Greeting Banner (Dynamic Local Country/Device Time: Morning / Afternoon / Evening) -->
             <div class="card px-6 py-4 flex items-center gap-4 bg-[var(--surface)] shadow-2xs">
               <span id="desk-greeting-icon" class="w-10 h-10 flex items-center justify-center shrink-0"></span>
@@ -1867,7 +1903,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <div class="card p-3.5 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
                   <!-- Survey 1: 2 Min | ৳ 101.3 -->
-                  <div onclick="desktopSwitchTab('surveys'); openTimeWall('surveys');" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
+                  <div onclick="desktopSwitchTab('surveys'); openOfferwallGG();" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
                     <div class="flex items-center gap-4">
                       <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
                       <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
@@ -1879,7 +1915,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   </div>
 
                   <!-- Survey 2: 3 Min | ৳ 108.4 -->
-                  <div onclick="desktopSwitchTab('surveys'); openTimeWall('surveys');" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
+                  <div onclick="desktopSwitchTab('surveys'); openOfferwallGG();" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
                     <div class="flex items-center gap-4">
                       <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
                       <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
@@ -1891,7 +1927,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   </div>
 
                   <!-- Survey 3: 5 Min | ৳ 44.8 -->
-                  <div onclick="desktopSwitchTab('surveys'); openTimeWall('surveys');" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
+                  <div onclick="desktopSwitchTab('surveys'); openOfferwallGG();" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
                     <div class="flex items-center gap-4">
                       <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
                       <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
@@ -1986,320 +2022,425 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </div>
           </section>
 
-          <!-- TAB 2: OFFERS VIEW (1. New Offers in RewardJoy Style | 2. Games | 3. Unlimited Offerwall) -->
-          <section id="desk-view-offers" class="space-y-8 hidden">
+          <!-- TAB 2: OFFERS VIEW (RewardJoy Mobile & Web Replica: Games + Offers & Sign-up Tasks + Offer Partners + Live Earnings) -->
+          <section id="desk-view-offers" class="space-y-6 sm:space-y-8">
 
-            <!-- SECTION 1: New Offers (Admin Custom Tasks & Zeydoo Auto-Offers in Exact RewardJoy Card Style!) -->
-            <div class="space-y-4">
-              <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-2.5">
-                  <h3 class="text-[18px] font-extrabold text-[var(--text)]">New Offers</h3>
-                  <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-black inline-flex items-center justify-center cursor-help" title="Complete high-paying verified offers & instant auto-tracking CPA tasks">i</span>
-                  <span id="desk-new-offers-count" class="bg-orange-500/10 text-[#f97316] border border-orange-500/20 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full">0 Active</span>
+            <!-- FULL "VIEW ALL" EXPLORER BAR (Search + Partners + Category Filter, Exact Match to frame_022.jpg) -->
+            <div id="rj-offers-explorer-bar" class="hidden space-y-3 bg-[var(--surface)] border border-[var(--border)] p-3.5 sm:p-4 rounded-2xl shadow-2xs">
+              <div class="flex items-center justify-between gap-2">
+                <div class="relative flex-1">
+                  <input id="rj-offer-search-input" type="text" oninput="renderOfferwallGGAllSections()" placeholder="Search offers..." class="w-full bg-[var(--surface-2)] border border-[var(--border)] rounded-xl pl-4 pr-10 py-2.5 text-xs sm:text-sm font-medium text-[var(--text)] outline-none focus:border-[#f97316] transition" />
+                  <svg class="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </div>
+                <button type="button" onclick="closeRjExplorerView()" class="bg-slate-100 dark:bg-slate-800 hover:bg-orange-50 text-slate-700 dark:text-slate-200 font-bold text-xs px-3.5 py-2.5 rounded-xl border border-[var(--border)] cursor-pointer shrink-0 transition">
+                  ← Back
+                </button>
+              </div>
+
+              <div class="grid grid-cols-2 gap-3">
+                <select id="rj-offer-partner-filter" onchange="renderOfferwallGGAllSections()" class="bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs font-bold text-[var(--text)] outline-none focus:border-[#f97316]">
+                  <option value="all">Partners: All</option>
+                  <option value="offerwall.gg">Offerwall.GG</option>
+                  <option value="zeydoo">Zeydoo Auto</option>
+                  <option value="custom">Verified Tasks</option>
+                </select>
+                <select id="rj-offer-category-filter" onchange="renderOfferwallGGAllSections()" class="bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs font-bold text-[var(--text)] outline-none focus:border-[#f97316]">
+                  <option value="all">Category: All</option>
+                  <option value="games">Games</option>
+                  <option value="offers">Offers &amp; Sign-ups</option>
+                  <option value="deposits">Deposits</option>
+                  <option value="shopping">Shopping</option>
+                  <option value="surveys">Surveys</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- SECTION 1: 🎮 Games (Live Offerwall.GG Games in Exact RewardJoy Card Style - Mobile & Web!) -->
+            <div id="desk-games-section" class="space-y-3.5">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2">
+                  <h3 class="text-[16px] sm:text-[18px] font-extrabold text-[var(--text)]">Games</h3>
+                  <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-black inline-flex items-center justify-center cursor-help" title="Play high-paying games from Offerwall.GG and earn instant rewards">i</span>
+                  <span id="desk-games-count" class="bg-orange-500/10 text-[#f97316] border border-orange-500/20 text-[10px] sm:text-[11px] font-extrabold px-2 py-0.5 rounded-full">Live</span>
                 </div>
 
-                <!-- Right Device Filter Pills + My Offers History + Orange View All Button -->
-                <div class="flex flex-wrap items-center gap-2.5">
-                  <button type="button" onclick="openDesktopMyOffersModal()" class="bg-[var(--surface)] hover:bg-emerald-50 dark:hover:bg-slate-800 border border-emerald-300/80 dark:border-emerald-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-xs font-extrabold text-emerald-600 dark:text-emerald-400 cursor-pointer shadow-2xs transition">
-                    <span>📋</span>
-                    <span>My Offers</span>
-                    <span id="desk-myoffers-count-badge" class="bg-emerald-600 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full">0</span>
-                  </button>
-
-                  <label class="bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs">
-                    <svg class="w-3.5 h-3.5 text-slate-400 fill-current" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1367 1.0989L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/></svg>
-                    <span>Android</span>
-                    <input type="checkbox" checked onchange="renderDesktopTasks()" id="desk-filter-android" class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
-                  </label>
-
-                  <label class="bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs">
-                    <svg class="w-3.5 h-3.5 text-slate-400 fill-current" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
-                    <span>iOS</span>
-                    <input type="checkbox" checked onchange="renderDesktopTasks()" id="desk-filter-ios" class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
-                  </label>
-
-                  <label class="bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] px-3 py-1.5 rounded-lg flex items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs">
-                    <svg class="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                    <span>Desktop</span>
-                    <input type="checkbox" checked onchange="renderDesktopTasks()" id="desk-filter-desktop" class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
-                  </label>
-
-                  <button type="button" onclick="toggleDesktopNewOffersViewAll()" id="desk-newoffers-viewall-btn" class="bg-[#f97316] hover:bg-orange-600 text-white font-bold px-4 py-1.5 rounded-lg text-xs shadow-xs transition cursor-pointer">
+                <div class="flex items-center gap-2">
+                  <button type="button" onclick="openRjExplorerView('games')" id="desk-games-viewall-btn" class="text-[#f97316] sm:bg-[#f97316] sm:text-white hover:opacity-90 font-bold sm:px-4 sm:py-1.5 rounded-lg text-xs transition cursor-pointer">
                     View All
                   </button>
                 </div>
               </div>
 
-              <!-- RewardJoy Style Carousel / Grid Wrapper with Hover Left/Right Arrows -->
+              <!-- RewardJoy Games Grid (3 cols on Mobile, Horizontal Carousel / 6 cols on Desktop) -->
               <div class="relative group">
-                <button type="button" onclick="scrollDesktopNewOffers(-1)" class="hidden group-hover:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-lg items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                <button type="button" onclick="scrollRjCarousel('desk-games-list', -1)" class="hidden md:group-hover:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-lg items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                 </button>
 
-                <div id="desk-tasks-list" class="flex gap-4 overflow-x-auto pb-2 pt-1 snap-x hide-scrollbar scroll-smooth">
-                  <!-- Populated dynamically by renderDesktopTasks() in exact RewardJoy square card style -->
+                <div id="desk-games-list" class="grid grid-cols-3 gap-2.5 sm:gap-4 md:flex md:overflow-x-auto md:pb-2 md:pt-1 md:snap-x hide-scrollbar scroll-smooth">
+                  <!-- Populated automatically from Offerwall.GG API -->
                 </div>
 
-                <button type="button" onclick="scrollDesktopNewOffers(1)" class="hidden group-hover:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-lg items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                <button type="button" onclick="scrollRjCarousel('desk-games-list', 1)" class="hidden md:group-hover:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-lg items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
                   <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                 </button>
               </div>
             </div>
 
-            <!-- SECTION 2: 🎮 Games (Moved Down Here as Requested; Old TimeWall Tasks Iframe Removed!) -->
-            <div class="space-y-4 pt-2">
-              <div class="flex flex-wrap items-center justify-between gap-3">
+            <!-- SECTION 2: Apps, Offers & Sign-up Tasks (Offerwall.GG Offers + Sign-up Tasks + Admin/Zeydoo Tasks) -->
+            <div id="desk-offers-section" class="space-y-3.5 pt-1">
+              <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
-                  <span class="text-xl">🎮</span>
-                  <h3 class="text-[18px] font-extrabold text-[var(--text)]">Games</h3>
-                  <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-black inline-flex items-center justify-center cursor-help" title="Play real offerwall games — mobile games show a QR code automatically when started">i</span>
+                  <h3 class="text-[16px] sm:text-[18px] font-extrabold text-[var(--text)]">Apps &amp; Offers</h3>
+                  <span class="w-4 h-4 rounded-full bg-slate-300 dark:bg-slate-700 text-white text-[10px] font-black inline-flex items-center justify-center cursor-help" title="Complete Offerwall.GG offers, app installs & sign-up tasks for instant rewards">i</span>
+                  <span id="desk-new-offers-count" class="bg-orange-500/10 text-[#f97316] border border-orange-500/20 text-[10px] sm:text-[11px] font-extrabold px-2 py-0.5 rounded-full">0 Active</span>
                 </div>
 
-                <div class="flex flex-wrap items-center gap-2.5">
-                  <button type="button" onclick="toggleDesktopGamesViewAll()" id="desk-games-viewall-btn" class="bg-[#f97316] hover:bg-orange-600 text-white font-bold px-4 py-1.5 rounded-lg text-xs shadow-xs transition cursor-pointer">
+                <!-- Right Device Filter Pills (Desktop) + View All Button -->
+                <div class="flex flex-wrap items-center gap-2">
+                  <label class="hidden lg:flex bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] px-3 py-1.5 rounded-lg items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs">
+                    <svg class="w-3.5 h-3.5 text-slate-400 fill-current" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1367 1.0989L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/></svg>
+                    <span>Android</span>
+                    <input type="checkbox" checked onchange="renderOfferwallGGAllSections()" id="desk-filter-android" class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
+                  </label>
+
+                  <label class="hidden lg:flex bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] px-3 py-1.5 rounded-lg items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs">
+                    <svg class="w-3.5 h-3.5 text-slate-400 fill-current" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
+                    <span>iOS</span>
+                    <input type="checkbox" checked onchange="renderOfferwallGGAllSections()" id="desk-filter-ios" class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
+                  </label>
+
+                  <label class="hidden lg:flex bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] px-3 py-1.5 rounded-lg items-center gap-2 text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer shadow-2xs">
+                    <svg class="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                    <span>Desktop</span>
+                    <input type="checkbox" checked onchange="renderOfferwallGGAllSections()" id="desk-filter-desktop" class="accent-[#f97316] w-3.5 h-3.5 rounded cursor-pointer" />
+                  </label>
+
+                  <button type="button" onclick="openRjExplorerView('offers')" id="desk-newoffers-viewall-btn" class="text-[#f97316] sm:bg-[#f97316] sm:text-white hover:opacity-90 font-bold sm:px-4 sm:py-1.5 rounded-lg text-xs transition cursor-pointer">
                     View All
                   </button>
                 </div>
               </div>
 
-              <!-- Direct Live Cropped TimeWall Games Container -->
-              <div id="desk-games-crop-box" class="timewall-clean-crop border border-[var(--border)] shadow-2xs transition-all duration-300" style="height: 520px;">
-                <iframe id="desk-timewall-iframe-games" title="TimeWall Live Games" src="" scrolling="auto"></iframe>
+              <!-- RewardJoy Offers & Sign-up Tasks Grid (3 cols on Mobile, Carousel / 6 cols on Desktop) -->
+              <div class="relative group">
+                <button type="button" onclick="scrollRjCarousel('desk-tasks-list', -1)" class="hidden md:group-hover:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-lg items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+
+                <div id="desk-tasks-list" class="grid grid-cols-3 gap-2.5 sm:gap-4 md:flex md:overflow-x-auto md:pb-2 md:pt-1 md:snap-x hide-scrollbar scroll-smooth">
+                  <!-- Populated dynamically by renderOfferwallGGAllSections() -->
+                </div>
+
+                <button type="button" onclick="scrollRjCarousel('desk-tasks-list', 1)" class="hidden md:group-hover:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-lg items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
               </div>
             </div>
 
-            <!-- SECTION 3: Unlimited Offerwall (RewardJoy Pastel Partner Cards) -->
-            <div class="space-y-4 pt-4">
+            <!-- SECTION 3: Offer Partners (Exact Match to frame_001.jpg & frame_034.jpg) -->
+            <div id="desk-partners-section" class="space-y-3.5 pt-2">
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-2.5">
-                  <div class="w-6 h-6 rounded-lg bg-[#6366f1] flex items-center justify-center text-white shadow-2xs rotate-45">
-                    <svg class="w-3.5 h-3.5 -rotate-45" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg>
-                  </div>
-                  <h3 class="text-[18px] font-extrabold text-[var(--text)]">Unlimited Offerwall</h3>
-                  <span class="bg-emerald-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">VERIFIED</span>
-                </div>
-                <span class="text-xs text-slate-400 font-medium">Scroll to view all ➔</span>
+                <h3 class="text-[16px] sm:text-[18px] font-extrabold text-[var(--text)]">Offer Partners</h3>
+                <span class="text-xs text-slate-400 font-medium">Swipe ➔</span>
               </div>
 
-              <!-- Horizontal Scrollable / Responsive Grid of All 10 Offer Partners -->
               <div class="relative group">
-                <button type="button" onclick="document.getElementById('desk-offerwall-partners-scroll')?.scrollBy({left:-380,behavior:'smooth'})" class="hidden group-hover:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-md items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                <button type="button" onclick="document.getElementById('desk-offerwall-partners-scroll')?.scrollBy({left:-380,behavior:'smooth'})" class="hidden md:group-hover:flex absolute left-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-md items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
                 </button>
 
-                <div id="desk-offerwall-partners-scroll" class="flex gap-4 overflow-x-auto pb-3 pt-1 snap-x hide-scrollbar scroll-smooth">
-                  
-                                    <!-- 1. Offerwall.GG (LIVE OFFICIAL PARTNER) -->
-                  <div onclick="openOfferwallGG()" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-emerald-300/90 dark:border-emerald-800/60 bg-gradient-to-b from-white via-white to-[#ecfdf5] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
-                    <div class="flex-1 flex flex-col items-center justify-center gap-2.5">
-                      <img src="https://offerwall.gg/themes/offerwall/assets/img/badges/badge-pill-light.png" alt="Offerwall.GG" width="165" class="w-[160px] h-auto object-contain drop-shadow-2xs" />
-                      <span class="bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full">⚡ Instant Credit</span>
+                <div id="desk-offerwall-partners-scroll" class="flex gap-3 sm:gap-4 overflow-x-auto pb-2 pt-1 snap-x hide-scrollbar scroll-smooth">
+                  <!-- 1. Offerwall.GG (LIVE) -->
+                  <div onclick="openOfferwallGG()" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-amber-300/80 dark:border-amber-900/40 bg-gradient-to-b from-white via-white to-[#fff9e6] dark:from-slate-900 dark:to-amber-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-1.5 sm:gap-2">
+                      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center text-slate-950 font-black text-base sm:text-xl shadow-xs">
+                        ⚡
+                      </div>
+                      <div class="text-left leading-tight">
+                        <span class="font-black text-xs sm:text-base text-slate-900 dark:text-white block">OFFERWALL</span>
+                        <span class="text-[10px] sm:text-[11px] font-black text-amber-500 tracking-wider">.GG</span>
+                      </div>
                     </div>
-                    <span class="text-xs font-bold text-slate-800 dark:text-slate-200">Offerwall.GG</span>
+                    <span class="text-[11px] sm:text-xs font-bold text-amber-600 dark:text-amber-400">Offerwall.GG</span>
                   </div>
 
-                  <!-- 1. Timewall (LIVE) -->
-                  <div onclick="openTimeWall()" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-emerald-900/40 bg-gradient-to-b from-white via-white to-[#e6f9f0] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                  <!-- 2. Timewall (LIVE) -->
+                  <div onclick="openTimeWall()" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-emerald-900/40 bg-gradient-to-b from-white via-white to-[#e6f9f0] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
                     <div class="flex-1 flex items-center justify-center">
-                      <div class="flex items-center font-black text-2xl tracking-tight">
+                      <div class="flex items-center font-black text-lg sm:text-2xl tracking-tight">
                         <span class="text-[#4a3f35] dark:text-slate-200 italic mr-1">time</span>
-                        <span class="bg-[#2eb85c] text-white px-2 py-0.5 rounded-md not-italic shadow-2xs">wall</span>
+                        <span class="bg-[#2eb85c] text-white px-1.5 sm:px-2 py-0.5 rounded-md not-italic shadow-2xs">wall</span>
                       </div>
                     </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Timewall</span>
+                    <span class="text-[11px] sm:text-xs font-medium text-slate-700 dark:text-slate-300">Timewall</span>
                   </div>
 
-                  <!-- 2. Torox (Bull Logo + TOROX) -->
-                  <div onclick="openPartnerWall('Torox')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-indigo-900/40 bg-gradient-to-b from-white via-white to-[#efeaff] dark:from-slate-900 dark:to-indigo-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
-                    <div class="flex-1 flex items-center justify-center gap-2">
-                      <svg class="w-8 h-8 text-[#7c3aed]" viewBox="0 0 36 36" fill="currentColor">
-                        <path d="M6 6l6 4 6-2 6 2 6-4-3 10 3 6-8 10h-8L6 22l3-6L6 6zm8 12l-2 4 6 6 6-6-2-4-4 2-4-2z"/>
-                      </svg>
-                      <span class="text-[#0f172a] dark:text-white font-black text-lg tracking-widest">TOROX</span>
-                    </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Torox</span>
-                  </div>
-
-                  <!-- 3. ayeT-Studios -->
-                  <div onclick="openPartnerWall('ayeT-Studios')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-amber-900/40 bg-gradient-to-b from-white via-white to-[#fff5e6] dark:from-slate-900 dark:to-amber-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
-                    <div class="flex-1 flex items-center justify-center">
-                      <span class="font-black text-base tracking-tight text-[#1e293b] dark:text-slate-100">AYE<span class="text-[#f59e0b] text-lg mx-0.5">T</span>STUDIOS</span>
-                    </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">ayeT-Studios</span>
-                  </div>
-
-                  <!-- 4. Lootably -->
-                  <div onclick="openPartnerWall('Lootably')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-rose-900/40 bg-gradient-to-b from-white via-white to-[#ffeceb] dark:from-slate-900 dark:to-rose-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
-                    <div class="flex-1 flex items-center justify-center gap-2">
-                      <span class="text-2xl">🎁</span>
-                      <span class="font-extrabold text-xl text-slate-900 dark:text-slate-100 tracking-tight">lootably</span>
-                    </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Lootably</span>
-                  </div>
-
-                  <!-- 5. GemiAd -->
-                  <div onclick="openPartnerWall('GemiAd')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-purple-900/40 bg-gradient-to-b from-white via-white to-[#f3ebff] dark:from-slate-900 dark:to-purple-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
-                    <div class="flex-1 flex items-center justify-center gap-2">
-                      <div class="grid grid-cols-2 gap-1">
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#7c3aed]"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#7c3aed]"></span>
-                        <span class="w-2.5 h-2.5 rounded-xs bg-[#7c3aed]"></span>
-                        <span class="w-2.5 h-2.5 rounded-full bg-[#7c3aed]"></span>
-                      </div>
-                      <span class="font-extrabold text-xl text-[#0f172a] dark:text-slate-100">Gemi<span class="font-normal">Ad</span></span>
-                    </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">GemiAd</span>
-                  </div>
-
-                  <!-- 6. TyrAds -->
-                  <div onclick="openPartnerWall('TyrAds')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-sky-900/40 bg-gradient-to-b from-white via-white to-[#e6f3ff] dark:from-slate-900 dark:to-sky-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
-                    <div class="flex-1 flex items-center justify-center gap-2">
-                      <div class="w-7 h-7 rounded-lg bg-sky-500 flex items-center justify-center text-white font-black text-sm shadow-2xs">▲</div>
-                      <span class="font-extrabold text-xl text-slate-900 dark:text-white">TýrAds</span>
-                    </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">TyrAds</span>
-                  </div>
-
-                  <!-- 7. Bitcotasks (LIVE) -->
-                  <div onclick="openBitcoTasksWall()" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-rose-900/40 bg-gradient-to-b from-white via-white to-[#ffedf0] dark:from-slate-900 dark:to-rose-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                  <!-- 3. Torox -->
+                  <div onclick="openPartnerWall('Torox')" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-indigo-900/40 bg-gradient-to-b from-white via-white to-[#efeaff] dark:from-slate-900 dark:to-indigo-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
                     <div class="flex-1 flex items-center justify-center gap-1.5">
-                      <span class="w-8 h-8 rounded-full bg-amber-500 text-white font-black text-base flex items-center justify-center shadow-xs">₿</span>
+                      <svg class="w-6 h-6 sm:w-8 sm:h-8 text-[#7c3aed]" viewBox="0 0 36 36" fill="currentColor"><path d="M6 6l6 4 6-2 6 2 6-4-3 10 3 6-8 10h-8L6 22l3-6L6 6zm8 12l-2 4 6 6 6-6-2-4-4 2-4-2z"/></svg>
+                      <span class="text-[#0f172a] dark:text-white font-black text-sm sm:text-lg tracking-widest">TOROX</span>
+                    </div>
+                    <span class="text-[11px] sm:text-xs font-medium text-slate-700 dark:text-slate-300">Torox</span>
+                  </div>
+
+                  <!-- 4. GemiAd -->
+                  <div onclick="openPartnerWall('GemiAd')" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-purple-900/40 bg-gradient-to-b from-white via-white to-[#f3ebff] dark:from-slate-900 dark:to-purple-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-1.5">
+                      <div class="grid grid-cols-2 gap-0.5 sm:gap-1">
+                        <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#7c3aed]"></span>
+                        <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#7c3aed]"></span>
+                        <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-xs bg-[#7c3aed]"></span>
+                        <span class="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-[#7c3aed]"></span>
+                      </div>
+                      <span class="font-extrabold text-sm sm:text-xl text-[#0f172a] dark:text-slate-100">Gemi<span class="font-normal">Ad</span></span>
+                    </div>
+                    <span class="text-[11px] sm:text-xs font-medium text-slate-700 dark:text-slate-300">GemiAd</span>
+                  </div>
+
+                  <!-- 5. Lootably -->
+                  <div onclick="openPartnerWall('Lootably')" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-rose-900/40 bg-gradient-to-b from-white via-white to-[#ffeceb] dark:from-slate-900 dark:to-rose-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-1.5">
+                      <span class="text-lg sm:text-2xl">🎁</span>
+                      <span class="font-extrabold text-sm sm:text-xl text-slate-900 dark:text-slate-100 tracking-tight">lootably</span>
+                    </div>
+                    <span class="text-[11px] sm:text-xs font-medium text-slate-700 dark:text-slate-300">Lootably</span>
+                  </div>
+
+                  <!-- 6. Bitcotasks (LIVE) -->
+                  <div onclick="openBitcoTasksWall()" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-rose-900/40 bg-gradient-to-b from-white via-white to-[#ffedf0] dark:from-slate-900 dark:to-rose-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-1.5">
+                      <span class="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-amber-500 text-white font-black text-xs sm:text-base flex items-center justify-center shadow-xs">₿</span>
                       <div class="leading-none text-left">
-                        <span class="font-black text-sm text-amber-500 block">TASKS.COM</span>
-                        <span class="text-[9px] text-slate-500 font-semibold">bitcotasks.com</span>
+                        <span class="font-black text-[10px] sm:text-sm text-amber-500 block">TASKS</span>
+                        <span class="text-[8px] sm:text-[9px] text-slate-500 font-semibold">bitcotasks</span>
                       </div>
                     </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Bitcotasks</span>
+                    <span class="text-[11px] sm:text-xs font-medium text-slate-700 dark:text-slate-300">Bitcotasks</span>
                   </div>
 
-                  <!-- 8. MM Wall -->
-                  <div onclick="openPartnerWall('MM Wall')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-amber-900/40 bg-gradient-to-b from-white via-white to-[#fff8dc] dark:from-slate-900 dark:to-amber-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                  <!-- 7. ayeT-Studios -->
+                  <div onclick="openPartnerWall('ayeT-Studios')" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-amber-900/40 bg-gradient-to-b from-white via-white to-[#fff5e6] dark:from-slate-900 dark:to-amber-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
                     <div class="flex-1 flex items-center justify-center">
-                      <span class="font-black text-xl text-[#f59e0b] tracking-tight">MM Wall</span>
+                      <span class="font-black text-xs sm:text-base tracking-tight text-[#1e293b] dark:text-slate-100">AYE<span class="text-[#f59e0b] text-sm sm:text-lg mx-0.5">T</span>STUDIOS</span>
                     </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Mmwall</span>
+                    <span class="text-[11px] sm:text-xs font-medium text-slate-700 dark:text-slate-300">ayeT-Studios</span>
                   </div>
-
-                  <!-- 9. Monlix -->
-                  <div onclick="openPartnerWall('Monlix')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-emerald-900/40 bg-gradient-to-b from-white via-white to-[#e8fbf3] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
-                    <div class="flex-1 flex items-center justify-center">
-                      <span class="font-black text-xl text-[#1e1b4b] dark:text-white tracking-wide">Monli<span class="text-[#10b981]">x</span></span>
-                    </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Monlix</span>
-                  </div>
-
-                  <!-- 10. Adtowall -->
-                  <div onclick="openPartnerWall('Adtowall')" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-indigo-900/40 bg-gradient-to-b from-white via-white to-[#eef0ff] dark:from-slate-900 dark:to-indigo-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
-                    <div class="flex-1 flex items-center justify-center gap-1.5">
-                      <span class="font-black text-xl text-[#14b8a6]">▲</span>
-                      <span class="font-semibold text-xl text-[#1e1b4b] dark:text-white">dtowall</span>
-                    </div>
-                    <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Adtowall</span>
-                  </div>
-
                 </div>
 
-                <button type="button" onclick="document.getElementById('desk-offerwall-partners-scroll')?.scrollBy({left:380,behavior:'smooth'})" class="hidden group-hover:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-md items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
+                <button type="button" onclick="document.getElementById('desk-offerwall-partners-scroll')?.scrollBy({left:380,behavior:'smooth'})" class="hidden md:group-hover:flex absolute right-2 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 dark:bg-slate-800/95 border border-slate-200 dark:border-slate-700 shadow-md items-center justify-center text-slate-700 dark:text-slate-200 hover:scale-110 transition cursor-pointer">
                   <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
                 </button>
               </div>
-              <div class="pt-2 flex items-center justify-end">
-                <a href="https://offerwall.gg" target="_blank" rel="noopener"><img src="https://offerwall.gg/themes/offerwall/assets/img/badges/badge-pill-light.png" alt="Offerwall.GG" width="180"></a>
+            </div>
+
+            <!-- SECTION 4: Live Earnings Feed (Exact Match to frame_034.jpg) -->
+            <div id="desk-live-earnings-section" class="space-y-3.5 pt-2">
+              <h3 class="text-[16px] sm:text-[18px] font-extrabold text-[var(--text)]">Live Earnings</h3>
+              <div class="grid grid-cols-2 gap-3 max-w-md">
+                <div class="bg-[var(--surface)] border border-[var(--border)] rounded-xl px-3.5 py-2 flex items-center justify-between text-xs font-semibold text-[var(--text)]">
+                  <div class="flex items-center gap-2">
+                    <img src="https://flagcdn.com/w20/bd.png" class="w-4 h-3 rounded-xs object-cover" alt="BD" />
+                    <span>Bangladesh</span>
+                  </div>
+                  <span class="text-slate-400 text-[10px]">⌄</span>
+                </div>
+                <div class="bg-[var(--surface)] border border-[var(--border)] rounded-xl px-3.5 py-2 flex items-center justify-between text-xs font-semibold text-[var(--text)]">
+                  <div class="flex items-center gap-1.5">
+                    <span class="w-4 h-4 rounded-full bg-amber-400 text-amber-950 font-black text-[9px] flex items-center justify-center">$</span>
+                    <span>0.2+</span>
+                  </div>
+                  <span class="text-slate-400 text-[10px]">⌄</span>
+                </div>
+              </div>
+
+              <div id="rj-live-earnings-feed" class="space-y-2.5">
+                <!-- Populated dynamically by renderOfferwallGGLiveEarnings() -->
               </div>
             </div>
           </section>
 
-          <!-- TAB 3: SURVEYS VIEW (Cleanly Arranged Survey Cards + Cropped TimeWall Surveys with NO Blue Bar or Left Sidebar!) -->
+          <!-- TAB 3: SURVEYS VIEW (TimeWall Survey Removed! Offerwall.GG Surveys Added + Check-in Bonus + Survey Partners - Exact Match to frame_043.jpg) -->
           <section id="desk-view-surveys" class="space-y-6 hidden">
-            <div>
-              <div class="flex items-center gap-2.5 mb-3">
-                <div class="w-5 h-5 rounded-md bg-[#10b981] flex items-center justify-center text-white shadow-2xs">
-                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2a1 1 0 00-1 1v1H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2V3a1 1 0 00-1-1H9zm3 10.5c1.1-1.1 2.8-1.1 3.8 0 .9 1 .9 2.6 0 3.6L12 20l-3.8-3.9c-.9-1-.9-2.6 0-3.6 1-1.1 2.7-1.1 3.8 0z"/></svg>
-                </div>
-                <span class="text-[15px] font-bold text-[var(--text)]">Featured Surveys</span>
+            
+            <!-- Check-in Bonus Card (Exact Match to frame_043.jpg) -->
+            <div class="card p-5 sm:p-6 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs space-y-4">
+              <div>
+                <h3 class="text-[17px] sm:text-[19px] font-extrabold text-[var(--text)]">Check-in Bonus</h3>
+                <p class="text-xs text-slate-400 mt-1">Complete a survey daily to earn a bonus</p>
               </div>
-
-              <div class="card p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
-                  <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
-                    <div class="flex items-center gap-4">
-                      <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
-                      <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
-                        <span>2 Min</span>
-                      </div>
-                    </div>
-                    <span class="font-extrabold text-[#f97316] text-[17px]">৳ 101.3</span>
+              <div>
+                <span class="inline-block border border-orange-300 bg-orange-50/70 dark:bg-orange-950/30 text-[#f97316] text-[11px] font-bold px-2.5 py-0.5 rounded-md">
+                  0 check-ins now
+                </span>
+              </div>
+              <div class="relative pt-3 pb-2 px-4">
+                <div class="h-0.5 bg-slate-200 dark:bg-slate-700 w-full relative flex items-center justify-between">
+                  <span class="w-3 h-3 rounded-full bg-[#f97316] ring-4 ring-orange-500/20"></span>
+                  <div class="flex flex-col items-center">
+                    <div class="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm shadow-2xs">🎁</div>
+                    <span class="text-[11px] font-bold text-slate-500 mt-1">3</span>
                   </div>
-
-                  <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
-                    <div class="flex items-center gap-4">
-                      <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
-                      <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
-                        <span>3 Min</span>
-                      </div>
-                    </div>
-                    <span class="font-extrabold text-[#f97316] text-[17px]">৳ 108.4</span>
+                  <div class="flex flex-col items-center">
+                    <div class="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm shadow-2xs">🎁</div>
+                    <span class="text-[11px] font-bold text-slate-500 mt-1">12</span>
                   </div>
-
-                  <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
-                    <div class="flex items-center gap-4">
-                      <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
-                      <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
-                        <span>5 Min</span>
-                      </div>
-                    </div>
-                    <span class="font-extrabold text-[#f97316] text-[17px]">৳ 44.8</span>
-                  </div>
-
-                  <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
-                    <div class="flex items-center gap-4">
-                      <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
-                      <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
-                        <span>6 Min</span>
-                      </div>
-                    </div>
-                    <span class="font-extrabold text-[#f97316] text-[17px]">৳ 124.5</span>
-                  </div>
-
-                  <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
-                    <div class="flex items-center gap-4">
-                      <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
-                      <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
-                        <span>8 Min</span>
-                      </div>
-                    </div>
-                    <span class="font-extrabold text-[#f97316] text-[17px]">৳ 152.0</span>
-                  </div>
-
-                  <div onclick="openTimeWall('surveys')" class="bg-[#f8fafc]/70 dark:bg-[var(--surface-2)] border border-slate-200/70 dark:border-[var(--border)] rounded-xl px-5 py-4 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
-                    <div class="flex items-center gap-4">
-                      <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
-                      <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 text-[13px] font-medium">
-                        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2"/><path d="M10 2h4"/></svg>
-                        <span>10 Min</span>
-                      </div>
-                    </div>
-                    <span class="font-extrabold text-[#f97316] text-[17px]">৳ 89.2</span>
+                  <div class="flex flex-col items-center">
+                    <div class="w-8 h-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-sm shadow-2xs">🎁</div>
+                    <span class="text-[11px] font-bold text-slate-500 mt-1">21</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- Cropped TimeWall Surveys (Blue Top Bar & Left Icon Sidebar Completely Hidden!) -->
-            <div class="timewall-clean-crop border border-[var(--border)] shadow-2xs">
-              <iframe id="desk-timewall-iframe-surveys" title="Surveys" src="" scrolling="auto"></iframe>
+            <!-- Live Offerwall.GG Surveys Section -->
+            <div class="space-y-3.5">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-5 h-5 rounded-md bg-[#10b981] flex items-center justify-center text-white shadow-2xs">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="currentColor"><path d="M9 2a1 1 0 00-1 1v1H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2V3a1 1 0 00-1-1H9zm3 10.5c1.1-1.1 2.8-1.1 3.8 0 .9 1 .9 2.6 0 3.6L12 20l-3.8-3.9c-.9-1-.9-2.6 0-3.6 1-1.1 2.7-1.1 3.8 0z"/></svg>
+                  </div>
+                  <h3 class="text-[16px] sm:text-[18px] font-extrabold text-[var(--text)]">Offerwall.GG Live Surveys</h3>
+                  <span class="bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase">INSTANT</span>
+                </div>
+                <button type="button" onclick="openOfferwallGG()" class="text-xs font-extrabold text-[#f97316] hover:underline cursor-pointer">
+                  Open Full Wall ➔
+                </button>
+              </div>
+
+              <div class="card p-3.5 sm:p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs">
+                <div id="desk-live-surveys-list" class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <!-- Populated dynamically with Offerwall.GG Surveys -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Survey Partners (Exact Match to frame_043.jpg & frame_049.jpg - All Powered by Offerwall.GG!) -->
+            <div class="space-y-3.5">
+              <h3 class="text-[16px] sm:text-[18px] font-extrabold text-[var(--text)]">Survey Partners</h3>
+              <div class="flex gap-3 sm:gap-4 overflow-x-auto pb-2 pt-1 snap-x hide-scrollbar">
+                <!-- Offerwall.GG Surveys -->
+                <div onclick="openOfferwallGG()" class="min-w-[125px] sm:min-w-[175px] h-40 sm:h-44 rounded-2xl p-4 flex flex-col items-center justify-between cursor-pointer border border-amber-300/80 bg-gradient-to-b from-white via-white to-[#fff9e6] dark:from-slate-900 dark:to-amber-950/30 shadow-2xs hover:shadow-md transition shrink-0 snap-start">
+                  <div class="flex-1 flex items-center justify-center gap-1.5">
+                    <span class="w-8 h-8 rounded-xl bg-amber-400 text-slate-950 font-black flex items-center justify-center text-base shadow-2xs">⚡</span>
+                    <span class="font-black text-xs sm:text-sm text-slate-900 dark:text-white">Offerwall.GG</span>
+                  </div>
+                  <span class="text-xs font-bold text-amber-600">Offerwall.GG</span>
+                </div>
+
+                <!-- Prime Surveys -->
+                <div onclick="openOfferwallGG()" class="min-w-[125px] sm:min-w-[175px] h-40 sm:h-44 rounded-2xl p-4 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 bg-gradient-to-b from-white via-white to-[#e8f1ff] dark:from-slate-900 dark:to-blue-950/30 shadow-2xs hover:shadow-md transition shrink-0 snap-start">
+                  <div class="flex-1 flex items-center justify-center gap-1.5">
+                    <span class="w-7 h-7 rounded-lg bg-blue-600 text-white font-black flex items-center justify-center text-sm">P</span>
+                    <span class="font-bold text-xs sm:text-sm text-blue-600">Prime Surveys</span>
+                  </div>
+                  <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Prime Surveys</span>
+                </div>
+
+                <!-- CPX Research -->
+                <div onclick="openOfferwallGG()" class="min-w-[125px] sm:min-w-[175px] h-40 sm:h-44 rounded-2xl p-4 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 bg-gradient-to-b from-white via-white to-[#e6fbf4] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md transition shrink-0 snap-start">
+                  <div class="flex-1 flex items-center justify-center gap-1.5">
+                    <span class="w-7 h-7 rounded-full border-2 border-[#10b981] text-[#10b981] font-black flex items-center justify-center text-xs">✓</span>
+                    <span class="font-black text-[11px] sm:text-xs text-slate-800 dark:text-white">CPX RESEARCH</span>
+                  </div>
+                  <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Cpx Research</span>
+                </div>
+
+                <!-- TheoremReach -->
+                <div onclick="openOfferwallGG()" class="min-w-[125px] sm:min-w-[175px] h-40 sm:h-44 rounded-2xl p-4 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 bg-gradient-to-b from-white via-white to-[#f3ebff] dark:from-slate-900 dark:to-purple-950/30 shadow-2xs hover:shadow-md transition shrink-0 snap-start">
+                  <div class="flex-1 flex items-center justify-center gap-1.5">
+                    <span class="w-7 h-7 rounded-lg bg-purple-600 text-white font-black flex items-center justify-center text-xs">TR</span>
+                    <span class="font-bold text-xs sm:text-sm text-purple-700 dark:text-purple-300">theoremreach</span>
+                  </div>
+                  <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Theoremreach</span>
+                </div>
+
+                <!-- BitLabs Surveys -->
+                <div onclick="openOfferwallGG()" class="min-w-[125px] sm:min-w-[175px] h-40 sm:h-44 rounded-2xl p-4 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 bg-gradient-to-b from-white via-white to-[#e8f4ff] dark:from-slate-900 dark:to-sky-950/30 shadow-2xs hover:shadow-md transition shrink-0 snap-start">
+                  <div class="flex-1 flex items-center justify-center gap-1.5">
+                    <span class="font-black text-sm sm:text-base text-sky-700 dark:text-sky-300">BitLabs</span>
+                  </div>
+                  <span class="text-xs font-medium text-slate-700 dark:text-slate-300">Bitlabs Surveys</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Direct Embedded Offerwall.GG Survey & Offer Wall -->
+            <div class="card p-4 sm:p-5 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="text-lg">📋</span>
+                  <h4 class="font-extrabold text-sm sm:text-base text-[var(--text)]">Offerwall.GG Survey &amp; Offer Wall</h4>
+                </div>
+                <button type="button" onclick="openOfferwallGG()" class="bg-[#f97316] hover:bg-orange-600 text-white font-bold text-xs px-3.5 py-1.5 rounded-xl shadow-2xs cursor-pointer transition">
+                  Full Screen 🚀
+                </button>
+              </div>
+              <div class="rounded-2xl overflow-hidden border border-[var(--border)] bg-white">
+                <iframe id="desk-offerwallgg-surveys-iframe" title="Offerwall.GG Surveys" src="" style="width:100%;height:720px;border:0;" scrolling="auto"></iframe>
+              </div>
             </div>
           </section>
 
-          <!-- TAB 4: BROWSING VIEW (Fake PTC Cards Removed! Direct Clean Cropped TimeWall Clicks/Browsing!) -->
-          <section id="desk-view-browsing" class="space-y-6 hidden">
-            <div class="timewall-clean-crop border border-[var(--border)] shadow-2xs" style="height: 760px;">
-              <iframe id="desk-timewall-iframe-clicks" title="Browsing" src="" scrolling="auto"></iframe>
+          <!-- TAB 3B: MY OFFERS VIEW (Started & Completed Tabs - Exact Match to frame_058.jpg) -->
+          <section id="desk-view-myoffers" class="space-y-6 hidden">
+            <!-- Top Segmented Tabs: Started | Completed -->
+            <div class="grid grid-cols-2 gap-3 bg-[var(--surface)] p-2 rounded-2xl border border-[var(--border)] shadow-2xs">
+              <button type="button" id="rj-myoffers-tab-started" onclick="switchRjMyOffersSubTab('started')" class="py-3 px-4 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 text-[#f97316] font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition">
+                <span>✴️</span>
+                <span>Started</span>
+              </button>
+              <button type="button" id="rj-myoffers-tab-completed" onclick="switchRjMyOffersSubTab('completed')" class="py-3 px-4 rounded-xl text-slate-500 dark:text-slate-400 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--surface-2)] transition">
+                <span>☑️</span>
+                <span>Completed</span>
+              </button>
+            </div>
+
+            <!-- Cute Mascot Banner (Exact Match to frame_058.jpg) -->
+            <div class="flex flex-col items-center justify-center py-2">
+              <div class="w-24 h-24 rounded-full bg-orange-500/10 flex items-center justify-center text-5xl shadow-inner">
+                🦊
+              </div>
+            </div>
+
+            <!-- Started Offers Grid -->
+            <div id="rj-myoffers-started-box" class="space-y-3">
+              <div id="rj-myoffers-started-grid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
+                <!-- Populated dynamically from user's started offers -->
+              </div>
+            </div>
+
+            <!-- Completed Offers List -->
+            <div id="rj-myoffers-completed-box" class="hidden space-y-3">
+              <div id="rj-myoffers-completed-list" class="space-y-2.5">
+                <!-- Populated dynamically by renderCombinedMyOffersHistory() -->
+              </div>
+            </div>
+          </section>
+
+          <!-- TAB 4: BROWSING VIEW (Offerwall.GG Traffic Tasks + Browsing Cards - Exact Match to frame_085.jpg) -->
+          <section id="desk-view-browsing" class="space-y-5 hidden">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-[17px] sm:text-[19px] font-extrabold text-[var(--text)] flex items-center gap-2">
+                  <span>🖱️</span> Browsing &amp; Traffic Tasks
+                </h3>
+                <p class="text-xs text-[var(--text-3)] mt-0.5">Visit sponsored websites and earn instant coins when the timer completes</p>
+              </div>
+            </div>
+
+            <!-- Active Surf Countdown Banner -->
+            <div id="desk-surf-timer-banner" class="hidden card p-4 bg-gradient-to-r from-orange-500 to-amber-500 text-white flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span class="text-xs sm:text-sm font-extrabold">Keep the browsing tab open... Reward in <span id="desk-surf-seconds">15</span>s!</span>
+              </div>
+            </div>
+
+            <!-- Offerwall.GG Traffic & Browsing Cards List (Exact Match to frame_085.jpg) -->
+            <div id="rj-browsing-tasks-list" class="space-y-3">
+              <!-- Populated dynamically by renderOfferwallGGBrowsingTasks() -->
             </div>
           </section>
 
@@ -2586,14 +2727,22 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   <span>FIAT</span>
                 </div>
 
-                <div class="flex flex-wrap gap-5">
-                  <!-- bKash Card using User's Exact Uploaded Image (https://i.ibb.co.com/0jm6s6V5/Screenshot-2026-10-15-032733.png) -->
-                  <div onclick="openRjWithdrawForm('bKash')" class="w-44 h-56 rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 relative" style="background: linear-gradient(180deg, #f48fb1 0%, #d81b60 65%, #ad1457 100%);">
+                <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-4 sm:gap-5">
+                  <!-- bKash Card -->
+                  <div onclick="openRjWithdrawForm('bKash')" class="w-full sm:w-44 h-48 sm:h-56 rounded-2xl overflow-hidden cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200 relative" style="background: linear-gradient(180deg, #f48fb1 0%, #d81b60 65%, #ad1457 100%);">
                     <img src="https://i.ibb.co.com/0jm6s6V5/Screenshot-2026-10-15-032733.png" alt="bKash" class="w-full h-full object-cover block" />
                   </div>
 
-                  <!-- Bank Transfer Card (Soft Coral-Pink Gradient with Classical Bank Icon) -->
-                  <div onclick="openRjWithdrawForm('Bank Transfer')" class="w-44 h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #fca5a5 0%, #fb7185 65%, #f43f5e 100%);">
+                  <!-- Nagad Card -->
+                  <div onclick="openRjWithdrawForm('Nagad')" class="w-full sm:w-44 h-48 sm:h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #fdba74 0%, #f97316 65%, #ea580c 100%);">
+                    <div class="flex-1 flex items-center justify-center">
+                      <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" alt="Nagad" class="w-16 h-16 rounded-2xl object-cover shadow-md border-2 border-white" />
+                    </div>
+                    <span class="text-white font-semibold text-sm tracking-wide">Nagad</span>
+                  </div>
+
+                  <!-- Bank Transfer Card -->
+                  <div onclick="openRjWithdrawForm('Bank Transfer')" class="w-full sm:w-44 h-48 sm:h-56 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-200" style="background: linear-gradient(180deg, #fca5a5 0%, #fb7185 65%, #f43f5e 100%);">
                     <div class="flex-1 flex items-center justify-center">
                       <svg class="w-14 h-14 text-white drop-shadow-xs" viewBox="0 0 24 24" fill="currentColor">
                         <path d="M12 2L2 7v2h20V7L12 2zm-7 9v7H3v2h18v-2h-2v-7h-2v7h-2v-7h-2v7h-2v-7H9v7H7v-7H5z"/>
@@ -2761,6 +2910,53 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             </div>
 
           </section>
+
+          <!-- RewardJoy Dark Footer for Mobile & Web (Exact Match to frame_037.jpg) -->
+          <footer class="mt-12 -mx-3.5 sm:-mx-8 -mb-5 sm:-mb-8 bg-[#3d312a] dark:bg-[#111116] text-slate-200 px-6 sm:px-12 py-10 space-y-8">
+            <div class="max-w-5xl mx-auto grid grid-cols-2 sm:grid-cols-3 gap-8 text-xs">
+              <div class="space-y-3">
+                <h4 class="text-slate-400 font-bold uppercase tracking-wider">About</h4>
+                <ul class="space-y-2.5 font-semibold">
+                  <li><a href="#faq" onclick="openPrivacyModal(); return false;" class="hover:text-orange-400 transition">FAQ</a></li>
+                  <li><a href="#privacy" onclick="openPrivacyModal(); return false;" class="hover:text-orange-400 transition">Privacy Policy</a></li>
+                  <li><a href="#cookie" onclick="openPrivacyModal(); return false;" class="hover:text-orange-400 transition">Cookie Policy</a></li>
+                  <li><a href="#terms" onclick="openPrivacyModal(); return false;" class="hover:text-orange-400 transition">Terms of Service</a></li>
+                </ul>
+              </div>
+              <div class="space-y-3">
+                <h4 class="text-slate-400 font-bold uppercase tracking-wider">Services</h4>
+                <ul class="space-y-2.5 font-semibold">
+                  <li><a href="https://t.me/RewardProAdmin" target="_blank" class="hover:text-orange-400 transition">Support</a></li>
+                  <li><a href="#affiliate" onclick="desktopSwitchTab('affiliate'); return false;" class="hover:text-orange-400 transition">Advertise</a></li>
+                  <li><a href="#challenge" onclick="desktopSwitchTab('challenge'); return false;" class="hover:text-orange-400 transition">Challenge</a></li>
+                  <li><a href="#affiliate" onclick="desktopSwitchTab('affiliate'); return false;" class="hover:text-orange-400 transition">Affiliate</a></li>
+                </ul>
+              </div>
+              <div class="col-span-2 sm:col-span-1 space-y-4">
+                <div class="flex items-center gap-2">
+                  <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" class="w-8 h-8 rounded-xl object-cover border border-orange-400" alt="Logo" />
+                  <span class="text-xl font-black text-orange-400 font-display">TakaReward Pro</span>
+                </div>
+                <div class="flex items-center gap-2.5">
+                  <button type="button" onclick="toggleTheme()" class="bg-black/30 hover:bg-black/50 text-amber-300 font-bold text-xs px-4 py-2 rounded-full flex items-center gap-2 border border-white/10 cursor-pointer transition">
+                    <span>🌙</span>
+                    <span>Dark / Light</span>
+                  </button>
+                  <button type="button" onclick="installAppDirect()" class="bg-black/40 hover:bg-black/60 text-white font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-2 border border-white/15 cursor-pointer transition">
+                    <span>▶️</span>
+                    <span>Google Play App</span>
+                  </button>
+                </div>
+                <div class="pt-1">
+                  <a href="https://offerwall.gg" target="_blank" rel="noopener"><img src="https://offerwall.gg/themes/offerwall/assets/img/badges/badge-pill-light.png" alt="Offerwall.GG" width="160"></a>
+                </div>
+              </div>
+            </div>
+            <div class="max-w-5xl mx-auto pt-6 border-t border-white/10 text-[11px] text-slate-400 flex flex-col sm:flex-row items-center justify-between gap-2">
+              <span>© 2019-2026 TakaReward Pro Limited. All rights reserved.</span>
+              <span>Admin Support: marufbro360x@gmail.com</span>
+            </div>
+          </footer>
         </main>
       </div>
     </div>
@@ -3176,7 +3372,66 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       </div>
     </div>
 
-<!-- ================= ENTERPRISE PRO MASTER ADMIN DASHBOARD (DUAL PC & MOBILE MODE) ================= -->
+        <!-- ================= ADMIN TASK EDIT MODAL ================= -->
+    <div id="admin-edit-task-modal" class="fixed inset-0 bg-black/80 z-[60] flex items-center justify-center p-4 hidden backdrop-blur-sm">
+      <div class="bg-white rounded-3xl w-full max-w-sm p-5 space-y-3 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
+        <div class="flex items-center justify-between border-b pb-2">
+          <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
+            <span>✏️</span> টাস্ক তথ্য এডিট করুন
+          </h3>
+          <button onclick="adminCloseEditTaskModal()" class="text-slate-400 hover:text-slate-800 text-xl font-bold cursor-pointer">✕</button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto space-y-2.5 text-xs hide-scrollbar pr-1">
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block">কাজের নাম:</label>
+            <input id="edit-task-title" type="text" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 font-bold" />
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 block">ক্যাটাগরি:</label>
+              <input id="edit-task-cat" type="text" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 block">রিওয়ার্ড টাকা (৳):</label>
+              <input id="edit-task-taka" type="number" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none font-bold" />
+            </div>
+          </div>
+
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block">CPA অফার লিংক:</label>
+            <input id="edit-task-link" type="url" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+          </div>
+
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block">সহজ নির্দেশনা:</label>
+            <input id="edit-task-desc" type="text" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+          </div>
+
+          <div>
+            <label class="text-[11px] font-bold text-slate-700 block">টিউটোরিয়াল ভিডিও লিংক (ঐচ্ছিক):</label>
+            <input id="edit-task-video" type="url" placeholder="https://youtube.com/watch?v=..." class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs mt-1 outline-none" />
+          </div>
+
+          <div class="border-t pt-2">
+            <label class="text-[11px] font-bold text-slate-700 block">নতুন আইকন বা ছবি (পরিবর্তন করতে চাইলে):</label>
+            <input id="edit-task-image-file" type="file" accept="image/*" class="w-full border rounded-xl p-2 text-xs file:mr-2 file:py-1 file:px-2 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700 mt-1" />
+          </div>
+        </div>
+
+        <div class="pt-2 flex gap-2">
+          <button onclick="adminSaveEditedTask()" id="btn-save-edited-task" class="flex-1 emerald-primary text-white font-black py-2.5 rounded-xl text-xs uppercase tracking-wider shadow cursor-pointer">
+            আপডেট সংরক্ষণ করুন
+          </button>
+          <button onclick="adminCloseEditTaskModal()" class="bg-slate-200 text-slate-700 font-bold px-4 py-2.5 rounded-xl text-xs cursor-pointer">
+            বাতিল
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ENTERPRISE PRO MASTER ADMIN DASHBOARD (DUAL PC & MOBILE MODE) ================= -->
     <div id="admin-modal" class="fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-2 sm:p-4 hidden backdrop-blur-md transition-all duration-300">
       <div id="admin-dashboard-container" class="bg-white rounded-3xl w-full max-w-6xl max-h-[96vh] h-[96vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden transition-all duration-300">
         
@@ -3711,7 +3966,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     </div>
 
     <!-- ADMIN EDIT TASK MODAL (With Limit & Pin) -->
-    <div id="admin-edit-task-modal" class="fixed inset-0 bg-black/70 z-[200] flex items-center justify-center p-3 hidden backdrop-blur-sm">
+    <div id="admin-edit-task-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-3 hidden backdrop-blur-sm">
       <div class="bg-white rounded-3xl w-full max-w-md p-5 max-h-[92vh] flex flex-col justify-between shadow-2xl text-slate-900 space-y-3">
         <div class="flex items-center justify-between border-b pb-2">
           <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
@@ -3813,6 +4068,52 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             ফিরে যান
           </button>
         </div>
+      </div>
+    </div>
+
+        <!-- ================= OFFERWALL.GG LIVE OFFER & GAME DETAIL MODAL (RewardJoy Style) ================= -->
+    <div id="offerwall-offer-modal" class="fixed inset-0 bg-black/65 z-[145] flex items-center justify-center p-4 hidden backdrop-blur-xs">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md p-6 space-y-4 shadow-2xl text-slate-900 dark:text-white border border-slate-100 dark:border-slate-800">
+        <div class="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <img id="ow-modal-logo" src="" alt="Offer" class="w-16 h-16 rounded-2xl object-cover border border-orange-200 shadow-sm shrink-0 bg-slate-900" />
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="bg-orange-500/15 text-[#f97316] border border-orange-500/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  ⚡ Offerwall.GG
+                </span>
+                <span id="ow-modal-devices" class="text-[10px] font-bold text-slate-400">🤖 🍎 💻</span>
+              </div>
+              <h3 id="ow-modal-title" class="font-extrabold text-base text-slate-900 dark:text-white mt-1 leading-snug truncate">Offer Title</h3>
+            </div>
+          </div>
+          <button type="button" onclick="closeOfferwallOfferModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white flex items-center justify-center font-bold cursor-pointer shrink-0">✕</button>
+        </div>
+
+        <div class="bg-gradient-to-r from-orange-50 to-emerald-50 dark:from-slate-800 dark:to-slate-800/70 border border-orange-200/80 dark:border-slate-700 rounded-2xl p-3.5 flex items-center justify-between">
+          <div>
+            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 block">Instant Auto-Credit Reward:</span>
+            <span id="ow-modal-coins" class="text-xs font-extrabold text-amber-600">🪙 100,000 Coins</span>
+          </div>
+          <span id="ow-modal-taka" class="text-2xl font-black text-[#f97316]">৳10</span>
+        </div>
+
+        <div class="space-y-2 text-xs">
+          <div class="font-extrabold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
+            <span>📋</span> Offer Requirements &amp; Instructions:
+          </div>
+          <div id="ow-modal-desc" class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700 text-slate-600 dark:text-slate-300 leading-relaxed text-xs">
+            Complete the required steps to receive your reward automatically.
+          </div>
+          <div class="flex items-start gap-2 bg-emerald-50/70 dark:bg-emerald-950/30 p-2.5 rounded-xl border border-emerald-200/80 dark:border-emerald-800/50 text-[11px] text-emerald-800 dark:text-emerald-300 font-semibold">
+            <span>✓</span>
+            <span>No screenshot needed! Once completed, Offerwall.GG automatically credits your balance via live postback.</span>
+          </div>
+        </div>
+
+        <button type="button" id="ow-modal-start-btn" onclick="startSelectedOfferwallOffer()" class="w-full bg-gradient-to-r from-[#f97316] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-black py-3.5 rounded-2xl text-sm shadow-lg shadow-orange-500/25 cursor-pointer transition flex items-center justify-center gap-2">
+          <span>🚀 Start Now &amp; Earn ➔</span>
+        </button>
       </div>
     </div>
 
@@ -4191,7 +4492,22 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     // ==========================================
     // DESKTOP DUAL-VARIANT CONTROLLER & SYNC ENGINE
     // ==========================================
-    window.desktopActiveTab = 'dashboard';
+    window.desktopActiveTab = 'offers';
+    window.OFFERWALL_GG_PUBLIC_KEY = "7495f3f6d2e6b19774fc1b67a4eecfa6";
+
+    // Mobile Slide-Out Drawer Controls
+    window.toggleMobileRjDrawer = function() {
+      const sb = document.getElementById('rj-main-sidebar');
+      const bd = document.getElementById('rj-mobile-drawer-backdrop');
+      if (!sb) return;
+      const isOpen = sb.classList.toggle('mobile-open');
+      if (bd) bd.classList.toggle('show', isOpen);
+    };
+
+    window.closeMobileRjDrawer = function() {
+      document.getElementById('rj-main-sidebar')?.classList.remove('mobile-open');
+      document.getElementById('rj-mobile-drawer-backdrop')?.classList.remove('show');
+    };
 
     function refreshAllLucideIcons() {
       try {
@@ -4201,21 +4517,18 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       } catch (e) {}
     }
 
-    // Call immediately and on DOMContentLoaded / load so Landing Page icons NEVER miss!
     refreshAllLucideIcons();
     window.addEventListener('DOMContentLoaded', refreshAllLucideIcons);
     window.addEventListener('load', refreshAllLucideIcons);
     setTimeout(refreshAllLucideIcons, 250);
     setTimeout(refreshAllLucideIcons, 800);
 
-    // Language Selector Modal
     window.selectDesktopLang = function(label) {
       const lbl = document.getElementById('currentLangLabel');
       if (lbl) lbl.textContent = label;
       document.getElementById('langModal')?.classList.remove('show');
     };
 
-    // Auth Modal (Sign Up / Sign In Popup like CashJoy)
     window.authMode = 'signup';
     window.openAuthModal = function(mode = 'signup') {
       window.authMode = mode;
@@ -4247,6 +4560,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.handleHeroSubmit = function(e) {
       if (e && e.preventDefault) e.preventDefault();
+      const heroInv = document.getElementById('heroInviteCode')?.value?.trim();
+      if (heroInv) {
+        const inp = document.getElementById('input-invite-code');
+        if (inp) inp.value = heroInv;
+      }
       window.loginWithGoogleSmart(e);
       return false;
     };
@@ -4294,7 +4612,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     };
 
-    // Apple Auth Provider
     const appleProvider = new OAuthProvider('apple.com');
     window.loginWithAppleSmart = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
@@ -4323,8 +4640,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.desktopSwitchTab = function(tabName) {
       window.desktopActiveTab = tabName;
+      window.closeMobileRjDrawer();
 
-      const tabs = ['dashboard', 'offers', 'surveys', 'browsing', 'affiliate', 'challenge', 'profile', 'withdraw'];
+      const tabs = ['dashboard', 'offers', 'surveys', 'myoffers', 'browsing', 'affiliate', 'challenge', 'profile', 'withdraw'];
       tabs.forEach(t => {
         const btn = document.getElementById('desk-nav-' + t);
         const view = document.getElementById('desk-view-' + t);
@@ -4345,31 +4663,24 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
 
       if (tabName === 'offers') {
-        renderDesktopTasks();
+        window.renderOfferwallGGAllSections();
+      }
+      if (tabName === 'surveys') {
+        window.renderOfferwallGGSurveysSection();
+        window.ensureOfferwallGGSurveyFrame();
+      }
+      if (tabName === 'myoffers') {
+        window.renderStartedOffersGrid();
+        renderCombinedMyOffersHistory();
+      }
+      if (tabName === 'browsing') {
+        window.renderOfferwallGGBrowsingTasks();
       }
       if (tabName === 'withdraw' && window.showRjWithdrawStep1) {
         window.showRjWithdrawStep1();
         if (window.syncRjWithdrawFormUI) window.syncRjWithdrawFormUI();
       }
-      if (window.ensureDesktopTimeWallFrames) {
-        window.ensureDesktopTimeWallFrames(tabName);
-      }
       refreshAllLucideIcons();
-    };
-
-
-    window.isGamesViewAllExpanded = false;
-
-    window.toggleDesktopGamesViewAll = function() {
-      window.isGamesViewAllExpanded = !window.isGamesViewAllExpanded;
-      const box = document.getElementById('desk-games-crop-box');
-      const btn = document.getElementById('desk-games-viewall-btn');
-      if (box) {
-        box.style.height = window.isGamesViewAllExpanded ? '820px' : '520px';
-      }
-      if (btn) {
-        btn.innerText = window.isGamesViewAllExpanded ? 'Show Less' : 'View All';
-      }
     };
 
     window.updateDesktopGreetingByLocalTime = function() {
@@ -4390,150 +4701,741 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     };
 
-    window.isNewOffersViewAllExpanded = false;
-
-    window.toggleDesktopNewOffersViewAll = function() {
-      window.isNewOffersViewAllExpanded = !window.isNewOffersViewAllExpanded;
-      const btn = document.getElementById('desk-newoffers-viewall-btn');
-      if (btn) {
-        btn.innerText = window.isNewOffersViewAllExpanded ? 'Show Carousel' : 'View All';
-      }
-      window.renderDesktopTasks();
+    window.scrollRjCarousel = function(containerId, dir) {
+      const el = document.getElementById(containerId);
+      if (el) el.scrollBy({ left: dir * 420, behavior: 'smooth' });
     };
 
-    window.scrollDesktopNewOffers = function(dir) {
-      const container = document.getElementById('desk-tasks-list');
-      if (container) {
-        container.scrollBy({ left: dir * 420, behavior: 'smooth' });
+    // =========================================================================
+    // OFFERWALL.GG LIVE API ENGINE (Games, Offers/Sign-ups, Surveys & Traffic)
+    // =========================================================================
+    const SVG_GAME_BUBBLE = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="bg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1e1b4b"/></radialGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="82" cy="88" r="36" fill="#facc15"/><circle cx="156" cy="88" r="36" fill="#38bdf8"/><circle cx="78" cy="156" r="36" fill="#fb923c"/><circle cx="158" cy="156" r="36" fill="#22c55e"/><circle cx="120" cy="122" r="42" fill="#ef4444" stroke="#fff" stroke-width="4"/></svg>');
+    const SVG_GAME_BOLTS = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e293b"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><rect x="36" y="110" width="168" height="84" rx="18" fill="#fbbf24" stroke="#d97706" stroke-width="6"/><circle cx="84" cy="145" r="24" fill="#ea580c"/><circle cx="148" cy="96" r="34" fill="#f97316" stroke="#fff" stroke-width="4"/><path d="M136,96 h24 M148,84 v24" stroke="#7c2d12" stroke-width="7" stroke-linecap="round"/></svg>');
+    const SVG_GAME_ROCKET = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="bg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#4c1d95"/><stop offset="100%" stop-color="#090d16"/></radialGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="135" r="54" fill="#ea580c" stroke="#fde047" stroke-width="4"/><ellipse cx="120" cy="135" rx="88" ry="22" transform="rotate(-18 120 135)" fill="none" stroke="#38bdf8" stroke-width="8"/><text x="120" y="62" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="28" fill="#f97316">ROCKET</text></svg>');
+    const SVG_OFFER_WHALE = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0284c7"/><stop offset="100%" stop-color="#1e3a8a"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="110" r="58" fill="#38bdf8" opacity="0.25"/><text x="120" y="132" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="68" fill="#ffffff">🐳</text><text x="120" y="195" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="24" fill="#bae6fd">WHALE.IO</text></svg>');
+    const SVG_OFFER_ORIGINALS = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#111827"/><stop offset="100%" stop-color="#31102f"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="105" r="52" fill="#f59e0b" opacity="0.2"/><text x="120" y="125" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="64" fill="#facc15">🎰</text><text x="120" y="192" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="22" fill="#fde047">ORIGINALS</text></svg>');
+    const SVG_OFFER_SHIP7 = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dc2626"/><stop offset="100%" stop-color="#991b1b"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><text x="120" y="125" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="62" fill="#ffffff">📦</text><text x="120" y="190" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="28" fill="#ffffff">Ship7</text></svg>');
+
+    // Default Offerwall.GG inventory (Includes the user's real Offerwall.GG placement offers + games)
+    window.DEFAULT_OFFERWALL_GG_GAMES = [
+      {
+        id: "ow_game_1",
+        provider: "offerwall.gg",
+        name: "Bubble Pop Legend",
+        description: "Play Bubble Pop Legend on your phone and clear levels to earn instant coins!",
+        requirements: "Download the game via Offerwall.GG and complete the in-game level milestones.",
+        image: SVG_GAME_BUBBLE,
+        categories: ["games"],
+        devices: ["android", "ios"],
+        rewardCoins: 16440000,
+        rewardTaka: 1644,
+        isGame: true,
+        isSurvey: false
+      },
+      {
+        id: "ow_game_2",
+        provider: "offerwall.gg",
+        name: "Color Bolts Sort Puzzle",
+        description: "Sort the colorful bolts and complete stages to unlock big cash rewards.",
+        requirements: "Install and reach the target puzzle stage within 14 days.",
+        image: SVG_GAME_BOLTS,
+        categories: ["games"],
+        devices: ["android", "ios"],
+        rewardCoins: 26940000,
+        rewardTaka: 2694,
+        isGame: true,
+        isSurvey: false
+      },
+      {
+        id: "ow_game_3",
+        provider: "offerwall.gg",
+        name: "Rocket Hit",
+        description: "Launch rockets, destroy planets, and earn high-paying level rewards.",
+        requirements: "Install Rocket Hit and complete the listed level steps.",
+        image: SVG_GAME_ROCKET,
+        categories: ["games"],
+        devices: ["android", "ios"],
+        rewardCoins: 52030000,
+        rewardTaka: 5203,
+        isGame: true,
+        isSurvey: false
+      },
+      {
+        id: "ow_game_4",
+        provider: "offerwall.gg",
+        name: "AFK Journey",
+        description: "Explore Esperia in AFK Journey and earn massive rewards as you level up.",
+        requirements: "Download AFK Journey, create an account, and reach the required Resonance Level.",
+        image: "https://i.ibb.co.com/TydT2Ky/Screenshot-2026-10-04-025242.png",
+        categories: ["games"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 50400000,
+        rewardTaka: 5040,
+        isGame: true,
+        isSurvey: false
+      },
+      {
+        id: "ow_game_5",
+        provider: "offerwall.gg",
+        name: "Mafia City",
+        description: "Build your empire in Mafia City and earn coins for upgrading your Mansion.",
+        requirements: "Install Mafia City and upgrade your Mansion to the specified level.",
+        image: "https://i.ibb.co.com/23vKWhJC/Screenshot-2026-10-04-025422.png",
+        categories: ["games"],
+        devices: ["android", "ios"],
+        rewardCoins: 42200000,
+        rewardTaka: 4220,
+        isGame: true,
+        isSurvey: false
+      },
+      {
+        id: "ow_game_6",
+        provider: "offerwall.gg",
+        name: "Candy Match",
+        description: "Match sweet candies and complete puzzle boards for instant coin payouts.",
+        requirements: "Install and complete the target levels as listed on Offerwall.GG.",
+        image: "https://i.ibb.co.com/39TstJrj/Screenshot-2026-10-04-025524.png",
+        categories: ["games"],
+        devices: ["android", "ios"],
+        rewardCoins: 11100000,
+        rewardTaka: 1110,
+        isGame: true,
+        isSurvey: false
+      },
+      {
+        id: "ow_game_7",
+        provider: "offerwall.gg",
+        name: "Dice Dreams",
+        description: "Roll the dice, attack kingdoms, and collect coins for every kingdom completed.",
+        requirements: "Download Dice Dreams and reach Kingdom 15.",
+        image: "https://i.ibb.co.com/mV2VgwW9/Screenshot-2026-10-04-025721.png",
+        categories: ["games"],
+        devices: ["android", "ios"],
+        rewardCoins: 17800000,
+        rewardTaka: 1780,
+        isGame: true,
+        isSurvey: false
+      },
+      {
+        id: "ow_game_8",
+        provider: "offerwall.gg",
+        name: "Castle Clash",
+        description: "Lead heroes into battle in Castle Clash and unlock high-value rewards.",
+        requirements: "Install Castle Clash and reach the required Might milestone.",
+        image: "https://i.ibb.co.com/Lzwm8N5j/Screenshot-2026-10-04-025946.png",
+        categories: ["games"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 29500000,
+        rewardTaka: 2950,
+        isGame: true,
+        isSurvey: false
       }
+    ];
+
+    window.DEFAULT_OFFERWALL_GG_OFFERS = [
+      {
+        id: "ow_offer_whale",
+        provider: "offerwall.gg",
+        name: "Whale.io",
+        description: "Register on Whale.io via Offerwall.GG and complete your first activity to earn 22,050,000 Coins!",
+        requirements: "Sign up as a new user and complete the required deposit/action on Whale.io.",
+        image: SVG_OFFER_WHALE,
+        categories: ["offers", "deposits", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 22050000,
+        rewardTaka: 2205,
+        isGame: false,
+        isSurvey: false
+      },
+      {
+        id: "ow_offer_originals",
+        provider: "offerwall.gg",
+        name: "The Originals",
+        description: "Join The Originals platform and complete the welcome step for 22,050,000 Coins!",
+        requirements: "Create a new account and complete the required deposit/activity step.",
+        image: SVG_OFFER_ORIGINALS,
+        categories: ["offers", "deposits", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 22050000,
+        rewardTaka: 2205,
+        isGame: false,
+        isSurvey: false
+      },
+      {
+        id: "ow_offer_ship7",
+        provider: "offerwall.gg",
+        name: "Ship7",
+        description: "Sign up for a free Ship7 international parcel forwarding account and complete verification.",
+        requirements: "Complete new user registration on Ship7 via Offerwall.GG.",
+        image: SVG_OFFER_SHIP7,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 1470000,
+        rewardTaka: 147,
+        isGame: false,
+        isSurvey: false
+      },
+      {
+        id: "ow_offer_wps",
+        provider: "offerwall.gg",
+        name: "WPS SOFTWARE PTE.LTD.",
+        description: "Try WPS Office Suite and complete the sign-up action to earn instant coins.",
+        requirements: "Download/register WPS Office as a new user.",
+        image: window.getZeydooPresetSvg ? window.getZeydooPresetSvg('app') : SVG_OFFER_SHIP7,
+        categories: ["offers", "shopping", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 71400,
+        rewardTaka: 7.1,
+        isGame: false,
+        isSurvey: false
+      },
+      {
+        id: "ow_offer_sayorbit",
+        provider: "offerwall.gg",
+        name: "SayOrbit Survey",
+        description: "Share your opinion on SayOrbit Survey and earn 176,400 Coins per completion!",
+        requirements: "Complete the survey honestly from start to finish.",
+        image: window.getZeydooPresetSvg ? window.getZeydooPresetSvg('survey') : SVG_OFFER_WHALE,
+        categories: ["surveys", "offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 176400,
+        rewardTaka: 17.6,
+        isGame: false,
+        isSurvey: true
+      }
+    ];
+
+    window.offerwallGGState = {
+      games: [...window.DEFAULT_OFFERWALL_GG_GAMES],
+      offers: [...window.DEFAULT_OFFERWALL_GG_OFFERS],
+      surveys: [
+        { id: "ow_srv_1", name: "SayOrbit Survey", lengthMinutes: 3, rewardCoins: 176400, rewardTaka: 17.6 },
+        { id: "ow_srv_2", name: "TheoremReach Surveys", lengthMinutes: 5, rewardCoins: 448000, rewardTaka: 44.8 },
+        { id: "ow_srv_3", name: "BitLabs Daily Survey", lengthMinutes: 4, rewardCoins: 892000, rewardTaka: 89.2 },
+        { id: "ow_srv_4", name: "CPX Consumer Research", lengthMinutes: 6, rewardCoins: 1013000, rewardTaka: 101.3 },
+        { id: "ow_srv_5", name: "Prime Opinion Poll", lengthMinutes: 8, rewardCoins: 1084000, rewardTaka: 108.4 },
+        { id: "ow_srv_6", name: "Offerwall.GG Quick Poll", lengthMinutes: 2, rewardCoins: 520000, rewardTaka: 52.0 }
+      ],
+      traffic: [],
+      loadedFromApi: false,
+      explorerOpen: false,
+      activeModalOffer: null
     };
 
-    window.ensureDesktopTimeWallFrames = function(tabName) {
-      const uid = currentUser?.uid;
-      if (!uid) return;
-      const gamesFrame = document.getElementById('desk-timewall-iframe-games');
-      const surveysFrame = document.getElementById('desk-timewall-iframe-surveys');
-      const clicksFrame = document.getElementById('desk-timewall-iframe-clicks');
-
-      if (gamesFrame && !gamesFrame.src.includes('timewall.io')) {
-        gamesFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=games`;
+    window.getOfferwallGGUrlForOffer = function(offer) {
+      const uid = encodeURIComponent(currentUser?.uid || "guest");
+      if (offer && offer.clickUrl && offer.clickUrl.includes("offerwall.gg")) {
+        return offer.clickUrl.replace(/userId=[^&]*/i, "userId=" + uid);
       }
-      if (tabName === 'surveys' && surveysFrame && !surveysFrame.src.includes('timewall.io')) {
-        surveysFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=surveys`;
+      if (offer && /^\d+$/.test(String(offer.id))) {
+        return `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}/click/${offer.id}?userId=${uid}`;
       }
-      if (tabName === 'browsing' && clicksFrame && !clicksFrame.src.includes('timewall.io')) {
-        clicksFrame.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=clicks`;
-      }
+      return `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}?userId=${uid}`;
     };
 
-    window.renderDesktopTasks = function() {
-      const container = document.getElementById('desk-tasks-list');
-      if (!container) return;
+    // Fetch live offers, games, surveys & traffic from /api/offers
+    window.fetchOfferwallGGLiveData = async function() {
+      const uid = currentUser?.uid || "guest";
+      let countryCode = "BD";
+      try {
+        const cachedCountry = JSON.parse(localStorage.getItem("tr_detected_country") || "{}");
+        if (cachedCountry && cachedCountry.code) countryCode = cachedCountry.code.toUpperCase();
+      } catch (e) {}
 
-      if (window.isNewOffersViewAllExpanded) {
-        container.className = "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 pt-1";
-      } else {
-        container.className = "flex gap-4 overflow-x-auto pb-2 pt-1 snap-x hide-scrollbar scroll-smooth";
+      try {
+        const res = await fetch(`/api/offers?userId=${encodeURIComponent(uid)}&country=${encodeURIComponent(countryCode)}`, {
+          headers: { "Accept": "application/json" }
+        });
+        if (res.ok) {
+          const json = await res.json();
+          if (json && json.success && json.data) {
+            const apiGames = Array.isArray(json.data.games) ? json.data.games : [];
+            const apiSignups = Array.isArray(json.data.signups) ? json.data.signups : [];
+            const apiAll = Array.isArray(json.data.allOffers) ? json.data.allOffers : [];
+            const apiSurveys = Array.isArray(json.data.surveys) ? json.data.surveys : [];
+            const apiTraffic = Array.isArray(json.data.traffic) ? json.data.traffic : [];
+
+            // Merge live API games + fallback games so Games section is always rich & full
+            const seenGameNames = new Set();
+            const mergedGames = [];
+            for (const g of [...apiGames, ...window.DEFAULT_OFFERWALL_GG_GAMES]) {
+              const k = String(g.name || "").toLowerCase().trim();
+              if (k && !seenGameNames.has(k)) {
+                seenGameNames.add(k);
+                mergedGames.push(g);
+              }
+            }
+            window.offerwallGGState.games = mergedGames;
+
+            // Merge live API offers/sign-ups + default Offerwall.GG offers
+            const seenOfferNames = new Set();
+            const mergedOffers = [];
+            for (const o of [...apiSignups, ...apiAll, ...window.DEFAULT_OFFERWALL_GG_OFFERS]) {
+              const k = String(o.name || "").toLowerCase().trim();
+              if (k && !seenOfferNames.has(k)) {
+                seenOfferNames.add(k);
+                mergedOffers.push(o);
+              }
+            }
+            window.offerwallGGState.offers = mergedOffers;
+
+            if (apiSurveys.length > 0) {
+              window.offerwallGGState.surveys = [...apiSurveys, ...window.offerwallGGState.surveys].slice(0, 12);
+            }
+            if (apiTraffic.length > 0) {
+              window.offerwallGGState.traffic = apiTraffic;
+            }
+            window.offerwallGGState.loadedFromApi = true;
+          }
+        }
+      } catch (err) {
+        console.warn("Using built-in Offerwall.GG inventory fallback:", err.message);
       }
 
-      const unattemptedTasks = (allAvailableTasks || []).filter(t => {
+      window.renderOfferwallGGAllSections();
+      window.renderOfferwallGGSurveysSection();
+      window.renderOfferwallGGBrowsingTasks();
+      window.renderOfferwallGGLiveEarnings();
+    };
+
+    // Format device icons pill (Android, iOS, Desktop) like RewardJoy
+    function buildDeviceIconsPillHtml(devices) {
+      const devs = Array.isArray(devices) && devices.length > 0 ? devices.map(d => String(d).toLowerCase()) : ["android", "ios", "desktop"];
+      let icons = "";
+      if (devs.includes("android") || devs.includes("mobile")) {
+        icons += `<svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1367 1.0989L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/></svg>`;
+      }
+      if (devs.includes("ios") || devs.includes("mobile")) {
+        icons += `<svg class="w-2.5 h-2.5 sm:w-3 sm:h-3 fill-current" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>`;
+      }
+      if (devs.includes("desktop")) {
+        icons += `<svg class="w-2.5 h-2.5 sm:w-3 sm:h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>`;
+      }
+      return icons;
+    }
+
+    // Build a single RewardJoy-style square card
+    function buildRjCardHtml(item, isExpandedGrid) {
+      const widthClass = isExpandedGrid ? "w-full" : "w-full md:w-[172px] md:shrink-0 md:snap-start";
+      const title = (item.name || item.title || "Offer").replace(/"/g, "&quot;");
+      const fallbackSvg = item.isGame
+        ? SVG_GAME_BUBBLE
+        : (window.getZeydooPresetSvg ? window.getZeydooPresetSvg('gift') : SVG_OFFER_WHALE);
+      const imgSrc = item.image || item.iconImage || fallbackSvg;
+      const takaVal = Number(item.rewardTaka) || 0;
+      const takaFormatted = takaVal >= 100
+        ? "৳" + Math.round(takaVal).toLocaleString()
+        : (takaVal > 0 ? "৳" + Number(takaVal.toFixed(1)) : "৳50+");
+
+      const clickHandler = item.isFirestoreTask
+        ? `handleOpenTask('${item.id}')`
+        : `openOfferwallOfferModal('${String(item.id).replace(/'/g, "\'")}')`;
+
+      return `
+        <div onclick="${clickHandler}" class="rj-offer-card ${widthClass} group/card">
+          <div>
+            <div class="w-full aspect-square rounded-xl overflow-hidden relative bg-slate-900 shadow-2xs">
+              <img src="${imgSrc}" alt="${title}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300 block" loading="lazy" />
+              <div class="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-xs px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-1 text-white shadow-xs">
+                ${buildDeviceIconsPillHtml(item.devices)}
+              </div>
+            </div>
+            <div class="text-[11.5px] sm:text-[13px] font-bold text-[var(--text)] truncate mt-2" title="${title}">${item.name || item.title}</div>
+          </div>
+          <div class="flex items-center justify-between mt-0.5 sm:mt-1">
+            <span class="text-[13px] sm:text-[15.5px] font-extrabold text-[#f97316]">${takaFormatted}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    // Open / Close Explorer ("View All") Mode
+    window.openRjExplorerView = function(category = 'all') {
+      window.offerwallGGState.explorerOpen = true;
+      const bar = document.getElementById('rj-offers-explorer-bar');
+      const catSel = document.getElementById('rj-offer-category-filter');
+      if (bar) bar.classList.remove('hidden');
+      if (catSel) catSel.value = category;
+      window.renderOfferwallGGAllSections();
+    };
+
+    window.closeRjExplorerView = function() {
+      window.offerwallGGState.explorerOpen = false;
+      const bar = document.getElementById('rj-offers-explorer-bar');
+      const searchInp = document.getElementById('rj-offer-search-input');
+      const catSel = document.getElementById('rj-offer-category-filter');
+      const partSel = document.getElementById('rj-offer-partner-filter');
+      if (bar) bar.classList.add('hidden');
+      if (searchInp) searchInp.value = '';
+      if (catSel) catSel.value = 'all';
+      if (partSel) partSel.value = 'all';
+      window.renderOfferwallGGAllSections();
+    };
+
+    // Master Renderer for Games & Offers sections (Mobile + Desktop)
+    window.renderOfferwallGGAllSections = function() {
+      const gamesContainer = document.getElementById('desk-games-list');
+      const offersContainer = document.getElementById('desk-tasks-list');
+      const gamesSection = document.getElementById('desk-games-section');
+      const offersSection = document.getElementById('desk-offers-section');
+      const partnersSection = document.getElementById('desk-partners-section');
+
+      const isExplorer = !!window.offerwallGGState.explorerOpen;
+      const searchQ = (document.getElementById('rj-offer-search-input')?.value || '').toLowerCase().trim();
+      const partnerFilter = document.getElementById('rj-offer-partner-filter')?.value || 'all';
+      const categoryFilter = document.getElementById('rj-offer-category-filter')?.value || 'all';
+
+      const chkAndroid = document.getElementById('desk-filter-android')?.checked !== false;
+      const chkIos = document.getElementById('desk-filter-ios')?.checked !== false;
+      const chkDesktop = document.getElementById('desk-filter-desktop')?.checked !== false;
+
+      function matchesDeviceFilter(item) {
+        const devs = Array.isArray(item.devices) && item.devices.length > 0 ? item.devices : ['android', 'ios', 'desktop'];
+        if (chkAndroid && devs.includes('android')) return true;
+        if (chkIos && devs.includes('ios')) return true;
+        if (chkDesktop && devs.includes('desktop')) return true;
+        return chkAndroid && chkIos && chkDesktop;
+      }
+
+      // 1. Prepare Games List
+      let gamesList = (window.offerwallGGState.games || []).filter(g => {
+        if (!matchesDeviceFilter(g)) return false;
+        if (searchQ && !String(g.name || '').toLowerCase().includes(searchQ)) return false;
+        if (partnerFilter !== 'all' && partnerFilter !== 'offerwall.gg') return false;
+        return true;
+      });
+
+      // 2. Prepare Combined Offers & Sign-up Tasks List (Firestore Tasks + Offerwall.GG Offers)
+      const unattemptedFirestoreTasks = (allAvailableTasks || []).filter(t => {
         if (userSubmissions && userSubmissions[t.id]) return false;
         const limit = t.workerLimit || 0;
         if (limit > 0 && adminTaskStatsMap && adminTaskStatsMap[t.id] && adminTaskStatsMap[t.id].approved >= limit) {
           return false;
         }
         return true;
+      }).map(t => ({
+        id: t.id,
+        name: t.title,
+        title: t.title,
+        rewardTaka: t.rewardTaka,
+        rewardCoins: (Number(t.rewardTaka) || 0) * 10000,
+        iconImage: t.iconImage || (window.getZeydooPresetSvg ? window.getZeydooPresetSvg(t.isAutoPostback ? 'gift' : 'app') : SVG_OFFER_WHALE),
+        devices: ['android', 'ios', 'desktop'],
+        categories: ['offers', 'signups'],
+        provider: (t.isAutoPostback || t.taskType === 'zeydoo') ? 'zeydoo' : 'custom',
+        isPinned: !!t.isPinned,
+        isFirestoreTask: true
+      }));
+
+      unattemptedFirestoreTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+
+      const owOffersList = (window.offerwallGGState.offers || []).map(o => ({
+        ...o,
+        provider: 'offerwall.gg',
+        isFirestoreTask: false
+      }));
+
+      let combinedOffers = [...unattemptedFirestoreTasks, ...owOffersList].filter(item => {
+        if (!matchesDeviceFilter(item)) return false;
+        if (searchQ && !String(item.name || item.title || '').toLowerCase().includes(searchQ)) return false;
+        if (partnerFilter !== 'all' && item.provider !== partnerFilter) return false;
+        if (categoryFilter !== 'all' && categoryFilter !== 'offers' && categoryFilter !== 'games') {
+          const cats = Array.isArray(item.categories) ? item.categories : [];
+          if (!cats.includes(categoryFilter)) return false;
+        }
+        return true;
       });
 
-      unattemptedTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
+      // Update Counts
+      const gamesCountEl = document.getElementById('desk-games-count');
+      if (gamesCountEl) gamesCountEl.innerText = `${gamesList.length} Active`;
+      const offersCountEl = document.getElementById('desk-new-offers-count');
+      if (offersCountEl) offersCountEl.innerText = `${combinedOffers.length} Active`;
 
-      const countBadge = document.getElementById('desk-new-offers-count');
-      if (countBadge) countBadge.innerText = `${unattemptedTasks.length} Active`;
+      // Render Explorer ("View All") vs Standard View
+      if (isExplorer) {
+        if (partnersSection) partnersSection.classList.add('hidden');
+        if (categoryFilter === 'games') {
+          if (gamesSection) gamesSection.classList.remove('hidden');
+          if (offersSection) offersSection.classList.add('hidden');
+        } else if (categoryFilter === 'offers' || categoryFilter === 'deposits' || categoryFilter === 'shopping' || categoryFilter === 'surveys') {
+          if (gamesSection) gamesSection.classList.add('hidden');
+          if (offersSection) offersSection.classList.remove('hidden');
+        } else {
+          if (gamesSection) gamesSection.classList.remove('hidden');
+          if (offersSection) offersSection.classList.remove('hidden');
+        }
 
-      if (unattemptedTasks.length === 0) {
-        container.className = "w-full";
-        container.innerHTML = `
-          <div class="w-full bg-[var(--surface)] border border-[var(--border)] rounded-2xl p-8 text-center text-xs text-slate-400">
-            🎉 বর্তমানে সকল নতুন অফার সম্পন্ন হয়েছে! নিচের Games অথবা Unlimited Offerwall থেকে আনলিমিটেড আয় করুন।
-          </div>
-        `;
-        return;
+        if (gamesContainer) {
+          gamesContainer.className = "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5 sm:gap-4 pt-1";
+          gamesContainer.innerHTML = gamesList.map(g => buildRjCardHtml(g, true)).join('');
+        }
+        if (offersContainer) {
+          offersContainer.className = "grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2.5 sm:gap-4 pt-1";
+          offersContainer.innerHTML = combinedOffers.map(o => buildRjCardHtml(o, true)).join('');
+        }
+      } else {
+        if (gamesSection) gamesSection.classList.remove('hidden');
+        if (offersSection) offersSection.classList.remove('hidden');
+        if (partnersSection) partnersSection.classList.remove('hidden');
+
+        // On mobile (<768px): show 6 items (2 rows of 3) unless expanded; on desktop: horizontal carousel
+        const isMobileScreen = window.innerWidth < 768;
+        const visibleGames = isMobileScreen ? gamesList.slice(0, 6) : gamesList;
+        const visibleOffers = isMobileScreen ? combinedOffers.slice(0, 6) : combinedOffers;
+
+        if (gamesContainer) {
+          gamesContainer.className = "grid grid-cols-3 gap-2.5 sm:gap-4 md:flex md:overflow-x-auto md:pb-2 md:pt-1 md:snap-x hide-scrollbar scroll-smooth";
+          gamesContainer.innerHTML = visibleGames.map(g => buildRjCardHtml(g, false)).join('');
+        }
+        if (offersContainer) {
+          offersContainer.className = "grid grid-cols-3 gap-2.5 sm:gap-4 md:flex md:overflow-x-auto md:pb-2 md:pt-1 md:snap-x hide-scrollbar scroll-smooth";
+          offersContainer.innerHTML = visibleOffers.map(o => buildRjCardHtml(o, false)).join('');
+        }
       }
-
-      const cardWidthClass = window.isNewOffersViewAllExpanded ? "w-full" : "w-[172px] sm:w-[186px] shrink-0 snap-start";
-
-      container.innerHTML = unattemptedTasks.map(t => {
-        const isAuto = !!t.isAutoPostback || t.taskType === 'zeydoo';
-        const isPinned = !!t.isPinned;
-        const fallbackImg = isAuto ? window.getZeydooPresetSvg('gift') : window.getZeydooPresetSvg('app');
-        const imgSrc = t.iconImage || fallbackImg;
-
-        const topBadgeHtml = isAuto
-          ? `<span class="absolute top-2 left-2 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs flex items-center gap-0.5">⚡ AUTO</span>`
-          : (isPinned
-              ? `<span class="absolute top-2 left-2 bg-amber-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">📌 TOP</span>`
-              : `<span class="absolute top-2 left-2 bg-emerald-600/90 text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">✓ VERIFIED</span>`);
-
-        return `
-          <div onclick="handleOpenTask('${t.id}')" class="${cardWidthClass} bg-[var(--surface)] border border-slate-200/80 dark:border-[var(--border)] rounded-2xl p-3 shadow-2xs hover:shadow-lg hover:-translate-y-1 hover:border-orange-400/60 transition-all duration-200 cursor-pointer flex flex-col justify-between group/card">
-            <div>
-              <div class="w-full aspect-square rounded-xl overflow-hidden relative bg-slate-900 shadow-2xs">
-                <img src="${imgSrc}" alt="${(t.title || 'Offer').replace(/"/g, '&quot;')}" class="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300 block" loading="lazy" />
-                ${topBadgeHtml}
-                <!-- RewardJoy Device Icons Pill at Bottom-Right -->
-                <div class="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-xs px-2 py-1 rounded-full flex items-center gap-1.5 text-white shadow-xs">
-                  <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0001.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.2439 13.8533 7.8508 12 7.8508s-3.5902.3931-5.1367 1.0989L4.841 5.4467a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3435-4.1021-2.6892-7.5743-6.1185-9.4396"/></svg>
-                  <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
-                  <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                </div>
-              </div>
-              <div class="text-[13px] font-bold text-[var(--text)] truncate mt-2.5" title="${(t.title || '').replace(/"/g, '&quot;')}">${t.title}</div>
-            </div>
-            <div class="flex items-center justify-between mt-1">
-              <span class="text-[16px] font-extrabold text-[#f97316]">৳${t.rewardTaka}</span>
-              <span class="text-[10px] font-bold text-slate-400 group-hover/card:text-[#f97316] transition">${isAuto ? 'Instant ⚡' : 'Earn ➔'}</span>
-            </div>
-          </div>
-        `;
-      }).join('');
 
       refreshAllLucideIcons();
     };
 
-        window.OFFERWALL_GG_PUBLIC_KEY = "7495f3f6d2e6b19774fc1b67a4eecfa6";
+    window.renderDesktopTasks = window.renderOfferwallGGAllSections;
+
+    // Offerwall.GG Offer & Game Detail Modal Controls
+    window.openOfferwallOfferModal = function(offerId) {
+      const allItems = [...(window.offerwallGGState.games || []), ...(window.offerwallGGState.offers || [])];
+      const found = allItems.find(x => String(x.id) === String(offerId));
+      if (!found) {
+        window.openOfferwallGG();
+        return;
+      }
+
+      window.offerwallGGState.activeModalOffer = found;
+      const logoEl = document.getElementById('ow-modal-logo');
+      const titleEl = document.getElementById('ow-modal-title');
+      const coinsEl = document.getElementById('ow-modal-coins');
+      const takaEl = document.getElementById('ow-modal-taka');
+      const descEl = document.getElementById('ow-modal-desc');
+
+      const fallbackSvg = found.isGame ? SVG_GAME_BUBBLE : SVG_OFFER_WHALE;
+      if (logoEl) logoEl.src = found.image || found.iconImage || fallbackSvg;
+      if (titleEl) titleEl.innerText = found.name || found.title || 'Offerwall.GG Offer';
+
+      const coins = Number(found.rewardCoins) || ((Number(found.rewardTaka) || 10) * 10000);
+      const taka = Number(found.rewardTaka) || (coins / 10000);
+      if (coinsEl) coinsEl.innerText = `🪙 ${coins.toLocaleString()} Coins`;
+      if (takaEl) takaEl.innerText = `৳${taka >= 100 ? Math.round(taka).toLocaleString() : taka.toFixed(1)}`;
+      if (descEl) descEl.innerText = found.requirements || found.description || 'Complete the offer instructions on Offerwall.GG to earn instant rewards.';
+
+      document.getElementById('offerwall-offer-modal')?.classList.remove('hidden');
+    };
+
+    window.closeOfferwallOfferModal = function() {
+      document.getElementById('offerwall-offer-modal')?.classList.add('hidden');
+    };
+
+    window.startSelectedOfferwallOffer = function() {
+      if (!currentUser) {
+        window.closeOfferwallOfferModal();
+        window.openAuthModal('login');
+        return;
+      }
+      const offer = window.offerwallGGState.activeModalOffer;
+      if (!offer) {
+        window.openOfferwallGG();
+        return;
+      }
+
+      // Save to user's "Started" offers list in localStorage so it shows under My Offers -> Started
+      try {
+        const key = 'tr_started_offers_' + currentUser.uid;
+        const existing = JSON.parse(localStorage.getItem(key) || '[]');
+        if (!existing.some(x => String(x.id) === String(offer.id))) {
+          existing.unshift({
+            id: offer.id,
+            name: offer.name || offer.title,
+            image: offer.image || offer.iconImage || SVG_GAME_BUBBLE,
+            rewardTaka: offer.rewardTaka,
+            startedAt: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
+          });
+          localStorage.setItem(key, JSON.stringify(existing.slice(0, 30)));
+        }
+        window.renderStartedOffersGrid();
+      } catch (e) {}
+
+      const targetUrl = window.getOfferwallGGUrlForOffer(offer);
+      window.open(targetUrl, '_blank');
+      window.closeOfferwallOfferModal();
+    };
+
+    // Render Surveys Section (Offerwall.GG Surveys)
+    window.renderOfferwallGGSurveysSection = function() {
+      const container = document.getElementById('desk-live-surveys-list');
+      if (!container) return;
+      const list = window.offerwallGGState.surveys || [];
+      container.innerHTML = list.slice(0, 6).map(srv => {
+        const mins = srv.lengthMinutes || 5;
+        const taka = Number(srv.rewardTaka) || 44.8;
+        const title = srv.name || `${mins} Min Survey`;
+        return `
+          <div onclick="openOfferwallGG()" class="bg-[#f8fafc]/80 dark:bg-[var(--surface-2)] border border-slate-200/80 dark:border-[var(--border)] rounded-xl px-4 py-3.5 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
+            <div class="flex items-center gap-3 min-w-0">
+              <svg class="w-6 h-6 text-[#10b981] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 12l4.5-4.5"/></svg>
+              <div class="min-w-0">
+                <div class="text-xs font-extrabold text-[var(--text)] truncate">${title}</div>
+                <div class="flex items-center gap-1 text-slate-400 text-[11px] font-medium mt-0.5">
+                  <span>🕒 ${mins} Min</span>
+                  <span>•</span>
+                  <span class="text-emerald-600 dark:text-emerald-400 font-bold">Offerwall.GG</span>
+                </div>
+              </div>
+            </div>
+            <span class="font-extrabold text-[#f97316] text-[15px] sm:text-[17px] shrink-0 ml-2">৳ ${taka.toFixed(1)}</span>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.ensureOfferwallGGSurveyFrame = function() {
+      const uid = currentUser?.uid;
+      if (!uid) return;
+      const surveyFrame = document.getElementById('desk-offerwallgg-surveys-iframe');
+      if (surveyFrame && !surveyFrame.src.includes('offerwall.gg')) {
+        surveyFrame.src = `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}?userId=${encodeURIComponent(uid)}`;
+      }
+    };
+
+    // Render Browsing & Traffic Tasks (Exact Match to frame_085.jpg)
+    window.renderOfferwallGGBrowsingTasks = function() {
+      const container = document.getElementById('rj-browsing-tasks-list');
+      if (!container) return;
+
+      const defaultBrowsing = [
+        { id: 'br_1', title: 'Offerwall.GG Sponsored Traffic Task — Instant Reward', durationSeconds: 15, rewardCoins: 3000, rewardTaka: 0.3, clickUrl: MONETAG_DIRECT_AD_LINK },
+        { id: 'br_2', title: 'Explore High-Paying Games & Apps Portal', durationSeconds: 10, rewardCoins: 2000, rewardTaka: 0.2, clickUrl: MONETAG_DIRECT_AD_LINK },
+        { id: 'br_3', title: 'Daily Partner Showcase — Visit & Engage', durationSeconds: 10, rewardCoins: 2000, rewardTaka: 0.2, clickUrl: MONETAG_DIRECT_AD_LINK },
+        { id: 'br_4', title: 'VIP Passive Income & Micro-Task Bonus', durationSeconds: 10, rewardCoins: 1500, rewardTaka: 0.15, clickUrl: MONETAG_DIRECT_AD_LINK }
+      ];
+
+      const tasks = (window.offerwallGGState.traffic && window.offerwallGGState.traffic.length > 0)
+        ? [...window.offerwallGGState.traffic, ...defaultBrowsing]
+        : defaultBrowsing;
+
+      container.innerHTML = tasks.map(t => {
+        const sec = Number(t.durationSeconds) || 15;
+        const coins = Number(t.rewardCoins) || 2000;
+        const taka = (coins / 10000).toFixed(2);
+        const url = (t.clickUrl || MONETAG_DIRECT_AD_LINK).replace(/'/g, "\'");
+        return `
+          <div onclick="startSurfAd('${url}', ${sec}, ${coins})" class="card p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl flex items-center justify-between gap-4 cursor-pointer hover:border-orange-400 transition">
+            <div class="flex items-start gap-3.5 min-w-0">
+              <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-lg shrink-0">
+                🌐
+              </div>
+              <div class="min-w-0">
+                <h4 class="font-bold text-xs sm:text-sm text-[var(--text)] leading-snug">${t.title}</h4>
+                <div class="flex items-center gap-3 text-[11px] font-bold text-slate-400 mt-1.5">
+                  <span class="text-[#f97316] font-extrabold text-xs">৳ ${taka}</span>
+                  <span>🕒 ${sec}s</span>
+                  <span>📌 Frameless</span>
+                </div>
+              </div>
+            </div>
+            <button type="button" class="bg-[#f97316] hover:bg-orange-600 text-white font-bold text-xs px-4 py-2 rounded-xl shrink-0 cursor-pointer transition">
+              Start
+            </button>
+          </div>
+        `;
+      }).join('');
+    };
+
+    // Render Live Earnings Feed at Bottom of Offers Page (Exact Match to frame_034.jpg)
+    window.renderOfferwallGGLiveEarnings = function() {
+      const feed = document.getElementById('rj-live-earnings-feed');
+      if (!feed) return;
+      const items = [
+        ...(window.offerwallGGState.games || []).slice(0, 2),
+        ...(window.offerwallGGState.offers || []).slice(0, 2)
+      ];
+      const times = ['18m ago', '1h ago', '3h ago', '5h ago'];
+      feed.innerHTML = items.map((it, idx) => {
+        const fallbackSvg = it.isGame ? SVG_GAME_BUBBLE : SVG_OFFER_WHALE;
+        const img = it.image || it.iconImage || fallbackSvg;
+        const taka = Number(it.rewardTaka) || 28.3;
+        const clickHandler = `openOfferwallOfferModal('${String(it.id).replace(/'/g, "\'")}')`;
+        return `
+          <div onclick="${clickHandler}" class="card p-3.5 bg-[var(--surface)] border border-[var(--border)] rounded-2xl flex items-center justify-between gap-3 cursor-pointer hover:border-orange-400 transition">
+            <div class="flex items-center gap-3 min-w-0">
+              <img src="${img}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-12 h-12 rounded-xl object-cover shrink-0 bg-slate-900" alt="${it.name}" />
+              <div class="min-w-0">
+                <div class="font-bold text-xs sm:text-sm text-[var(--text)] truncate">${it.name}</div>
+                <button type="button" class="mt-1 bg-[#f97316] text-white font-bold text-[11px] px-3.5 py-1 rounded-lg">Start</button>
+              </div>
+            </div>
+            <div class="text-right shrink-0">
+              <div class="font-extrabold text-sm text-[#f97316]">৳${taka >= 100 ? Math.round(taka).toLocaleString() : taka.toFixed(1)}</div>
+              <div class="text-[11px] text-slate-400 mt-1">${times[idx % times.length]}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    // My Offers Tab: Started vs Completed Sub-Tabs (Exact Match to frame_058.jpg)
+    window.switchRjMyOffersSubTab = function(subTab) {
+      const btnStarted = document.getElementById('rj-myoffers-tab-started');
+      const btnCompleted = document.getElementById('rj-myoffers-tab-completed');
+      const boxStarted = document.getElementById('rj-myoffers-started-box');
+      const boxCompleted = document.getElementById('rj-myoffers-completed-box');
+
+      if (subTab === 'completed') {
+        boxStarted?.classList.add('hidden');
+        boxCompleted?.classList.remove('hidden');
+        if (btnCompleted) btnCompleted.className = "py-3 px-4 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 text-[#f97316] font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition";
+        if (btnStarted) btnStarted.className = "py-3 px-4 rounded-xl text-slate-500 dark:text-slate-400 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--surface-2)] transition";
+        renderCombinedMyOffersHistory();
+      } else {
+        boxStarted?.classList.remove('hidden');
+        boxCompleted?.classList.add('hidden');
+        if (btnStarted) btnStarted.className = "py-3 px-4 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 text-[#f97316] font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer transition";
+        if (btnCompleted) btnCompleted.className = "py-3 px-4 rounded-xl text-slate-500 dark:text-slate-400 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 cursor-pointer hover:bg-[var(--surface-2)] transition";
+        window.renderStartedOffersGrid();
+      }
+    };
+
+    window.renderStartedOffersGrid = function() {
+      const grid = document.getElementById('rj-myoffers-started-grid');
+      if (!grid) return;
+      let started = [];
+      try {
+        if (currentUser?.uid) {
+          started = JSON.parse(localStorage.getItem('tr_started_offers_' + currentUser.uid) || '[]');
+        }
+      } catch (e) {}
+
+      if (started.length === 0) {
+        // Show 3 recommended starter offers just like frame_058.jpg if none started yet
+        const sample = (window.offerwallGGState.offers || []).slice(0, 3);
+        grid.innerHTML = sample.map(it => buildRjCardHtml(it, true)).join('');
+        return;
+      }
+
+      grid.innerHTML = started.map(it => buildRjCardHtml(it, true)).join('');
+    };
+
     window.openOfferwallGG = function() {
       if (!currentUser) {
-        alert("Offerwall.GG অফারওয়ালে কাজ করতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
+        window.openAuthModal('login');
         return;
       }
       const uid = currentUser.uid;
-      const url = `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}?userId=${encodeURIComponent(uid)}`;
-      window.open(url, '_blank');
+      const url = "https://offerwall.gg/wall/" + window.OFFERWALL_GG_PUBLIC_KEY + "?userId=" + encodeURIComponent(uid);
+      window.open(url, "_blank");
     };
 
     window.toggleOfferwallGGIframe = function() {
-      if (!currentUser) {
-        alert("Offerwall.GG অফারওয়ালে কাজ করতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
-        return;
-      }
-      const container = document.getElementById('offerwallgg-iframe-container');
-      const iframe = document.getElementById('offerwallgg-iframe');
-      const btnText = document.getElementById('offerwallgg-toggle-text');
-      if (!container) return;
-      const isHidden = container.classList.contains('hidden');
-      if (isHidden) {
-        container.classList.remove('hidden');
-        if (btnText) btnText.innerText = 'বন্ধ করুন 🔼';
-        if (iframe) {
-          iframe.src = `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}?userId=${encodeURIComponent(currentUser.uid)}`;
-        }
-      } else {
-        container.classList.add('hidden');
-        if (btnText) btnText.innerText = 'অ্যাপে দেখুন 🔽';
-      }
+      window.openOfferwallGG();
     };
 
-    window.openBitcoTasksWall = function() {
+        window.openBitcoTasksWall = function() {
       if (!currentUser) {
         alert("BitcoTasks অফারওয়ালে কাজ করতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
         return;
@@ -4559,7 +5461,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         window.open(`https://offerwall.ayet.io/offers?adSlot=${window.AYET_ADSLOT_ID}&externalIdentifier=${currentUser.uid}`, '_blank');
         return;
       }
-      window.showRjErrorToast(`${partnerName} অফারওয়াল বর্তমানে রিভিউধীন রয়েছে। অনুগ্রহ করে Offerwall.GG, Timewall বা Bitcotasks ব্যবহার করুন!`);
+      window.showRjErrorToast(`${partnerName} অফারওয়াল বর্তমানে রিভিউধীন রয়েছে। অনুগ্রহ করে Timewall বা Bitcotasks ব্যবহার করুন!`);
     };
 
     window.openToroxInfo = function() {
@@ -4709,12 +5611,17 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     // Trigger IP country detection automatically on load
     window.detectUserCountryByIP(false);
+    if (window.renderOfferwallGGAllSections) window.renderOfferwallGGAllSections();
+    if (window.renderOfferwallGGSurveysSection) window.renderOfferwallGGSurveysSection();
+    if (window.renderOfferwallGGBrowsingTasks) window.renderOfferwallGGBrowsingTasks();
+    if (window.renderOfferwallGGLiveEarnings) window.renderOfferwallGGLiveEarnings();
 
     // ==========================================
     // REWARDJOY 1:1 DESKTOP WITHDRAW & WALLET ENGINE
     // ==========================================
     window.RJ_WITHDRAW_METHODS = [
       { id: 'bKash', name: 'bKash', tag: 'BDT', tagBg: 'bg-pink-100 text-[#e2136e]', iconHtml: `<img src="https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg" class="w-6 h-6 rounded-full object-cover shrink-0" alt="bKash" />`, label: 'bKash mobile number', placeholder: 'Fill your bKash Account', isBdMobile: true, isEnabled: true },
+      { id: 'Nagad', name: 'Nagad', tag: 'BDT', tagBg: 'bg-orange-100 text-orange-600', iconHtml: `<img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" class="w-6 h-6 rounded-full object-cover shrink-0" alt="Nagad" />`, label: 'Nagad mobile number', placeholder: 'Fill your Nagad Account', isBdMobile: true, isEnabled: true },
       { id: 'Bank Transfer', name: 'Bank Transfer', tag: 'BDT', tagBg: 'bg-rose-100 text-rose-600', iconHtml: `<span class="w-6 h-6 rounded-full bg-rose-500 text-white inline-flex items-center justify-center text-[11px] font-bold shrink-0">🏛</span>`, label: 'Bank Account Number & Bank Name', placeholder: 'Enter Bank Name & Account Number', isBdMobile: false, isEnabled: false },
       { id: 'Bitcoin', name: 'Bitcoin', tag: 'BTC', tagBg: 'bg-amber-100 text-amber-600', iconHtml: `<span class="w-6 h-6 rounded-full bg-amber-500 text-white inline-flex items-center justify-center text-xs font-bold shrink-0">₿</span>`, label: 'Bitcoin (BTC) Wallet Address', placeholder: 'Enter your BTC Address', isBdMobile: false, isEnabled: false },
       { id: 'Ethereum', name: 'Ethereum', tag: 'ETH', tagBg: 'bg-indigo-100 text-indigo-600', iconHtml: `<span class="w-6 h-6 rounded-full bg-indigo-500 text-white inline-flex items-center justify-center text-xs font-bold shrink-0">♦</span>`, label: 'Ethereum (ETH) Wallet Address', placeholder: 'Enter your ETH Address', isBdMobile: false, isEnabled: false },
@@ -4761,12 +5668,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
     window.openRjWithdrawForm = function(methodId) {
-      if (methodId !== 'bKash') {
-        window.showRjErrorToast("এটি এখন বন্ধ আছে, অন্য ওয়ে ট্রাই করুন।");
+      if (methodId !== 'bKash' && methodId !== 'Nagad') {
+        window.showRjErrorToast("এটি এখন বন্ধ আছে, অনুগ্রহ করে বিকাশ বা নগদ ব্যবহার করুন।");
         return;
       }
-      window.currentRjMethod = 'bKash';
-      selectedMethod = 'bKash';
+      window.currentRjMethod = methodId;
+      selectedMethod = methodId;
       document.getElementById('rj-withdraw-step-cards')?.classList.add('hidden');
       document.getElementById('rj-withdraw-step-form')?.classList.add('hidden');
       const loader = document.getElementById('rj-withdraw-loading');
@@ -4896,12 +5803,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
     window.selectRjMethodFromPicker = function(methodId) {
-      if (methodId !== 'bKash') {
-        window.showRjErrorToast("এটি এখন বন্ধ আছে, অন্য ওয়ে ট্রাই করুন।");
+      if (methodId !== 'bKash' && methodId !== 'Nagad') {
+        window.showRjErrorToast("এটি এখন বন্ধ আছে, অনুগ্রহ করে বিকাশ বা নগদ ব্যবহার করুন।");
         return;
       }
-      window.currentRjMethod = 'bKash';
-      selectedMethod = 'bKash';
+      window.currentRjMethod = methodId;
+      selectedMethod = methodId;
       window.syncRjWithdrawFormUI();
       window.closeRjMethodPickerModal();
     };
@@ -5042,8 +5949,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return;
       }
       const m = window.getRjMethodObj(window.currentRjMethod);
-      if (m.id !== 'bKash') {
-        window.showRjErrorToast("এটি এখন বন্ধ আছে, অন্য ওয়ে ট্রাই করুন।");
+      if (m.id !== 'bKash' && m.id !== 'Nagad') {
+        window.showRjErrorToast("এটি এখন বন্ধ আছে, অনুগ্রহ করে বিকাশ বা নগদ ব্যবহার করুন।");
         return;
       }
 
@@ -5419,6 +6326,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           console.warn("User doc snapshot notice:", err);
         });
 
+        window.fetchOfferwallGGLiveData();
         listenTasks();
         listenNotifications();
         listenUserSubmissions(user.uid);
@@ -5724,6 +6632,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       if (myOffersBox) myOffersBox.innerHTML = htmlItems;
       if (deskMyOffersBox) deskMyOffersBox.innerHTML = htmlItems;
+      const rjCompletedBox = document.getElementById('rj-myoffers-completed-list');
+      if (rjCompletedBox) rjCompletedBox.innerHTML = htmlItems;
+      const sbBadge = document.getElementById('sidebar-myoffers-badge');
+      if (sbBadge) sbBadge.innerText = totalCount;
     }
 
     function rebuildUserSubmissionsMap() {
@@ -6146,10 +7058,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const iframe = document.getElementById('timewall-iframe');
       if (iframe && uid) {
         iframe.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}`;
-      }
-      const owIframe = document.getElementById('offerwallgg-iframe');
-      if (owIframe && uid && !document.getElementById('offerwallgg-iframe-container')?.classList.contains('hidden')) {
-        owIframe.src = `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}?userId=${encodeURIComponent(uid)}`;
       }
     }
 
