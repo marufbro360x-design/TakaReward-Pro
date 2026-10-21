@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
+  <meta name="offerwall-verification" content="ow-cbd9a2957d11abc30749">
   <meta charset="UTF-8" />
     <!-- Top Status Bar Pure White (Like Tip Tip App) -->
   <meta name="theme-color" content="#ffffff" />
@@ -1634,7 +1635,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     <footer class="px-5 sm:px-8 pt-16 pb-10 mt-8" style="border-top:1px solid var(--border)">
       <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p class="text-[12.5px] font-semibold" style="color:var(--text-3)">© 2026 TakaReward Pro. All rights reserved.</p>
-        <div class="flex items-center gap-4">
+        <div class="flex flex-wrap items-center gap-4">
+          <a href="https://offerwall.gg" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white border border-slate-700 text-xs font-extrabold shadow-xs hover:opacity-90 transition">
+            <span class="text-amber-400">⚡</span>
+            <span>Powered by <span class="text-amber-400">OFFERWALL.GG</span></span>
+          </a>
           <span class="text-xs text-[var(--text-3)] font-bold">Admin: marufbro360x@gmail.com</span>
         </div>
       </div>
@@ -2040,7 +2045,21 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
                 <div id="desk-offerwall-partners-scroll" class="flex gap-4 overflow-x-auto pb-3 pt-1 snap-x hide-scrollbar scroll-smooth">
                   
-                  <!-- 1. Timewall (LIVE) -->
+                                    <!-- Offerwall.GG (LIVE) -->
+                  <div onclick="openOfferwallGG()" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-amber-300/80 dark:border-amber-900/40 bg-gradient-to-b from-white via-white to-[#fff9e6] dark:from-slate-900 dark:to-amber-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
+                    <div class="flex-1 flex items-center justify-center gap-2">
+                      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-yellow-500 flex items-center justify-center text-slate-950 font-black text-xl shadow-xs">
+                        ⚡
+                      </div>
+                      <div class="text-left leading-tight">
+                        <span class="font-black text-base text-slate-900 dark:text-white block">OFFERWALL</span>
+                        <span class="text-[11px] font-black text-amber-500 tracking-wider">.GG</span>
+                      </div>
+                    </div>
+                    <span class="text-xs font-bold text-amber-600 dark:text-amber-400">Offerwall.GG (Live)</span>
+                  </div>
+
+<!-- 1. Timewall (LIVE) -->
                   <div onclick="openTimeWall()" class="min-w-[185px] h-48 rounded-2xl p-5 flex flex-col items-center justify-between cursor-pointer border border-slate-200/80 dark:border-emerald-900/40 bg-gradient-to-b from-white via-white to-[#e6f9f0] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
                     <div class="flex-1 flex items-center justify-center">
                       <div class="flex items-center font-black text-2xl tracking-tight">
@@ -4496,6 +4515,40 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }).join('');
 
       refreshAllLucideIcons();
+    };
+
+    
+    window.OFFERWALL_GG_PUBLIC_KEY = "7495f3f6d2e6b19774fc1b67a4eecfa6";
+    window.openOfferwallGG = function() {
+      if (!currentUser) {
+        alert("Offerwall.GG অফারওয়ালে কাজ করতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
+        return;
+      }
+      const uid = currentUser.uid;
+      const url = "https://offerwall.gg/wall/" + window.OFFERWALL_GG_PUBLIC_KEY + "?userId=" + encodeURIComponent(uid);
+      window.open(url, "_blank");
+    };
+
+    window.toggleOfferwallGGIframe = function() {
+      if (!currentUser) {
+        alert("Offerwall.GG অফারওয়ালে কাজ করতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
+        return;
+      }
+      const container = document.getElementById("offerwallgg-iframe-container");
+      const iframe = document.getElementById("offerwallgg-iframe");
+      const btnText = document.getElementById("offerwallgg-toggle-text");
+      if (!container) return;
+      const isHidden = container.classList.contains("hidden");
+      if (isHidden) {
+        container.classList.remove("hidden");
+        if (btnText) btnText.innerText = "বন্ধ করুন 🔼";
+        if (iframe) {
+          iframe.src = "https://offerwall.gg/wall/" + window.OFFERWALL_GG_PUBLIC_KEY + "?userId=" + encodeURIComponent(currentUser.uid);
+        }
+      } else {
+        container.classList.add("hidden");
+        if (btnText) btnText.innerText = "অ্যাপে দেখুন 🔽";
+      }
     };
 
     window.openBitcoTasksWall = function() {
