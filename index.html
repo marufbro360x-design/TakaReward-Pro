@@ -4460,21 +4460,23 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return dId;
     }
 
-    // Direct Google Sign In (Mobile & Desktop Bulletproof Handler)
+    // Direct Google Sign In (Mobile & Desktop Bulletproof Handler with Instant Popup + Redirect Fallback)
     provider.setCustomParameters({ prompt: 'select_account' });
     let isGoogleLoginInProgress = false;
+
+    window.loginWithGoogleRedirectDirect = async function() {
+      try {
+        await signInWithRedirect(auth, provider);
+      } catch (err) {
+        console.error("Redirect login error:", err);
+        alert("গুগল রিডাইরেক্ট এরর: " + (err?.code || err?.message || "Unknown error"));
+      }
+    };
 
     window.loginWithGoogleSmart = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
       if (isGoogleLoginInProgress) return;
       isGoogleLoginInProgress = true;
-
-      const clickedBtn = (e && (e.currentTarget || e.target?.closest('button'))) || document.getElementById('btn-google-login');
-      const origBtnHtml = clickedBtn ? clickedBtn.innerHTML : '';
-      if (clickedBtn) {
-        clickedBtn.disabled = true;
-        clickedBtn.innerHTML = '<span>⏳ গুগল কানেক্ট হচ্ছে...</span>';
-      }
 
       let inputCode = document.getElementById('input-invite-code')?.value?.trim() || document.getElementById('heroInviteCode')?.value?.trim() || '';
       inputCode = extractCleanInviteCode(inputCode);
@@ -4483,8 +4485,20 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         sessionStorage.setItem('tr_pending_invite', inputCode);
       }
 
+      const heroEm = document.getElementById('heroEmail')?.value?.trim();
+      provider.setCustomParameters(heroEm ? { prompt: 'select_account', login_hint: heroEm } : { prompt: 'select_account' });
+
+      // Call signInWithPopup IMMEDIATELY on user click gesture before mutating button DOM so browsers never block the popup!
+      const popupPromise = signInWithPopup(auth, provider);
+
+      const clickedBtn = (e && (e.currentTarget || e.target?.closest('button'))) || document.getElementById('btn-google-login');
+      const origBtnHtml = clickedBtn ? (clickedBtn.dataset.origHtml || clickedBtn.innerHTML) : '';
+      if (clickedBtn) {
+        clickedBtn.innerHTML = '<span>⏳ গুগল কানেক্ট হচ্ছে...</span>';
+      }
+
       try {
-        const res = await signInWithPopup(auth, provider);
+        const res = await popupPromise;
         if (res && res.user) {
           currentUser = res.user;
           window.closeAuthModal();
@@ -4495,38 +4509,49 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         }
       } catch (err) {
         console.warn("Google Sign-In notice:", err?.code, err?.message);
-        // Wait 400ms to check if Firebase Auth already signed the user in despite COOP/popup close warning
-        await new Promise(r => setTimeout(r, 400));
+        // Wait 350ms to check if Firebase Auth already signed the user in despite COOP/popup close warning
+        await new Promise(r => setTimeout(r, 350));
         if (auth.currentUser) {
           currentUser = auth.currentUser;
           window.closeAuthModal();
+          document.getElementById('screen-login')?.classList.add('hidden');
+          document.getElementById('screen-app')?.classList.remove('hidden');
           syncDesktopUI(userData, auth.currentUser);
           processUserRegistration(auth.currentUser);
         } else {
           const code = err?.code || '';
-          if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
-            // User closed the account chooser; do not trigger a broken redirect
+          if (code === 'auth/unauthorized-domain') {
+            window.openAuthModal('signup');
+            alert("⚠️ ডোমেইন পারমিশন বাকি আছে!
+
+Firebase Console ➔ Authentication ➔ Settings ➔ Authorized domains-এ গিয়ে '" + window.location.hostname + "' এবং 'www.takarewardpro.com' যোগ করুন।
+
+ততক্ষণ নিচে আপনার Email ও Password দিয়ে ১-ক্লিকে সরাসরি একাউন্ট খুলে বা লগইন করে কাজ শুরু করতে পারবেন!");
           } else if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
             try {
               await signInWithRedirect(auth, provider);
               return;
             } catch (redirectErr) {
-              console.error("Redirect error:", redirectErr);
               window.openAuthModal('signup');
             }
-          } else if (code === 'auth/unauthorized-domain') {
-            alert("⚠️ ডোমেইন লগইন নোট: আপনার Firebase Console -> Authentication -> Settings -> Authorized domains-এ '" + window.location.hostname + "' ডোমেইনটি যুক্ত করুন অথবা নিচে ইমেইল ও পাসওয়ার্ড দিয়ে সরাসরি সাইন-ইন করুন!");
+          } else if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+            // Open the Auth Modal so the user never gets stuck on a dead button and can either use Email/Password or 1-click Google Redirect
             window.openAuthModal('signup');
+            if (window.showRjErrorToast) {
+              window.showRjErrorToast("গুগল পপআপটি বন্ধ হয়ে গেছে! পপআপ কাজ না করলে নিচে Email ও Password দিয়ে লগইন করুন অথবা Firebase Authorized Domains চেক করুন।");
+            }
           } else {
-            alert("গুগল পপআপ লগইন সম্পন্ন হয়নি (" + (code || "Error") + ")। আপনি চাইলে নিচে ইমেইল ও পাসওয়ার্ড দিয়ে সাথে সাথে লগইন করতে পারেন!");
             window.openAuthModal('signup');
+            alert("⚠️ গুগল লগইন সম্পন্ন হয়নি (" + (code || err?.message || "Error") + ")।
+
+নিচে ইমেইল ও পাসওয়ার্ড দিয়ে সরাসরি সাইন-আপ বা লগইন করুন!");
           }
         }
       } finally {
         isGoogleLoginInProgress = false;
-        if (clickedBtn) {
+        if (clickedBtn && origBtnHtml) {
           clickedBtn.disabled = false;
-          if (origBtnHtml) clickedBtn.innerHTML = origBtnHtml;
+          clickedBtn.innerHTML = origBtnHtml;
         }
       }
     };
@@ -4715,8 +4740,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (heroInv) {
         const inp = document.getElementById('input-invite-code');
         if (inp) inp.value = heroInv;
+        localStorage.setItem('tr_pending_invite', heroInv);
       }
-      window.loginWithGoogleSmart(e);
+      const heroEm = document.getElementById('heroEmail')?.value?.trim();
+      window.openAuthModal('signup');
+      if (heroEm) {
+        const authEmInp = document.getElementById('authEmailInput');
+        if (authEmInp) authEmInp.value = heroEm;
+        const passInp = document.getElementById('authPassInput');
+        if (passInp) setTimeout(() => passInp.focus(), 150);
+      }
       return false;
     };
 
