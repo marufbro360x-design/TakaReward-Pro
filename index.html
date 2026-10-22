@@ -91,35 +91,6 @@
   <meta name="apple-mobile-web-app-title" content="TakaReward Pro">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://takareward-bd.firebaseapp.com" crossorigin>
-  <script>
-    // Instant Mobile Auth & Modal Stub (Prevents dead clicks before Firebase ES Module finishes loading on slow 3G/4G)
-    window.__pendingAuthAction = null;
-    window.openAuthModal = window.openAuthModal || function(mode) {
-      var m = document.getElementById('authModal');
-      if (m) m.classList.add('show');
-      window.__pendingAuthAction = { type: 'modal', mode: mode || 'signup' };
-    };
-    window.closeAuthModal = window.closeAuthModal || function() {
-      var m = document.getElementById('authModal');
-      if (m) m.classList.remove('show');
-    };
-    window.loginWithGoogleSmart = window.loginWithGoogleSmart || function(e) {
-      if (e && e.preventDefault) e.preventDefault();
-      var btn = e && (e.currentTarget || e.target);
-      if (btn) {
-        btn.dataset.origHtml = btn.innerHTML;
-        btn.innerHTML = '<span>⏳ গুগল কানেক্ট হচ্ছে...</span>';
-      }
-      window.__pendingAuthAction = { type: 'google' };
-    };
-    window.handleHeroSubmit = window.handleHeroSubmit || function(e) {
-      if (e && e.preventDefault) e.preventDefault();
-      window.openAuthModal('signup');
-      return false;
-    };
-  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1483,14 +1454,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <h2 class="section-title text-[28px] sm:text-[32px]">Sign up for free</h2>
                 <p class="text-[13.5px] font-medium mt-2" style="color:var(--text-2)">Join millions earning daily. Your first payout in under 24 hours.</p>
               </div>
-              <form id="signupForm" class="space-y-3" onsubmit="handleHeroSubmit(event)">
+              <form id="signupForm" class="space-y-3.5" onsubmit="handleHeroSubmit(event)">
                 <div class="relative">
                   <i data-lucide="mail" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--text-3)"></i>
                   <input id="heroEmail" type="email" class="input !pl-11" placeholder="Email address" required />
-                </div>
-                <div class="relative">
-                  <i data-lucide="gift" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--brand)"></i>
-                  <input id="heroInviteCode" type="text" oninput="const el=document.getElementById('input-invite-code'); if(el) el.value=this.value;" class="input !pl-11 uppercase tracking-wider text-xs" placeholder="Invite Code (Optional - 30,000 Coins Bonus)" />
                 </div>
                 <button type="submit" class="btn btn-primary w-full !py-3.5 !text-[14px]"><i data-lucide="zap"></i> Start earning now</button>
               </form>
@@ -3044,56 +3011,28 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
   </div>
   
-  <!-- UNIFIED MOBILE & DESKTOP AUTH MODAL (1-Click Google/Apple + Instant Email Sign In / Sign Up) -->
+  <!-- DESKTOP AUTH MODAL (Direct Google & Apple Login Only - NO Password Form!) -->
   <div id="authModal" class="modal-backdrop">
     <div class="modal-panel max-w-[420px]">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2.5">
           <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-9 h-9 rounded-xl object-cover border border-orange-500 shadow-xs" />
-          <h3 id="authTitle" class="section-title text-[20px] sm:text-[21px]">Sign in to TakaReward Pro</h3>
+          <h3 id="authTitle" class="section-title text-[21px]">Sign in to TakaReward Pro</h3>
         </div>
-        <button type="button" onclick="closeAuthModal()" class="icon-btn !w-9 !h-9">✕</button>
+        <button type="button" onclick="closeAuthModal()" class="icon-btn !w-9 !h-9"><i data-lucide="x"></i></button>
       </div>
+      <p class="text-[13px] font-medium mb-6" style="color:var(--text-2)">Continue directly with your Google or Apple account to start earning instantly.</p>
 
-      <!-- Mode Switch Tabs: Sign Up / Sign In -->
-      <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] mb-4">
-        <button type="button" id="authTabSignup" onclick="switchAuthTab('signup')" class="tab active !py-2 text-xs font-extrabold">Sign Up</button>
-        <button type="button" id="authTabLogin" onclick="switchAuthTab('login')" class="tab !py-2 text-xs font-extrabold">Sign In</button>
-      </div>
-
-      <!-- 1-Click Google & Apple Buttons -->
-      <div class="space-y-2.5">
-        <button type="button" class="social-btn !py-3.5 !text-[14px] border-2 border-orange-500/30 hover:border-orange-500 shadow-xs" onclick="loginWithGoogleSmart(event)">
+      <div class="space-y-3">
+        <button type="button" class="social-btn !py-3.5 !text-[14px]" onclick="closeAuthModal(); loginWithGoogleSmart(event);">
           <svg viewBox="0 0 48 48" class="w-5 h-5"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 18.9 12 24 12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.3 4.1-4.1 5.5l6.2 5.2C36.9 39.1 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
-          <span>Continue with Google</span>
+          Sign in with Google
         </button>
-        <button type="button" class="social-btn !py-3 !text-[13.5px]" onclick="loginWithAppleSmart(event)">
+        <button type="button" class="social-btn !py-3.5 !text-[14px]" onclick="closeAuthModal(); loginWithAppleSmart(event);">
           <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
-          <span>Continue with Apple</span>
+          Sign in with Apple
         </button>
       </div>
-
-      <div class="flex items-center gap-3 my-4">
-        <div class="flex-1 h-px" style="background:var(--border)"></div>
-        <span class="text-[10.5px] font-extrabold tracking-wider" style="color:var(--text-3)">OR WITH EMAIL</span>
-        <div class="flex-1 h-px" style="background:var(--border)"></div>
-      </div>
-
-      <!-- Email & Password Form (Works in 100% of browsers even if popups are blocked) -->
-      <form onsubmit="handleFirebaseEmailAuth(event)" class="space-y-3">
-        <div id="authNameField">
-          <input id="authNameInput" type="text" class="input !py-2.5 !text-xs" placeholder="Your Full Name (Optional)" />
-        </div>
-        <div>
-          <input id="authEmailInput" type="email" class="input !py-2.5 !text-xs" placeholder="Email address" required />
-        </div>
-        <div>
-          <input id="authPassInput" type="password" class="input !py-2.5 !text-xs" placeholder="Password (min. 6 characters)" required />
-        </div>
-        <button type="submit" class="btn btn-primary w-full !py-3 !text-xs font-extrabold">
-          <span id="authBtnText">Create free account</span>
-        </button>
-      </form>
     </div>
   </div>
 
@@ -4460,114 +4399,47 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return dId;
     }
 
-    // Direct Google Sign In (Mobile & Desktop Bulletproof Handler with Instant Popup + Redirect Fallback)
-    provider.setCustomParameters({ prompt: 'select_account' });
-    let isGoogleLoginInProgress = false;
-
-    window.loginWithGoogleRedirectDirect = async function() {
-      try {
-        await signInWithRedirect(auth, provider);
-      } catch (err) {
-        console.error("Redirect login error:", err);
-        alert("গুগল রিডাইরেক্ট এরর: " + (err?.code || err?.message || "Unknown error"));
-      }
-    };
-
+    // Direct Google Sign In
     window.loginWithGoogleSmart = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
-      if (isGoogleLoginInProgress) return;
-      isGoogleLoginInProgress = true;
+      const btn = document.getElementById('btn-google-login');
+      const btnText = document.getElementById('btn-login-text');
+      if (btn && btn.dataset.loading === "true") return;
+      if (btn) btn.dataset.loading = "true";
+      if (btnText) btnText.innerText = 'গুগল কানেক্ট হচ্ছে...';
 
-      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || document.getElementById('heroInviteCode')?.value?.trim() || '';
+      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || '';
       inputCode = extractCleanInviteCode(inputCode);
       if (inputCode) {
         localStorage.setItem('tr_pending_invite', inputCode);
         sessionStorage.setItem('tr_pending_invite', inputCode);
       }
 
-      const heroEm = document.getElementById('heroEmail')?.value?.trim();
-      provider.setCustomParameters(heroEm ? { prompt: 'select_account', login_hint: heroEm } : { prompt: 'select_account' });
-
-      // Call signInWithPopup IMMEDIATELY on user click gesture before mutating button DOM so browsers never block the popup!
-      const popupPromise = signInWithPopup(auth, provider);
-
-      const clickedBtn = (e && (e.currentTarget || e.target?.closest('button'))) || document.getElementById('btn-google-login');
-      const origBtnHtml = clickedBtn ? (clickedBtn.dataset.origHtml || clickedBtn.innerHTML) : '';
-      if (clickedBtn) {
-        clickedBtn.innerHTML = '<span>⏳ গুগল কানেক্ট হচ্ছে...</span>';
-      }
-
       try {
-        const res = await popupPromise;
+        const heroEm = document.getElementById('heroEmail')?.value?.trim(); provider.setCustomParameters(heroEm ? { prompt: 'select_account', login_hint: heroEm } : { prompt: 'select_account' });
+        const res = await signInWithPopup(auth, provider);
         if (res && res.user) {
           currentUser = res.user;
-          window.closeAuthModal();
           document.getElementById('screen-login')?.classList.add('hidden');
           document.getElementById('screen-app')?.classList.remove('hidden');
-          syncDesktopUI(userData, res.user);
+        syncDesktopUI(userData, typeof user !== 'undefined' ? user : currentUser);
           processUserRegistration(res.user);
         }
       } catch (err) {
-        console.warn("Google Sign-In notice:", err?.code, err?.message);
-        // Wait 350ms to check if Firebase Auth already signed the user in despite COOP/popup close warning
-        await new Promise(r => setTimeout(r, 350));
-        if (auth.currentUser) {
-          currentUser = auth.currentUser;
-          window.closeAuthModal();
-          document.getElementById('screen-login')?.classList.add('hidden');
-          document.getElementById('screen-app')?.classList.remove('hidden');
-          syncDesktopUI(userData, auth.currentUser);
-          processUserRegistration(auth.currentUser);
-        } else {
-          const code = err?.code || '';
-          if (code === 'auth/unauthorized-domain') {
-            window.openAuthModal('signup');
-            alert("⚠️ ডোমেইন পারমিশন বাকি আছে!
-
-Firebase Console ➔ Authentication ➔ Settings ➔ Authorized domains-এ গিয়ে '" + window.location.hostname + "' এবং 'www.takarewardpro.com' যোগ করুন।
-
-ততক্ষণ নিচে আপনার Email ও Password দিয়ে ১-ক্লিকে সরাসরি একাউন্ট খুলে বা লগইন করে কাজ শুরু করতে পারবেন!");
-          } else if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
-            try {
-              await signInWithRedirect(auth, provider);
-              return;
-            } catch (redirectErr) {
-              window.openAuthModal('signup');
-            }
-          } else if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
-            // Open the Auth Modal so the user never gets stuck on a dead button and can either use Email/Password or 1-click Google Redirect
-            window.openAuthModal('signup');
-            if (window.showRjErrorToast) {
-              window.showRjErrorToast("গুগল পপআপটি বন্ধ হয়ে গেছে! পপআপ কাজ না করলে নিচে Email ও Password দিয়ে লগইন করুন অথবা Firebase Authorized Domains চেক করুন।");
-            }
-          } else {
-            window.openAuthModal('signup');
-            alert("⚠️ গুগল লগইন সম্পন্ন হয়নি (" + (code || err?.message || "Error") + ")।
-
-নিচে ইমেইল ও পাসওয়ার্ড দিয়ে সরাসরি সাইন-আপ বা লগইন করুন!");
-          }
+        console.warn("Popup error, switching to redirect fallback:", err);
+        // Fallback to redirect seamlessly on any mobile block or popup failure
+        try {
+          await signInWithRedirect(auth, provider);
+          return;
+        } catch (redirectErr) {
+          console.error("Redirect error:", redirectErr);
+          alert("লগইন সমস্যা: " + (redirectErr.message || redirectErr.code));
         }
       } finally {
-        isGoogleLoginInProgress = false;
-        if (clickedBtn && origBtnHtml) {
-          clickedBtn.disabled = false;
-          clickedBtn.innerHTML = origBtnHtml;
-        }
+        if (btn) btn.dataset.loading = "false";
+        if (btnText) btnText.innerText = 'Sign in with Google';
       }
     };
-
-    // Replay any queued click if user tapped Sign In / Google before Firebase ES module finished loading
-    setTimeout(() => {
-      if (window.__pendingAuthAction) {
-        const act = window.__pendingAuthAction;
-        window.__pendingAuthAction = null;
-        if (act.type === 'google') {
-          window.loginWithGoogleSmart();
-        } else if (act.type === 'modal') {
-          window.openAuthModal(act.mode || 'signup');
-        }
-      }
-    }, 100);
 
     document.getElementById('btn-google-login')?.addEventListener('click', window.loginWithGoogleSmart);
 
@@ -4736,20 +4608,7 @@ Firebase Console ➔ Authentication ➔ Settings ➔ Authorized domains-এ গ�
 
     window.handleHeroSubmit = function(e) {
       if (e && e.preventDefault) e.preventDefault();
-      const heroInv = document.getElementById('heroInviteCode')?.value?.trim();
-      if (heroInv) {
-        const inp = document.getElementById('input-invite-code');
-        if (inp) inp.value = heroInv;
-        localStorage.setItem('tr_pending_invite', heroInv);
-      }
-      const heroEm = document.getElementById('heroEmail')?.value?.trim();
-      window.openAuthModal('signup');
-      if (heroEm) {
-        const authEmInp = document.getElementById('authEmailInput');
-        if (authEmInp) authEmInp.value = heroEm;
-        const passInp = document.getElementById('authPassInput');
-        if (passInp) setTimeout(() => passInp.focus(), 150);
-      }
+      window.loginWithGoogleSmart(e);
       return false;
     };
 
