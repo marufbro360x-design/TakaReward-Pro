@@ -91,6 +91,37 @@
   <meta name="apple-mobile-web-app-title" content="TakaReward Pro">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://takareward-bd.firebaseapp.com" crossorigin>
+  <script>
+    // Instant Mobile Auth & Modal Stub (Prevents dead clicks before Firebase ES Module finishes loading on slow 3G/4G)
+    window.__pendingAuthAction = null;
+    window.openAuthModal = window.openAuthModal || function(mode) {
+      var m = document.getElementById('authModal');
+      if (m) m.classList.add('show');
+      window.__pendingAuthAction = { type: 'modal', mode: mode || 'signup' };
+    };
+    window.closeAuthModal = window.closeAuthModal || function() {
+      var m = document.getElementById('authModal');
+      if (m) m.classList.remove('show');
+    };
+    window.isGoogleAuthInFlight = false;
+    window.loginWithGoogleSmart = window.loginWithGoogleSmart || function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      if (e && e.stopPropagation) e.stopPropagation();
+      var btn = e && (e.currentTarget || (e.target && e.target.closest ? e.target.closest('button') : e.target));
+      if (btn && !btn.dataset.origHtml) {
+        btn.dataset.origHtml = btn.innerHTML;
+        btn.innerHTML = '<span>⏳ গুগল কানেক্ট হচ্ছে...</span>';
+      }
+      window.__pendingAuthAction = { type: 'google' };
+    };
+    window.handleHeroSubmit = window.handleHeroSubmit || function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      window.openAuthModal('signup');
+      return false;
+    };
+  </script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1454,10 +1485,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <h2 class="section-title text-[28px] sm:text-[32px]">Sign up for free</h2>
                 <p class="text-[13.5px] font-medium mt-2" style="color:var(--text-2)">Join millions earning daily. Your first payout in under 24 hours.</p>
               </div>
-              <form id="signupForm" class="space-y-3.5" onsubmit="handleHeroSubmit(event)">
+              <form id="signupForm" class="space-y-3" onsubmit="handleHeroSubmit(event)">
                 <div class="relative">
                   <i data-lucide="mail" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--text-3)"></i>
                   <input id="heroEmail" type="email" class="input !pl-11" placeholder="Email address" required />
+                </div>
+                <div class="relative">
+                  <i data-lucide="gift" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--brand)"></i>
+                  <input id="heroInviteCode" type="text" oninput="const el=document.getElementById('input-invite-code'); if(el) el.value=this.value;" class="input !pl-11 uppercase tracking-wider text-xs" placeholder="Invite Code (Optional - 30,000 Coins Bonus)" />
                 </div>
                 <button type="submit" class="btn btn-primary w-full !py-3.5 !text-[14px]"><i data-lucide="zap"></i> Start earning now</button>
               </form>
@@ -3011,28 +3046,56 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
   </div>
   
-  <!-- DESKTOP AUTH MODAL (Direct Google & Apple Login Only - NO Password Form!) -->
+  <!-- UNIFIED MOBILE & DESKTOP AUTH MODAL (1-Click Google/Apple + Instant Email Sign In / Sign Up) -->
   <div id="authModal" class="modal-backdrop">
     <div class="modal-panel max-w-[420px]">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2.5">
           <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-9 h-9 rounded-xl object-cover border border-orange-500 shadow-xs" />
-          <h3 id="authTitle" class="section-title text-[21px]">Sign in to TakaReward Pro</h3>
+          <h3 id="authTitle" class="section-title text-[20px] sm:text-[21px]">Sign in to TakaReward Pro</h3>
         </div>
-        <button type="button" onclick="closeAuthModal()" class="icon-btn !w-9 !h-9"><i data-lucide="x"></i></button>
+        <button type="button" onclick="closeAuthModal()" class="icon-btn !w-9 !h-9">✕</button>
       </div>
-      <p class="text-[13px] font-medium mb-6" style="color:var(--text-2)">Continue directly with your Google or Apple account to start earning instantly.</p>
 
-      <div class="space-y-3">
-        <button type="button" class="social-btn !py-3.5 !text-[14px]" onclick="closeAuthModal(); loginWithGoogleSmart(event);">
+      <!-- Mode Switch Tabs: Sign Up / Sign In -->
+      <div class="grid grid-cols-2 gap-2 p-1 rounded-2xl bg-[var(--surface-2)] border border-[var(--border)] mb-4">
+        <button type="button" id="authTabSignup" onclick="switchAuthTab('signup')" class="tab active !py-2 text-xs font-extrabold">Sign Up</button>
+        <button type="button" id="authTabLogin" onclick="switchAuthTab('login')" class="tab !py-2 text-xs font-extrabold">Sign In</button>
+      </div>
+
+      <!-- 1-Click Google & Apple Buttons -->
+      <div class="space-y-2.5">
+        <button type="button" class="social-btn !py-3.5 !text-[14px] border-2 border-orange-500/30 hover:border-orange-500 shadow-xs" onclick="loginWithGoogleSmart(event)">
           <svg viewBox="0 0 48 48" class="w-5 h-5"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.9 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.1 18.9 12 24 12c3.1 0 5.8 1.1 8 3l5.7-5.7C34.1 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.3 26.7 36 24 36c-5.2 0-9.6-3.1-11.3-7.6l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.3 4.1-4.1 5.5l6.2 5.2C36.9 39.1 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
-          Sign in with Google
+          <span>Continue with Google</span>
         </button>
-        <button type="button" class="social-btn !py-3.5 !text-[14px]" onclick="closeAuthModal(); loginWithAppleSmart(event);">
+        <button type="button" class="social-btn !py-3 !text-[13.5px]" onclick="loginWithAppleSmart(event)">
           <svg viewBox="0 0 24 24" class="w-5 h-5 fill-current"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 6.84c.62-.75 1.04-1.8 1.01-2.84-.9.04-1.99.6-2.63 1.35-.57.65-1.07 1.71-1.02 2.73 1 .08 2.02-.49 2.64-1.24z"/></svg>
-          Sign in with Apple
+          <span>Continue with Apple</span>
         </button>
       </div>
+
+      <div class="flex items-center gap-3 my-4">
+        <div class="flex-1 h-px" style="background:var(--border)"></div>
+        <span class="text-[10.5px] font-extrabold tracking-wider" style="color:var(--text-3)">OR WITH EMAIL</span>
+        <div class="flex-1 h-px" style="background:var(--border)"></div>
+      </div>
+
+      <!-- Email & Password Form (Works in 100% of browsers even if popups are blocked) -->
+      <form onsubmit="handleFirebaseEmailAuth(event)" class="space-y-3">
+        <div id="authNameField">
+          <input id="authNameInput" type="text" class="input !py-2.5 !text-xs" placeholder="Your Full Name (Optional)" />
+        </div>
+        <div>
+          <input id="authEmailInput" type="email" class="input !py-2.5 !text-xs" placeholder="Email address" required />
+        </div>
+        <div>
+          <input id="authPassInput" type="password" class="input !py-2.5 !text-xs" placeholder="Password (min. 6 characters)" required />
+        </div>
+        <button type="submit" class="btn btn-primary w-full !py-3 !text-xs font-extrabold">
+          <span id="authBtnText">Create free account</span>
+        </button>
+      </form>
     </div>
   </div>
 
@@ -4269,6 +4332,28 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     const BKASH_LOGO = "https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg";
     const NAGAD_LOGO = "https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg";
+    const MONETAG_DIRECT_AD_LINK = "https://uplcm.com/4/12077628";
+    const TIMEWALL_PLACEMENT_ID = "e62ce94a3f9bf6b3";
+
+    let isClaimingDailyAd = false;
+    let manualSubmissionsList = [];
+    let zeydooAutoCompletionsList = [];
+    let offerwallGGCompletionsList = [];
+    let knownOfferwallGGLogIds = new Set();
+    let isFirstOfferwallGGSnapshot = true;
+    let zeydooCompletedMap = {};
+    let knownZeydooLogIds = new Set();
+    let isFirstZeydooSnapshot = true;
+    let activeZeydooAutoTask = null;
+    let adminAllUsersList = [];
+    let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
+    let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
+    let isDesktopWideMode = true;
+    let currentEditingTaskId = null;
+    let currentEditingTaskIcon = null;
+    const bnStepNumbers = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '১০', '১১', '১২', '১৩', '১৪', '১৫', '১৬', '১৭', '১৮', '১৯', '২০'];
+    let unsubMyReferrals = null;
+    let activeReferralListenerCode = null;
 
     
     // Robust Referral Code Extractor
@@ -4351,68 +4436,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     let adminSubmissionsMap = {};
     let clientIP = "Unknown";
     let selectedAvatarUrl = "";
-    const MONETAG_DIRECT_AD_LINK = "https://uplcm.com/4/12077628";
-    let isClaimingDailyAd = false;
-    let manualSubmissionsList = [];
-    let zeydooAutoCompletionsList = [];
-    let offerwallGGCompletionsList = [];
-    let knownOfferwallGGLogIds = new Set();
-    let isFirstOfferwallGGSnapshot = true;
-    let zeydooCompletedMap = {};
-    let knownZeydooLogIds = new Set();
-    let isFirstZeydooSnapshot = true;
-    let activeZeydooAutoTask = null;
-    const TIMEWALL_PLACEMENT_ID = "e62ce94a3f9bf6b3";
-    let adminAllUsersList = [];
-    let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
-    let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
-    let isDesktopWideMode = true;
-    let currentEditingTaskId = null;
-    let currentEditingTaskIcon = null;
-    const bnStepNumbers = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '১০', '১১', '১২', '১৩', '১৪', '১৫', '১৬', '১৭', '১৮', '১৯', '২০'];
-    let unsubMyReferrals = null;
-    let activeReferralListenerCode = null;
-    // ================= ZEYDOO AUTO CPA OFFER IMPORTER & 50% PROFIT AUTO-POSTER =================
-    const ZEYDOO_3D_PRESETS = {
-      gift: {
-        title: "Click to claim your bonus prize!",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="gBg" cx="50%" cy="40%" r="65%"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#0f172a"/></radialGradient><linearGradient id="boxW" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cbd5e1"/></linearGradient><linearGradient id="ribR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="100%" stop-color="#c9184a"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gBg)"/><circle cx="120" cy="115" r="78" fill="#ef4444" opacity="0.18"/><polygon points="55,105 120,78 185,105 185,180 120,208 55,180" fill="url(#boxW)"/><polygon points="55,105 120,132 120,208 55,180" fill="#e2e8f0"/><polygon points="120,132 185,105 185,180 120,208" fill="#cbd5e1"/><polygon points="50,92 120,64 190,92 120,120" fill="#f8fafc"/><polygon points="106,70 134,70 134,205 106,205" fill="url(#ribR)"/><ellipse cx="102" cy="66" rx="24" ry="13" transform="rotate(-20 102 66)" fill="url(#ribR)"/><ellipse cx="138" cy="66" rx="24" ry="13" transform="rotate(20 138 66)" fill="url(#ribR)"/><circle cx="120" cy="70" r="10" fill="#a4133c"/></svg>`)
-      },
-      wheel: {
-        title: "Spin & Win Instant Cash Reward!",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="wBg" cx="50%" cy="45%" r="65%"><stop offset="0%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#0f766e"/></radialGradient></defs><rect width="240" height="240" rx="36" fill="url(#wBg)"/><circle cx="120" cy="122" r="80" fill="#042f2e" opacity="0.3"/><circle cx="120" cy="120" r="74" fill="#ffffff" stroke="#cbd5e1" stroke-width="6"/><path d="M120,120 L120,46 A74,74 0 0,1 184,83 Z" fill="#ef4444"/><path d="M120,120 L184,83 A74,74 0 0,1 184,157 Z" fill="#f8fafc"/><path d="M120,120 L184,157 A74,74 0 0,1 120,194 Z" fill="#ef4444"/><path d="M120,120 L120,194 A74,74 0 0,1 56,157 Z" fill="#f8fafc"/><path d="M120,120 L56,157 A74,74 0 0,1 56,83 Z" fill="#ef4444"/><path d="M120,120 L56,83 A74,74 0 0,1 120,46 Z" fill="#f8fafc"/><circle cx="120" cy="120" r="16" fill="#f59e0b" stroke="#ffffff" stroke-width="4"/><polygon points="120,32 110,52 130,52" fill="#facc15" stroke="#78350f" stroke-width="2"/></svg>`)
-      },
-      chest: {
-        title: "Playable: Open Golden Treasure Chest!",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="cBg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#451a03"/><stop offset="100%" stop-color="#1c1917"/></radialGradient><linearGradient id="goldG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fde047"/><stop offset="100%" stop-color="#ca8a04"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#cBg)"/><circle cx="120" cy="115" r="76" fill="#f59e0b" opacity="0.22"/><rect x="52" y="105" width="136" height="75" rx="14" fill="#92400e" stroke="url(#goldG)" stroke-width="6"/><path d="M52,105 Q120,55 188,105 Z" fill="#b45309" stroke="url(#goldG)" stroke-width="6"/><rect x="106" y="95" width="28" height="34" rx="6" fill="url(#goldG)"/><circle cx="120" cy="112" r="5" fill="#451a03"/><circle cx="88" cy="84" r="10" fill="#fde047"/><circle cx="152" cy="84" r="10" fill="#fde047"/></svg>`)
-      },
-      survey: {
-        title: "Quick Finance & Social Survey Offer",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="sBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#sBg)"/><rect x="64" y="46" width="112" height="148" rx="16" fill="#ffffff"/><rect x="92" y="34" width="56" height="24" rx="8" fill="#f59e0b"/><circle cx="90" cy="92" r="10" fill="#10b981"/><rect x="110" y="86" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="126" r="10" fill="#10b981"/><rect x="110" y="120" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="160" r="10" fill="#f97316"/><rect x="110" y="154" width="36" height="10" rx="5" fill="#cbd5e1"/></svg>`)
-      },
-      app: {
-        title: "Smart App Install & Action Bonus",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="aBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient><linearGradient id="wGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#2563eb"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#aBg)"/><text x="120" y="158" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="900" font-size="118" fill="url(#wGrad)">W</text></svg>`)
-      },
-      game: {
-        title: "Play & Complete Instant Level Task",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="gmBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gmBg)"/><rect x="46" y="76" width="148" height="90" rx="42" fill="#ffffff"/><rect x="74" y="106" width="28" height="10" rx="4" fill="#7c3aed"/><rect x="83" y="97" width="10" height="28" rx="4" fill="#7c3aed"/><circle cx="152" cy="104" r="8" fill="#ef4444"/><circle cx="168" cy="118" r="8" fill="#f59e0b"/><circle cx="136" cy="118" r="8" fill="#10b981"/><circle cx="152" cy="132" r="8" fill="#3b82f6"/></svg>`)
-      }
-    };
-
-    window.currentZeydooPresetKey = 'gift';
-    window.currentZeydooCustomLogo = null;
-
-    window.getZeydooPresetSvg = function(key) {
-      return (ZEYDOO_3D_PRESETS[key] || ZEYDOO_3D_PRESETS.gift).svg;
-    };
-
 
     async function initClientIP() {
       try {
@@ -4461,69 +4484,94 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return dId;
     }
 
-    // Direct Google Sign In (Single-Request Guarded)
+    // Direct Google Sign In (Single-Request Lock: isGoogleAuthInFlight, No Double Listener, No 2nd Redirect Request)
+    provider.setCustomParameters({ prompt: 'select_account' });
     let isGoogleAuthInFlight = false;
+    window.isGoogleAuthInFlight = false;
+
     window.loginWithGoogleSmart = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
       if (e && e.stopPropagation) e.stopPropagation();
-      if (isGoogleAuthInFlight) return;
+
+      // Single-request lock: prevent duplicate popup or redirect requests
+      if (isGoogleAuthInFlight || window.isGoogleAuthInFlight) return;
       isGoogleAuthInFlight = true;
+      window.isGoogleAuthInFlight = true;
 
-      const btn = document.getElementById('btn-google-login');
-      const btnText = document.getElementById('btn-login-text');
-      if (btn) btn.dataset.loading = "true";
-      if (btnText) btnText.innerText = 'গুগল কানেক্ট হচ্ছে...';
+      const clickedBtn = (e && (e.currentTarget || (e.target && e.target.closest ? e.target.closest('button') : null))) || document.getElementById('btn-google-login');
+      const origBtnHtml = clickedBtn ? (clickedBtn.dataset.origHtml || clickedBtn.innerHTML) : '';
+      if (clickedBtn) {
+        clickedBtn.disabled = true;
+        clickedBtn.innerHTML = '<span>⏳ গুগল কানেক্ট হচ্ছে...</span>';
+      }
 
-      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || '';
+      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || document.getElementById('heroInviteCode')?.value?.trim() || '';
       inputCode = extractCleanInviteCode(inputCode);
       if (inputCode) {
         localStorage.setItem('tr_pending_invite', inputCode);
         sessionStorage.setItem('tr_pending_invite', inputCode);
       }
 
-      let res = null;
       try {
         const heroEm = document.getElementById('heroEmail')?.value?.trim();
         provider.setCustomParameters(heroEm ? { prompt: 'select_account', login_hint: heroEm } : { prompt: 'select_account' });
-        res = await signInWithPopup(auth, provider);
-      } catch (err) {
-        const code = err?.code || '';
-        if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
-          console.warn("Popup closed or cancelled by user:", code);
-          isGoogleAuthInFlight = false;
-          if (btn) btn.dataset.loading = "false";
-          if (btnText) btnText.innerText = 'Sign in with Google';
-          return;
-        }
-        if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
-          console.warn("Popup blocked by browser, switching to redirect fallback:", err);
-          try {
-            await signInWithRedirect(auth, provider);
-            return;
-          } catch (redirectErr) {
-            console.error("Redirect error:", redirectErr);
-            alert("লগইন সমস্যা: " + (redirectErr.message || redirectErr.code));
+        const res = await signInWithPopup(auth, provider);
+        if (res && res.user) {
+          currentUser = res.user;
+          if (typeof window.closeAuthModal === 'function') window.closeAuthModal();
+          document.getElementById('screen-login')?.classList.add('hidden');
+          document.getElementById('screen-app')?.classList.remove('hidden');
+          if (typeof window.syncDesktopUI === 'function') {
+            try { window.syncDesktopUI(userData, res.user); } catch (uiErr) { console.warn("UI sync notice:", uiErr); }
           }
+          processUserRegistration(res.user);
+        }
+      } catch (err) {
+        console.warn("Google Sign-In notice:", err?.code, err?.message);
+        // Wait briefly in case Firebase Auth completed sign-in before COOP/popup warning
+        await new Promise(r => setTimeout(r, 350));
+        if (auth.currentUser) {
+          currentUser = auth.currentUser;
+          if (typeof window.closeAuthModal === 'function') window.closeAuthModal();
+          document.getElementById('screen-login')?.classList.add('hidden');
+          document.getElementById('screen-app')?.classList.remove('hidden');
+          if (typeof window.syncDesktopUI === 'function') {
+            try { window.syncDesktopUI(userData, auth.currentUser); } catch (uiErr) { console.warn("UI sync notice:", uiErr); }
+          }
+          processUserRegistration(auth.currentUser);
         } else {
-          console.error("Google Sign-In error:", err);
-          alert("লগইন সমস্যা: " + (err.message || err.code));
+          const code = err?.code || '';
+          if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+            // User closed the popup manually — do nothing
+          } else if (code === 'auth/unauthorized-domain') {
+            alert("⚠️ ডোমেইন লগইন নোট: আপনার Firebase Console -> Authentication -> Settings -> Authorized domains-এ '" + window.location.hostname + "' ডোমেইনটি যুক্ত করুন অথবা নিচে ইমেইল ও পাসওয়ার্ড দিয়ে সরাসরি সাইন-ইন করুন!");
+          } else {
+            console.error("Google Popup Login Error:", err);
+          }
         }
       } finally {
         isGoogleAuthInFlight = false;
-        if (btn) btn.dataset.loading = "false";
-        if (btnText) btnText.innerText = 'Sign in with Google';
-      }
-
-      if (res && res.user) {
-        currentUser = res.user;
-        document.getElementById('screen-login')?.classList.add('hidden');
-        document.getElementById('screen-app')?.classList.remove('hidden');
-        if (typeof window.syncDesktopUI === 'function') {
-          window.syncDesktopUI(userData, currentUser);
+        window.isGoogleAuthInFlight = false;
+        if (clickedBtn) {
+          clickedBtn.disabled = false;
+          if (origBtnHtml) clickedBtn.innerHTML = origBtnHtml;
+          delete clickedBtn.dataset.origHtml;
         }
-        processUserRegistration(res.user);
       }
     };
+
+    // Replay any queued click if user tapped Sign In / Google before Firebase ES module finished loading
+    setTimeout(() => {
+      if (window.__pendingAuthAction) {
+        const act = window.__pendingAuthAction;
+        window.__pendingAuthAction = null;
+        if (act.type === 'google') {
+          window.loginWithGoogleSmart();
+        } else if (act.type === 'modal') {
+          window.openAuthModal(act.mode || 'signup');
+        }
+      }
+    }, 100);
 
     async function handleRedirectAuth() {
       try {
@@ -4690,6 +4738,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.handleHeroSubmit = function(e) {
       if (e && e.preventDefault) e.preventDefault();
+      const heroInv = document.getElementById('heroInviteCode')?.value?.trim();
+      if (heroInv) {
+        const inp = document.getElementById('input-invite-code');
+        if (inp) inp.value = heroInv;
+      }
       window.loginWithGoogleSmart(e);
       return false;
     };
@@ -4834,6 +4887,48 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     // =========================================================================
     // OFFERWALL.GG LIVE API ENGINE (Games, Offers/Sign-ups, Surveys & Traffic)
     // =========================================================================
+    // ================= ZEYDOO AUTO CPA OFFER IMPORTER & 50% PROFIT AUTO-POSTER =================
+    const ZEYDOO_3D_PRESETS = {
+      gift: {
+        title: "Click to claim your bonus prize!",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="gBg" cx="50%" cy="40%" r="65%"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#0f172a"/></radialGradient><linearGradient id="boxW" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cbd5e1"/></linearGradient><linearGradient id="ribR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="100%" stop-color="#c9184a"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gBg)"/><circle cx="120" cy="115" r="78" fill="#ef4444" opacity="0.18"/><polygon points="55,105 120,78 185,105 185,180 120,208 55,180" fill="url(#boxW)"/><polygon points="55,105 120,132 120,208 55,180" fill="#e2e8f0"/><polygon points="120,132 185,105 185,180 120,208" fill="#cbd5e1"/><polygon points="50,92 120,64 190,92 120,120" fill="#f8fafc"/><polygon points="106,70 134,70 134,205 106,205" fill="url(#ribR)"/><ellipse cx="102" cy="66" rx="24" ry="13" transform="rotate(-20 102 66)" fill="url(#ribR)"/><ellipse cx="138" cy="66" rx="24" ry="13" transform="rotate(20 138 66)" fill="url(#ribR)"/><circle cx="120" cy="70" r="10" fill="#a4133c"/></svg>`)
+      },
+      wheel: {
+        title: "Spin & Win Instant Cash Reward!",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="wBg" cx="50%" cy="45%" r="65%"><stop offset="0%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#0f766e"/></radialGradient></defs><rect width="240" height="240" rx="36" fill="url(#wBg)"/><circle cx="120" cy="122" r="80" fill="#042f2e" opacity="0.3"/><circle cx="120" cy="120" r="74" fill="#ffffff" stroke="#cbd5e1" stroke-width="6"/><path d="M120,120 L120,46 A74,74 0 0,1 184,83 Z" fill="#ef4444"/><path d="M120,120 L184,83 A74,74 0 0,1 184,157 Z" fill="#f8fafc"/><path d="M120,120 L184,157 A74,74 0 0,1 120,194 Z" fill="#ef4444"/><path d="M120,120 L120,194 A74,74 0 0,1 56,157 Z" fill="#f8fafc"/><path d="M120,120 L56,157 A74,74 0 0,1 56,83 Z" fill="#ef4444"/><path d="M120,120 L56,83 A74,74 0 0,1 120,46 Z" fill="#f8fafc"/><circle cx="120" cy="120" r="16" fill="#f59e0b" stroke="#ffffff" stroke-width="4"/><polygon points="120,32 110,52 130,52" fill="#facc15" stroke="#78350f" stroke-width="2"/></svg>`)
+      },
+      chest: {
+        title: "Playable: Open Golden Treasure Chest!",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="cBg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#451a03"/><stop offset="100%" stop-color="#1c1917"/></radialGradient><linearGradient id="goldG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fde047"/><stop offset="100%" stop-color="#ca8a04"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#cBg)"/><circle cx="120" cy="115" r="76" fill="#f59e0b" opacity="0.22"/><rect x="52" y="105" width="136" height="75" rx="14" fill="#92400e" stroke="url(#goldG)" stroke-width="6"/><path d="M52,105 Q120,55 188,105 Z" fill="#b45309" stroke="url(#goldG)" stroke-width="6"/><rect x="106" y="95" width="28" height="34" rx="6" fill="url(#goldG)"/><circle cx="120" cy="112" r="5" fill="#451a03"/><circle cx="88" cy="84" r="10" fill="#fde047"/><circle cx="152" cy="84" r="10" fill="#fde047"/></svg>`)
+      },
+      survey: {
+        title: "Quick Finance & Social Survey Offer",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="sBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#sBg)"/><rect x="64" y="46" width="112" height="148" rx="16" fill="#ffffff"/><rect x="92" y="34" width="56" height="24" rx="8" fill="#f59e0b"/><circle cx="90" cy="92" r="10" fill="#10b981"/><rect x="110" y="86" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="126" r="10" fill="#10b981"/><rect x="110" y="120" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="160" r="10" fill="#f97316"/><rect x="110" y="154" width="36" height="10" rx="5" fill="#cbd5e1"/></svg>`)
+      },
+      app: {
+        title: "Smart App Install & Action Bonus",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="aBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient><linearGradient id="wGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#2563eb"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#aBg)"/><text x="120" y="158" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="900" font-size="118" fill="url(#wGrad)">W</text></svg>`)
+      },
+      game: {
+        title: "Play & Complete Instant Level Task",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="gmBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gmBg)"/><rect x="46" y="76" width="148" height="90" rx="42" fill="#ffffff"/><rect x="74" y="106" width="28" height="10" rx="4" fill="#7c3aed"/><rect x="83" y="97" width="10" height="28" rx="4" fill="#7c3aed"/><circle cx="152" cy="104" r="8" fill="#ef4444"/><circle cx="168" cy="118" r="8" fill="#f59e0b"/><circle cx="136" cy="118" r="8" fill="#10b981"/><circle cx="152" cy="132" r="8" fill="#3b82f6"/></svg>`)
+      }
+    };
+
+    window.currentZeydooPresetKey = 'gift';
+    window.currentZeydooCustomLogo = null;
+
+    window.getZeydooPresetSvg = function(key) {
+      return (ZEYDOO_3D_PRESETS[key] || ZEYDOO_3D_PRESETS.gift).svg;
+    };
+
+
     const SVG_GAME_BUBBLE = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="bg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1e1b4b"/></radialGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="82" cy="88" r="36" fill="#facc15"/><circle cx="156" cy="88" r="36" fill="#38bdf8"/><circle cx="78" cy="156" r="36" fill="#fb923c"/><circle cx="158" cy="156" r="36" fill="#22c55e"/><circle cx="120" cy="122" r="42" fill="#ef4444" stroke="#fff" stroke-width="4"/></svg>');
     const SVG_GAME_BOLTS = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e293b"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><rect x="36" y="110" width="168" height="84" rx="18" fill="#fbbf24" stroke="#d97706" stroke-width="6"/><circle cx="84" cy="145" r="24" fill="#ea580c"/><circle cx="148" cy="96" r="34" fill="#f97316" stroke="#fff" stroke-width="4"/><path d="M136,96 h24 M148,84 v24" stroke="#7c2d12" stroke-width="7" stroke-linecap="round"/></svg>');
     const SVG_GAME_ROCKET = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="bg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#4c1d95"/><stop offset="100%" stop-color="#090d16"/></radialGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="135" r="54" fill="#ea580c" stroke="#fde047" stroke-width="4"/><ellipse cx="120" cy="135" rx="88" ry="22" transform="rotate(-18 120 135)" fill="none" stroke="#38bdf8" stroke-width="8"/><text x="120" y="62" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="28" fill="#f97316">ROCKET</text></svg>');
@@ -6585,6 +6680,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     };
 
+    // MONETAG_DIRECT_AD_LINK & isClaimingDailyAd hoisted to top of module
 
     function checkDailyRewardStatus(lastClaimTime) {
       const now = Date.now();
@@ -6692,6 +6788,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }, 1000);
     };
 
+    // Submission & Offerwall log state lists hoisted to top of module
 
     function renderCombinedMyOffersHistory() {
       const myOffersBox = document.getElementById('my-offers-container');
@@ -6993,6 +7090,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
+    // activeZeydooAutoTask hoisted to top of module
 
     window.openDesktopMyOffersModal = function() {
       renderCombinedMyOffersHistory();
@@ -7196,6 +7294,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     }
 
         // ================= TIMEWALL OFFERWALL HELPERS =================
+    // TIMEWALL_PLACEMENT_ID hoisted to top of module
 
     function getTimeWallUrl(tab = '') {
       const uid = (currentUser && currentUser.uid) ? currentUser.uid : 'guest';
@@ -7580,6 +7679,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     }
 
     // ================= ENTERPRISE MASTER ADMIN LOGIC =================
+    // Admin state maps & bnStepNumbers hoisted to top of module
 
     // Dynamic Step-by-Step Instructions Engine
     window.adminAddInstructionStep = function(type, initialText = '') {
@@ -8358,7 +8458,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
-    // ================= ZEYDOO AUTO CPA OFFER IMPORTER & 50% PROFIT AUTO-POSTER =================
+    // ZEYDOO_3D_PRESETS & getZeydooPresetSvg hoisted to top
     window.switchAdminTaskCreatorMode = function(mode) {
       const autoBox = document.getElementById('admin-auto-cpa-importer-box');
       const manualBox = document.getElementById('admin-manual-task-creator-box');
@@ -9098,6 +9198,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
     // Live Real-Time Referrals Tracker for Current User
+    // Referral listener state hoisted to top of module
     function listenMyReferrals(uid, myInviteCode) {
       if (!myInviteCode || myInviteCode === 'TR-----') return;
       if (activeReferralListenerCode === myInviteCode && unsubMyReferrals) return;
