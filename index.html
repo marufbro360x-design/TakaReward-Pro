@@ -91,6 +91,7 @@
   <meta name="apple-mobile-web-app-title" content="TakaReward Pro">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -1454,10 +1455,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <h2 class="section-title text-[28px] sm:text-[32px]">Sign up for free</h2>
                 <p class="text-[13.5px] font-medium mt-2" style="color:var(--text-2)">Join millions earning daily. Your first payout in under 24 hours.</p>
               </div>
-              <form id="signupForm" class="space-y-3.5" onsubmit="handleHeroSubmit(event)">
+              <form id="signupForm" class="space-y-3" onsubmit="handleHeroSubmit(event)">
                 <div class="relative">
                   <i data-lucide="mail" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--text-3)"></i>
                   <input id="heroEmail" type="email" class="input !pl-11" placeholder="Email address" required />
+                </div>
+                <div class="relative">
+                  <i data-lucide="gift" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--brand)"></i>
+                  <input id="heroInviteCode" type="text" oninput="const el=document.getElementById('input-invite-code'); if(el) el.value=this.value;" class="input !pl-11 uppercase tracking-wider text-xs" placeholder="Invite Code (Optional - 30,000 Coins Bonus)" />
                 </div>
                 <button type="submit" class="btn btn-primary w-full !py-3.5 !text-[14px]"><i data-lucide="zap"></i> Start earning now</button>
               </form>
@@ -4408,7 +4413,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (btn) btn.dataset.loading = "true";
       if (btnText) btnText.innerText = 'গুগল কানেক্ট হচ্ছে...';
 
-      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || '';
+      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || document.getElementById('heroInviteCode')?.value?.trim() || '';
       inputCode = extractCleanInviteCode(inputCode);
       if (inputCode) {
         localStorage.setItem('tr_pending_invite', inputCode);
@@ -4608,6 +4613,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.handleHeroSubmit = function(e) {
       if (e && e.preventDefault) e.preventDefault();
+      const heroInv = document.getElementById('heroInviteCode')?.value?.trim();
+      if (heroInv) {
+        const inp = document.getElementById('input-invite-code');
+        if (inp) inp.value = heroInv;
+      }
       window.loginWithGoogleSmart(e);
       return false;
     };
