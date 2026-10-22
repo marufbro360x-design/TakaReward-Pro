@@ -91,7 +91,6 @@
   <meta name="apple-mobile-web-app-title" content="TakaReward Pro">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -727,7 +726,553 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 </head>
 <body class="min-h-screen antialiased select-none" style="background:var(--bg)">
 
+  <!-- Mobile App Frame -->
+  <!-- ================= 1. MOBILE APP VARIANT (Phone View < 768px: 100% UNTOUCHED) ================= -->
+  <div id="mobile-app-wrapper" class="hidden">
 
+    <!-- ================= 1. LOGIN SCREEN ================= -->
+    <div id="screen-login" class="flex-1 flex flex-col justify-between p-6 text-center bg-white">
+      <div class="pt-6">
+        <h1 class="text-3xl sm:text-4xl font-black text-slate-900 leading-tight">
+          Easy way to<br /><span class="text-emerald-500">make money</span><br />online!
+        </h1>
+      </div>
+
+      <!-- Real Official App Icon -->
+      <div class="my-auto py-4">
+        <div class="relative w-44 h-44 mx-auto flex items-center justify-center">
+          <div class="absolute inset-0 bg-emerald-400/25 rounded-3xl blur-xl animate-pulse"></div>
+          <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Official Logo" class="relative z-10 w-40 h-40 rounded-3xl object-cover shadow-2xl border-4 border-white" />
+        </div>
+      </div>
+
+      <div class="space-y-3 pb-6">
+        <div class="space-y-1">
+          <input id="input-invite-code" type="text" placeholder="ইনভাইট কোড (থাকলে লিখুন - ৩০,০০০ কয়েন বোনাস)" class="w-full border-2 border-slate-200 focus:border-emerald-500 rounded-full py-3.5 px-6 text-center text-sm font-bold tracking-wider uppercase outline-none transition" />
+          <div id="invite-code-badge" class="hidden text-[11px] font-bold text-emerald-600 text-center bg-emerald-50 py-1.5 px-3 rounded-full border border-emerald-200">
+            ✓ রেফারেল কোড যুক্ত হয়েছে! (৩০,০০০ কয়েন পাবেন)
+          </div>
+        </div>
+        
+        <button id="btn-google-login" onclick="loginWithGoogleSmart(event)" class="w-full emerald-primary text-white font-extrabold py-4 px-6 rounded-full text-base flex items-center justify-center gap-3 shadow-lg shadow-emerald-500/30 hover:scale-[1.01] active:scale-[0.98] transition duration-150 cursor-pointer">
+          <svg class="w-5 h-5 bg-white p-0.5 rounded-full" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.35 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.14-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/></svg>
+          <span id="btn-login-text">Sign in with Google</span>
+        </button>
+
+                <!-- SEO Informational & FAQ Section for Googlebot & Users -->
+        <div class="mt-4 pt-4 border-t border-slate-200 text-left text-xs text-slate-600 space-y-2.5">
+          <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 space-y-1">
+            <h2 class="font-extrabold text-slate-800 text-xs">🔥 TakaReward Pro কী এবং কীভাবে টাকা আয় করবেন?</h2>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              TakaReward Pro হলো বাংলাদেশের ১ নম্বর ট্রাস্টেড মাইক্রো টাস্ক ও রিওয়ার্ড প্ল্যাটফর্ম। এখানে আপনি সহজ মোবাইল টাস্ক, অ্যাপ ইনস্টল, অফারওয়াল এবং বন্ধুদের রেফার করে সরাসরি পয়েন্ট আয় করতে পারবেন।
+            </p>
+          </div>
+          <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 space-y-1">
+            <h2 class="font-extrabold text-slate-800 text-xs">💸 বিকাশ ও নগদে টাকা উত্তোলনের নিয়ম:</h2>
+            <p class="text-[11px] text-slate-500 leading-relaxed">
+              ১০,০০০ কয়েন = ১ টাকা। সর্বনিম্ন ১০৫ টাকা হলেই আপনি আপনার ব্যক্তিগত বিকাশ বা নগদ একাউন্টে ক্যাশআউট রিকোয়েস্ট করতে পারবেন। সর্বোচ্চ ২৪ ঘণ্টার মধ্যে পেমেন্ট প্রসেস করা হয়।
+            </p>
+          </div>
+        </div>
+
+        <p class="text-slate-400 text-xs pt-2">
+          Continuing means that you accept our <button type="button" onclick="openPrivacyModal()" class="text-emerald-600 font-bold underline cursor-pointer">privacy policy & rules</button>.
+        </p>
+      </div>
+    </div>
+
+    <!-- ================= 2. MAIN APP VIEW ================= -->
+    <div id="screen-app" class="flex-1 flex flex-col justify-between hidden pb-16 bg-pastel relative">
+
+      <!-- Header (With VIP Badge, Notification Bell & Profile Customization Trigger) -->
+      <header class="bg-white px-3.5 py-2.5 border-b border-slate-200/80 sticky top-0 z-30 flex items-center justify-between shadow-xs">
+        <div onclick="openProfileEditModal()" class="flex items-center gap-2.5 cursor-pointer group" title="প্রোফাইল এডিট করতে ক্লিক করুন">
+          <div class="relative">
+            <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full border-2 border-emerald-400 object-cover shadow-xs shrink-0 group-hover:opacity-85 transition" />
+            <span class="absolute -bottom-1 -right-1 bg-emerald-600 text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center border border-white">✎</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-1.5">
+              <div class="flex items-center gap-1 text-[11px] font-bold text-slate-500 leading-none">
+                <span>🪙</span>
+                <span id="app-coins">0</span>
+              </div>
+              <!-- VIP Level Badge in Header (Feature 5) -->
+              <span id="header-vip-badge" class="bg-amber-100 border border-amber-300 text-amber-900 text-[9px] font-black px-1.5 py-0.2 rounded-md uppercase tracking-wider flex items-center gap-0.5 shadow-xs">
+                <span>🥉</span> BRONZE
+              </span>
+            </div>
+            <div class="flex items-baseline gap-1 mt-0.5">
+              <span class="text-slate-400 font-bold text-xs">=</span>
+              <span class="text-amber-500 font-black text-lg tracking-tight leading-none">৳<span id="app-taka">0.0</span></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 shrink-0">
+          <!-- In-App Notification Bell (Feature 6) -->
+          <button onclick="openNotificationModal()" class="relative p-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer" title="নোটিফিকেশন">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path></svg>
+            <span id="notification-counter" class="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">1</span>
+          </button>
+
+          <button id="admin-btn" onclick="toggleAdminModal()" class="hidden bg-amber-400 hover:bg-amber-500 text-slate-950 font-black text-[11px] px-2.5 py-1 rounded-full shadow-xs border border-amber-500 flex items-center gap-1 cursor-pointer">
+            <span>⚙️</span> Admin
+          </button>
+          <div onclick="switchAppTab('cashout')" class="cursor-pointer bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-black px-2.5 py-1 rounded-full shadow-xs flex items-center gap-1">
+            <span>💵</span>
+            <span>৳১০৫</span>
+          </div>
+        </div>
+      </header>
+
+      <!-- Clean Pure-White Animated Live Ticker Notice Bar -->
+      <div class="bg-white border-b border-slate-200/70 px-3 py-2 flex items-center gap-2 text-[11px] text-slate-800 shrink-0 shadow-xs">
+        <span class="bg-emerald-50 border border-emerald-200 text-emerald-700 font-extrabold text-[9px] px-2 py-0.5 rounded-full uppercase shrink-0 flex items-center gap-1">
+          <span>📢</span> নোটিশ
+        </span>
+        <div class="live-ticker-wrap flex-1">
+          <div class="live-ticker-content font-bold text-slate-700 tracking-wide">
+            🔥 স্বাগতম TakaReward Pro-তে! সবাই নিয়ম মেনে সঠিক তথ্য দিয়ে কাজ করুন। ভুল বা ফেক তথ্য দিলে আইডি ব্যান হবে। যেকোনো প্রয়োজনে অফিসিয়াল টেলিগ্রাম সাপোর্টে মেসেজ দিন: @RewardProAdmin &nbsp;&nbsp;&nbsp;✦&nbsp;&nbsp;&nbsp; 💸 ২৪ ঘণ্টার মধ্যে বিকাশ ও নগদে পেমেন্ট নিশ্চিত করা হয়!
+          </div>
+        </div>
+      </div>
+
+      <!-- Scrollable Main Content -->
+      <main class="flex-1 p-4 overflow-y-auto hide-scrollbar space-y-4">
+
+        <!-- ================= TAB 1: OFFER ================= -->
+        <section id="tab-content-offer" class="space-y-4">
+          
+          <!-- 1-Click PWA App Install Banner (Feature 7) -->
+          <div id="pwa-install-banner" class="hidden bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl p-3 text-white flex items-center justify-between shadow-sm">
+            <div class="flex items-center gap-2.5">
+              <span class="text-2xl">📲</span>
+              <div>
+                <strong class="text-xs block leading-tight">অ্যান্ড্রয়েড অ্যাপ ইনস্টল করুন</strong>
+                <span class="text-[10px] text-emerald-100">১-ক্লিকে আসল অ্যাপের মতো ফোনে চালান</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="installAppDirect()" class="bg-white hover:bg-emerald-50 text-emerald-700 font-extrabold text-xs px-3 py-1.5 rounded-xl shadow-xs transition cursor-pointer">
+                ইনস্টল
+              </button>
+              <button onclick="dismissInstallBanner()" class="text-emerald-200 hover:text-white font-bold text-sm px-1.5 py-0.5 rounded-lg cursor-pointer" title="বন্ধ করুন">✕</button>
+            </div>
+          </div>
+
+                    <!-- Ultra-Premium Animated Daily Reward Card -->
+          <div class="relative overflow-hidden bg-white rounded-3xl p-4 border border-emerald-100 shadow-xs transition duration-300 hover:shadow-md">
+            <!-- Subtle Ambient Glow -->
+            <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-emerald-400/10 rounded-full blur-2xl pointer-events-none"></div>
+            <div class="absolute -left-6 -top-6 w-24 h-24 bg-amber-400/10 rounded-full blur-2xl pointer-events-none"></div>
+
+            <div class="relative z-10 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                <!-- 3D Gift Box with Bounce & Active Radar Ping -->
+                <div class="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-100 via-orange-50 to-amber-200 border border-amber-300 flex items-center justify-center text-2xl shadow-xs shrink-0 transform transition duration-300 hover:scale-110">
+                  <span class="animate-bounce inline-block">🎁</span>
+                  <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                  </span>
+                </div>
+
+                <div>
+                  <div class="flex items-center gap-1.5 mb-0.5">
+                    <span class="font-extrabold text-slate-900 text-xs tracking-tight">Daily Sign-in Reward</span>
+                    <span class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black text-[9px] px-1.5 py-0.2 rounded-full uppercase tracking-wider shadow-xs flex items-center gap-0.5">
+                      <span>🔥</span> STREAK
+                    </span>
+                  </div>
+                  <span id="daily-subtext" class="text-[11px] text-emerald-600 font-bold block">
+                    +10,000 Coins Available
+                  </span>
+                </div>
+              </div>
+
+              <!-- Glowing Animated Claim Button with Shimmer Sweep -->
+              <button onclick="claimDailyBonus()" id="daily-claim-btn" class="relative group overflow-hidden emerald-primary text-white font-black text-xs px-5 py-2.5 rounded-2xl shadow-md shadow-emerald-500/25 hover:scale-105 active:scale-95 transition duration-200 cursor-pointer shrink-0">
+                <span class="relative z-10 flex items-center gap-1">
+                  <span>Claim</span>
+                  <span class="text-xs">✨</span>
+                </span>
+                <div class="absolute inset-0 bg-white/25 transform -translate-x-full group-hover:translate-x-full transition duration-700"></div>
+              </button>
+            </div>
+
+            <!-- Animated Milestone Live Indicator Bar -->
+            <div class="mt-3 pt-2.5 border-t border-slate-100 flex items-center justify-between text-[10px] font-bold text-slate-500">
+              <div class="flex items-center gap-1">
+                <span class="text-amber-500">🪙</span>
+                <span>প্রতি ২৪ ঘণ্টায় ইনস্ট্যান্ট বোনাস</span>
+              </div>
+              <div class="flex items-center gap-1 text-emerald-600 font-extrabold">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                <span>Live Active</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 1: Admin Verified Custom Tasks -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between pt-1">
+              <h2 class="font-extrabold text-slate-900 text-sm flex items-center gap-1.5">
+                <span>🔥</span> স্পেশাল ভেরিফাইড টাস্ক
+              </h2>
+              <span id="task-badge-count" class="text-[11px] bg-emerald-50 border border-emerald-200 text-emerald-600 font-bold px-2.5 py-0.5 rounded-full">
+                ০টি নতুন কাজ
+              </span>
+            </div>
+
+            <!-- Dynamic Tasks Container -->
+            <div id="tasks-list" class="space-y-2.5"></div>
+          </div>
+
+          <!-- Section 2: TimeWall Offerwall (Clicks, Surveys, Microtasks) -->
+          <div class="space-y-3 pt-3 border-t border-slate-200/80">
+            <div class="bg-gradient-to-r from-sky-50 via-white to-emerald-50 border-2 border-sky-300 rounded-3xl p-4 shadow-sm relative overflow-hidden">
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <div class="flex items-center gap-2.5">
+                  <img src="https://i.ibb.co.com/Tx0TZs0G/Chat-GPT-Image-Sep-24-2026-02-14-37-AM.png" alt="Unlimited Offerwall" class="w-11 h-11 rounded-2xl object-cover border border-sky-200 shadow-xs shrink-0" />
+                  <div>
+                    <h3 class="font-black text-slate-900 text-sm leading-tight flex items-center gap-1.5">
+                      <span>Unlimited অফারওয়াল</span>
+                      <span class="bg-emerald-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase tracking-wider">VERIFIED</span>
+                    </h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">সহজ ক্লিক, সার্ভে ও মাইক্রো-টাস্ক করে আনলিমিটেড কয়েন আয় করুন</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Category Tags -->
+              <div class="grid grid-cols-3 gap-1.5 my-2.5 text-center text-xs font-bold">
+                <button type="button" onclick="openTimeWall('clicks')" class="bg-white hover:bg-sky-50 text-sky-700 border border-sky-200 py-1.5 px-2 rounded-xl text-[11px] font-extrabold flex items-center justify-center gap-1 shadow-2xs transition cursor-pointer">
+                  <span>🎯</span> Clicks
+                </button>
+                <button type="button" onclick="openTimeWall('surveys')" class="bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-200 py-1.5 px-2 rounded-xl text-[11px] font-extrabold flex items-center justify-center gap-1 shadow-2xs transition cursor-pointer">
+                  <span>📋</span> Surveys
+                </button>
+                <button type="button" onclick="openTimeWall('tasks')" class="bg-white hover:bg-amber-50 text-amber-700 border border-amber-200 py-1.5 px-2 rounded-xl text-[11px] font-extrabold flex items-center justify-center gap-1 shadow-2xs transition cursor-pointer">
+                  <span>⚡</span> Tasks
+                </button>
+              </div>
+
+              <!-- Main Action Buttons -->
+              <div class="flex gap-2 mt-3">
+                <button type="button" onclick="openTimeWall()" class="flex-1 bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-700 hover:to-blue-700 text-white font-black text-xs py-3 px-4 rounded-2xl shadow-md flex items-center justify-center gap-1.5 transition transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer">
+                  <span>ফুল স্ক্রিনে কাজ করুন</span>
+                  <span>🚀</span>
+                </button>
+                <button type="button" onclick="toggleTimeWallIframe()" class="bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 font-extrabold text-xs py-3 px-3 rounded-2xl shadow-xs transition cursor-pointer shrink-0">
+                  <span id="timewall-toggle-text">অ্যাপে দেখুন 🔽</span>
+                </button>
+              </div>
+
+              <!-- Hidden Embedded iFrame Container (Can be toggled) -->
+              <div id="timewall-iframe-container" class="hidden mt-4 pt-3 border-t border-slate-200">
+                <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
+                  <iframe id="timewall-iframe" title="TimeWall" src="" frameborder="0" width="100%" height="800" class="w-full rounded-2xl" scrolling="auto"></iframe>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+        </section>
+
+        <!-- ================= TAB 2: MY OFFERS ================= -->
+        <section id="tab-content-myoffers" class="space-y-3 hidden">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-extrabold text-slate-800 text-base">My Tasks History</h2>
+            <span class="text-xs text-slate-400">All Submissions</span>
+          </div>
+          <div id="my-offers-container" class="space-y-2.5"></div>
+        </section>
+
+        <!-- ================= TAB 3: REFER ================= -->
+        <section id="tab-content-refer" class="space-y-4 hidden">
+          <div class="bg-gradient-to-b from-emerald-100/90 to-emerald-50 rounded-3xl p-5 border border-emerald-200 text-center relative overflow-hidden">
+            <h2 class="text-2xl font-black text-slate-900">Refer Friends & Earn</h2>
+            <span class="text-3xl font-black text-emerald-600 block mt-0.5">৳৬৪৯.১৬ !</span>
+
+            <div class="mt-4 bg-white/90 backdrop-blur rounded-2xl p-3 border border-emerald-200/60 shadow-xs flex items-center justify-around text-center text-[10px] font-bold text-slate-700">
+              <div><span class="text-lg block">👥</span><span>Refer Friends</span></div>
+              <span class="text-slate-300">❯❯</span>
+              <div><span class="text-lg block text-emerald-600">⚡</span><span class="text-emerald-700">১০,০০০ কয়েন</span></div>
+              <span class="text-slate-300">❯❯</span>
+              <div><span class="text-lg block text-emerald-600">💰</span><span class="text-emerald-700">৳১০ ১ম ক্যাশআউট</span></div>
+            </div>
+
+            <div class="mt-3 text-left text-xs space-y-1.5 text-slate-700 font-medium px-1">
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span><strong>বন্ধু সাইন-আপ বোনাস:</strong> বন্ধু কোড দিয়ে জয়েন করলেই পাবে <strong>৩০,০০০ কয়েন</strong></span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span><strong>ইনস্ট্যান্ট রেফার রিওয়ার্ড:</strong> প্রতি সফল রেফারে আপনি সাথে সাথে পাবেন <strong>১০,০০০ কয়েন</strong></span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="text-emerald-600 font-bold">✓</span>
+                <span><strong>১ম ক্যাশআউট বোনাস:</strong> রেফার করা বন্ধু <strong>প্রথম উত্তোলন</strong> সম্পন্ন করলে আপনি পাবেন <strong>৳১০.০০ (১,০০,০০০ কয়েন)</strong></span>
+              </div>
+            </div>
+
+            <div class="mt-4 bg-white rounded-2xl p-3 border-2 border-dashed border-emerald-400 flex flex-col gap-2">
+              <div class="flex items-center justify-between">
+                <div class="text-left pl-1">
+                  <span class="text-[10px] font-bold text-slate-400 uppercase">My Invitation Code</span>
+                  <div id="my-invite-code" class="text-xl font-black tracking-wider text-slate-900">TR-----</div>
+                </div>
+                <div class="flex gap-1.5">
+                  <button onclick="copyOnlyCode()" class="bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold text-xs px-3.5 py-2.5 rounded-xl cursor-pointer transition">
+                    কোড কপি
+                  </button>
+                  <button onclick="copyInviteCode()" class="emerald-primary hover:bg-emerald-600 text-white font-extrabold text-xs px-4 py-2.5 rounded-xl shadow-sm cursor-pointer transition">
+                    লিংক কপি 🔗
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- In-App Claim Referral Code Card (Shown if user joined without referral code) -->
+          <div id="card-apply-referral" class="hidden bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl p-4 border border-amber-200 shadow-2xs">
+            <div class="flex items-center gap-2 text-xs font-black text-amber-900 mb-1">
+              <span class="text-base">🎁</span>
+              <span>কারও রেফারেল কোড ব্যবহার করেননি?</span>
+            </div>
+            <p class="text-[11px] text-amber-800 mb-3">বন্ধুর ইনভাইট কোড বসালেই সাথে সাথে আপনার একাউন্টে <strong>৩০,০০০ কয়েন</strong> বোনাস যোগ হবে!</p>
+            <div class="flex gap-2">
+              <input id="input-inapp-invite-code" type="text" placeholder="কোড লিখুন (যেমন: TR12345)" class="flex-1 bg-white border border-amber-300 rounded-xl px-3 py-2 text-xs font-bold uppercase tracking-wider outline-none focus:border-amber-500" />
+              <button id="btn-apply-inapp-invite" onclick="applyInAppInviteCode()" class="bg-amber-600 hover:bg-amber-700 text-white font-black text-xs px-4 py-2 rounded-xl cursor-pointer shadow-xs whitespace-nowrap transition">
+                বোনাস নিন ➔
+              </button>
+            </div>
+          </div>
+
+          <!-- My Referrals List Section (Real-time tracking of referred users) -->
+          <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-xs">
+            <div class="flex items-center justify-between mb-3">
+              <div>
+                <h3 class="text-base font-black text-slate-900 flex items-center gap-1.5">
+                  <span>👥</span> আমার রেফারেল তালিকা
+                </h3>
+                <p class="text-[11px] text-slate-400 mt-0.5">আপনার রেফারেল লিংকে জয়েন করা বন্ধুদের তালিকা</p>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-bold text-slate-400 block">মোট রেফারেল</span>
+                <span id="my-total-ref-count" class="text-sm font-black text-emerald-600">0 জন</span>
+              </div>
+            </div>
+
+            <!-- Referral Stats Summary -->
+            <div class="grid grid-cols-2 gap-2 mb-3 bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-2.5 text-center">
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 block">ইনস্ট্যান্ট কয়েন আয়</span>
+                <span class="text-xs font-black text-emerald-700"><span id="my-total-ref-coins">0</span> 🪙</span>
+              </div>
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 block">১ম ক্যাশআউট বোনাস</span>
+                <span class="text-xs font-black text-amber-700">৳১০.০০ / জন 💰</span>
+              </div>
+            </div>
+
+            <!-- List Container -->
+            <div id="my-referral-list-container" class="space-y-2">
+              <div class="text-center py-6 px-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                <span class="text-3xl block mb-2">👥</span>
+                <p class="text-xs font-bold text-slate-700">এখনও কোনো সফল রেফারেল নেই</p>
+                <p class="text-[11px] text-slate-400 mt-1">আপনার বন্ধুদের সাথে লিংক শেয়ার করুন এবং প্রতি রেফারে ১০,০০০ কয়েন ও ১ম ক্যাশআউটে ৳১০ বোনাস পান!</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Real 3D Podium Leaderboard -->
+          <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-xs">
+            <div class="text-center mb-4">
+              <h3 class="text-xl font-black text-slate-900 tracking-tight">৳52,654 LEADERBOARD</h3>
+              <p class="text-xs text-slate-400 mt-0.5 flex items-center justify-center gap-1">
+                <span>🕒</span> Ends in <strong class="text-emerald-600 font-bold">02h 32m</strong>
+              </p>
+            </div>
+
+            <div id="leaderboard-podium" class="flex items-end justify-center gap-2.5 pt-6 pb-2 text-center">
+              <!-- Rank 2: Silver -->
+              <div class="w-24 flex flex-col items-center">
+                <div class="relative mb-2">
+                  <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 text-xs bg-sky-500 text-white font-black px-1.5 rounded-full">2</span>
+                  <img id="podium-img-2" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maicro" class="w-12 h-12 rounded-full border-2 border-sky-400 object-cover shadow-xs" />
+                </div>
+                <span id="podium-name-2" class="font-extrabold text-slate-800 text-xs truncate w-full">Maicro</span>
+                <span id="podium-ref-2" class="text-[10px] text-slate-400">👤 3,543</span>
+                <div id="podium-prize-2" class="podium-silver w-full h-20 rounded-t-2xl mt-1.5 flex items-center justify-center font-black text-xs text-sky-900 border-t border-sky-300 shadow-xs">৳17,480</div>
+              </div>
+
+              <!-- Rank 1: Champion Admin Gold -->
+              <div class="w-28 flex flex-col items-center z-10">
+                <div class="relative mb-2">
+                  <span class="absolute -top-4 left-1/2 transform -translate-x-1/2 text-lg animate-bounce">👑</span>
+                  <img id="podium-img-1" src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" class="w-14 h-14 rounded-full border-2 border-amber-400 object-cover shadow-md" />
+                </div>
+                <span id="podium-name-1" class="font-extrabold text-slate-900 text-xs truncate w-full">MD Maruf Khan (Admin)</span>
+                <span id="podium-ref-1" class="text-[10px] text-emerald-700 font-bold">👤 14,750</span>
+                <div id="podium-prize-1" class="podium-gold w-full h-28 rounded-t-2xl mt-1.5 flex items-center justify-center font-black text-sm text-amber-950 border-t border-amber-300 shadow-sm">৳23,544</div>
+              </div>
+
+              <!-- Rank 3: Bronze -->
+              <div class="w-24 flex flex-col items-center">
+                <div class="relative mb-2">
+                  <span class="absolute -top-3 left-1/2 transform -translate-x-1/2 text-xs bg-emerald-500 text-white font-black px-1.5 rounded-full">3</span>
+                  <img id="podium-img-3" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Rasel" class="w-12 h-12 rounded-full border-2 border-emerald-400 object-cover shadow-xs" />
+                </div>
+                <span id="podium-name-3" class="font-extrabold text-slate-800 text-xs truncate w-full">Md Rasel</span>
+                <span id="podium-ref-3" class="text-[10px] text-slate-400">👤 1,767</span>
+                <div id="podium-prize-3" class="podium-bronze w-full h-16 rounded-t-2xl mt-1.5 flex items-center justify-center font-black text-xs text-emerald-900 border-t border-emerald-300 shadow-xs">৳11,630</div>
+              </div>
+            </div>
+
+            <div class="mt-3 bg-emerald-50/80 border border-emerald-200 rounded-xl p-3 flex items-center justify-between text-xs font-bold text-slate-800">
+              <div class="flex items-center gap-2">
+                <span id="my-rank-position" class="text-slate-400 font-bold">99+</span>
+                <span id="rank-user-name" class="font-bold">Me</span>
+              </div>
+              <div>Referrals: <span id="rank-referrals-count" class="text-emerald-700">0</span></div>
+              <div class="text-emerald-700">Prize: <span id="my-rank-prize">৳0.00</span></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <button onclick="shareLink('fb')" class="bg-blue-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">Facebook</button>
+            <button onclick="shareLink('tg')" class="bg-sky-500 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">Telegram</button>
+            <button onclick="copyInviteCode()" class="bg-emerald-600 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1 cursor-pointer">লিংক কপি</button>
+          </div>
+        </section>
+
+        <!-- ================= TAB 4: CASHOUT ================= -->
+        <section id="tab-content-cashout" class="space-y-4 hidden">
+          <div class="bg-emerald-50 rounded-2xl p-4 border border-emerald-200 flex items-center justify-between">
+            <h2 class="text-xl font-black text-slate-900">Withdrawable</h2>
+            <button onclick="openWithdrawHistoryModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold text-xs px-3.5 py-1.5 rounded-full shadow-xs flex items-center gap-1 transition cursor-pointer">
+              History &gt;
+            </button>
+          </div>
+
+          <div class="flex gap-2.5">
+            <button onclick="selectGate('Nagad', this)" id="gate-btn-nagad" class="gate-btn flex-1 border-2 border-orange-500 bg-orange-50/70 font-black text-orange-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer">
+              <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" alt="Nagad" class="w-6 h-6 rounded-full object-cover shadow-xs" />
+              <span>নগদ (Nagad)</span>
+            </button>
+            <button onclick="selectGate('bKash', this)" id="gate-btn-bkash" class="gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer">
+              <img src="https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg" alt="bKash" class="w-6 h-6 rounded-full object-cover shadow-xs" />
+              <span>বিকাশ (bKash)</span>
+            </button>
+          </div>
+
+          <!-- Dynamic 2x2 Amount Grid Cards -->
+          <div class="grid grid-cols-2 gap-3 pt-1">
+            <div onclick="selectWithdrawCard(105, 1050000, this)" class="w-card cursor-pointer bg-white border-2 border-emerald-500 rounded-2xl p-4 shadow-sm relative flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl font-black text-slate-900">৳105</span>
+                <div class="w-card-badge flex items-center gap-1 bg-orange-50 border border-orange-200 px-2 py-1 rounded-lg">
+                  <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" class="w-4 h-4 rounded-full object-cover card-method-img" />
+                  <span class="card-method-name text-[11px] font-bold text-orange-600">নগদ</span>
+                </div>
+              </div>
+              <div class="mt-3 bg-amber-400 text-slate-950 font-black text-xs py-1.5 px-2 rounded-xl text-center">🪙 1050000</div>
+            </div>
+
+            <div onclick="selectWithdrawCard(200, 2000000, this)" class="w-card cursor-pointer bg-white border-2 border-slate-200 rounded-2xl p-4 shadow-sm relative flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl font-black text-slate-900">৳200</span>
+                <div class="w-card-badge flex items-center gap-1 bg-orange-50 border border-orange-200 px-2 py-1 rounded-lg">
+                  <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" class="w-4 h-4 rounded-full object-cover card-method-img" />
+                  <span class="card-method-name text-[11px] font-bold text-orange-600">নগদ</span>
+                </div>
+              </div>
+              <div class="mt-3 bg-amber-400 text-slate-950 font-black text-xs py-1.5 px-2 rounded-xl text-center">🪙 2000000</div>
+            </div>
+
+            <div onclick="selectWithdrawCard(300, 3000000, this)" class="w-card cursor-pointer bg-white border-2 border-slate-200 rounded-2xl p-4 shadow-sm relative flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl font-black text-slate-900">৳300</span>
+                <div class="w-card-badge flex items-center gap-1 bg-orange-50 border border-orange-200 px-2 py-1 rounded-lg">
+                  <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" class="w-4 h-4 rounded-full object-cover card-method-img" />
+                  <span class="card-method-name text-[11px] font-bold text-orange-600">নগদ</span>
+                </div>
+              </div>
+              <div class="mt-3 bg-amber-400 text-slate-950 font-black text-xs py-1.5 px-2 rounded-xl text-center">🪙 3000000</div>
+            </div>
+
+            <div onclick="selectWithdrawCard(500, 5000000, this)" class="w-card cursor-pointer bg-white border-2 border-slate-200 rounded-2xl p-4 shadow-sm relative flex flex-col justify-between">
+              <div class="flex items-center justify-between">
+                <span class="text-2xl font-black text-slate-900">৳500</span>
+                <div class="w-card-badge flex items-center gap-1 bg-orange-50 border border-orange-200 px-2 py-1 rounded-lg">
+                  <img src="https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg" class="w-4 h-4 rounded-full object-cover card-method-img" />
+                  <span class="card-method-name text-[11px] font-bold text-orange-600">নগদ</span>
+                </div>
+              </div>
+              <div class="mt-3 bg-amber-400 text-slate-950 font-black text-xs py-1.5 px-2 rounded-xl text-center">🪙 5000000</div>
+            </div>
+          </div>
+
+          <div class="space-y-1.5 pt-1">
+            <label class="text-xs font-bold text-slate-600 flex items-center justify-between">
+              <span>উইথড্রল মোবাইল নম্বর:</span>
+              <span class="text-amber-600 text-[11px] font-bold">ব্যক্তিগত (Personal) অ্যাকাউন্ট</span>
+            </label>
+            <input id="withdraw-number" type="tel" placeholder="01XXXXXXXXX" class="w-full bg-white border border-slate-300 rounded-2xl p-3.5 text-sm font-bold text-slate-800 outline-none focus:border-emerald-500" />
+            
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-[11px] text-amber-800 flex items-start gap-2 leading-relaxed">
+              <span class="text-sm shrink-0">⚠️</span>
+              <span><strong>সতর্কতা:</strong> উইথড্র শুধুমাত্র <strong>পার্সোনাল (Personal)</strong> বিকাশ বা নগদ নম্বরে গ্রহণযোগ্য। এজেন্ট নম্বরে টাকা পাঠানো হবে না।</span>
+            </div>
+          </div>
+
+          <button onclick="executeCashout()" class="w-full emerald-primary text-white font-black py-4 rounded-full text-base tracking-wide shadow-lg shadow-emerald-500/25 transition cursor-pointer">
+            Cashout
+          </button>
+
+          <div class="space-y-2 pt-2">
+            <h3 class="font-extrabold text-slate-800 text-sm">Recent Withdrawals</h3>
+            <div id="live-withdrawals-ticker" class="space-y-2 text-xs"></div>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Floating Telegram Support Button -->
+      <a id="floating-support-btn" href="https://t.me/RewardProAdmin" target="_blank" class="fixed bottom-20 right-4 z-40 bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs px-3.5 py-2.5 rounded-full shadow-lg shadow-sky-500/40 flex items-center gap-1.5 border-2 border-white transition transform hover:scale-105 active:scale-95">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.458c.538-.196 1.006.128.832.965z"/></svg>
+        <span>সাপোর্ট</span>
+      </a>
+
+      <!-- Bottom Nav -->
+      <nav class="fixed bottom-0 w-full max-w-md bg-white border-t border-slate-200/80 py-2 px-4 flex justify-around items-center z-20 shadow-lg">
+        <button onclick="switchAppTab('offer')" id="nav-btn-offer" class="flex flex-col items-center gap-1 text-emerald-primary font-bold text-xs cursor-pointer">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg>
+          <span>Offer</span>
+        </button>
+        <button onclick="switchAppTab('myoffers')" id="nav-btn-myoffers" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-xs hover:text-slate-600 relative cursor-pointer">
+          <span id="myoffers-badge" class="hidden absolute -top-1 right-2 bg-red-500 text-white text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">0</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path></svg>
+          <span>My offers</span>
+        </button>
+        <button onclick="switchAppTab('refer')" id="nav-btn-refer" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-xs hover:text-slate-600 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+          <span>Refer</span>
+        </button>
+        <button onclick="switchAppTab('cashout')" id="nav-btn-cashout" class="flex flex-col items-center gap-1 text-slate-400 font-medium text-xs hover:text-slate-600 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+          <span>Cashout</span>
+        </button>
+      </nav>
+
+    </div>
+  </div>
+  <!-- ================= END MOBILE APP VARIANT ================= -->
 
   
   <!-- ================= 2. DESKTOP WEB APP VARIANT (RewardJoy Architecture: strictly >= 768px) ================= -->
@@ -909,14 +1454,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <h2 class="section-title text-[28px] sm:text-[32px]">Sign up for free</h2>
                 <p class="text-[13.5px] font-medium mt-2" style="color:var(--text-2)">Join millions earning daily. Your first payout in under 24 hours.</p>
               </div>
-              <form id="signupForm" class="space-y-3" onsubmit="handleHeroSubmit(event)">
+              <form id="signupForm" class="space-y-3.5" onsubmit="handleHeroSubmit(event)">
                 <div class="relative">
                   <i data-lucide="mail" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--text-3)"></i>
                   <input id="heroEmail" type="email" class="input !pl-11" placeholder="Email address" required />
-                </div>
-                <div class="relative">
-                  <i data-lucide="gift" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--brand)"></i>
-                  <input id="heroInviteCode" type="text" oninput="const el=document.getElementById('input-invite-code'); if(el) el.value=this.value;" class="input !pl-11 uppercase tracking-wider text-xs" placeholder="Invite Code (Optional - 30,000 Coins Bonus)" />
                 </div>
                 <button type="submit" class="btn btn-primary w-full !py-3.5 !text-[14px]"><i data-lucide="zap"></i> Start earning now</button>
               </form>
@@ -3810,6 +4351,68 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     let adminSubmissionsMap = {};
     let clientIP = "Unknown";
     let selectedAvatarUrl = "";
+    const MONETAG_DIRECT_AD_LINK = "https://uplcm.com/4/12077628";
+    let isClaimingDailyAd = false;
+    let manualSubmissionsList = [];
+    let zeydooAutoCompletionsList = [];
+    let offerwallGGCompletionsList = [];
+    let knownOfferwallGGLogIds = new Set();
+    let isFirstOfferwallGGSnapshot = true;
+    let zeydooCompletedMap = {};
+    let knownZeydooLogIds = new Set();
+    let isFirstZeydooSnapshot = true;
+    let activeZeydooAutoTask = null;
+    const TIMEWALL_PLACEMENT_ID = "e62ce94a3f9bf6b3";
+    let adminAllUsersList = [];
+    let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
+    let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
+    let isDesktopWideMode = true;
+    let currentEditingTaskId = null;
+    let currentEditingTaskIcon = null;
+    const bnStepNumbers = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '১০', '১১', '১২', '১৩', '১৪', '১৫', '১৬', '১৭', '১৮', '১৯', '২০'];
+    let unsubMyReferrals = null;
+    let activeReferralListenerCode = null;
+    // ================= ZEYDOO AUTO CPA OFFER IMPORTER & 50% PROFIT AUTO-POSTER =================
+    const ZEYDOO_3D_PRESETS = {
+      gift: {
+        title: "Click to claim your bonus prize!",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="gBg" cx="50%" cy="40%" r="65%"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#0f172a"/></radialGradient><linearGradient id="boxW" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cbd5e1"/></linearGradient><linearGradient id="ribR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="100%" stop-color="#c9184a"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gBg)"/><circle cx="120" cy="115" r="78" fill="#ef4444" opacity="0.18"/><polygon points="55,105 120,78 185,105 185,180 120,208 55,180" fill="url(#boxW)"/><polygon points="55,105 120,132 120,208 55,180" fill="#e2e8f0"/><polygon points="120,132 185,105 185,180 120,208" fill="#cbd5e1"/><polygon points="50,92 120,64 190,92 120,120" fill="#f8fafc"/><polygon points="106,70 134,70 134,205 106,205" fill="url(#ribR)"/><ellipse cx="102" cy="66" rx="24" ry="13" transform="rotate(-20 102 66)" fill="url(#ribR)"/><ellipse cx="138" cy="66" rx="24" ry="13" transform="rotate(20 138 66)" fill="url(#ribR)"/><circle cx="120" cy="70" r="10" fill="#a4133c"/></svg>`)
+      },
+      wheel: {
+        title: "Spin & Win Instant Cash Reward!",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="wBg" cx="50%" cy="45%" r="65%"><stop offset="0%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#0f766e"/></radialGradient></defs><rect width="240" height="240" rx="36" fill="url(#wBg)"/><circle cx="120" cy="122" r="80" fill="#042f2e" opacity="0.3"/><circle cx="120" cy="120" r="74" fill="#ffffff" stroke="#cbd5e1" stroke-width="6"/><path d="M120,120 L120,46 A74,74 0 0,1 184,83 Z" fill="#ef4444"/><path d="M120,120 L184,83 A74,74 0 0,1 184,157 Z" fill="#f8fafc"/><path d="M120,120 L184,157 A74,74 0 0,1 120,194 Z" fill="#ef4444"/><path d="M120,120 L120,194 A74,74 0 0,1 56,157 Z" fill="#f8fafc"/><path d="M120,120 L56,157 A74,74 0 0,1 56,83 Z" fill="#ef4444"/><path d="M120,120 L56,83 A74,74 0 0,1 120,46 Z" fill="#f8fafc"/><circle cx="120" cy="120" r="16" fill="#f59e0b" stroke="#ffffff" stroke-width="4"/><polygon points="120,32 110,52 130,52" fill="#facc15" stroke="#78350f" stroke-width="2"/></svg>`)
+      },
+      chest: {
+        title: "Playable: Open Golden Treasure Chest!",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="cBg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#451a03"/><stop offset="100%" stop-color="#1c1917"/></radialGradient><linearGradient id="goldG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fde047"/><stop offset="100%" stop-color="#ca8a04"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#cBg)"/><circle cx="120" cy="115" r="76" fill="#f59e0b" opacity="0.22"/><rect x="52" y="105" width="136" height="75" rx="14" fill="#92400e" stroke="url(#goldG)" stroke-width="6"/><path d="M52,105 Q120,55 188,105 Z" fill="#b45309" stroke="url(#goldG)" stroke-width="6"/><rect x="106" y="95" width="28" height="34" rx="6" fill="url(#goldG)"/><circle cx="120" cy="112" r="5" fill="#451a03"/><circle cx="88" cy="84" r="10" fill="#fde047"/><circle cx="152" cy="84" r="10" fill="#fde047"/></svg>`)
+      },
+      survey: {
+        title: "Quick Finance & Social Survey Offer",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="sBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#sBg)"/><rect x="64" y="46" width="112" height="148" rx="16" fill="#ffffff"/><rect x="92" y="34" width="56" height="24" rx="8" fill="#f59e0b"/><circle cx="90" cy="92" r="10" fill="#10b981"/><rect x="110" y="86" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="126" r="10" fill="#10b981"/><rect x="110" y="120" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="160" r="10" fill="#f97316"/><rect x="110" y="154" width="36" height="10" rx="5" fill="#cbd5e1"/></svg>`)
+      },
+      app: {
+        title: "Smart App Install & Action Bonus",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="aBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient><linearGradient id="wGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#2563eb"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#aBg)"/><text x="120" y="158" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="900" font-size="118" fill="url(#wGrad)">W</text></svg>`)
+      },
+      game: {
+        title: "Play & Complete Instant Level Task",
+        cat: "Zeydoo Auto",
+        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="gmBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gmBg)"/><rect x="46" y="76" width="148" height="90" rx="42" fill="#ffffff"/><rect x="74" y="106" width="28" height="10" rx="4" fill="#7c3aed"/><rect x="83" y="97" width="10" height="28" rx="4" fill="#7c3aed"/><circle cx="152" cy="104" r="8" fill="#ef4444"/><circle cx="168" cy="118" r="8" fill="#f59e0b"/><circle cx="136" cy="118" r="8" fill="#10b981"/><circle cx="152" cy="132" r="8" fill="#3b82f6"/></svg>`)
+      }
+    };
+
+    window.currentZeydooPresetKey = 'gift';
+    window.currentZeydooCustomLogo = null;
+
+    window.getZeydooPresetSvg = function(key) {
+      return (ZEYDOO_3D_PRESETS[key] || ZEYDOO_3D_PRESETS.gift).svg;
+    };
+
 
     async function initClientIP() {
       try {
@@ -3858,37 +4461,42 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return dId;
     }
 
-    // Direct Google Sign In (Works flawlessly with Popups & Redirects)
+    // Direct Google Sign In (Single-Request Guarded)
+    let isGoogleAuthInFlight = false;
     window.loginWithGoogleSmart = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
+      if (e && e.stopPropagation) e.stopPropagation();
+      if (isGoogleAuthInFlight) return;
+      isGoogleAuthInFlight = true;
+
       const btn = document.getElementById('btn-google-login');
       const btnText = document.getElementById('btn-login-text');
-      if (btn && btn.dataset.loading === "true") return;
       if (btn) btn.dataset.loading = "true";
       if (btnText) btnText.innerText = 'গুগল কানেক্ট হচ্ছে...';
 
-      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || document.getElementById('heroInviteCode')?.value?.trim() || '';
+      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || '';
       inputCode = extractCleanInviteCode(inputCode);
       if (inputCode) {
         localStorage.setItem('tr_pending_invite', inputCode);
         sessionStorage.setItem('tr_pending_invite', inputCode);
       }
 
+      let res = null;
       try {
         const heroEm = document.getElementById('heroEmail')?.value?.trim();
         provider.setCustomParameters(heroEm ? { prompt: 'select_account', login_hint: heroEm } : { prompt: 'select_account' });
-        const res = await signInWithPopup(auth, provider);
-        if (res && res.user) {
-          currentUser = res.user;
-          window.closeAuthModal();
-          syncDesktopUI(userData, res.user);
-          processUserRegistration(res.user);
-        }
+        res = await signInWithPopup(auth, provider);
       } catch (err) {
-        console.warn("Popup notice, testing fallback:", err?.code, err?.message);
-        if (err?.code === 'auth/popup-closed-by-user') {
-          // user closed popup manually
-        } else {
+        const code = err?.code || '';
+        if (code === 'auth/popup-closed-by-user' || code === 'auth/cancelled-popup-request') {
+          console.warn("Popup closed or cancelled by user:", code);
+          isGoogleAuthInFlight = false;
+          if (btn) btn.dataset.loading = "false";
+          if (btnText) btnText.innerText = 'Sign in with Google';
+          return;
+        }
+        if (code === 'auth/popup-blocked' || code === 'auth/operation-not-supported-in-this-environment') {
+          console.warn("Popup blocked by browser, switching to redirect fallback:", err);
           try {
             await signInWithRedirect(auth, provider);
             return;
@@ -3896,22 +4504,35 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             console.error("Redirect error:", redirectErr);
             alert("লগইন সমস্যা: " + (redirectErr.message || redirectErr.code));
           }
+        } else {
+          console.error("Google Sign-In error:", err);
+          alert("লগইন সমস্যা: " + (err.message || err.code));
         }
       } finally {
+        isGoogleAuthInFlight = false;
         if (btn) btn.dataset.loading = "false";
         if (btnText) btnText.innerText = 'Sign in with Google';
       }
-    };
 
-    document.getElementById('btn-google-login')?.addEventListener('click', window.loginWithGoogleSmart);
+      if (res && res.user) {
+        currentUser = res.user;
+        document.getElementById('screen-login')?.classList.add('hidden');
+        document.getElementById('screen-app')?.classList.remove('hidden');
+        if (typeof window.syncDesktopUI === 'function') {
+          window.syncDesktopUI(userData, currentUser);
+        }
+        processUserRegistration(res.user);
+      }
+    };
 
     async function handleRedirectAuth() {
       try {
         const res = await getRedirectResult(auth);
         if (res && res.user) {
           currentUser = res.user;
-          window.closeAuthModal();
-          syncDesktopUI(userData, res.user);
+          document.getElementById('screen-login')?.classList.add('hidden');
+          document.getElementById('screen-app')?.classList.remove('hidden');
+        syncDesktopUI(userData, typeof user !== 'undefined' ? user : currentUser);
           processUserRegistration(res.user);
         }
       } catch (err) {
@@ -4069,11 +4690,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.handleHeroSubmit = function(e) {
       if (e && e.preventDefault) e.preventDefault();
-      const heroInv = document.getElementById('heroInviteCode')?.value?.trim();
-      if (heroInv) {
-        const inp = document.getElementById('input-invite-code');
-        if (inp) inp.value = heroInv;
-      }
       window.loginWithGoogleSmart(e);
       return false;
     };
@@ -4538,7 +5154,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       const clickHandler = item.isFirestoreTask
         ? `handleOpenTask('${item.id}')`
-        : `openOfferwallOfferModal(encodeURIComponent(String(item.id)))`;
+        : `openOfferwallOfferModal('${String(item.id).replace(/'/g, "\'")}')`;
 
       return `
         <div onclick="${clickHandler}" class="rj-offer-card ${widthClass} group/card">
@@ -4709,8 +5325,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.renderDesktopTasks = window.renderOfferwallGGAllSections;
 
     // Offerwall.GG Offer & Game Detail Modal Controls
-    window.openOfferwallOfferModal = function(rawOfferId) {
-      const offerId = decodeURIComponent(String(rawOfferId || ''));
+    window.openOfferwallOfferModal = function(offerId) {
       const allItems = [...(window.offerwallGGState.games || []), ...(window.offerwallGGState.offers || [])];
       const found = allItems.find(x => String(x.id) === String(offerId));
       if (!found) {
@@ -4870,7 +5485,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         const fallbackSvg = it.isGame ? SVG_GAME_BUBBLE : SVG_OFFER_WHALE;
         const img = it.image || it.iconImage || fallbackSvg;
         const taka = Number(it.rewardTaka) || 28.3;
-        const clickHandler = `openOfferwallOfferModal(encodeURIComponent(String(it.id)))`;
+        const clickHandler = `openOfferwallOfferModal('${String(it.id).replace(/'/g, "\'")}')`;
         return `
           <div onclick="${clickHandler}" class="card p-3.5 bg-[var(--surface)] border border-[var(--border)] rounded-2xl flex items-center justify-between gap-3 cursor-pointer hover:border-orange-400 transition">
             <div class="flex items-center gap-3 min-w-0">
@@ -5673,32 +6288,17 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const landing = document.getElementById('landingView');
       const app = document.getElementById('desktop-screen-app');
       const landingThemeBtn = document.getElementById('landingThemeBtn');
-      const authM = document.getElementById('authModal');
-      if (authM) authM.classList.remove('show');
 
       if (!user) {
-        if (landing) {
-          landing.classList.remove('hidden');
-          landing.style.display = 'block';
-        }
-        if (app) {
-          app.classList.add('hidden');
-          app.style.display = 'none';
-        }
+        if (landing) landing.classList.remove('hidden');
+        if (app) app.classList.add('hidden');
         if (landingThemeBtn) landingThemeBtn.classList.remove('hidden');
         refreshAllLucideIcons();
         return;
       }
 
-      // User logged in: Hide landing page completely, display dashboard!
-      if (landing) {
-        landing.classList.add('hidden');
-        landing.style.display = 'none';
-      }
-      if (app) {
-        app.classList.remove('hidden');
-        app.style.display = 'flex';
-      }
+      if (landing) landing.classList.add('hidden');
+      if (app) app.classList.remove('hidden');
       if (landingThemeBtn) landingThemeBtn.classList.add('hidden');
 
       const coins = uData?.coins || 0;
@@ -5784,13 +6384,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         currentUser = user;
 
         // 1. Instantly show the app screen
-        window.closeAuthModal();
-        syncDesktopUI(userData, user);
+        document.getElementById('screen-login')?.classList.add('hidden');
+        document.getElementById('screen-app')?.classList.remove('hidden');
+        syncDesktopUI(userData, typeof user !== 'undefined' ? user : currentUser);
 
         // 2. Admin Check
         if (user.email && user.email.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) {
           document.getElementById('admin-btn')?.classList.remove('hidden');
-          document.getElementById('desk-admin-btn')?.classList.remove('hidden');
         }
 
         // 3. Fail-safe User Profile Creation in Firestore (background)
@@ -5985,8 +6585,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     };
 
-    const MONETAG_DIRECT_AD_LINK = "https://uplcm.com/4/12077628";
-    let isClaimingDailyAd = false;
 
     function checkDailyRewardStatus(lastClaimTime) {
       const now = Date.now();
@@ -6094,14 +6692,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }, 1000);
     };
 
-    let manualSubmissionsList = [];
-    let zeydooAutoCompletionsList = [];
-    let offerwallGGCompletionsList = [];
-    let knownOfferwallGGLogIds = new Set();
-    let isFirstOfferwallGGSnapshot = true;
-    let zeydooCompletedMap = {};
-    let knownZeydooLogIds = new Set();
-    let isFirstZeydooSnapshot = true;
 
     function renderCombinedMyOffersHistory() {
       const myOffersBox = document.getElementById('my-offers-container');
@@ -6403,7 +6993,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
-    let activeZeydooAutoTask = null;
 
     window.openDesktopMyOffersModal = function() {
       renderCombinedMyOffersHistory();
@@ -6607,7 +7196,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     }
 
         // ================= TIMEWALL OFFERWALL HELPERS =================
-    const TIMEWALL_PLACEMENT_ID = "e62ce94a3f9bf6b3";
 
     function getTimeWallUrl(tab = '') {
       const uid = (currentUser && currentUser.uid) ? currentUser.uid : 'guest';
@@ -6992,14 +7580,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     }
 
     // ================= ENTERPRISE MASTER ADMIN LOGIC =================
-    let adminAllUsersList = [];
-    let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
-    let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
-    let isDesktopWideMode = true;
-    let currentEditingTaskId = null;
-    let currentEditingTaskIcon = null;
-
-    const bnStepNumbers = ['১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯', '১০', '১১', '১২', '১৩', '১৪', '১৫', '১৬', '১৭', '১৮', '১৯', '২০'];
 
     // Dynamic Step-by-Step Instructions Engine
     window.adminAddInstructionStep = function(type, initialText = '') {
@@ -7779,46 +8359,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     }
 
     // ================= ZEYDOO AUTO CPA OFFER IMPORTER & 50% PROFIT AUTO-POSTER =================
-    const ZEYDOO_3D_PRESETS = {
-      gift: {
-        title: "Click to claim your bonus prize!",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="gBg" cx="50%" cy="40%" r="65%"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#0f172a"/></radialGradient><linearGradient id="boxW" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cbd5e1"/></linearGradient><linearGradient id="ribR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="100%" stop-color="#c9184a"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gBg)"/><circle cx="120" cy="115" r="78" fill="#ef4444" opacity="0.18"/><polygon points="55,105 120,78 185,105 185,180 120,208 55,180" fill="url(#boxW)"/><polygon points="55,105 120,132 120,208 55,180" fill="#e2e8f0"/><polygon points="120,132 185,105 185,180 120,208" fill="#cbd5e1"/><polygon points="50,92 120,64 190,92 120,120" fill="#f8fafc"/><polygon points="106,70 134,70 134,205 106,205" fill="url(#ribR)"/><ellipse cx="102" cy="66" rx="24" ry="13" transform="rotate(-20 102 66)" fill="url(#ribR)"/><ellipse cx="138" cy="66" rx="24" ry="13" transform="rotate(20 138 66)" fill="url(#ribR)"/><circle cx="120" cy="70" r="10" fill="#a4133c"/></svg>`)
-      },
-      wheel: {
-        title: "Spin & Win Instant Cash Reward!",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="wBg" cx="50%" cy="45%" r="65%"><stop offset="0%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#0f766e"/></radialGradient></defs><rect width="240" height="240" rx="36" fill="url(#wBg)"/><circle cx="120" cy="122" r="80" fill="#042f2e" opacity="0.3"/><circle cx="120" cy="120" r="74" fill="#ffffff" stroke="#cbd5e1" stroke-width="6"/><path d="M120,120 L120,46 A74,74 0 0,1 184,83 Z" fill="#ef4444"/><path d="M120,120 L184,83 A74,74 0 0,1 184,157 Z" fill="#f8fafc"/><path d="M120,120 L184,157 A74,74 0 0,1 120,194 Z" fill="#ef4444"/><path d="M120,120 L120,194 A74,74 0 0,1 56,157 Z" fill="#f8fafc"/><path d="M120,120 L56,157 A74,74 0 0,1 56,83 Z" fill="#ef4444"/><path d="M120,120 L56,83 A74,74 0 0,1 120,46 Z" fill="#f8fafc"/><circle cx="120" cy="120" r="16" fill="#f59e0b" stroke="#ffffff" stroke-width="4"/><polygon points="120,32 110,52 130,52" fill="#facc15" stroke="#78350f" stroke-width="2"/></svg>`)
-      },
-      chest: {
-        title: "Playable: Open Golden Treasure Chest!",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="cBg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#451a03"/><stop offset="100%" stop-color="#1c1917"/></radialGradient><linearGradient id="goldG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fde047"/><stop offset="100%" stop-color="#ca8a04"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#cBg)"/><circle cx="120" cy="115" r="76" fill="#f59e0b" opacity="0.22"/><rect x="52" y="105" width="136" height="75" rx="14" fill="#92400e" stroke="url(#goldG)" stroke-width="6"/><path d="M52,105 Q120,55 188,105 Z" fill="#b45309" stroke="url(#goldG)" stroke-width="6"/><rect x="106" y="95" width="28" height="34" rx="6" fill="url(#goldG)"/><circle cx="120" cy="112" r="5" fill="#451a03"/><circle cx="88" cy="84" r="10" fill="#fde047"/><circle cx="152" cy="84" r="10" fill="#fde047"/></svg>`)
-      },
-      survey: {
-        title: "Quick Finance & Social Survey Offer",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="sBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#sBg)"/><rect x="64" y="46" width="112" height="148" rx="16" fill="#ffffff"/><rect x="92" y="34" width="56" height="24" rx="8" fill="#f59e0b"/><circle cx="90" cy="92" r="10" fill="#10b981"/><rect x="110" y="86" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="126" r="10" fill="#10b981"/><rect x="110" y="120" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="160" r="10" fill="#f97316"/><rect x="110" y="154" width="36" height="10" rx="5" fill="#cbd5e1"/></svg>`)
-      },
-      app: {
-        title: "Smart App Install & Action Bonus",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="aBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient><linearGradient id="wGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#2563eb"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#aBg)"/><text x="120" y="158" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="900" font-size="118" fill="url(#wGrad)">W</text></svg>`)
-      },
-      game: {
-        title: "Play & Complete Instant Level Task",
-        cat: "Zeydoo Auto",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="gmBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gmBg)"/><rect x="46" y="76" width="148" height="90" rx="42" fill="#ffffff"/><rect x="74" y="106" width="28" height="10" rx="4" fill="#7c3aed"/><rect x="83" y="97" width="10" height="28" rx="4" fill="#7c3aed"/><circle cx="152" cy="104" r="8" fill="#ef4444"/><circle cx="168" cy="118" r="8" fill="#f59e0b"/><circle cx="136" cy="118" r="8" fill="#10b981"/><circle cx="152" cy="132" r="8" fill="#3b82f6"/></svg>`)
-      }
-    };
-
-    window.currentZeydooPresetKey = 'gift';
-    window.currentZeydooCustomLogo = null;
-
-    window.getZeydooPresetSvg = function(key) {
-      return (ZEYDOO_3D_PRESETS[key] || ZEYDOO_3D_PRESETS.gift).svg;
-    };
-
     window.switchAdminTaskCreatorMode = function(mode) {
       const autoBox = document.getElementById('admin-auto-cpa-importer-box');
       const manualBox = document.getElementById('admin-manual-task-creator-box');
@@ -8558,8 +9098,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
     // Live Real-Time Referrals Tracker for Current User
-    let unsubMyReferrals = null;
-    let activeReferralListenerCode = null;
     function listenMyReferrals(uid, myInviteCode) {
       if (!myInviteCode || myInviteCode === 'TR-----') return;
       if (activeReferralListenerCode === myInviteCode && unsubMyReferrals) return;
