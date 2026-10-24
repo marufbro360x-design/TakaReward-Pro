@@ -4299,49 +4299,98 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       </div>
     </div>
 
-        <!-- ================= OFFERWALL.GG LIVE OFFER & GAME DETAIL MODAL (RewardJoy Style) ================= -->
-    <div id="offerwall-offer-modal" class="fixed inset-0 bg-black/65 z-[145] flex items-center justify-center p-4 hidden backdrop-blur-xs">
-      <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md p-6 space-y-4 shadow-2xl text-slate-900 dark:text-white border border-slate-100 dark:border-slate-800">
-        <div class="flex items-start justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+        <!-- ================= OFFERWALL.GG LIVE OFFER & GAME DETAIL MODAL (With Full Multi-Step Goal Ladder!) ================= -->
+    <div id="offerwall-offer-modal" class="fixed inset-0 bg-black/70 z-[145] flex items-center justify-center p-3 sm:p-4 hidden backdrop-blur-xs">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md max-h-[90vh] flex flex-col shadow-2xl text-slate-900 dark:text-white border border-slate-100 dark:border-slate-800 overflow-hidden">
+        <!-- Sticky Top Header -->
+        <div class="p-4 sm:p-5 border-b border-slate-100 dark:border-slate-800 flex items-start justify-between gap-3 shrink-0">
           <div class="flex items-center gap-3 min-w-0">
-            <img id="ow-modal-logo" src="" alt="Offer" class="w-16 h-16 rounded-2xl object-cover border border-orange-200 shadow-sm shrink-0 bg-slate-900" />
+            <img id="ow-modal-logo" src="" alt="Offer" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl object-cover border border-orange-200 shadow-sm shrink-0 bg-slate-900" />
             <div class="min-w-0">
               <div class="flex items-center gap-1.5 flex-wrap">
                 <span class="bg-orange-500/15 text-[#f97316] border border-orange-500/30 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
                   ⚡ Offerwall.GG
                 </span>
+                <span id="ow-modal-type-badge" class="bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
+                  ✨ Multi-reward
+                </span>
                 <span id="ow-modal-devices" class="text-[10px] font-bold text-slate-400">🤖 🍎 💻</span>
               </div>
-              <h3 id="ow-modal-title" class="font-extrabold text-base text-slate-900 dark:text-white mt-1 leading-snug truncate">Offer Title</h3>
+              <h3 id="ow-modal-title" class="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white mt-1 leading-snug">Offer Title</h3>
             </div>
           </div>
           <button type="button" onclick="closeOfferwallOfferModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-800 dark:hover:text-white flex items-center justify-center font-bold cursor-pointer shrink-0">✕</button>
         </div>
 
-        <div class="bg-gradient-to-r from-orange-50 to-emerald-50 dark:from-slate-800 dark:to-slate-800/70 border border-orange-200/80 dark:border-slate-700 rounded-2xl p-3.5 flex items-center justify-between">
-          <div>
-            <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 block">Instant Auto-Credit Reward:</span>
-            <span id="ow-modal-coins" class="text-xs font-extrabold text-amber-600">🪙 100,000 Coins</span>
+        <!-- Scrollable Body with Total Earnings, What to do, Reward Steps Ladder & Good to know -->
+        <div class="p-4 sm:p-5 overflow-y-auto space-y-4 flex-1 hide-scrollbar">
+          <!-- Total You Earn Card -->
+          <div class="bg-gradient-to-r from-orange-50 via-amber-50/60 to-emerald-50 dark:from-slate-800 dark:to-slate-800/80 border border-orange-200/80 dark:border-slate-700 rounded-2xl p-3.5 flex items-center justify-between">
+            <div>
+              <span class="text-[10px] font-extrabold uppercase tracking-wider text-amber-600 dark:text-amber-400 block">YOU EARN (অটোমেটিক ক্রেডিট)</span>
+              <span id="ow-modal-coins" class="text-sm sm:text-base font-black text-slate-900 dark:text-white mt-0.5 block">🪙 100,000 Coins</span>
+              <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium block mt-0.5">Credited automatically once the advertiser confirms completion.</span>
+            </div>
+            <span id="ow-modal-taka" class="text-2xl sm:text-3xl font-black text-[#f97316] shrink-0 ml-2">৳10</span>
           </div>
-          <span id="ow-modal-taka" class="text-2xl font-black text-[#f97316]">৳10</span>
-        </div>
 
-        <div class="space-y-2 text-xs">
-          <div class="font-extrabold text-slate-700 dark:text-slate-200 flex items-center gap-1.5">
-            <span>📋</span> Offer Requirements &amp; Instructions:
+          <!-- What to do Section -->
+          <div class="bg-slate-50 dark:bg-slate-800/60 p-3.5 rounded-2xl border border-slate-200/80 dark:border-slate-700 space-y-1.5 text-xs">
+            <div class="font-extrabold text-slate-800 dark:text-white flex items-center justify-between">
+              <span class="flex items-center gap-1.5"><span>📋</span> What to do (কাজের নিয়মাবলি)</span>
+            </div>
+            <p id="ow-modal-req" class="font-bold text-[#f97316] text-xs leading-relaxed">
+              Complete all steps listed. Earn rewards along the way.
+            </p>
+            <p id="ow-modal-desc" class="text-slate-600 dark:text-slate-300 leading-relaxed text-[11.5px]">
+              Complete the required steps to receive your reward automatically.
+            </p>
           </div>
-          <div id="ow-modal-desc" class="bg-slate-50 dark:bg-slate-800/60 p-3 rounded-2xl border border-slate-200/70 dark:border-slate-700 text-slate-600 dark:text-slate-300 leading-relaxed text-xs">
-            Complete the required steps to receive your reward automatically.
+
+          <!-- Reward Steps Ladder Section (Matches Offerwall.GG 1:1!) -->
+          <div id="ow-modal-steps-wrapper" class="bg-slate-900 text-white rounded-2xl p-3.5 sm:p-4 border border-slate-800 space-y-3 shadow-inner">
+            <div class="border-b border-slate-800 pb-2.5">
+              <div class="flex items-center justify-between">
+                <h4 class="font-extrabold text-xs sm:text-sm text-white flex items-center gap-1.5">
+                  <span class="text-amber-400">🏆</span> Reward steps (ধাপে ধাপে ইনকাম)
+                </h4>
+                <span id="ow-modal-steps-count" class="text-[10px] font-bold bg-amber-400/15 text-amber-300 border border-amber-400/30 px-2 py-0.5 rounded-full">Loading...</span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1 leading-relaxed">
+                Each step is credited on its own as soon as the advertiser confirms it. You keep what you have earned even if you stop part-way.
+              </p>
+            </div>
+
+            <!-- Dynamic Steps List -->
+            <div id="ow-modal-steps-list" class="divide-y divide-slate-800/90 max-h-60 overflow-y-auto pr-1">
+              <!-- Populated dynamically from /api/offers?offerId=... -->
+            </div>
           </div>
+
+          <!-- Good to know Section -->
+          <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-3.5 border border-slate-200/70 dark:border-slate-700/80 grid grid-cols-2 gap-3 text-[11px]">
+            <div>
+              <span class="text-slate-400 font-bold uppercase text-[9.5px] block">📱 WORKS ON</span>
+              <strong id="ow-modal-workson" class="text-slate-800 dark:text-slate-200 font-extrabold capitalize mt-0.5 block">Android, iOS, Desktop</strong>
+            </div>
+            <div>
+              <span class="text-slate-400 font-bold uppercase text-[9.5px] block">🔁 REPEATABLE</span>
+              <strong class="text-slate-800 dark:text-slate-200 font-extrabold mt-0.5 block">Once per user (New User)</strong>
+            </div>
+          </div>
+
           <div class="flex items-start gap-2 bg-emerald-50/70 dark:bg-emerald-950/30 p-2.5 rounded-xl border border-emerald-200/80 dark:border-emerald-800/50 text-[11px] text-emerald-800 dark:text-emerald-300 font-semibold">
             <span>✓</span>
-            <span>No screenshot needed! Once completed, Offerwall.GG automatically credits your balance via live postback.</span>
+            <span>স্ক্রিনশট জমা দিতে হবে না! প্রতিটি লেভেল বা স্টেপ পূরণ হওয়ার সাথে সাথে অটোমেটিক আপনার ব্যালেন্সে কয়েন ও টাকা যোগ হয়ে যাবে।</span>
           </div>
         </div>
 
-        <button type="button" id="ow-modal-start-btn" onclick="startSelectedOfferwallOffer()" class="w-full bg-gradient-to-r from-[#f97316] to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-black py-3.5 rounded-2xl text-sm shadow-lg shadow-orange-500/25 cursor-pointer transition flex items-center justify-center gap-2">
-          <span>🚀 Start Now &amp; Earn ➔</span>
-        </button>
+        <!-- Sticky Bottom Action Bar -->
+        <div class="p-4 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
+          <button type="button" id="ow-modal-start-btn" onclick="startSelectedOfferwallOffer()" class="w-full bg-gradient-to-r from-[#eab308] via-[#f59e0b] to-[#f97316] hover:opacity-95 text-slate-950 font-black py-3.5 px-4 rounded-2xl text-xs sm:text-sm shadow-lg shadow-orange-500/25 cursor-pointer transition flex items-center justify-center gap-2">
+            <span id="ow-modal-start-btn-text">🚀 Start Now &amp; Earn ➔</span>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -5544,8 +5593,78 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.renderDesktopTasks = window.renderOfferwallGGAllSections;
 
-    // Offerwall.GG Offer & Game Detail Modal Controls
-    window.openOfferwallOfferModal = function(offerId) {
+    // Helper to build a default step ladder if an offer doesn't have custom goals yet
+    function buildFallbackGoalsForOffer(offer) {
+      const totalCoins = Number(offer.rewardCoins) || ((Number(offer.rewardTaka) || 10) * 10000);
+      if (Array.isArray(offer.goals) && offer.goals.length > 0) {
+        return offer.goals;
+      }
+      if (offer.isGame) {
+        const s1 = Math.round(totalCoins * 0.05);
+        const s2 = Math.round(totalCoins * 0.15);
+        const s3 = Math.round(totalCoins * 0.30);
+        const s4 = Math.max(0, totalCoins - s1 - s2 - s3);
+        return [
+          { stepNumber: 1, description: "Install the game & open for the first time", rewardCoins: s1, rewardTaka: Number((s1 / 10000).toFixed(2)), optional: false },
+          { stepNumber: 2, description: "Complete initial levels / tutorial milestone", rewardCoins: s2, rewardTaka: Number((s2 / 10000).toFixed(2)), optional: false },
+          { stepNumber: 3, description: "Reach mid-game level milestone", rewardCoins: s3, rewardTaka: Number((s3 / 10000).toFixed(2)), optional: false },
+          { stepNumber: 4, description: offer.requirements || "Complete final target level milestone", rewardCoins: s4, rewardTaka: Number((s4 / 10000).toFixed(2)), optional: false }
+        ];
+      }
+      return [
+        {
+          stepNumber: 1,
+          description: offer.requirements || offer.description || "Complete the required offer registration / action",
+          rewardCoins: totalCoins,
+          rewardTaka: Number((totalCoins / 10000).toFixed(2)),
+          optional: false
+        }
+      ];
+    }
+
+    function renderOfferwallModalStepsList(goals, offer) {
+      const listEl = document.getElementById('ow-modal-steps-list');
+      const countEl = document.getElementById('ow-modal-steps-count');
+      const typeBadge = document.getElementById('ow-modal-type-badge');
+      if (!listEl) return;
+
+      const finalGoals = (Array.isArray(goals) && goals.length > 0) ? goals : buildFallbackGoalsForOffer(offer);
+      if (countEl) countEl.innerText = `${finalGoals.length} ${finalGoals.length === 1 ? 'Step' : 'Steps'}`;
+      if (typeBadge) {
+        typeBadge.innerText = finalGoals.length > 1 ? '✨ Multi-reward' : '⚡ Single-step';
+      }
+
+      listEl.innerHTML = finalGoals.map((g, idx) => {
+        const stepNum = g.stepNumber || (idx + 1);
+        const c = Math.round(Number(g.rewardCoins || g.reward || 0));
+        const tk = c > 0 ? (c / 10000) : 0;
+        const tkText = tk >= 100 ? `৳${Math.round(tk).toLocaleString()}` : `৳${tk.toFixed(1)}`;
+        const isOpt = Boolean(g.optional || /purchase|deposit|buy|spend/i.test(String(g.description || '')));
+
+        return `
+          <div class="py-2.5 flex items-center justify-between gap-3 text-xs">
+            <div class="flex items-start gap-2.5 min-w-0">
+              <span class="w-6 h-6 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-extrabold text-[11px] flex items-center justify-center shrink-0 mt-0.5">
+                ${stepNum}
+              </span>
+              <div class="min-w-0">
+                <span class="font-bold text-slate-100 leading-snug block break-words">
+                  ${g.description || `Step ${stepNum}`}
+                  ${isOpt ? `<span class="ml-1 text-[10px] font-semibold text-slate-400">(Optional)</span>` : ''}
+                </span>
+                ${tk > 0 ? `<span class="text-[10.5px] font-bold text-emerald-400 block mt-0.5">≈ ${tkText} BDT</span>` : ''}
+              </div>
+            </div>
+            <div class="text-right shrink-0">
+              <span class="font-black text-amber-400 text-xs sm:text-[13px] whitespace-nowrap">${c > 0 ? c.toLocaleString() + ' Coins' : 'Bonus'}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Offerwall.GG Offer & Game Detail Modal Controls (Automatically fetches full Goal Ladder from /api/offers?offerId=...)
+    window.openOfferwallOfferModal = async function(offerId) {
       const allItems = [...(window.offerwallGGState.games || []), ...(window.offerwallGGState.offers || [])];
       const found = allItems.find(x => String(x.id) === String(offerId));
       if (!found) {
@@ -5558,7 +5677,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const titleEl = document.getElementById('ow-modal-title');
       const coinsEl = document.getElementById('ow-modal-coins');
       const takaEl = document.getElementById('ow-modal-taka');
+      const reqEl = document.getElementById('ow-modal-req');
       const descEl = document.getElementById('ow-modal-desc');
+      const worksOnEl = document.getElementById('ow-modal-workson');
+      const startBtnTextEl = document.getElementById('ow-modal-start-btn-text');
 
       const fallbackSvg = found.isGame ? SVG_GAME_BUBBLE : SVG_OFFER_WHALE;
       if (logoEl) logoEl.src = found.image || found.iconImage || fallbackSvg;
@@ -5566,11 +5688,73 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       const coins = Number(found.rewardCoins) || ((Number(found.rewardTaka) || 10) * 10000);
       const taka = Number(found.rewardTaka) || (coins / 10000);
+      const takaFormatted = taka >= 100 ? Math.round(taka).toLocaleString() : taka.toFixed(1);
+
       if (coinsEl) coinsEl.innerText = `🪙 ${coins.toLocaleString()} Coins`;
-      if (takaEl) takaEl.innerText = `৳${taka >= 100 ? Math.round(taka).toLocaleString() : taka.toFixed(1)}`;
-      if (descEl) descEl.innerText = found.requirements || found.description || 'Complete the offer instructions on Offerwall.GG to earn instant rewards.';
+      if (takaEl) takaEl.innerText = `৳${takaFormatted}`;
+      if (reqEl) reqEl.innerText = found.requirements || 'Complete all steps listed. Earn rewards along the way.';
+      if (descEl) descEl.innerText = found.description || 'Follow the instructions on the offer page to earn instant rewards.';
+      if (worksOnEl) {
+        const devs = Array.isArray(found.devices) && found.devices.length > 0 ? found.devices.join(', ') : 'Android, iOS, Desktop';
+        worksOnEl.innerText = devs;
+      }
+      if (startBtnTextEl) {
+        startBtnTextEl.innerText = `🚀 Start offer · ${coins.toLocaleString()} Coins (৳${takaFormatted})`;
+      }
+
+      // Render immediate steps (or loading indicator if numeric Offerwall.GG ID)
+      const isNumericId = /^\d+$/.test(String(found.id));
+      if (isNumericId && (!Array.isArray(found.goals) || found.goals.length === 0)) {
+        const listEl = document.getElementById('ow-modal-steps-list');
+        const countEl = document.getElementById('ow-modal-steps-count');
+        if (countEl) countEl.innerText = 'Loading steps...';
+        if (listEl) {
+          listEl.innerHTML = `
+            <div class="py-5 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
+              <span class="w-4 h-4 border-2 border-amber-400 border-t-transparent rounded-full animate-spin inline-block"></span>
+              <span>অফারের সকল স্টেপ ও নিয়মাবলি লোড হচ্ছে...</span>
+            </div>
+          `;
+        }
+      } else {
+        renderOfferwallModalStepsList(found.goals, found);
+      }
 
       document.getElementById('offerwall-offer-modal')?.classList.remove('hidden');
+
+      // Fetch live goal ladder from /api/offers?offerId={id} for real Offerwall.GG offers
+      if (isNumericId && (!Array.isArray(found.goals) || found.goals.length === 0)) {
+        try {
+          const uid = currentUser?.uid || 'guest';
+          const res = await fetch(`/api/offers?offerId=${encodeURIComponent(found.id)}&userId=${encodeURIComponent(uid)}`, {
+            headers: { 'Accept': 'application/json' }
+          });
+          if (res.ok) {
+            const detailJson = await res.json();
+            const detailedOffer = detailJson?.data?.offer;
+            if (detailedOffer) {
+              found.goals = Array.isArray(detailedOffer.goals) ? detailedOffer.goals : [];
+              if (detailedOffer.requirements) found.requirements = detailedOffer.requirements;
+              if (detailedOffer.description) found.description = detailedOffer.description;
+              if (detailedOffer.clickUrl) found.clickUrl = detailedOffer.clickUrl;
+
+              // If modal is still showing this offer, update UI with real steps & requirements
+              if (window.offerwallGGState.activeModalOffer && String(window.offerwallGGState.activeModalOffer.id) === String(found.id)) {
+                if (reqEl && detailedOffer.requirements) reqEl.innerText = detailedOffer.requirements;
+                if (descEl && detailedOffer.description) descEl.innerText = detailedOffer.description;
+                renderOfferwallModalStepsList(found.goals, found);
+              }
+              return;
+            }
+          }
+        } catch (err) {
+          console.warn('Live offer goal ladder fetch fallback:', err.message);
+        }
+        // Fallback if network request didn't return goals
+        if (window.offerwallGGState.activeModalOffer && String(window.offerwallGGState.activeModalOffer.id) === String(found.id)) {
+          renderOfferwallModalStepsList(found.goals, found);
+        }
+      }
     };
 
     window.closeOfferwallOfferModal = function() {
