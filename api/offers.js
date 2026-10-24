@@ -117,7 +117,8 @@ function isGameOffer(offer) {
     "game", "play", "level", "puzzle", "solitaire", "casino", "slots", "whale.io",
     "originals", "battle", "rpg", "clash", "kingdom", "tycoon", "merge", "dice",
     "bingo", "poker", "fish", "shooter", "racing", "farm", "zombie", "dragon",
-    "bubble", "sort", "rocket", "legends", "adventure", "heroes", "mafia", "monopoly"
+    "bubble", "sort", "rocket", "legends", "adventure", "heroes", "mafia", "monopoly",
+    "tile", "match"
   ];
   return gameKeywords.some(kw => text.includes(kw));
 }
@@ -132,6 +133,26 @@ function isSurveyOffer(offer) {
   }
   const text = `${offer.name || ""} ${offer.description || ""}`.toLowerCase();
   return text.includes("survey") || text.includes("theoremreach") || text.includes("bitlabs") || text.includes("sayorbit") || text.includes("cpx");
+}
+
+// Normalize goal ladder / reward steps array from Offerwall.GG
+function normalizeGoals(rawGoals) {
+  if (!Array.isArray(rawGoals) || rawGoals.length === 0) return [];
+  return rawGoals.map((g, idx) => {
+    const rewardCoins = Math.round(Number(g.reward || g.points || g.coins || g.currencyAmount || 0));
+    const rewardTaka = rewardCoins > 0 ? Number((rewardCoins / 10000).toFixed(2)) : 0;
+    const desc = String(g.description || g.name || g.title || `Step ${idx + 1}`).trim();
+    const isOptional = Boolean(g.optional || /purchase|deposit|buy|spend/i.test(desc));
+    return {
+      stepNumber: idx + 1,
+      goalId: String(g.goalId || g.id || idx + 1),
+      description: desc,
+      rewardCoins,
+      rewardTaka,
+      rewardFormatted: g.rewardFormatted || (rewardCoins > 0 ? `${rewardCoins.toLocaleString()} Coins` : "Bonus"),
+      optional: isOptional
+    };
+  });
 }
 
 // Normalize an offer object for TakaReward Pro frontend
@@ -154,15 +175,22 @@ function normalizeOffer(raw, userId) {
     ? raw.categories.map(c => String(c).toLowerCase())
     : ["offers"];
 
+  const goals = normalizeGoals(raw.goals || raw.steps || raw.events);
+  const isMultiStep = String(raw.type || "").toLowerCase() === "multistep" || Boolean(raw.multipleConversions) || goals.length > 1;
+
   return {
     id: String(id),
     externalId: String(raw.externalId || id),
     provider: String(raw.provider || "offerwall.gg"),
     name: String(raw.name || raw.title || "Special Offer"),
     description: String(raw.description || "Complete this offer to earn instant rewards."),
-    requirements: String(raw.requirements || raw.description || "Follow the instructions on the offer page and complete the required steps."),
+    requirements: String(
+      raw.requirements ||
+      (isMultiStep ? "Complete all steps listed. Earn rewards along the way." : (raw.description || "Follow the instructions on the offer page and complete the required steps."))
+    ),
     image: String(raw.image || ""),
-    type: String(raw.type || "singlestep"),
+    type: isMultiStep ? "multistep" : String(raw.type || "singlestep"),
+    multipleConversions: Boolean(raw.multipleConversions || isMultiStep),
     categories,
     devices,
     countries: Array.isArray(raw.countries) ? raw.countries : ["*"],
@@ -173,12 +201,41 @@ function normalizeOffer(raw, userId) {
     featured: Boolean(raw.featured),
     isGame: isGameOffer(raw),
     isSurvey: isSurveyOffer(raw),
-    clickUrl
+    clickUrl,
+    goals
   };
 }
 
 async function handleOffersRequest(params, headers = {}) {
   const userId = String(params.userId || params.uid || params.user || "guest").trim();
+  const singleOfferId = String(params.offerId || params.offer || params.id || "").trim();
+
+  // Case 1: Single Offer Detail + Goal Ladder Request (?offerId=4021)
+  if (singleOfferId && /^\d+$/.test(singleOfferId)) {
+    const detailRes = await fetchOfferwallEndpoint(`/offers/${encodeURIComponent(singleOfferId)}`, {
+      appId: OFFERWALL_APP_ID,
+      userId
+    });
+    const rawOffer = detailRes?.data?.offer || detailRes?.offer || null;
+    if (rawOffer) {
+      const normalized = normalizeOffer(rawOffer, userId);
+      return {
+        success: true,
+        appId: OFFERWALL_APP_ID,
+        data: {
+          offer: normalized,
+          goals: normalized.goals
+        }
+      };
+    }
+    return {
+      success: false,
+      error: "Offer details not found",
+      data: { offer: null, goals: [] }
+    };
+  }
+
+  // Case 2: Full Catalogue Request
   const requestedCategory = String(params.category || "").toLowerCase().trim();
   const requestedDevice = String(params.device || "").toLowerCase().trim();
   const search = String(params.search || "").trim();
