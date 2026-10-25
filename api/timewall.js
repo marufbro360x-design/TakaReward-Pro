@@ -1,9 +1,17 @@
 // Universal Serverless Function for TimeWall Postback Integration (Vercel & Netlify)
-// Supports both Vercel (/api/timewall) and Netlify (/.netlify/functions/timewall)
+// File Location in GitHub Repo: api/timewall.js
+// Live Postback Endpoint: https://takarewardpro.com/api/timewall
 const crypto = require('crypto');
 
-// Placement Secret Key from TimeWall siteowner dashboard
-const SECRET_KEY = process.env.TIMEWALL_SECRET || "506313a9cf4210a0d6daf16a8be69f28";
+// Placement Secret Key & Survey Signing Key from TimeWall siteowner dashboard (oid: 22db97d7a055bb22)
+const SECRET_KEY = process.env.TIMEWALL_SECRET || "bba6d5d15ae4907d2680aa4ce1a1a386";
+const CANDIDATE_SECRETS = [
+  process.env.TIMEWALL_SECRET,
+  "bba6d5d15ae4907d2680aa4ce1a1a386",
+  "9e7fe018b4c712d8c54fc5b384b849e730eefd4611de7a51b1bc6283fbd7b03",
+  "506313a9cf4210a0d6daf16a8be69f28"
+].filter(Boolean);
+
 const FIREBASE_PROJECT_ID = "takareward-bd";
 
 // Service Account Credentials for Superuser Admin Access to Firestore
@@ -50,17 +58,36 @@ async function getGoogleAdminToken() {
   return tokenData.access_token;
 }
 
+function verifyTimeWallHash(userid, revenue, hash) {
+  if (!hash || !revenue) return false;
+  const cleanHash = String(hash).toLowerCase().trim();
+  for (const sec of CANDIDATE_SECRETS) {
+    const expected = crypto
+      .createHash("sha256")
+      .update(String(userid) + String(revenue) + String(sec).trim())
+      .digest("hex")
+      .toLowerCase();
+    if (cleanHash === expected) return true;
+  }
+  return false;
+}
+
 // Core processor for TimeWall Postback
 async function processTimeWallCallback(params) {
   // Support all parameter variations sent by TimeWall macros
   const userid = String(params.userid || params.userID || params.userId || params.uid || params.subid || "").trim();
-  const currency = params.currency || params.currencyAmount || params.points || params.coins;
+  const currency = params.currency !== undefined ? params.currency : (params.currencyAmount !== undefined ? params.currencyAmount : (params.points || params.coins));
   const revenue = params.revenue !== undefined ? String(params.revenue).trim() : "";
   const txid = String(params.txid || params.transactionID || params.transactionId || params.trans_id || params.withdrawid || "").trim();
+  const withdrawid = String(params.withdrawid || "").trim();
+  const ip = String(params.ip || "").trim();
+  const reason = String(params.reason || "").trim();
+  const offername = String(params.offername || params.offerName || "TimeWall Task / Survey").trim();
+  const offerdetail = String(params.offerdetail || params.offerDetail || "").trim();
   const hash = String(params.hash || params.sig || params.signature || "").trim();
   const type = String(params.type || "1").trim(); // 1 = credit, 2 / -1 = chargeback
 
-  console.log(`[TimeWall Postback] User: ${userid}, Currency: ${currency}, Revenue: ${revenue}, TxID: ${txid}, Type: ${type}`);
+  console.log(`[TimeWall Postback] User: ${userid}, Currency: ${currency}, Revenue: ${revenue}, TxID: ${txid}, Offer: ${offername}, Type: ${type}`);
 
   // Health check if opened in browser directly
   if (!userid && !txid && !revenue) {
@@ -74,32 +101,29 @@ async function processTimeWallCallback(params) {
 
   // 1. Hash Validation (TimeWall standard: sha256(userID + revenue + secretKey))
   if (hash && revenue) {
-    const expectedHash = crypto
-      .createHash('sha256')
-      .update(String(userid) + String(revenue) + SECRET_KEY)
-      .digest('hex');
-
-    if (hash.toLowerCase() !== expectedHash.toLowerCase()) {
-      console.warn(`[TimeWall Hash Notice] Received: ${hash}, Expected: ${expectedHash}. Processing postback.`);
+    const isMatched = verifyTimeWallHash(userid, revenue, hash);
+    if (!isMatched) {
+      console.warn(`[TimeWall Hash Notice] Received hash=${hash} did not match primary secret. Proceeding with postback.`);
     } else {
       console.log("[TimeWall Hash Verified Successfully]");
     }
   }
 
-  // 2. Calculate TakaReward Coins (10,000 Coins = 1 BDT)
-  // TimeWall passes currencyAmount directly based on placement currency settings
+  // 2. Calculate TakaReward Coins ($1 USD = 600,000 Coins as configured in TimeWall Placement)
+  // 10,000 Coins = 1 BDT (৳1)
   let coinsToAdd = 0;
-  if (currency !== undefined && !isNaN(Number(currency)) && Number(currency) > 0) {
-    coinsToAdd = Math.round(Number(currency));
-  } else if (revenue && !isNaN(Number(revenue)) && Number(revenue) > 0) {
-    // If currency not provided, convert revenue USD -> BDT -> Coins (1 USD ≈ 120 BDT)
-    coinsToAdd = Math.round(Number(revenue) * 120 * 10000);
+  if (currency !== undefined && currency !== "" && !isNaN(Number(currency)) && Number(currency) !== 0) {
+    coinsToAdd = Math.round(Math.abs(Number(currency)));
+  } else if (revenue && !isNaN(Number(revenue)) && Number(revenue) !== 0) {
+    // Convert revenue USD -> Coins using TimeWall placement rate ($1 USD = 600,000 Coins)
+    coinsToAdd = Math.round(Math.abs(Number(revenue)) * 600000);
   } else {
-    coinsToAdd = 10000;
+    coinsToAdd = 6000;
   }
 
   // Handle chargebacks / reversals
-  if (type === "2" || type === "-1" || type.toLowerCase() === "reversed") {
+  const isReversed = (type === "2" || type === "-1" || type.toLowerCase() === "reversed" || Number(currency) < 0 || Number(revenue) < 0);
+  if (isReversed) {
     coinsToAdd = -Math.abs(coinsToAdd);
   }
 
@@ -107,7 +131,8 @@ async function processTimeWallCallback(params) {
   const adminAccessToken = await getGoogleAdminToken();
 
   // 4. Deduplication Check on (txid, type)
-  const logDocId = (type === "2" || type === "-1") ? `${txid || Date.now()}_rev` : (txid || String(Date.now()));
+  const baseTxId = txid || withdrawid || `${userid}_${Date.now()}`;
+  const logDocId = isReversed ? `${baseTxId}_rev` : baseTxId;
   const checkUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/timewall_logs/${encodeURIComponent(logDocId)}`;
 
   const checkRes = await fetch(checkUrl, {
@@ -120,7 +145,7 @@ async function processTimeWallCallback(params) {
     return { code: 200, body: "1" };
   }
 
-  // 5. Update User Document and Save Audit Log in Firestore
+  // 5. Update User Document and Save Full Audit Log in Firestore
   const commitUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents:commit`;
   const userDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${userid}`;
   const logDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/timewall_logs/${encodeURIComponent(logDocId)}`;
@@ -147,11 +172,17 @@ async function processTimeWallCallback(params) {
           name: logDocPath,
           fields: {
             userId: { stringValue: String(userid) },
-            txid: { stringValue: String(txid || "") },
+            txid: { stringValue: String(baseTxId) },
+            withdrawId: { stringValue: String(withdrawid || "") },
             revenue: { stringValue: String(revenue || "0") },
             coins: { integerValue: coinsToAdd },
-            currencyAmount: { doubleValue: Number(currency) || 0 },
+            currencyAmount: { doubleValue: Number(currency) || coinsToAdd },
+            offerName: { stringValue: String(offername || "TimeWall Task / Survey") },
+            offerDetail: { stringValue: String(offerdetail || "") },
+            ip: { stringValue: String(ip || "") },
+            reason: { stringValue: String(reason || "") },
             type: { stringValue: String(type) },
+            status: { stringValue: isReversed ? "reversed" : "credited" },
             createdAt: { timestampValue: new Date().toISOString() }
           }
         }
