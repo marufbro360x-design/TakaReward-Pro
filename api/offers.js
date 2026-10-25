@@ -1,4 +1,4 @@
-// Vercel & Netlify Universal Serverless Function: Offerwall.GG + TimeWall Survey API Live Proxy
+// Vercel & Netlify Universal Serverless Function: Offerwall.GG + TimeWall Live Proxy
 // File Location in GitHub Repo: api/offers.js
 // Live Endpoint: https://takarewardpro.com/api/offers
 
@@ -6,8 +6,9 @@ const OFFERWALL_APP_ID = process.env.OFFERWALL_APP_ID || "7495f3f6d2e6b19774fc1b
 const OFFERWALL_SECRET = process.env.OFFERWALL_SECRET || "38420234f0f6e719f28054f43da7e5b0199a31f00d42a2790df1e0e4ed703ace";
 const OFFERWALL_API_BASE = "https://offerwall.gg/api/v1";
 
-// TimeWall Survey API Configuration (Bearer Token from TimeWall Siteowner Dashboard)
+// TimeWall Configuration (Bearer Token, Signing Key & Placement OID from TimeWall Siteowner Dashboard)
 const TIMEWALL_SURVEY_API_KEY = process.env.TIMEWALL_SURVEY_API_KEY || "tw_e8c7a7d151ffaa0d9215127d48e95590df925ced577a949f9ea850deb4b1934f";
+const TIMEWALL_SIGNING_KEY = process.env.TIMEWALL_SIGNING_KEY || "9e7fe018b4c712d8c54fc5b384b849e730eefd4611de7a51b1bc6283fbd7b03";
 const TIMEWALL_PLACEMENT_OID = process.env.TIMEWALL_PLACEMENT_OID || "22db97d7a055bb22";
 
 // Helper to fetch an Offerwall.GG endpoint safely with timeout
@@ -76,9 +77,10 @@ async function fetchTimeWallSurveys(queryParams = {}) {
           return rawList.map((s, idx) => {
             const rawCurrency = Number(s.currencyAmount || s.points || s.coins || s.reward || 0);
             const rawRevenueUsd = Number(s.revenue || s.payout || s.cpi || 0);
+            // TimeWall Placement Rate: $1 USD = 600,000 Coins
             const rewardCoins = rawCurrency > 0
               ? Math.round(rawCurrency)
-              : (rawRevenueUsd > 0 ? Math.round(rawRevenueUsd * 120 * 10000 * 0.7) : 450000);
+              : (rawRevenueUsd > 0 ? Math.round(rawRevenueUsd * 600000) : 600000);
             const rewardTaka = Number((rewardCoins / 10000).toFixed(1));
             const mins = Number(s.loi || s.length || s.lengthMinutes || s.duration || 5);
             return {
@@ -118,7 +120,7 @@ function isGameOffer(offer) {
     "originals", "battle", "rpg", "clash", "kingdom", "tycoon", "merge", "dice",
     "bingo", "poker", "fish", "shooter", "racing", "farm", "zombie", "dragon",
     "bubble", "sort", "rocket", "legends", "adventure", "heroes", "mafia", "monopoly",
-    "tile", "match"
+    "tile", "match", "crazy aim", "roller", "pool", "abyss", "slime", "mochi", "unblock"
   ];
   return gameKeywords.some(kw => text.includes(kw));
 }
@@ -135,16 +137,20 @@ function isSurveyOffer(offer) {
   return text.includes("survey") || text.includes("theoremreach") || text.includes("bitlabs") || text.includes("sayorbit") || text.includes("cpx");
 }
 
-// Normalize goal ladder / reward steps array from Offerwall.GG
+// Normalize goal ladder / reward steps array from Offerwall.GG and sort in ascending order
 function normalizeGoals(rawGoals) {
   if (!Array.isArray(rawGoals) || rawGoals.length === 0) return [];
-  return rawGoals.map((g, idx) => {
+  const mapped = rawGoals.map((g, idx) => {
     const rewardCoins = Math.round(Number(g.reward || g.points || g.coins || g.currencyAmount || 0));
     const rewardTaka = rewardCoins > 0 ? Number((rewardCoins / 10000).toFixed(2)) : 0;
     const desc = String(g.description || g.name || g.title || `Step ${idx + 1}`).trim();
     const isOptional = Boolean(g.optional || /purchase|deposit|buy|spend/i.test(desc));
+    // Extract numeric stage/level if present for natural sorting
+    const stageMatch = desc.match(/(?:stage|level|step|milestone|kingdom|day)\s*(\d+)/i);
+    const stageOrder = stageMatch ? parseInt(stageMatch[1], 10) : null;
     return {
-      stepNumber: idx + 1,
+      origIndex: idx,
+      stageOrder,
       goalId: String(g.goalId || g.id || idx + 1),
       description: desc,
       rewardCoins,
@@ -153,6 +159,27 @@ function normalizeGoals(rawGoals) {
       optional: isOptional
     };
   });
+
+  // Sort ascending by stage number (if all have stage numbers) or ascending by rewardCoins
+  mapped.sort((a, b) => {
+    if (a.stageOrder !== null && b.stageOrder !== null && a.stageOrder !== b.stageOrder) {
+      return a.stageOrder - b.stageOrder;
+    }
+    if (a.rewardCoins !== b.rewardCoins) {
+      return a.rewardCoins - b.rewardCoins;
+    }
+    return a.origIndex - b.origIndex;
+  });
+
+  return mapped.map((g, i) => ({
+    stepNumber: i + 1,
+    goalId: g.goalId,
+    description: g.description,
+    rewardCoins: g.rewardCoins,
+    rewardTaka: g.rewardTaka,
+    rewardFormatted: g.rewardFormatted,
+    optional: g.optional
+  }));
 }
 
 // Normalize an offer object for TakaReward Pro frontend
@@ -320,9 +347,10 @@ async function handleOffersRequest(params, headers = {}) {
     allOffers = allOffers.filter(o => o.devices.includes(requestedDevice));
   }
 
-  // Separate into Games, Offers/Sign-ups, and Surveys
+  // Separate into Games, Non-Game Offers/Sign-ups, and Surveys
   const games = allOffers.filter(o => o.isGame && !o.isSurvey);
-  const signupsAndOffers = allOffers.filter(o => !o.isSurvey);
+  const nonGameOffers = allOffers.filter(o => !o.isGame && !o.isSurvey);
+  const signupsAndOffers = nonGameOffers.length > 0 ? [...nonGameOffers, ...games] : allOffers.filter(o => !o.isSurvey);
   const surveyOffers = allOffers.filter(o => o.isSurvey);
 
   // Normalize dedicated surveys from /api/v1/surveys
