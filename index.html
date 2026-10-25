@@ -2144,7 +2144,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               </div>
             </div>
 
-            <!-- SECTION 2: Apps, Offers & Sign-up Tasks (Offerwall.GG Offers + Sign-up Tasks + Admin Verified Tasks & TimeWall Tasks) -->
+            <!-- SECTION 2: Apps, Offers & Sign-up Tasks (Offerwall.GG Offers + Sign-up Tasks + Admin/Zeydoo Tasks) -->
             <div id="desk-offers-section" class="space-y-3.5 pt-1">
               <div class="flex flex-wrap items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
@@ -3815,15 +3815,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <div id="admin-submissions-list" class="space-y-2.5 text-xs"></div>
             </div>
 
-            <!-- TAB 3: ADD NEW TASK (Manual Verified Task Creator) -->
+            <!-- TAB 3: ADD NEW TASK (Manual Proof Task Creator) -->
             <div id="admin-view-add" class="bg-white border border-slate-200 rounded-3xl p-5 space-y-4 hidden shadow-xs">
-              
               <div class="flex flex-wrap items-center justify-between gap-2 border-b pb-3">
                 <div>
                   <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
-                    <img src="https://i.ibb.co.com/MHvfRnH/New-Task.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="New Task" /> নতুন ভেরিফাইড টাস্ক পাবলিশার
+                    <img src="https://i.ibb.co.com/MHvfRnH/New-Task.jpg" class="w-5 h-5 rounded-lg object-contain inline-block shrink-0" alt="New Task" /> নতুন অফার ও টাস্ক পাবলিশার
                   </h4>
-                  <p class="text-[11px] text-slate-400">ইউজারদের জন্য নতুন কাস্টম ও ভেরিফাইড প্রুফ টাস্ক তৈরি করুন</p>
+                  <p class="text-[11px] text-slate-400">স্পেশাল ভেরিফায়েড ও স্ক্রিনশট প্রুফ টাস্ক তৈরি করুন</p>
                 </div>
               </div>
 
@@ -3831,83 +3830,83 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <div id="admin-manual-task-creator-box" class="space-y-3.5 pt-1">
                 <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl text-xs text-emerald-900 font-bold flex items-center gap-2">
                   <span>📝</span>
-                  <span>ভেরিফাইড প্রুফ টাস্ক: এই অফারগুলোতে ইউজার কাজ শেষে স্ক্রিনশট ও প্রুফ নোট জমা দেবে এবং আপনি পেন্ডিং প্রুফ থেকে Approve করবেন।</span>
+                  <span>ম্যানুয়াল প্রুফ টাস্ক: এই অফারগুলোতে ইউজার কাজ শেষে স্ক্রিনশট ও প্রুফ নোট জমা দেবে এবং আপনি পেন্ডিং প্রুফ থেকে Approve করবেন।</span>
                 </div>
 
+              <div>
+                <label class="text-[11px] font-bold text-slate-700">কাজের নাম (Title):</label>
+                <input id="admin-title" type="text" placeholder="যেমন: Asian Games সার্ভে ও সাইন-আপ" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white transition" />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label class="text-[11px] font-bold text-slate-700">কাজের নাম (Title):</label>
-                  <input id="admin-title" type="text" placeholder="যেমন: Asian Games সার্ভে ও সাইন-আপ" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white transition" />
+                  <label class="text-[11px] font-bold text-slate-700">ক্যাটাগরি:</label>
+                  <input id="admin-cat" type="text" placeholder="Sign In / App / Special" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
                 </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label class="text-[11px] font-bold text-slate-700">ক্যাটাগরি:</label>
-                    <input id="admin-cat" type="text" placeholder="Sign In / App / Special" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
-                  </div>
-                  <div>
-                    <label class="text-[11px] font-bold text-slate-700">ইউজার রিওয়ার্ড টাকা (৳):</label>
-                    <input id="admin-taka" type="number" placeholder="যেমন: 20" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
-                  </div>
-                </div>
-
                 <div>
-                  <label class="text-[11px] font-bold text-slate-700">অফার লিংক:</label>
-                  <input id="admin-link" type="url" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
+                  <label class="text-[11px] font-bold text-slate-700">ইউজার রিওয়ার্ড টাকা (৳):</label>
+                  <input id="admin-taka" type="number" placeholder="যেমন: 20" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
                 </div>
+              </div>
 
+              <div>
+                <label class="text-[11px] font-bold text-slate-700">CPA অফার লিংক:</label>
+                <input id="admin-link" type="url" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs mt-1 outline-none focus:border-emerald-500 focus:bg-white" />
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
+                    <span>📝</span> কাজের সহজ নির্দেশনা (ধাপে ধাপে):
+                  </label>
+                  <button type="button" onclick="adminAddInstructionStep('publish')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 px-2.5 py-1 rounded-xl text-[11px] font-black transition flex items-center gap-1 cursor-pointer shadow-2xs">
+                    <span>➕</span> আরও স্টেপ যোগ করুন
+                  </button>
+                </div>
+                <div id="admin-instructions-list" class="space-y-2">
+                  <!-- Dynamic Step Rows Injected Here -->
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <div class="flex items-center justify-between mb-1.5">
-                    <label class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
-                      <span>📝</span> কাজের সহজ নির্দেশনা (ধাপে ধাপে):
-                    </label>
-                    <button type="button" onclick="adminAddInstructionStep('publish')" class="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 px-2.5 py-1 rounded-xl text-[11px] font-black transition flex items-center gap-1 cursor-pointer shadow-2xs">
-                      <span>➕</span> আরও স্টেপ যোগ করুন
-                    </button>
-                  </div>
-                  <div id="admin-instructions-list" class="space-y-2">
-                    <!-- Dynamic Step Rows Injected Here -->
-                  </div>
+                  <label class="text-[11px] font-bold text-slate-700">টিউটোরিয়াল ভিডিও লিংক (ঐচ্ছিক):</label>
+                  <input id="admin-video-link" type="url" placeholder="https://youtube.com/watch?v=..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs mt-1 outline-none" />
                 </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label class="text-[11px] font-bold text-slate-700">টিউটোরিয়াল ভিডিও লিংক (ঐচ্ছিক):</label>
-                    <input id="admin-video-link" type="url" placeholder="https://youtube.com/watch?v=..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs mt-1 outline-none" />
-                  </div>
-                  <div>
-                    <label class="text-[11px] font-bold text-slate-700">টাস্কের ছবি/লোগো (ঐচ্ছিক):</label>
-                    <input id="admin-task-image-file" type="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-1.5 text-xs mt-1 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700" />
-                  </div>
+                <div>
+                  <label class="text-[11px] font-bold text-slate-700">টাস্কের ছবি/লোগো (ঐচ্ছিক):</label>
+                  <input id="admin-task-image-file" type="file" accept="image/*" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-1.5 text-xs mt-1 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-50 file:text-emerald-700" />
                 </div>
+              </div>
 
-                <!-- WORKER LIMIT SECTION -->
-                <div class="bg-sky-50/70 border border-sky-200 p-3.5 rounded-2xl space-y-2">
-                  <div class="flex items-center justify-between">
-                    <label class="text-xs font-black text-sky-950 flex items-center gap-1.5">
-                      <span>🎯</span> কাজের ইউজার লিমিট (Worker Limit):
-                    </label>
-                    <label class="flex items-center gap-1.5 text-xs font-bold text-sky-800 cursor-pointer">
-                      <input id="admin-unlimited-workers" type="checkbox" onchange="toggleLimitInput('admin')" class="w-4 h-4 rounded text-sky-600 accent-sky-600 cursor-pointer" />
-                      <span>আনলিমিটেড ইউজার</span>
-                    </label>
-                  </div>
-                  <div id="admin-limit-input-container">
-                    <input id="admin-worker-limit" type="number" placeholder="কতজন ইউজার এই কাজ করতে পারবে? (যেমন: 50)" class="w-full bg-white border border-sky-300 rounded-xl p-2.5 text-xs outline-none focus:border-sky-500 font-bold" />
-                    <p class="text-[10px] text-sky-700 mt-1">লিমিট পূর্ণ হয়ে গেলে কাজটি স্বয়ংক্রিয়ভাবে বন্ধ হয়ে যাবে।</p>
-                  </div>
-                </div>
-
-                <!-- PIN TASK SECTION -->
-                <div class="flex items-center gap-2.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 p-3 rounded-2xl">
-                  <input id="admin-pin-task" type="checkbox" class="w-4 h-4 text-amber-600 rounded cursor-pointer accent-amber-600" />
-                  <label for="admin-pin-task" class="text-xs font-black text-amber-900 cursor-pointer flex items-center gap-1.5">
-                    <span>📌</span> এই টাস্কটি সবার ওপরে পিন করে রাখুন (Featured / Top Priority)
+              <!-- WORKER LIMIT SECTION (NEW FEATURE!) -->
+              <div class="bg-sky-50/70 border border-sky-200 p-3.5 rounded-2xl space-y-2">
+                <div class="flex items-center justify-between">
+                  <label class="text-xs font-black text-sky-950 flex items-center gap-1.5">
+                    <span>🎯</span> কাজের ইউজার লিমিট (Worker Limit):
+                  </label>
+                  <label class="flex items-center gap-1.5 text-xs font-bold text-sky-800 cursor-pointer">
+                    <input id="admin-unlimited-workers" type="checkbox" onchange="toggleLimitInput('admin')" class="w-4 h-4 rounded text-sky-600 accent-sky-600 cursor-pointer" />
+                    <span>আনলিমিটেড ইউজার</span>
                   </label>
                 </div>
+                <div id="admin-limit-input-container">
+                  <input id="admin-worker-limit" type="number" placeholder="কতজন ইউজার এই কাজ করতে পারবে? (যেমন: 50)" class="w-full bg-white border border-sky-300 rounded-xl p-2.5 text-xs outline-none focus:border-sky-500 font-bold" />
+                  <p class="text-[10px] text-sky-700 mt-1">লিমিট পূর্ণ হয়ে গেলে কাজটি স্বয়ংক্রিয়ভাবে বন্ধ হয়ে যাবে।</p>
+                </div>
+              </div>
 
-                <button onclick="adminPublishTask()" id="admin-publish-btn" class="w-full emerald-primary hover:bg-emerald-600 text-white font-extrabold py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-md cursor-pointer transition">
-                  ভেরিফাইড প্রুফ টাস্ক পাবলিশ করুন 🚀
-                </button>
+              <!-- PIN TASK SECTION -->
+              <div class="flex items-center gap-2.5 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 p-3 rounded-2xl">
+                <input id="admin-pin-task" type="checkbox" class="w-4 h-4 text-amber-600 rounded cursor-pointer accent-amber-600" />
+                <label for="admin-pin-task" class="text-xs font-black text-amber-900 cursor-pointer flex items-center gap-1.5">
+                  <span>📌</span> এই টাস্কটি সবার ওপরে পিন করে রাখুন (Featured / Top Priority)
+                </label>
+              </div>
+
+              <button onclick="adminPublishTask()" id="admin-publish-btn" class="w-full emerald-primary hover:bg-emerald-600 text-white font-extrabold py-3.5 rounded-2xl text-xs uppercase tracking-wider shadow-md cursor-pointer transition">
+                ম্যানুয়াল প্রুফ টাস্ক পাবলিশ করুন 🚀
+              </button>
               </div>
             </div>
 
@@ -3982,7 +3981,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     </div>
 
     <!-- ADMIN EDIT TASK MODAL (With Limit & Pin) -->
-    <div id="admin-edit-task-modal" class="fixed inset-0 bg-black/70 z-[200] flex items-center justify-center p-3 hidden backdrop-blur-sm">
+    <div id="admin-edit-task-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-3 hidden backdrop-blur-sm">
       <div class="bg-white rounded-3xl w-full max-w-md p-5 max-h-[92vh] flex flex-col justify-between shadow-2xl text-slate-900 space-y-3">
         <div class="flex items-center justify-between border-b pb-2">
           <h4 class="font-black text-sm text-slate-900 flex items-center gap-1.5">
@@ -4087,108 +4086,98 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       </div>
     </div>
 
-        <!-- ================= REWARDJOY 1:1 SINGLE-PAGE OFFER & GAME DETAIL MODAL ================= -->
-    <div id="offerwall-offer-modal" onclick="if(event.target === this) closeOfferwallOfferModal()" class="fixed inset-0 bg-black/60 z-[145] flex items-center justify-center p-3 sm:p-4 hidden backdrop-blur-[2px]">
-      <div class="bg-white dark:bg-slate-900 rounded-2xl w-full max-w-[430px] max-h-[88vh] flex flex-col shadow-2xl text-slate-800 dark:text-slate-100 border border-slate-100 dark:border-slate-800 overflow-hidden transition-all duration-200">
+        <!-- ================= REWARDJOY 1:1 PROFESSIONAL SINGLE-SCROLL OFFER & GAME DETAIL MODAL ================= -->
+    <div id="offerwall-offer-modal" onclick="if(event.target === this) closeOfferwallOfferModal()" class="fixed inset-0 bg-black/65 z-[145] flex items-center justify-center p-3 sm:p-4 hidden backdrop-blur-[2px]">
+      <div class="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-[430px] max-h-[88vh] flex flex-col shadow-2xl text-slate-800 dark:text-slate-100 border border-slate-100 dark:border-slate-800 overflow-hidden animate-[viewEnter_0.22s_ease-out]">
         
-        <!-- Single Unified Scrollable Body (Smooth 1-Page RewardJoy Layout) -->
-        <div class="p-5 overflow-y-auto flex-1 space-y-4">
+        <!-- Single Smooth Scrollable Page Container (No Nested Scrollbars!) -->
+        <div id="ow-modal-scroll-body" class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-4 hide-scrollbar">
           
-          <!-- Top Header: App Icon + Title + Price + Device Icon + Close (X) -->
+          <!-- 1. Top App Header (Icon + Title + Orange Total Price + Device Icon + Close Button) -->
           <div class="flex items-start justify-between gap-3">
             <div class="flex items-center gap-3.5 min-w-0">
-              <img id="ow-modal-logo" src="" alt="Offer" class="w-16 h-16 rounded-2xl object-cover shadow-xs shrink-0 bg-slate-100 dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700" />
+              <img id="ow-modal-logo" src="" alt="Offer" class="w-15 h-15 sm:w-16 sm:h-16 rounded-2xl object-cover border border-slate-200/80 dark:border-slate-700 shadow-xs shrink-0 bg-slate-900" style="width:62px;height:62px;" />
               <div class="min-w-0">
-                <h3 id="ow-modal-title" class="font-bold text-[16px] sm:text-[17px] text-slate-800 dark:text-white leading-snug">Offer Title</h3>
+                <h3 id="ow-modal-title" class="font-bold text-[15px] sm:text-base text-slate-800 dark:text-white leading-snug truncate">Offer Title</h3>
                 <div class="flex items-center gap-2 mt-1.5">
-                  <span id="ow-modal-taka" class="text-[20px] font-extrabold text-[#f97316] leading-none">৳ 10</span>
-                  <span id="ow-modal-devices" class="w-5 h-5 rounded-full bg-slate-200/80 dark:bg-slate-800 text-slate-500 dark:text-slate-400 inline-flex items-center justify-center text-[11px]">🤖</span>
+                  <span id="ow-modal-taka" class="text-[17px] sm:text-lg font-extrabold text-[#f97316] leading-none">৳10</span>
+                  <span id="ow-modal-devices" class="text-slate-400 dark:text-slate-500 inline-flex items-center gap-1"></span>
                 </div>
-                <!-- Hidden compatibility spans -->
-                <span id="ow-modal-coins" class="hidden"></span>
-                <span id="ow-modal-type-badge" class="hidden"></span>
-                <span id="ow-modal-steps-count" class="hidden"></span>
-                <span id="ow-modal-workson" class="hidden"></span>
               </div>
             </div>
             <button type="button" onclick="closeOfferwallOfferModal()" class="w-7 h-7 rounded-full border border-slate-300 dark:border-slate-700 text-slate-400 hover:text-slate-700 dark:hover:text-white flex items-center justify-center text-xs cursor-pointer shrink-0 transition">✕</button>
           </div>
 
-          <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
-
-          <!-- Status / Provider / Category Metadata Rows (Exact Match to RewardJoy Video) -->
-          <div class="space-y-2 text-[13px]">
-            <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-              <span class="w-18 shrink-0">Status:</span>
-              <span class="inline-flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
-                <span class="w-4 h-4 rounded-full bg-violet-100 dark:bg-violet-950/60 text-violet-600 dark:text-violet-400 inline-flex items-center justify-center text-[10px]">🏅</span>
-                <span id="ow-modal-status-text">Not started</span>
+          <!-- 2. Status, Provider & Category Metadata Block (Dashed Dividers like RewardJoy) -->
+          <div class="border-y border-dashed border-slate-200 dark:border-slate-800 py-3.5 space-y-2 text-xs">
+            <div class="flex items-center gap-3">
+              <span class="text-slate-400 dark:text-slate-500 w-16 shrink-0 font-medium">Status:</span>
+              <span id="ow-modal-status-badge" class="inline-flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+                <span class="w-4 h-4 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 inline-flex items-center justify-center text-[10px]">⏳</span>
+                <span>Not started</span>
               </span>
             </div>
-            <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-              <span class="w-18 shrink-0">Provider:</span>
-              <span class="inline-flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
-                <span id="ow-modal-provider-icon" class="w-4 h-4 rounded-full bg-orange-100 dark:bg-orange-950/60 text-[#f97316] inline-flex items-center justify-center text-[10px]">⚡</span>
-                <span id="ow-modal-provider-name">Offerwall.GG</span>
+            <div class="flex items-center gap-3">
+              <span class="text-slate-400 dark:text-slate-500 w-16 shrink-0 font-medium">Provider:</span>
+              <span id="ow-modal-provider-badge" class="inline-flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+                <span class="w-4 h-4 rounded-full bg-orange-100 text-[#f97316] inline-flex items-center justify-center text-[10px]">⚡</span>
+                <span>Offerwall.GG</span>
               </span>
             </div>
-            <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
-              <span class="w-18 shrink-0">Category:</span>
-              <span class="inline-flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
-                <span class="w-4 h-4 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 inline-flex items-center justify-center text-[10px]">☷</span>
-                <span id="ow-modal-category-name">Game</span>
+            <div class="flex items-center gap-3">
+              <span class="text-slate-400 dark:text-slate-500 w-16 shrink-0 font-medium">Category:</span>
+              <span id="ow-modal-category-badge" class="inline-flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+                <span class="text-slate-400">⌘</span>
+                <span>Game</span>
               </span>
             </div>
           </div>
 
-          <!-- Rewards | Recent Segmented Pill Tabs -->
-          <div class="pt-1">
-            <div class="inline-flex rounded-lg bg-slate-100 dark:bg-slate-800 p-1 text-xs font-bold">
-              <button type="button" id="ow-tab-btn-rewards" onclick="switchOfferwallModalTab('rewards')" class="px-4 py-1.5 rounded-md bg-[#fff3eb] dark:bg-orange-950/50 text-[#f97316] transition cursor-pointer">
-                Rewards
-              </button>
-              <button type="button" id="ow-tab-btn-recent" onclick="switchOfferwallModalTab('recent')" class="px-4 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-700 transition cursor-pointer">
-                Recent
-              </button>
-            </div>
+          <!-- 3. Segmented Tabs: Rewards | Recent -->
+          <div class="flex items-center gap-2 pt-0.5 border-b border-dashed border-slate-200 dark:border-slate-800 pb-3">
+            <button type="button" id="ow-tab-btn-rewards" onclick="switchOwModalTab('rewards')" class="px-4 py-1.5 rounded-lg bg-[#fff3eb] dark:bg-orange-950/50 text-[#f97316] font-bold text-xs cursor-pointer transition">
+              Rewards
+            </button>
+            <button type="button" id="ow-tab-btn-recent" onclick="switchOwModalTab('recent')" class="px-4 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 font-semibold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition">
+              Recent
+            </button>
+            <span id="ow-modal-steps-count" class="ml-auto text-[11px] font-semibold text-slate-400"></span>
           </div>
 
-          <!-- Rewards Tab Pane: Clean Light-Gray Pill Rows + Description + Steps -->
-          <div id="ow-modal-tab-rewards" class="space-y-4"><div id="ow-modal-steps-wrapper" class="space-y-2">
-            <!-- Dynamic Reward Step Rows (No nested inner scrollbar — flows smoothly on 1 page) -->
+          <!-- 4A. REWARDS PANE (Steps List + Description + Steps Instructions in One Smooth Page!) -->
+          <div id="ow-modal-rewards-pane" class="space-y-4">
+            <!-- Dynamic Steps List (Clean Light-Gray Pill Rows, Sorted Ascending, No Inner Scrollbar) -->
             <div id="ow-modal-steps-list" class="space-y-2">
               <!-- Populated dynamically -->
-            </div></div>
-
-            <div class="h-px bg-slate-100 dark:bg-slate-800 pt-1"></div>
+            </div>
 
             <!-- Description Section -->
-            <div class="space-y-1">
-              <h4 class="font-bold text-[13.5px] text-slate-800 dark:text-white">Description</h4>
-              <p id="ow-modal-desc" class="text-[12.5px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                Dive into the offer and complete the tasks to earn instant rewards!
+            <div class="pt-3 border-t border-dashed border-slate-200 dark:border-slate-800 space-y-1.5">
+              <h4 class="font-bold text-xs sm:text-[13px] text-slate-800 dark:text-white">Description</h4>
+              <p id="ow-modal-desc" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                Complete the required steps to receive your reward automatically.
               </p>
             </div>
 
-            <!-- Steps Section -->
-            <div class="space-y-1">
-              <h4 class="font-bold text-[13.5px] text-slate-800 dark:text-white">Steps</h4>
-              <p id="ow-modal-req" class="text-[12.5px] text-slate-500 dark:text-slate-400 leading-relaxed">
-                Complete the listed tasks within 30 days. This offer rewards within 24 hours. New users only.
+            <!-- Steps Instructions Section -->
+            <div class="pt-1 space-y-1.5">
+              <h4 class="font-bold text-xs sm:text-[13px] text-slate-800 dark:text-white">Steps</h4>
+              <p id="ow-modal-req" class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                Play the game and complete the tasks in 30 days. This offer rewards within 24 hours. New users only.
               </p>
             </div>
           </div>
 
-          <!-- Recent Tab Pane: Recent User Completions -->
-          <div id="ow-modal-tab-recent" class="hidden space-y-2">
-            <div id="ow-modal-recent-list" class="space-y-2"></div>
+          <!-- 4B. RECENT COMPLETIONS PANE (Shown when user clicks 'Recent' tab) -->
+          <div id="ow-modal-recent-pane" class="hidden space-y-2.5 pt-1">
+            <!-- Populated dynamically -->
           </div>
 
         </div>
 
-        <!-- Sticky Bottom Full-Width Solid Orange Start Offer Button (Exact Match to RewardJoy Video) -->
+        <!-- Sticky Bottom Start Offer Button (RewardJoy Exact Style) -->
         <div class="p-4 pt-3 border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shrink-0">
-          <button type="button" id="ow-modal-start-btn" onclick="startSelectedOfferwallOffer()" class="w-full bg-[#f97316] hover:bg-orange-600 active:scale-[0.99] text-white font-bold py-3 px-4 rounded-xl text-sm shadow-sm cursor-pointer transition flex items-center justify-center">
+          <button type="button" id="ow-modal-start-btn" onclick="startSelectedOfferwallOffer()" class="w-full bg-[#f97316] hover:bg-orange-600 active:scale-[0.99] text-white font-bold py-3.5 px-4 rounded-xl text-sm shadow-md shadow-orange-500/20 cursor-pointer transition flex items-center justify-center gap-2">
             <span id="ow-modal-start-btn-text">Start Offer</span>
           </button>
         </div>
@@ -4245,23 +4234,18 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     const BKASH_LOGO = "https://i.ibb.co.com/21JhfMRj/BKash-Icon-Logo-wine.jpg";
     const NAGAD_LOGO = "https://i.ibb.co.com/27TBZKn1/Whats-App-Image-2026-09-08-at-7-23-31-AM.jpg";
     const MONETAG_DIRECT_AD_LINK = "https://uplcm.com/4/12077628";
-    // TimeWall Placement Configuration (Placement Type: Survey API — Tasks, Surveys, Games, Featured, Bonus Clicks, Daily Streak ON)
     const TIMEWALL_PLACEMENT_ID = "22db97d7a055bb22";
     const TIMEWALL_SURVEY_API_KEY = "tw_e8c7a7d151ffaa0d9215127d48e95590df925ced577a949f9ea850deb4b1934f";
-    const TIMEWALL_SIGNING_KEY = "9e7fe018b4c712d8c54fc5b384b849e730eefd4611de7a51b1bc6283fbd7b03";
-    const TIMEWALL_USD_TO_COINS_RATE = 600000; // $1 USD = 600,000 Coins (50% Profit Share = ৳60 BDT)
     window.TIMEWALL_SURVEY_API_KEY = TIMEWALL_SURVEY_API_KEY;
-    window.TIMEWALL_SIGNING_KEY = TIMEWALL_SIGNING_KEY;
-    window.TIMEWALL_USD_TO_COINS_RATE = TIMEWALL_USD_TO_COINS_RATE;
 
     let isClaimingDailyAd = false;
     let manualSubmissionsList = [];
-    let offerwallGGCompletionsList = [];
     let timewallCompletionsList = [];
-    let knownTimewallLogIds = new Set();
-    let isFirstTimewallSnapshot = true;
+    let offerwallGGCompletionsList = [];
     let knownOfferwallGGLogIds = new Set();
     let isFirstOfferwallGGSnapshot = true;
+    let knownTimeWallLogIds = new Set();
+    let isFirstTimeWallSnapshot = true;
     let adminAllUsersList = [];
     let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
     let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
@@ -4808,45 +4792,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     // =========================================================================
     // OFFERWALL.GG LIVE API ENGINE (Games, Offers/Sign-ups, Surveys & Traffic)
     // =========================================================================
-    // ================= 3D OFFER & TASK SVG ICON PRESETS =================
-    const OFFER_3D_PRESETS = {
-      gift: {
-        title: "Click to claim your bonus prize!",
-        cat: "Special Offer",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="gBg" cx="50%" cy="40%" r="65%"><stop offset="0%" stop-color="#334155"/><stop offset="100%" stop-color="#0f172a"/></radialGradient><linearGradient id="boxW" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#cbd5e1"/></linearGradient><linearGradient id="ribR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff4d6d"/><stop offset="100%" stop-color="#c9184a"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gBg)"/><circle cx="120" cy="115" r="78" fill="#ef4444" opacity="0.18"/><polygon points="55,105 120,78 185,105 185,180 120,208 55,180" fill="url(#boxW)"/><polygon points="55,105 120,132 120,208 55,180" fill="#e2e8f0"/><polygon points="120,132 185,105 185,180 120,208" fill="#cbd5e1"/><polygon points="50,92 120,64 190,92 120,120" fill="#f8fafc"/><polygon points="106,70 134,70 134,205 106,205" fill="url(#ribR)"/><ellipse cx="102" cy="66" rx="24" ry="13" transform="rotate(-20 102 66)" fill="url(#ribR)"/><ellipse cx="138" cy="66" rx="24" ry="13" transform="rotate(20 138 66)" fill="url(#ribR)"/><circle cx="120" cy="70" r="10" fill="#a4133c"/></svg>`)
-      },
-      wheel: {
-        title: "Spin & Win Instant Cash Reward!",
-        cat: "Special Offer",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="wBg" cx="50%" cy="45%" r="65%"><stop offset="0%" stop-color="#14b8a6"/><stop offset="100%" stop-color="#0f766e"/></radialGradient></defs><rect width="240" height="240" rx="36" fill="url(#wBg)"/><circle cx="120" cy="122" r="80" fill="#042f2e" opacity="0.3"/><circle cx="120" cy="120" r="74" fill="#ffffff" stroke="#cbd5e1" stroke-width="6"/><path d="M120,120 L120,46 A74,74 0 0,1 184,83 Z" fill="#ef4444"/><path d="M120,120 L184,83 A74,74 0 0,1 184,157 Z" fill="#f8fafc"/><path d="M120,120 L184,157 A74,74 0 0,1 120,194 Z" fill="#ef4444"/><path d="M120,120 L120,194 A74,74 0 0,1 56,157 Z" fill="#f8fafc"/><path d="M120,120 L56,157 A74,74 0 0,1 56,83 Z" fill="#ef4444"/><path d="M120,120 L56,83 A74,74 0 0,1 120,46 Z" fill="#f8fafc"/><circle cx="120" cy="120" r="16" fill="#f59e0b" stroke="#ffffff" stroke-width="4"/><polygon points="120,32 110,52 130,52" fill="#facc15" stroke="#78350f" stroke-width="2"/></svg>`)
-      },
-      chest: {
-        title: "Playable: Open Golden Treasure Chest!",
-        cat: "Special Offer",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="cBg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#451a03"/><stop offset="100%" stop-color="#1c1917"/></radialGradient><linearGradient id="goldG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fde047"/><stop offset="100%" stop-color="#ca8a04"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#cBg)"/><circle cx="120" cy="115" r="76" fill="#f59e0b" opacity="0.22"/><rect x="52" y="105" width="136" height="75" rx="14" fill="#92400e" stroke="url(#goldG)" stroke-width="6"/><path d="M52,105 Q120,55 188,105 Z" fill="#b45309" stroke="url(#goldG)" stroke-width="6"/><rect x="106" y="95" width="28" height="34" rx="6" fill="url(#goldG)"/><circle cx="120" cy="112" r="5" fill="#451a03"/><circle cx="88" cy="84" r="10" fill="#fde047"/><circle cx="152" cy="84" r="10" fill="#fde047"/></svg>`)
-      },
-      survey: {
-        title: "Quick Finance & Social Survey Offer",
-        cat: "Special Offer",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="sBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#sBg)"/><rect x="64" y="46" width="112" height="148" rx="16" fill="#ffffff"/><rect x="92" y="34" width="56" height="24" rx="8" fill="#f59e0b"/><circle cx="90" cy="92" r="10" fill="#10b981"/><rect x="110" y="86" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="126" r="10" fill="#10b981"/><rect x="110" y="120" width="48" height="10" rx="5" fill="#cbd5e1"/><circle cx="90" cy="160" r="10" fill="#f97316"/><rect x="110" y="154" width="36" height="10" rx="5" fill="#cbd5e1"/></svg>`)
-      },
-      app: {
-        title: "Smart App Install & Action Bonus",
-        cat: "Special Offer",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="aBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#bae6fd"/></linearGradient><linearGradient id="wGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#38bdf8"/><stop offset="100%" stop-color="#2563eb"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#aBg)"/><text x="120" y="158" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif" font-weight="900" font-size="118" fill="url(#wGrad)">W</text></svg>`)
-      },
-      game: {
-        title: "Play & Complete Instant Level Task",
-        cat: "Special Offer",
-        svg: `data:image/svg+xml;utf8,` + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="gmBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#db2777"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#gmBg)"/><rect x="46" y="76" width="148" height="90" rx="42" fill="#ffffff"/><rect x="74" y="106" width="28" height="10" rx="4" fill="#7c3aed"/><rect x="83" y="97" width="10" height="28" rx="4" fill="#7c3aed"/><circle cx="152" cy="104" r="8" fill="#ef4444"/><circle cx="168" cy="118" r="8" fill="#f59e0b"/><circle cx="136" cy="118" r="8" fill="#10b981"/><circle cx="152" cy="132" r="8" fill="#3b82f6"/></svg>`)
-      }
-    };
-
-    window.getOfferPresetSvg = function(key) {
-      return (OFFER_3D_PRESETS[key] || OFFER_3D_PRESETS.gift).svg;
-    };
-
-
     const SVG_GAME_BUBBLE = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="bg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1e1b4b"/></radialGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="82" cy="88" r="36" fill="#facc15"/><circle cx="156" cy="88" r="36" fill="#38bdf8"/><circle cx="78" cy="156" r="36" fill="#fb923c"/><circle cx="158" cy="156" r="36" fill="#22c55e"/><circle cx="120" cy="122" r="42" fill="#ef4444" stroke="#fff" stroke-width="4"/></svg>');
     const SVG_GAME_BOLTS = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e293b"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><rect x="36" y="110" width="168" height="84" rx="18" fill="#fbbf24" stroke="#d97706" stroke-width="6"/><circle cx="84" cy="145" r="24" fill="#ea580c"/><circle cx="148" cy="96" r="34" fill="#f97316" stroke="#fff" stroke-width="4"/><path d="M136,96 h24 M148,84 v24" stroke="#7c2d12" stroke-width="7" stroke-linecap="round"/></svg>');
     const SVG_GAME_ROCKET = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="bg" cx="50%" cy="50%" r="70%"><stop offset="0%" stop-color="#4c1d95"/><stop offset="100%" stop-color="#090d16"/></radialGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="135" r="54" fill="#ea580c" stroke="#fde047" stroke-width="4"/><ellipse cx="120" cy="135" rx="88" ry="22" transform="rotate(-18 120 135)" fill="none" stroke="#38bdf8" stroke-width="8"/><text x="120" y="62" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="28" fill="#f97316">ROCKET</text></svg>');
@@ -4854,14 +4799,24 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     const SVG_OFFER_ORIGINALS = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#111827"/><stop offset="100%" stop-color="#31102f"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="105" r="52" fill="#f59e0b" opacity="0.2"/><text x="120" y="125" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="64" fill="#facc15">🎰</text><text x="120" y="192" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="22" fill="#fde047">ORIGINALS</text></svg>');
     const SVG_OFFER_SHIP7 = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#dc2626"/><stop offset="100%" stop-color="#991b1b"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><text x="120" y="125" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="62" fill="#ffffff">📦</text><text x="120" y="190" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="28" fill="#ffffff">Ship7</text></svg>');
 
-    // Default Offerwall.GG inventory (Includes the user's real Offerwall.GG placement offers + games)
+    // TimeWall Custom SVG Artworks (Matches Video 1: Block Pop Party, Bubble Pop Legends, Register Now, Whatsapp Channel, etc.)
+    const SVG_TW_BLOCK_POP = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ec4899"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><rect x="28" y="28" width="84" height="54" rx="12" fill="#facc15" stroke="#fff" stroke-width="3"/><rect x="124" y="28" width="88" height="54" rx="12" fill="#22c55e" stroke="#fff" stroke-width="3"/><rect x="28" y="94" width="184" height="58" rx="14" fill="#38bdf8" stroke="#fff" stroke-width="3"/><rect x="28" y="162" width="184" height="50" rx="12" fill="#f43f5e" stroke="#fff" stroke-width="3"/><text x="120" y="132" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="34" fill="#1e1b4b">BLOCK POP</text><text x="120" y="195" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="28" fill="#ffffff">PARTY</text></svg>');
+    const SVG_TW_TILE_MASTER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#065f46"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><rect x="44" y="44" width="68" height="68" rx="16" fill="#fef08a"/><rect x="128" y="44" width="68" height="68" rx="16" fill="#fed7aa"/><rect x="44" y="128" width="68" height="68" rx="16" fill="#bae6fd"/><rect x="128" y="128" width="68" height="68" rx="16" fill="#fbcfe8"/><text x="78" y="90" text-anchor="middle" font-size="36">🀄</text><text x="162" y="90" text-anchor="middle" font-size="36">🍓</text><text x="78" y="174" text-anchor="middle" font-size="36">💎</text><text x="162" y="174" text-anchor="middle" font-size="36">🌟</text></svg>');
+    const SVG_TW_REGISTER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><rect width="240" height="240" rx="38" fill="#facc15"/><rect x="20" y="54" width="200" height="132" rx="22" fill="#ef4444" stroke="#ffffff" stroke-width="6"/><text x="120" y="112" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="30" fill="#ffffff">REGISTER</text><text x="120" y="154" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="34" fill="#fde047">NOW ➔</text></svg>');
+    const SVG_TW_GOOGLE_REG = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><rect width="240" height="240" rx="38" fill="#ffffff"/><rect x="12" y="12" width="216" height="216" rx="32" fill="#f8fafc" stroke="#e2e8f0" stroke-width="6"/><circle cx="120" cy="95" r="42" fill="#2563eb"/><text x="120" y="110" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="46" fill="#ffffff">G</text><text x="120" y="178" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="24" fill="#0f172a">SIGN UP</text><text x="120" y="204" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="16" fill="#10b981">TIMEWALL TASK</text></svg>');
+    const SVG_TW_WEB_ENGAGE = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1d4ed8"/><stop offset="100%" stop-color="#1e3a8a"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><text x="120" y="138" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="92" fill="#ffffff" stroke="#93c5fd" stroke-width="4">15</text><text x="120" y="196" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="20" fill="#bfdbfe">WEB ENGAGE</text></svg>');
+    const SVG_TW_CLICK_VISIT = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#111827"/><stop offset="100%" stop-color="#374151"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="105" r="48" fill="#f59e0b" stroke="#fde047" stroke-width="4"/><text x="120" y="122" text-anchor="middle" font-size="46">🏆</text><text x="120" y="192" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="22" fill="#fde047">VISIT &amp; EARN</text></svg>');
+    const SVG_TW_WHATSAPP = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#22c55e"/><stop offset="100%" stop-color="#15803d"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="108" r="52" fill="#ffffff"/><text x="120" y="126" text-anchor="middle" font-size="52">💬</text><text x="120" y="195" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="21" fill="#ffffff">WHATSAPP</text></svg>');
+    const SVG_TW_TWITTER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0284c7"/><stop offset="100%" stop-color="#0369a1"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="108" r="50" fill="#ffffff"/><text x="120" y="126" text-anchor="middle" font-size="48">🔁</text><text x="120" y="195" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="22" fill="#ffffff">RETWEET</text></svg>');
+
+    // Default Offerwall.GG Games
     window.DEFAULT_OFFERWALL_GG_GAMES = [
       {
         id: "ow_game_1",
         provider: "offerwall.gg",
         name: "Bubble Pop Legend",
-        description: "Play Bubble Pop Legend on your phone and clear levels to earn instant coins!",
-        requirements: "Download the game via Offerwall.GG and complete the in-game level milestones.",
+        description: "Dive into the world of colourful bubble-popping fun with Bubble Pop Legend — the ultimate bubble shooter experience for puzzle lovers!",
+        requirements: "Play the game and complete the tasks in 30 days. This offer rewards within 24 hours. New users only.",
         image: SVG_GAME_BUBBLE,
         categories: ["games"],
         devices: ["android", "ios"],
@@ -4874,8 +4829,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         id: "ow_game_2",
         provider: "offerwall.gg",
         name: "Color Bolts Sort Puzzle",
-        description: "Sort the colorful bolts and complete stages to unlock big cash rewards.",
-        requirements: "Install and reach the target puzzle stage within 14 days.",
+        description: "Sort the colorful bolts and complete puzzle stages to unlock instant cash rewards.",
+        requirements: "Install the game and reach the target puzzle stages within 14 days. New users only.",
         image: SVG_GAME_BOLTS,
         categories: ["games"],
         devices: ["android", "ios"],
@@ -4888,8 +4843,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         id: "ow_game_3",
         provider: "offerwall.gg",
         name: "Rocket Hit",
-        description: "Launch rockets, destroy planets, and earn high-paying level rewards.",
-        requirements: "Install Rocket Hit and complete the listed level steps.",
+        description: "Launch rockets, destroy targets, and earn high-paying level rewards along the way.",
+        requirements: "Install Rocket Hit and complete the listed level steps within 30 days.",
         image: SVG_GAME_ROCKET,
         categories: ["games"],
         devices: ["android", "ios"],
@@ -4902,7 +4857,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         id: "ow_game_4",
         provider: "offerwall.gg",
         name: "AFK Journey",
-        description: "Explore Esperia in AFK Journey and earn massive rewards as you level up.",
+        description: "Explore Esperia in AFK Journey and earn massive rewards as you level up your heroes.",
         requirements: "Download AFK Journey, create an account, and reach the required Resonance Level.",
         image: "https://i.ibb.co.com/TydT2Ky/Screenshot-2026-10-04-025242.png",
         categories: ["games"],
@@ -4970,6 +4925,195 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     ];
 
+    // TimeWall Games (Appended at the end of the Games section as requested!)
+    window.DEFAULT_TIMEWALL_GAMES = [
+      {
+        id: "tw_game_block_pop",
+        provider: "timewall",
+        name: "Block Pop Party",
+        description: "Play Block Pop Party via TimeWall! Clear colorful block puzzles and unlock instant coin rewards at every stage.",
+        requirements: "Open TimeWall Games, install Block Pop Party on your Android/iOS phone, and complete the level milestones. New users only.",
+        image: SVG_TW_BLOCK_POP,
+        categories: ["games"],
+        devices: ["android", "ios"],
+        rewardCoins: 9282000,
+        rewardTaka: 928.2,
+        isGame: true,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Open and play Block Pop Party", rewardCoins: 12000, rewardTaka: 1.2 },
+          { stepNumber: 2, description: "Reach Stage 15", rewardCoins: 180000, rewardTaka: 18.0 },
+          { stepNumber: 3, description: "Reach Stage 40", rewardCoins: 650000, rewardTaka: 65.0 },
+          { stepNumber: 4, description: "Reach Stage 100", rewardCoins: 2140000, rewardTaka: 214.0 },
+          { stepNumber: 5, description: "Reach Stage 250", rewardCoins: 6300000, rewardTaka: 630.0 }
+        ]
+      },
+      {
+        id: "tw_game_bubble_legends",
+        provider: "timewall",
+        name: "Bubble Pop Legends (TimeWall)",
+        description: "Aim, match, and pop bubbles in Bubble Pop Legends on TimeWall to earn up to 9,660,000 Coins!",
+        requirements: "Play the game via TimeWall and complete the gem collection milestones within 30 days. New users only.",
+        image: SVG_GAME_BUBBLE,
+        categories: ["games"],
+        devices: ["android", "ios"],
+        rewardCoins: 9660000,
+        rewardTaka: 966.0,
+        isGame: true,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Open and play the game", rewardCoins: 10000, rewardTaka: 1.0 },
+          { stepNumber: 2, description: "Collect 150 gems", rewardCoins: 65000, rewardTaka: 6.5 },
+          { stepNumber: 3, description: "Collect 1,650 gems", rewardCoins: 420000, rewardTaka: 42.0 },
+          { stepNumber: 4, description: "Collect 12,000 gems", rewardCoins: 2165000, rewardTaka: 216.5 },
+          { stepNumber: 5, description: "Collect 100,000 gems", rewardCoins: 7000000, rewardTaka: 700.0 }
+        ]
+      },
+      {
+        id: "tw_game_tile_master",
+        provider: "timewall",
+        name: "Tile Match Master (TimeWall)",
+        description: "Match 3 identical tiles to clear the board in Tile Match Master and earn TimeWall coins automatically.",
+        requirements: "Install via TimeWall Games and clear the listed level milestones within 21 days.",
+        image: SVG_TW_TILE_MASTER,
+        categories: ["games"],
+        devices: ["android", "ios"],
+        rewardCoins: 7450000,
+        rewardTaka: 745.0,
+        isGame: true,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Install & complete tutorial", rewardCoins: 20000, rewardTaka: 2.0 },
+          { stepNumber: 2, description: "Complete Level 25", rewardCoins: 430000, rewardTaka: 43.0 },
+          { stepNumber: 3, description: "Complete Level 80", rewardCoins: 1800000, rewardTaka: 180.0 },
+          { stepNumber: 4, description: "Complete Level 200", rewardCoins: 5200000, rewardTaka: 520.0 }
+        ]
+      }
+    ];
+
+    // TimeWall Micro-Tasks (Loaded right after Admin Uploaded Tasks in Apps & Offers!)
+    window.DEFAULT_TIMEWALL_TASKS = [
+      {
+        id: "tw_task_visit_click",
+        provider: "timewall",
+        name: "Click Button & Visit Website",
+        description: "Visit the promoted website via TimeWall Tasks, click the required button, and follow the engagement instructions.",
+        requirements: "Complete all steps in the TimeWall task instructions and submit proof inside TimeWall for 71,400 Coins.",
+        image: SVG_TW_CLICK_VISIT,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 71400,
+        rewardTaka: 7.1,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Click button, visit website & complete engagement (28 mins)", rewardCoins: 71400, rewardTaka: 7.14 }
+        ]
+      },
+      {
+        id: "tw_task_web_engage",
+        provider: "timewall",
+        name: "Website Engagement Task",
+        description: "Browse the advertiser website and complete the engagement steps listed on TimeWall.",
+        requirements: "Visit the website and follow the step-by-step instructions on TimeWall Tasks.",
+        image: SVG_TW_WEB_ENGAGE,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 71400,
+        rewardTaka: 7.1,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Complete Website Engagement Task on TimeWall (22 mins)", rewardCoins: 71400, rewardTaka: 7.14 }
+        ]
+      },
+      {
+        id: "tw_task_reg_refer",
+        provider: "timewall",
+        name: "Registration and enter refer code",
+        description: "Create a new account on the partner platform and enter the referral code shown in TimeWall Tasks.",
+        requirements: "Register as a new user, enter the required code, and submit verification on TimeWall.",
+        image: SVG_TW_REGISTER,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 63000,
+        rewardTaka: 6.3,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Register new account & apply referral code (8 mins)", rewardCoins: 63000, rewardTaka: 6.3 }
+        ]
+      },
+      {
+        id: "tw_task_google_signup",
+        provider: "timewall",
+        name: "Register by Google New Sign up",
+        description: "Quick 60-second Google registration task on TimeWall for new users.",
+        requirements: "Sign up using your Google account as a new user and verify completion on TimeWall.",
+        image: SVG_TW_GOOGLE_REG,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 16800,
+        rewardTaka: 1.7,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Complete Google 1-click sign-up (60 secs)", rewardCoins: 16800, rewardTaka: 1.68 }
+        ]
+      },
+      {
+        id: "tw_task_wa_channel",
+        provider: "timewall",
+        name: "Join the TimeWall Whatsapp Channel",
+        description: "Join the official TimeWall WhatsApp Channel in 30 seconds and earn instant coins.",
+        requirements: "Click the link inside TimeWall Tasks, follow the WhatsApp channel, and submit screenshot proof on TimeWall.",
+        image: SVG_TW_WHATSAPP,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 4200,
+        rewardTaka: 0.4,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Join TimeWall WhatsApp Channel (31 secs)", rewardCoins: 4200, rewardTaka: 0.42 }
+        ]
+      },
+      {
+        id: "tw_task_wa_gifts",
+        provider: "timewall",
+        name: "Join TimeWall Gifts Whatsapp Channel",
+        description: "Follow the TimeWall Gifts WhatsApp Channel and claim your instant coin reward.",
+        requirements: "Join the WhatsApp Gifts channel via TimeWall Tasks and confirm participation.",
+        image: SVG_TW_WHATSAPP,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 4200,
+        rewardTaka: 0.4,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Join TimeWall Gifts WhatsApp Channel (39 secs)", rewardCoins: 4200, rewardTaka: 0.42 }
+        ]
+      },
+      {
+        id: "tw_task_retweet",
+        provider: "timewall",
+        name: "Retweet on your Twitter profile",
+        description: "Retweet the featured post on your X / Twitter profile via TimeWall Micro-tasks.",
+        requirements: "Open the tweet link in TimeWall Tasks, repost it on your profile, and submit proof.",
+        image: SVG_TW_TWITTER,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 4200,
+        rewardTaka: 0.4,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Retweet on your Twitter/X profile (2 mins)", rewardCoins: 4200, rewardTaka: 0.42 }
+        ]
+      }
+    ];
+
     window.DEFAULT_OFFERWALL_GG_OFFERS = [
       {
         id: "ow_offer_whale",
@@ -5019,7 +5163,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         name: "WPS SOFTWARE PTE.LTD.",
         description: "Try WPS Office Suite and complete the sign-up action to earn instant coins.",
         requirements: "Download/register WPS Office as a new user.",
-        image: window.getOfferPresetSvg ? window.getOfferPresetSvg('app') : SVG_OFFER_SHIP7,
+        image: SVG_OFFER_SHIP7,
         categories: ["offers", "shopping", "signups"],
         devices: ["android", "ios", "desktop"],
         rewardCoins: 71400,
@@ -5033,7 +5177,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         name: "SayOrbit Survey",
         description: "Share your opinion on SayOrbit Survey and earn 176,400 Coins per completion!",
         requirements: "Complete the survey honestly from start to finish.",
-        image: window.getOfferPresetSvg ? window.getOfferPresetSvg('survey') : SVG_OFFER_WHALE,
+        image: SVG_OFFER_WHALE,
         categories: ["surveys", "offers", "signups"],
         devices: ["android", "ios", "desktop"],
         rewardCoins: 176400,
@@ -5043,215 +5187,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     ];
 
-    // ================= TIMEWALL GAMES & MICRO-TASKS INVENTORY (From TimeWall Featured & Tasks) =================
-    const SVG_TW_BLOCK_POP = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bpBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e3a8a"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#bpBg)"/><rect x="28" y="28" width="54" height="54" rx="12" fill="#ef4444"/><rect x="93" y="28" width="54" height="54" rx="12" fill="#eab308"/><rect x="158" y="28" width="54" height="54" rx="12" fill="#22c55e"/><rect x="28" y="93" width="54" height="54" rx="12" fill="#3b82f6"/><rect x="93" y="93" width="54" height="54" rx="12" fill="#a855f7"/><rect x="158" y="93" width="54" height="54" rx="12" fill="#f97316"/><rect x="28" y="158" width="184" height="52" rx="14" fill="#ffffff"/><text x="120" y="191" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="23" fill="#0f172a">BLOCK POP</text></svg>');
-    const SVG_TW_BUBBLE_LEGENDS = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><radialGradient id="blBg" cx="50%" cy="40%" r="70%"><stop offset="0%" stop-color="#1d4ed8"/><stop offset="100%" stop-color="#172554"/></radialGradient></defs><rect width="240" height="240" rx="36" fill="url(#blBg)"/><circle cx="80" cy="82" r="38" fill="#facc15"/><circle cx="160" cy="82" r="38" fill="#ef4444"/><circle cx="80" cy="158" r="38" fill="#38bdf8"/><circle cx="160" cy="158" r="38" fill="#22c55e"/><circle cx="120" cy="120" r="34" fill="#fb923c" stroke="#ffffff" stroke-width="4"/></svg>');
-    const SVG_TW_GOOGLE_SIGNUP = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><rect width="240" height="240" rx="36" fill="#ffffff"/><rect x="16" y="16" width="208" height="208" rx="28" fill="#f8fafc" stroke="#e2e8f0" stroke-width="4"/><circle cx="120" cy="92" r="38" fill="#4285F4"/><text x="120" y="106" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="42" fill="#ffffff">G</text><rect x="34" y="150" width="172" height="44" rx="12" fill="#0f172a"/><text x="120" y="178" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="20" fill="#ffffff">SIGN UP</text></svg>');
-    const SVG_TW_REGISTER_NOW = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><rect width="240" height="240" rx="36" fill="#facc15"/><rect x="24" y="52" width="192" height="136" rx="22" fill="#fef08a" stroke="#ca8a04" stroke-width="5"/><text x="120" y="110" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="28" fill="#dc2626">REGISTER</text><text x="120" y="148" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="32" fill="#0f172a">NOW</text></svg>');
-    const SVG_TW_WHATSAPP_BLUE = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="waB" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1e40af"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#waB)"/><circle cx="120" cy="120" r="68" fill="none" stroke="#60a5fa" stroke-width="8"/><text x="120" y="142" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="64" fill="#fde047">🏆</text></svg>');
-    const SVG_TW_WHATSAPP_GREEN = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><rect width="240" height="240" rx="36" fill="#0f172a"/><circle cx="120" cy="120" r="72" fill="#22c55e" stroke="#ffffff" stroke-width="8"/><text x="120" y="142" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="62" fill="#ffffff">💬</text></svg>');
-    const SVG_TW_ENGAGE_15 = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><rect width="240" height="240" rx="36" fill="#eff6ff"/><rect x="20" y="20" width="200" height="200" rx="28" fill="#ffffff" stroke="#bfdbfe" stroke-width="5"/><text x="120" y="156" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="112" fill="#1d4ed8">15</text></svg>');
-    const SVG_TW_TWITTER_RT = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><rect width="240" height="240" rx="36" fill="#0f172a"/><circle cx="120" cy="105" r="52" fill="#1d9bf0"/><text x="120" y="124" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="54" fill="#ffffff">𝕏</text><text x="120" y="196" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="22" fill="#38bdf8">RETWEET</text></svg>');
-    const SVG_TW_ENGAGE_17 = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><rect width="240" height="240" rx="36" fill="#1c1917"/><rect x="20" y="20" width="200" height="200" rx="28" fill="#292524" stroke="#f59e0b" stroke-width="5"/><text x="120" y="85" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="22" fill="#fde047">CHEERS TO</text><text x="120" y="162" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="84" fill="#f59e0b">17</text><text x="120" y="196" text-anchor="middle" font-family="sans-serif" font-weight="800" font-size="20" fill="#fde047">YEARS</text></svg>');
-    const SVG_TW_CLICK_VISIT = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="cvBg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7f1d1d"/><stop offset="100%" stop-color="#111827"/></linearGradient></defs><rect width="240" height="240" rx="36" fill="url(#cvBg)"/><circle cx="120" cy="108" r="52" fill="#f59e0b"/><text x="120" y="128" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="52" fill="#ffffff">⚽</text><text x="120" y="196" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="22" fill="#fde047">VISIT SITE</text></svg>');
-
-    window.DEFAULT_TIMEWALL_GAMES = [
-      {
-        id: "tw_game_block_pop",
-        provider: "timewall",
-        name: "Block Pop Party",
-        description: "Play Block Pop Party via TimeWall, match colorful blocks, and clear stages to earn 9,282,000 Coins!",
-        requirements: "Download Block Pop Party through TimeWall and complete the listed level milestones within 30 days.",
-        image: SVG_TW_BLOCK_POP,
-        categories: ["games"],
-        devices: ["android", "ios"],
-        rewardCoins: 9282000,
-        rewardTaka: 928.2,
-        isGame: true,
-        isSurvey: false,
-        timewallTab: "games",
-        goals: [
-          { stepNumber: 1, description: "Open and play Block Pop Party", rewardCoins: 82000, rewardTaka: 8.2, optional: false },
-          { stepNumber: 2, description: "Complete Stage 20", rewardCoins: 450000, rewardTaka: 45.0, optional: false },
-          { stepNumber: 3, description: "Complete Stage 60", rewardCoins: 1250000, rewardTaka: 125.0, optional: false },
-          { stepNumber: 4, description: "Complete Stage 150", rewardCoins: 2800000, rewardTaka: 280.0, optional: false },
-          { stepNumber: 5, description: "Complete Stage 300", rewardCoins: 4700000, rewardTaka: 470.0, optional: false }
-        ]
-      },
-      {
-        id: "tw_game_bubble_legends",
-        provider: "timewall",
-        name: "Bubble Pop Legends",
-        description: "Dive into the world of colourful bubble-popping fun with Bubble Pop Legends — the ultimate bubble shooter experience for puzzle lovers!",
-        requirements: "Play the game and complete the tasks in 30 days. This offer rewards within 24 hours. New users only.",
-        image: SVG_TW_BUBBLE_LEGENDS,
-        categories: ["games"],
-        devices: ["android", "ios"],
-        rewardCoins: 9660000,
-        rewardTaka: 966,
-        isGame: true,
-        isSurvey: false,
-        timewallTab: "games",
-        goals: [
-          { stepNumber: 1, description: "Open and play the game", rewardCoins: 10000, rewardTaka: 1.0, optional: false },
-          { stepNumber: 2, description: "Collect 150 gems", rewardCoins: 65000, rewardTaka: 6.5, optional: false },
-          { stepNumber: 3, description: "Collect 450 gems", rewardCoins: 125000, rewardTaka: 12.5, optional: false },
-          { stepNumber: 4, description: "Collect 1650 gems", rewardCoins: 510000, rewardTaka: 51.0, optional: false },
-          { stepNumber: 5, description: "Collect 5000 gems", rewardCoins: 1700000, rewardTaka: 170.0, optional: false },
-          { stepNumber: 6, description: "Collect 35000 gems", rewardCoins: 7250000, rewardTaka: 725.0, optional: false }
-        ]
-      }
-    ];
-
-    window.DEFAULT_TIMEWALL_TASKS = [
-      {
-        id: "tw_task_reg_refer",
-        provider: "timewall",
-        name: "Registration and enter refer code",
-        description: "Complete the quick account registration on the partner platform and enter the referral code as instructed on TimeWall.",
-        requirements: "Register a new account, enter the required refer code, and submit proof on TimeWall (Est. 8 mins).",
-        image: SVG_TW_REGISTER_NOW,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 63000,
-        rewardTaka: 6.3,
-        isGame: false,
-        isSurvey: false,
-        timewallTab: "tasks",
-        goals: [
-          { stepNumber: 1, description: "Register a new account & enter refer code", rewardCoins: 63000, rewardTaka: 6.3, optional: false }
-        ]
-      },
-      {
-        id: "tw_task_web_engage_15",
-        provider: "timewall",
-        name: "Website Engagement Task",
-        description: "Visit the sponsored website via TimeWall and complete the engagement instructions.",
-        requirements: "Follow the browsing and engagement steps on TimeWall Tasks and submit the verification proof.",
-        image: SVG_TW_ENGAGE_15,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 71400,
-        rewardTaka: 7.1,
-        isGame: false,
-        isSurvey: false,
-        timewallTab: "tasks",
-        goals: [
-          { stepNumber: 1, description: "Complete Website Engagement Task & verify", rewardCoins: 71400, rewardTaka: 7.1, optional: false }
-        ]
-      },
-      {
-        id: "tw_task_click_visit",
-        provider: "timewall",
-        name: "Click Button & Visit Website",
-        description: "Click the target button, visit the partner website, and complete the required page interaction on TimeWall.",
-        requirements: "Complete all steps listed in the TimeWall task instructions to earn 71,400 Coins.",
-        image: SVG_TW_CLICK_VISIT,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 71400,
-        rewardTaka: 7.1,
-        isGame: false,
-        isSurvey: false,
-        timewallTab: "tasks",
-        goals: [
-          { stepNumber: 1, description: "Click Button & Visit Website as instructed", rewardCoins: 71400, rewardTaka: 7.1, optional: false }
-        ]
-      },
-      {
-        id: "tw_task_web_engage_17",
-        provider: "timewall",
-        name: "Website Engagement Task #2",
-        description: "Visit the featured campaign page on TimeWall and complete the engagement steps.",
-        requirements: "Follow the campaign instructions and submit proof on TimeWall Tasks.",
-        image: SVG_TW_ENGAGE_17,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 71400,
-        rewardTaka: 7.1,
-        isGame: false,
-        isSurvey: false,
-        timewallTab: "tasks",
-        goals: [
-          { stepNumber: 1, description: "Complete Website Engagement steps", rewardCoins: 71400, rewardTaka: 7.1, optional: false }
-        ]
-      },
-      {
-        id: "tw_task_google_signup",
-        provider: "timewall",
-        name: "Register by Google New Sign up",
-        description: "Sign up using your Google account on the partner site via TimeWall Tasks.",
-        requirements: "Complete a new Google sign-up (60 secs) and submit confirmation on TimeWall.",
-        image: SVG_TW_GOOGLE_SIGNUP,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 16800,
-        rewardTaka: 1.7,
-        isGame: false,
-        isSurvey: false,
-        timewallTab: "tasks",
-        goals: [
-          { stepNumber: 1, description: "Register by Google New Sign up (60 secs)", rewardCoins: 16800, rewardTaka: 1.7, optional: false }
-        ]
-      },
-      {
-        id: "tw_task_whatsapp_1",
-        provider: "timewall",
-        name: "Join the TimeWall Whatsapp Channel",
-        description: "Join the official TimeWall WhatsApp Channel and stay subscribed to claim instant coins.",
-        requirements: "Click the channel link on TimeWall, join the WhatsApp channel, and submit a screenshot.",
-        image: SVG_TW_WHATSAPP_BLUE,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 4200,
-        rewardTaka: 0.42,
-        isGame: false,
-        isSurvey: false,
-        timewallTab: "tasks",
-        goals: [
-          { stepNumber: 1, description: "Join the TimeWall WhatsApp Channel (31 secs)", rewardCoins: 4200, rewardTaka: 0.42, optional: false }
-        ]
-      },
-      {
-        id: "tw_task_whatsapp_2",
-        provider: "timewall",
-        name: "Join the TimeWall Gifts Whatsapp Channel",
-        description: "Join the TimeWall Gifts WhatsApp Channel to receive daily gift codes and earn instant coins.",
-        requirements: "Join the WhatsApp channel via TimeWall Tasks and submit confirmation.",
-        image: SVG_TW_WHATSAPP_GREEN,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 4200,
-        rewardTaka: 0.42,
-        isGame: false,
-        isSurvey: false,
-        timewallTab: "tasks",
-        goals: [
-          { stepNumber: 1, description: "Join the TimeWall Gifts WhatsApp Channel (39 secs)", rewardCoins: 4200, rewardTaka: 0.42, optional: false }
-        ]
-      },
-      {
-        id: "tw_task_twitter_rt",
-        provider: "timewall",
-        name: "Retweet on your twitter profile",
-        description: "Retweet the sponsored post on your X/Twitter profile via TimeWall Tasks.",
-        requirements: "Retweet the post publicly and submit your profile link/screenshot on TimeWall.",
-        image: SVG_TW_TWITTER_RT,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 4200,
-        rewardTaka: 0.42,
-        isGame: false,
-        isSurvey: false,
-        timewallTab: "tasks",
-        goals: [
-          { stepNumber: 1, description: "Retweet on your Twitter/X profile (2 mins)", rewardCoins: 4200, rewardTaka: 0.42, optional: false }
-        ]
-      }
-    ];
-
     window.offerwallGGState = {
-      games: [...window.DEFAULT_OFFERWALL_GG_GAMES, ...window.DEFAULT_TIMEWALL_GAMES],
+      games: [...window.DEFAULT_OFFERWALL_GG_GAMES],
       timewallGames: [...window.DEFAULT_TIMEWALL_GAMES],
       timewallTasks: [...window.DEFAULT_TIMEWALL_TASKS],
       offers: [...window.DEFAULT_OFFERWALL_GG_OFFERS],
@@ -5274,7 +5211,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.getOfferwallGGUrlForOffer = function(offer) {
       const uid = encodeURIComponent(currentUser?.uid || "guest");
       if (offer && String(offer.provider || "").toLowerCase() === "timewall") {
-        const tab = offer.timewallTab || (offer.isGame ? "games" : "tasks");
+        const tab = offer.isGame ? "games" : (offer.isSurvey ? "surveys" : "tasks");
         return `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=${tab}`;
       }
       if (offer && offer.clickUrl && offer.clickUrl.includes("offerwall.gg")) {
@@ -5308,32 +5245,28 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             const apiSurveys = Array.isArray(json.data.surveys) ? json.data.surveys : [];
             const apiTraffic = Array.isArray(json.data.traffic) ? json.data.traffic : [];
 
-            // 1. Merge Offerwall.GG games first, then append TimeWall games at the end of Games!
+            // Merge live Offerwall.GG games + fallback Offerwall.GG games
             const seenGameNames = new Set();
-            const mergedOwGames = [];
+            const mergedGames = [];
             for (const g of [...apiGames, ...window.DEFAULT_OFFERWALL_GG_GAMES]) {
               const k = String(g.name || "").toLowerCase().trim();
               if (k && !seenGameNames.has(k)) {
                 seenGameNames.add(k);
-                mergedOwGames.push(g);
+                mergedGames.push({ ...g, provider: g.provider || "offerwall.gg" });
               }
             }
-            const twGames = (window.DEFAULT_TIMEWALL_GAMES || []).filter(g => {
-              const k = String(g.name || "").toLowerCase().trim();
-              if (!k || seenGameNames.has(k)) return false;
-              seenGameNames.add(k);
-              return true;
-            });
-            window.offerwallGGState.games = [...mergedOwGames, ...twGames];
+            window.offerwallGGState.games = mergedGames;
 
-            // 2. Merge live Offerwall.GG offers/sign-ups + default Offerwall.GG offers
+            // Merge live Offerwall.GG offers (non-games first so Apps & Offers stays clean)
             const seenOfferNames = new Set();
             const mergedOffers = [];
-            for (const o of [...apiSignups, ...apiAll, ...window.DEFAULT_OFFERWALL_GG_OFFERS]) {
+            const nonGameApiOffers = [...apiSignups, ...apiAll].filter(o => !o.isGame);
+            const gameApiOffers = [...apiSignups, ...apiAll].filter(o => o.isGame);
+            for (const o of [...nonGameApiOffers, ...window.DEFAULT_OFFERWALL_GG_OFFERS, ...gameApiOffers]) {
               const k = String(o.name || "").toLowerCase().trim();
               if (k && !seenOfferNames.has(k)) {
                 seenOfferNames.add(k);
-                mergedOffers.push(o);
+                mergedOffers.push({ ...o, provider: o.provider || "offerwall.gg" });
               }
             }
             window.offerwallGGState.offers = mergedOffers;
@@ -5377,30 +5310,22 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     function buildRjCardHtml(item, isExpandedGrid) {
       const widthClass = isExpandedGrid ? "w-full" : "w-full md:w-[172px] md:shrink-0 md:snap-start";
       const title = (item.name || item.title || "Offer").replace(/"/g, "&quot;");
-      const fallbackSvg = item.isGame
-        ? SVG_GAME_BUBBLE
-        : (window.getOfferPresetSvg ? window.getOfferPresetSvg('gift') : SVG_OFFER_WHALE);
+      const fallbackSvg = item.isGame ? SVG_GAME_BUBBLE : SVG_OFFER_WHALE;
       const imgSrc = item.image || item.iconImage || fallbackSvg;
       const takaVal = Number(item.rewardTaka) || 0;
       const takaFormatted = takaVal >= 100
         ? "৳" + Math.round(takaVal).toLocaleString()
-        : (takaVal > 0 ? "৳" + Number(takaVal.toFixed(2)) : "৳50+");
+        : (takaVal > 0 ? "৳" + Number(takaVal.toFixed(1)) : "৳50+");
 
       const clickHandler = item.isFirestoreTask
         ? `handleOpenTask('${item.id}')`
         : `openOfferwallOfferModal('${String(item.id).replace(/'/g, "\'")}')`;
-
-      const isTw = String(item.provider || "").toLowerCase() === "timewall";
-      const partnerBadge = isTw
-        ? `<span class="absolute top-1.5 left-1.5 bg-[#2eb85c]/95 text-white text-[8.5px] font-black px-1.5 py-0.5 rounded-md shadow-xs uppercase tracking-wider">TimeWall</span>`
-        : "";
 
       return `
         <div onclick="${clickHandler}" class="rj-offer-card ${widthClass} group/card">
           <div>
             <div class="w-full aspect-square rounded-xl overflow-hidden relative bg-slate-900 shadow-2xs">
               <img src="${imgSrc}" alt="${title}" onerror="this.onerror=null;this.src='${fallbackSvg}';" class="w-full h-full object-cover group-hover/card:scale-105 transition-transform duration-300 block" loading="lazy" />
-              ${partnerBadge}
               <div class="absolute bottom-1.5 right-1.5 bg-black/70 backdrop-blur-xs px-1.5 sm:px-2 py-0.5 rounded-full flex items-center gap-1 text-white shadow-xs">
                 ${buildDeviceIconsPillHtml(item.devices)}
               </div>
@@ -5438,9 +5363,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
     // Master Renderer for Games & Offers sections (Mobile + Desktop)
-    // Order:
-    //  - Games: Offerwall.GG Games first -> TimeWall Games at the end!
-    //  - Apps & Offers: Admin Uploaded Tasks first -> TimeWall Tasks right after -> Offerwall.GG Offers!
+    // ORDERING:
+    // 1. Games Section: Offerwall.GG Games first -> TimeWall Games at the end!
+    // 2. Apps & Offers Section: Admin Uploaded Tasks first -> TimeWall Tasks right after -> Offerwall.GG Offers after!
     window.renderOfferwallGGAllSections = function() {
       const gamesContainer = document.getElementById('desk-games-list');
       const offersContainer = document.getElementById('desk-tasks-list');
@@ -5465,24 +5390,21 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return chkAndroid && chkIos && chkDesktop;
       }
 
-      // 1. Prepare Games List (Offerwall.GG games first, TimeWall games at the end)
-      const allGamesRaw = (window.offerwallGGState.games || []);
-      const owGamesPart = allGamesRaw.filter(g => String(g.provider || 'offerwall.gg').toLowerCase() !== 'timewall');
-      const twGamesPart = allGamesRaw.filter(g => String(g.provider || '').toLowerCase() === 'timewall');
-      const orderedGames = [...owGamesPart, ...twGamesPart];
+      // 1. Prepare Games List: Offerwall.GG Games first, then TimeWall Games at the end
+      const owGames = (window.offerwallGGState.games || []).map(g => ({ ...g, provider: g.provider || 'offerwall.gg' }));
+      const twGames = (window.offerwallGGState.timewallGames || []).map(g => ({ ...g, provider: 'timewall' }));
 
-      let gamesList = orderedGames.filter(g => {
+      let gamesList = [...owGames, ...twGames].filter(g => {
         if (!matchesDeviceFilter(g)) return false;
         if (searchQ && !String(g.name || '').toLowerCase().includes(searchQ)) return false;
-        const prov = String(g.provider || 'offerwall.gg').toLowerCase();
-        if (partnerFilter !== 'all' && prov !== partnerFilter) return false;
+        if (partnerFilter !== 'all' && String(g.provider || '').toLowerCase() !== partnerFilter) return false;
         return true;
       });
 
       // 2. Prepare Combined Offers & Sign-up Tasks List:
-      //    (A) Admin Uploaded Tasks (Firestore)
-      //    (B) TimeWall Micro-Tasks (Loaded right after Admin Uploaded Tasks!)
-      //    (C) Offerwall.GG Offers
+      //    (A) Admin Uploaded Tasks FIRST
+      //    (B) TimeWall Tasks SECOND (right after Admin Uploaded Tasks!)
+      //    (C) Offerwall.GG Offers THIRD
       const unattemptedFirestoreTasks = (allAvailableTasks || []).filter(t => {
         if (userSubmissions && userSubmissions[t.id]) return false;
         const limit = t.workerLimit || 0;
@@ -5496,7 +5418,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         title: t.title,
         rewardTaka: t.rewardTaka,
         rewardCoins: (Number(t.rewardTaka) || 0) * 10000,
-        iconImage: t.iconImage || (window.getOfferPresetSvg ? window.getOfferPresetSvg('app') : SVG_OFFER_WHALE),
+        iconImage: t.iconImage || SVG_OFFER_WHALE,
         devices: ['android', 'ios', 'desktop'],
         categories: ['offers', 'signups'],
         provider: 'custom',
@@ -5506,7 +5428,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       unattemptedFirestoreTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
 
-      const twTasksList = (window.offerwallGGState.timewallTasks || window.DEFAULT_TIMEWALL_TASKS || []).map(t => ({
+      const twTasksList = (window.offerwallGGState.timewallTasks || []).map(t => ({
         ...t,
         provider: 'timewall',
         isFirestoreTask: false
@@ -5562,9 +5484,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (offersSection) offersSection.classList.remove('hidden');
         if (partnersSection) partnersSection.classList.remove('hidden');
 
-        // On mobile (<768px): show 6 Games on home preview, and show 9 Offers & Tasks (3 rows of 3) so Admin Tasks + TimeWall Tasks + Offerwall.GG Offers are immediately visible!
+        // On mobile (<768px): show 6 Offerwall.GG games + 3 TimeWall games at the end (9 total) in Games, and 9 items in Apps & Offers so Admin Tasks + TimeWall Tasks are immediately visible!
         const isMobileScreen = window.innerWidth < 768;
-        const visibleGames = isMobileScreen ? gamesList.slice(0, 6) : gamesList;
+        let visibleGames = gamesList;
+        if (isMobileScreen && gamesList.length > 9) {
+          const owFiltered = gamesList.filter(g => g.provider !== 'timewall');
+          const twFiltered = gamesList.filter(g => g.provider === 'timewall');
+          visibleGames = [...owFiltered.slice(0, 6), ...twFiltered.slice(0, 3)];
+        }
         const visibleOffers = isMobileScreen ? combinedOffers.slice(0, 9) : combinedOffers;
 
         if (gamesContainer) {
@@ -5582,22 +5509,49 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.renderDesktopTasks = window.renderOfferwallGGAllSections;
 
+    // Sort goals in ascending order (by stage number or reward amount) so steps always run from Step 1 / lowest stage to highest stage
+    function sortGoalsAscending(rawGoals) {
+      if (!Array.isArray(rawGoals) || rawGoals.length === 0) return [];
+      const copy = rawGoals.map((g, idx) => {
+        const desc = String(g.description || g.name || g.title || `Step ${idx + 1}`).trim();
+        const rewardCoins = Math.round(Number(g.rewardCoins || g.reward || 0));
+        const stageMatch = desc.match(/(?:stage|level|step|milestone|kingdom|day|collect)\s*([0-9,]+)/i);
+        const stageNum = stageMatch ? parseInt(stageMatch[1].replace(/,/g, ''), 10) : null;
+        return { ...g, _origIdx: idx, _stageNum: stageNum, _coins: rewardCoins, description: desc };
+      });
+      copy.sort((a, b) => {
+        if (a._stageNum !== null && b._stageNum !== null && !isNaN(a._stageNum) && !isNaN(b._stageNum) && a._stageNum !== b._stageNum) {
+          return a._stageNum - b._stageNum;
+        }
+        if (a._coins !== b._coins) {
+          return a._coins - b._coins;
+        }
+        return a._origIdx - b._origIdx;
+      });
+      return copy.map((g, i) => ({
+        ...g,
+        stepNumber: i + 1
+      }));
+    }
+
     // Helper to build a default step ladder if an offer doesn't have custom goals yet
     function buildFallbackGoalsForOffer(offer) {
       const totalCoins = Number(offer.rewardCoins) || ((Number(offer.rewardTaka) || 10) * 10000);
       if (Array.isArray(offer.goals) && offer.goals.length > 0) {
-        return offer.goals;
+        return sortGoalsAscending(offer.goals);
       }
       if (offer.isGame) {
-        const s1 = Math.round(totalCoins * 0.05);
-        const s2 = Math.round(totalCoins * 0.15);
-        const s3 = Math.round(totalCoins * 0.30);
-        const s4 = Math.max(0, totalCoins - s1 - s2 - s3);
+        const s1 = Math.round(totalCoins * 0.02);
+        const s2 = Math.round(totalCoins * 0.06);
+        const s3 = Math.round(totalCoins * 0.14);
+        const s4 = Math.round(totalCoins * 0.28);
+        const s5 = Math.max(0, totalCoins - s1 - s2 - s3 - s4);
         return [
           { stepNumber: 1, description: "Open and play the game", rewardCoins: s1, rewardTaka: Number((s1 / 10000).toFixed(2)), optional: false },
-          { stepNumber: 2, description: "Complete initial levels milestone", rewardCoins: s2, rewardTaka: Number((s2 / 10000).toFixed(2)), optional: false },
-          { stepNumber: 3, description: "Reach mid-game level milestone", rewardCoins: s3, rewardTaka: Number((s3 / 10000).toFixed(2)), optional: false },
-          { stepNumber: 4, description: offer.requirements || "Complete final target level milestone", rewardCoins: s4, rewardTaka: Number((s4 / 10000).toFixed(2)), optional: false }
+          { stepNumber: 2, description: "Complete Stage 10", rewardCoins: s2, rewardTaka: Number((s2 / 10000).toFixed(2)), optional: false },
+          { stepNumber: 3, description: "Complete Stage 30", rewardCoins: s3, rewardTaka: Number((s3 / 10000).toFixed(2)), optional: false },
+          { stepNumber: 4, description: "Complete Stage 70", rewardCoins: s4, rewardTaka: Number((s4 / 10000).toFixed(2)), optional: false },
+          { stepNumber: 5, description: offer.requirements || "Complete final target level milestone", rewardCoins: s5, rewardTaka: Number((s5 / 10000).toFixed(2)), optional: false }
         ];
       }
       return [
@@ -5611,81 +5565,75 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       ];
     }
 
-    // Switch between "Rewards" and "Recent" tabs inside the RewardJoy Offer Modal
-    window.switchOfferwallModalTab = function(tabName) {
+    // Switch between 'Rewards' and 'Recent' tabs inside RewardJoy Offer Modal
+    window.switchOwModalTab = function(tabName) {
       const btnRewards = document.getElementById('ow-tab-btn-rewards');
       const btnRecent = document.getElementById('ow-tab-btn-recent');
-      const paneRewards = document.getElementById('ow-modal-tab-rewards');
-      const paneRecent = document.getElementById('ow-modal-tab-recent');
+      const paneRewards = document.getElementById('ow-modal-rewards-pane');
+      const paneRecent = document.getElementById('ow-modal-recent-pane');
 
       if (tabName === 'recent') {
         paneRewards?.classList.add('hidden');
         paneRecent?.classList.remove('hidden');
-        if (btnRecent) btnRecent.className = "px-4 py-1.5 rounded-md bg-[#fff3eb] dark:bg-orange-950/50 text-[#f97316] transition cursor-pointer";
-        if (btnRewards) btnRewards.className = "px-4 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-700 transition cursor-pointer";
+        if (btnRecent) btnRecent.className = "px-4 py-1.5 rounded-lg bg-[#fff3eb] dark:bg-orange-950/50 text-[#f97316] font-bold text-xs cursor-pointer transition";
+        if (btnRewards) btnRewards.className = "px-4 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 font-semibold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition";
       } else {
         paneRewards?.classList.remove('hidden');
         paneRecent?.classList.add('hidden');
-        if (btnRewards) btnRewards.className = "px-4 py-1.5 rounded-md bg-[#fff3eb] dark:bg-orange-950/50 text-[#f97316] transition cursor-pointer";
-        if (btnRecent) btnRecent.className = "px-4 py-1.5 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-700 transition cursor-pointer";
+        if (btnRewards) btnRewards.className = "px-4 py-1.5 rounded-lg bg-[#fff3eb] dark:bg-orange-950/50 text-[#f97316] font-bold text-xs cursor-pointer transition";
+        if (btnRecent) btnRecent.className = "px-4 py-1.5 rounded-lg text-slate-500 dark:text-slate-400 font-semibold text-xs hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition";
       }
     };
 
-    // Render clean light-gray RewardJoy step rows on a single smooth page
+    // Render RewardJoy 1:1 Clean Light-Gray Pill Rows (No Nested Scrollbar!)
     function renderOfferwallModalStepsList(goals, offer) {
       const listEl = document.getElementById('ow-modal-steps-list');
       const countEl = document.getElementById('ow-modal-steps-count');
+      const recentEl = document.getElementById('ow-modal-recent-pane');
       if (!listEl) return;
 
-      const finalGoals = (Array.isArray(goals) && goals.length > 0) ? goals : buildFallbackGoalsForOffer(offer);
+      const finalGoals = (Array.isArray(goals) && goals.length > 0) ? sortGoalsAscending(goals) : buildFallbackGoalsForOffer(offer);
       if (countEl) countEl.innerText = `${finalGoals.length} ${finalGoals.length === 1 ? 'Step' : 'Steps'}`;
 
       listEl.innerHTML = finalGoals.map((g, idx) => {
-        const stepNum = g.stepNumber || (idx + 1);
         const c = Math.round(Number(g.rewardCoins || g.reward || 0));
         const tk = c > 0 ? (c / 10000) : (Number(g.rewardTaka) || 0);
         const tkText = tk >= 100
           ? `৳ ${Math.round(tk).toLocaleString()}`
-          : (tk >= 1 ? `৳ ${Number(tk.toFixed(2))}` : `৳ ${tk.toFixed(3)}`);
+          : (tk >= 1 ? `৳ ${Number(tk.toFixed(2))}` : `৳ ${tk.toFixed(2)}`);
 
         return `
-          <div class="bg-[#f8fafc] dark:bg-slate-800/80 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-3 flex items-center justify-between gap-3">
-            <span class="text-[13px] font-medium text-slate-700 dark:text-slate-200 leading-snug break-words">
-              ${g.description || `Step ${stepNum}`}
-            </span>
-            <span class="text-[13px] font-bold text-slate-600 dark:text-slate-300 whitespace-nowrap shrink-0">
-              ${tk > 0 ? tkText : 'Bonus'}
-            </span>
+          <div class="bg-[#f8fafc] dark:bg-slate-800/70 border border-slate-100 dark:border-slate-800 px-3.5 py-3 rounded-xl flex items-center justify-between gap-3 text-xs">
+            <span class="font-medium text-slate-700 dark:text-slate-200 leading-snug break-words">${g.description || `Step ${idx + 1}`}</span>
+            <span class="font-bold text-slate-600 dark:text-slate-300 whitespace-nowrap shrink-0">${tk > 0 ? tkText : 'Bonus'}</span>
           </div>
         `;
       }).join('');
 
-      // Also populate the Recent tab with realistic recent completions for this offer
-      const recentEl = document.getElementById('ow-modal-recent-list');
       if (recentEl) {
-        const totalTk = Number(offer?.rewardTaka) || 10;
         const sampleUsers = ['Tanvir H.', 'Mehedi S.', 'Rifat K.', 'Sabbir A.'];
-        const sampleTimes = ['12m ago', '45m ago', '2h ago', '5h ago'];
+        const sampleTimes = ['12m ago', '38m ago', '1h ago', '3h ago'];
+        const topGoal = finalGoals[finalGoals.length - 1] || { rewardCoins: offer.rewardCoins || 100000 };
+        const stepTk = ((Number(topGoal.rewardCoins || offer.rewardCoins || 100000)) / 10000).toFixed(1);
         recentEl.innerHTML = sampleUsers.map((u, i) => `
-          <div class="bg-[#f8fafc] dark:bg-slate-800/80 border border-slate-100 dark:border-slate-800 rounded-xl px-4 py-2.5 flex items-center justify-between text-xs">
+          <div class="bg-[#f8fafc] dark:bg-slate-800/70 border border-slate-100 dark:border-slate-800 px-3.5 py-2.5 rounded-xl flex items-center justify-between text-xs">
             <div class="flex items-center gap-2.5">
-              <span class="w-6 h-6 rounded-full bg-orange-500/15 text-[#f97316] font-bold flex items-center justify-center text-[11px]">${u[0]}</span>
+              <span class="w-6 h-6 rounded-full bg-orange-500/15 text-[#f97316] font-bold text-[11px] flex items-center justify-center">${u[0]}</span>
               <span class="font-semibold text-slate-700 dark:text-slate-200">${u}</span>
+              <span class="text-[11px] text-slate-400">· ${sampleTimes[i]}</span>
             </div>
-            <div class="flex items-center gap-3">
-              <span class="font-bold text-emerald-600 dark:text-emerald-400">+৳${totalTk >= 100 ? Math.round(totalTk).toLocaleString() : totalTk.toFixed(1)}</span>
-              <span class="text-[11px] text-slate-400">${sampleTimes[i]}</span>
-            </div>
+            <span class="font-bold text-emerald-600 dark:text-emerald-400">৳ ${stepTk}</span>
           </div>
         `).join('');
       }
     }
 
-    // RewardJoy 1:1 Offer & Game Detail Modal Controls (Works for both Offerwall.GG & TimeWall!)
+    // Offerwall.GG & TimeWall Offer/Game Detail Modal Controls (RewardJoy 1:1 Single-Scroll Design)
     window.openOfferwallOfferModal = async function(offerId) {
       const allItems = [
         ...(window.offerwallGGState.games || []),
-        ...(window.offerwallGGState.timewallTasks || window.DEFAULT_TIMEWALL_TASKS || []),
+        ...(window.offerwallGGState.timewallGames || []),
+        ...(window.offerwallGGState.timewallTasks || []),
         ...(window.offerwallGGState.offers || [])
       ];
       const found = allItems.find(x => String(x.id) === String(offerId));
@@ -5695,16 +5643,20 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
 
       window.offerwallGGState.activeModalOffer = found;
-      window.switchOfferwallModalTab('rewards');
+      window.switchOwModalTab('rewards');
+
+      const scrollBody = document.getElementById('ow-modal-scroll-body');
+      if (scrollBody) scrollBody.scrollTop = 0;
 
       const logoEl = document.getElementById('ow-modal-logo');
       const titleEl = document.getElementById('ow-modal-title');
       const takaEl = document.getElementById('ow-modal-taka');
+      const devicesEl = document.getElementById('ow-modal-devices');
+      const statusBadgeEl = document.getElementById('ow-modal-status-badge');
+      const providerBadgeEl = document.getElementById('ow-modal-provider-badge');
+      const categoryBadgeEl = document.getElementById('ow-modal-category-badge');
       const reqEl = document.getElementById('ow-modal-req');
       const descEl = document.getElementById('ow-modal-desc');
-      const providerNameEl = document.getElementById('ow-modal-provider-name');
-      const categoryNameEl = document.getElementById('ow-modal-category-name');
-      const statusTextEl = document.getElementById('ow-modal-status-text');
       const startBtnTextEl = document.getElementById('ow-modal-start-btn-text');
 
       const fallbackSvg = found.isGame ? SVG_GAME_BUBBLE : SVG_OFFER_WHALE;
@@ -5716,12 +5668,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const takaFormatted = taka >= 100 ? Math.round(taka).toLocaleString() : Number(taka.toFixed(2));
 
       if (takaEl) takaEl.innerText = `৳ ${takaFormatted}`;
-      if (descEl) descEl.innerText = found.description || 'Follow the instructions on the offer page to earn instant rewards.';
-      if (reqEl) reqEl.innerText = found.requirements || 'Complete the listed tasks within 30 days. This offer rewards within 24 hours. New users only.';
-
-      const isTimeWall = String(found.provider || '').toLowerCase() === 'timewall';
-      if (providerNameEl) providerNameEl.innerText = isTimeWall ? 'TimeWall' : 'Offerwall.GG';
-      if (categoryNameEl) categoryNameEl.innerText = found.isGame ? 'Game' : (found.isSurvey ? 'Survey' : 'Task & Offer');
+      if (devicesEl) devicesEl.innerHTML = buildDeviceIconsPillHtml(found.devices);
 
       // Check if user already started this offer
       let isStarted = false;
@@ -5731,16 +5678,39 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           isStarted = startedList.some(x => String(x.id) === String(found.id));
         }
       } catch (e) {}
-      if (statusTextEl) statusTextEl.innerText = isStarted ? 'In progress' : 'Not started';
+
+      if (statusBadgeEl) {
+        statusBadgeEl.innerHTML = isStarted
+          ? `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px]">✓</span><span>Started</span>`
+          : `<span class="w-4 h-4 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 inline-flex items-center justify-center text-[10px]">⏳</span><span>Not started</span>`;
+      }
+
+      const isTimeWall = String(found.provider || '').toLowerCase() === 'timewall';
+      if (providerBadgeEl) {
+        providerBadgeEl.innerHTML = isTimeWall
+          ? `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px]">🕒</span><span>TimeWall</span>`
+          : `<span class="w-4 h-4 rounded-full bg-orange-100 text-[#f97316] inline-flex items-center justify-center text-[10px]">⚡</span><span>Offerwall.GG</span>`;
+      }
+
+      if (categoryBadgeEl) {
+        categoryBadgeEl.innerHTML = found.isGame
+          ? `<span class="text-slate-400">⌘</span><span>Game</span>`
+          : `<span class="text-slate-400">⌘</span><span>Offer &amp; Task</span>`;
+      }
+
+      if (descEl) descEl.innerText = found.description || 'Follow the instructions on the offer page to earn instant rewards.';
+      if (reqEl) reqEl.innerText = found.requirements || 'Play the game and complete the tasks in 30 days. This offer rewards within 24 hours. New users only.';
       if (startBtnTextEl) startBtnTextEl.innerText = 'Start Offer';
 
-      // Render immediate steps (or subtle loading row if numeric Offerwall.GG ID without cached goals)
+      // Render immediate steps (or loading indicator if numeric Offerwall.GG ID without cached goals)
       const isNumericId = /^\d+$/.test(String(found.id));
       if (isNumericId && (!Array.isArray(found.goals) || found.goals.length === 0)) {
         const listEl = document.getElementById('ow-modal-steps-list');
+        const countEl = document.getElementById('ow-modal-steps-count');
+        if (countEl) countEl.innerText = 'Loading...';
         if (listEl) {
           listEl.innerHTML = `
-            <div class="bg-[#f8fafc] dark:bg-slate-800/80 rounded-xl py-4 px-4 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
+            <div class="bg-[#f8fafc] dark:bg-slate-800/70 rounded-xl py-5 text-center text-xs text-slate-400 flex items-center justify-center gap-2">
               <span class="w-4 h-4 border-2 border-[#f97316] border-t-transparent rounded-full animate-spin inline-block"></span>
               <span>Loading reward steps...</span>
             </div>
@@ -5752,7 +5722,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       document.getElementById('offerwall-offer-modal')?.classList.remove('hidden');
 
-      // Fetch live goal ladder from /api/offers?offerId={id} for real Offerwall.GG offers
+      // Fetch live goal ladder from /api/offers?offerId={id} for numeric Offerwall.GG offers
       if (isNumericId && (!Array.isArray(found.goals) || found.goals.length === 0)) {
         try {
           const uid = currentUser?.uid || 'guest';
@@ -5809,11 +5779,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           existing.unshift({
             id: offer.id,
             provider: offer.provider || 'offerwall.gg',
-            timewallTab: offer.timewallTab || (offer.isGame ? 'games' : 'tasks'),
             isGame: !!offer.isGame,
             name: offer.name || offer.title,
             image: offer.image || offer.iconImage || SVG_GAME_BUBBLE,
             rewardTaka: offer.rewardTaka,
+            rewardCoins: offer.rewardCoins,
+            devices: offer.devices || ['android', 'ios', 'desktop'],
             startedAt: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })
           });
           localStorage.setItem(key, JSON.stringify(existing.slice(0, 30)));
@@ -5837,7 +5808,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         const title = srv.name || `${mins} Min Survey`;
         const provider = srv.provider || (String(srv.id || '').startsWith('tw_') ? 'TimeWall' : 'Offerwall.GG');
         const clickAction = srv.clickUrl
-          ? `window.open('${String(srv.clickUrl).replace(/'/g, "\'")}', '_blank')`
+          ? `window.open('${String(srv.clickUrl).replace(/'/g, "\\'")}', '_blank')`
           : (provider === 'TimeWall' ? `openTimeWall('surveys')` : `openOfferwallGG()`);
         return `
           <div onclick="${clickAction}" class="bg-[#f8fafc]/80 dark:bg-[var(--surface-2)] border border-slate-200/80 dark:border-[var(--border)] rounded-xl px-4 py-3.5 flex items-center justify-between cursor-pointer hover:border-emerald-400 hover:shadow-xs transition">
@@ -7185,7 +7156,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const myOffersBox = document.getElementById('my-offers-container');
       const deskMyOffersBox = document.getElementById('desk-myoffers-list-container');
 
-      const combined = [...timewallCompletionsList, ...offerwallGGCompletionsList, ...manualSubmissionsList];
+      const combined = [...offerwallGGCompletionsList, ...timewallCompletionsList, ...manualSubmissionsList];
       const totalCount = combined.length;
 
       const badgeEl = document.getElementById('myoffers-badge');
@@ -7199,9 +7170,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (deskBadgeEl) {
         deskBadgeEl.innerText = totalCount;
       }
-
-      const sbBadge = document.getElementById('sidebar-myoffers-badge');
-      if (sbBadge) sbBadge.innerText = totalCount;
 
       if (totalCount === 0) {
         const emptyHtml = `<p class="text-slate-400 text-center py-6 text-xs bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700">এখনও কোনো অফার বা টাস্ক সম্পন্ন করেননি।</p>`;
@@ -7228,7 +7196,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 ${isAuto ? `<span class="bg-orange-500/15 text-[#f97316] text-[9px] font-black px-1.5 py-0.2 rounded">⚡ AUTO</span>` : ''}
                 <strong class="text-slate-900 dark:text-white text-xs block truncate">${sub.taskTitle}</strong>
               </div>
-              ${sub.offerDetail ? `<div class="text-[10.5px] text-slate-500 dark:text-slate-400 truncate mt-0.5">${sub.offerDetail}</div>` : ''}
               <div class="text-[11px] text-amber-500 font-bold mt-0.5">🪙 ${Number(sub.rewardCoins || (sub.rewardTaka * 10000)).toLocaleString()} ≈ ৳${sub.rewardTaka}</div>
               <div class="text-[10px] text-slate-400 mt-0.5">📅 ${sub.submittedTime || ''}</div>
             </div>
@@ -7243,6 +7210,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (deskMyOffersBox) deskMyOffersBox.innerHTML = htmlItems;
       const rjCompletedBox = document.getElementById('rj-myoffers-completed-list');
       if (rjCompletedBox) rjCompletedBox.innerHTML = htmlItems;
+      const sbBadge = document.getElementById('sidebar-myoffers-badge');
+      if (sbBadge) sbBadge.innerText = totalCount;
     }
 
     function rebuildUserSubmissionsMap() {
@@ -7254,6 +7223,50 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       try {
         localStorage.setItem('tr_cached_user_submissions', JSON.stringify(userSubmissions));
       } catch(e) {}
+    }
+
+    function listenTimeWallLogs(uid) {
+      const q = query(collection(db, "timewall_logs"), where("userId", "==", uid));
+      onSnapshot(q, (snapshot) => {
+        timewallCompletionsList = [];
+        snapshot.forEach((docItem) => {
+          const log = docItem.data();
+          const coinsAdded = Number(log.coins) || Math.round(Number(log.currencyAmount) || 0);
+          const takaAdded = Number((Math.abs(coinsAdded) / 10000).toFixed(2));
+          const title = log.offerName ? `TimeWall: ${log.offerName}` : 'TimeWall Instant Task / Survey';
+          const isReversed = String(log.status || '').toLowerCase() === 'reversed' || String(log.type || '') === '2' || coinsAdded < 0;
+
+          let timeStr = 'TimeWall Verified';
+          if (log.createdAt) {
+            try {
+              const d = new Date(log.createdAt);
+              if (!isNaN(d.getTime())) {
+                timeStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+              }
+            } catch(e) {}
+          }
+
+          timewallCompletionsList.push({
+            taskId: docItem.id,
+            taskTitle: title,
+            rewardTaka: takaAdded,
+            rewardCoins: Math.abs(coinsAdded),
+            submittedTime: timeStr,
+            status: isReversed ? 'Rejected' : 'Approved',
+            isAutoPostback: true
+          });
+
+          if (!isFirstTimeWallSnapshot && !knownTimeWallLogIds.has(docItem.id) && !isReversed) {
+            playCoinChime();
+            triggerConfettiBlast();
+          }
+          knownTimeWallLogIds.add(docItem.id);
+        });
+        isFirstTimeWallSnapshot = false;
+        renderCombinedMyOffersHistory();
+      }, (err) => {
+        console.warn("TimeWall logs listen notice:", err);
+      });
     }
 
     function listenOfferwallGGLogs(uid) {
@@ -7300,60 +7313,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
-    function listenTimeWallLogs(uid) {
-      const q = query(collection(db, "timewall_logs"), where("userId", "==", uid));
-      onSnapshot(q, (snapshot) => {
-        timewallCompletionsList = [];
-        snapshot.forEach((docItem) => {
-          const log = docItem.data();
-          const coinsAdded = Number(log.coins) || Math.round(Number(log.currencyAmount) || 0);
-          const takaAdded = Number((coinsAdded / 10000).toFixed(2));
-          const isReversed = String(log.type || '') === '2' || String(log.type || '') === '-1' || coinsAdded < 0;
-
-          const rawOfferName = String(log.offername || log.offerName || '').trim();
-          const rawOfferDetail = String(log.offerdetail || log.offerDetail || '').trim();
-          const title = rawOfferName
-            ? `TimeWall: ${rawOfferName}`
-            : 'TimeWall: Instant Task / Game Reward';
-
-          let timeStr = 'TimeWall Verified';
-          if (log.createdAt) {
-            try {
-              const d = new Date(log.createdAt);
-              if (!isNaN(d.getTime())) {
-                timeStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-              }
-            } catch(e) {}
-          }
-
-          timewallCompletionsList.push({
-            taskId: docItem.id,
-            taskTitle: title,
-            offerDetail: rawOfferDetail || (log.reason ? `Reason: ${log.reason}` : ''),
-            withdrawId: log.withdrawid || log.txid || docItem.id,
-            rewardTaka: Math.abs(takaAdded),
-            rewardCoins: Math.abs(coinsAdded),
-            submittedTime: timeStr,
-            status: isReversed ? 'Rejected' : 'Approved',
-            isAutoPostback: true
-          });
-
-          if (!isFirstTimewallSnapshot && !knownTimewallLogIds.has(docItem.id) && !isReversed) {
-            playCoinChime();
-            triggerConfettiBlast();
-          }
-          knownTimewallLogIds.add(docItem.id);
-        });
-        isFirstTimewallSnapshot = false;
-        renderCombinedMyOffersHistory();
-      }, (err) => {
-        console.warn("TimeWall logs listen notice:", err);
-      });
-    }
-
     function listenUserSubmissions(uid) {
-      listenTimeWallLogs(uid);
       listenOfferwallGGLogs(uid);
+      listenTimeWallLogs(uid);
       const q = query(collection(db, "submissions"), where("userId", "==", uid));
       onSnapshot(q, (snapshot) => {
         manualSubmissionsList = [];
@@ -7475,6 +7437,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return;
       }
 
+      // Open Screenshot Proof Modal for Admin Uploaded Tasks
       openProofModal(task.id, task.title, task.rewardTaka, task.link, task.desc, task.videoLink || '', task.instructions || null);
     };
 
@@ -7521,7 +7484,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           ? 'bg-gradient-to-r from-amber-50/90 via-white to-emerald-50/60 border-2 border-amber-400 rounded-2xl p-3.5 shadow-sm flex items-center justify-between gap-3 relative overflow-hidden transition hover:shadow-md'
           : 'bg-white rounded-2xl p-3.5 border border-slate-200/80 shadow-xs flex items-center justify-between gap-3 hover:border-emerald-300 transition';
 
-        const isAutoTask = !!t.isAutoPostback;
+        const isAutoTask = !!t.isAutoPostback || t.taskType === 'zeydoo';
         const topBadge = isPinned 
           ? `<div class="flex items-center gap-1.5 text-[10px] mb-0.5">
                <span class="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs flex items-center gap-1">
@@ -7667,8 +7630,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         // Passes s1 and sub1 for AdBlueMedia, subid for CPAlead, tracking_id for CPAGrip
         dynamicCpaLink += `${separator}s1=${encodeURIComponent(uid)}&sub1=${encodeURIComponent(uid)}&subid=${encodeURIComponent(uid)}&tracking_id=${encodeURIComponent(uid)}`;
         
-        // Smart Click ID Macro Replacement
+        // Zeydoo Smart Tracking Macro & Parameter ({CLICK_ID} / {ymid})
         dynamicCpaLink = dynamicCpaLink.replace(/\{CLICK_ID\}/gi, encodeURIComponent(uid));
+        dynamicCpaLink = dynamicCpaLink.replace(/\{ymid\}/gi, encodeURIComponent(uid));
+        if (!dynamicCpaLink.includes('ymid=')) {
+          dynamicCpaLink += `&ymid=${encodeURIComponent(uid)}`;
+        }
       }
       document.getElementById('modal-cpa-btn').href = dynamicCpaLink;
       
@@ -8980,7 +8947,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <div class="truncate">
                   <div class="flex items-center gap-1.5 flex-wrap">
                     <strong class="text-slate-900 text-xs font-black truncate">${t.title}</strong>
-                    
+                    ${(t.isAutoPostback || t.taskType === 'zeydoo') ? '<span class="bg-orange-100 text-orange-800 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-orange-300">⚡ AUTO 50%</span>' : ''}
                     ${t.isPinned ? '<span class="bg-amber-100 text-amber-800 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-amber-300">📌 PINNED</span>' : ''}
                     ${isFull ? '<span class="bg-red-100 text-red-700 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-red-200">🔴 স্লট পূর্ণ (Full)</span>' : '<span class="bg-emerald-100 text-emerald-800 text-[9px] font-black px-1.5 py-0.2 rounded-full border border-emerald-200">🟢 রানিং</span>'}
                   </div>
