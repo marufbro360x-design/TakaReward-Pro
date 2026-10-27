@@ -21,6 +21,14 @@ const SERVICE_ACCOUNT = {
   project_id: "takareward-bd"
 };
 
+// Strip unreplaced macros like "{transactionID}" or "{offername}" if TimeWall leaves them raw
+function cleanMacroParam(val) {
+  if (val === undefined || val === null) return "";
+  const s = String(val).trim();
+  if (!s || /^\{.*\}$/.test(s) || s === "undefined" || s === "null") return "";
+  return s;
+}
+
 // Generates Google OAuth2 Access Token using pure Node built-in crypto
 async function getGoogleAdminToken() {
   const now = Math.floor(Date.now() / 1000);
@@ -74,23 +82,26 @@ function verifyTimeWallHash(userid, revenue, hash) {
 
 // Core processor for TimeWall Postback
 async function processTimeWallCallback(params) {
-  // Support all parameter variations sent by TimeWall macros
-  const userid = String(params.userid || params.userID || params.userId || params.uid || params.subid || "").trim();
-  const currency = params.currency !== undefined ? params.currency : (params.currencyAmount !== undefined ? params.currencyAmount : (params.points || params.coins));
-  const revenue = params.revenue !== undefined ? String(params.revenue).trim() : "";
-  const txid = String(params.txid || params.transactionID || params.transactionId || params.trans_id || params.withdrawid || "").trim();
-  const withdrawid = String(params.withdrawid || "").trim();
-  const ip = String(params.ip || "").trim();
-  const reason = String(params.reason || "").trim();
-  const offername = String(params.offername || params.offerName || "TimeWall Task / Survey").trim();
-  const offerdetail = String(params.offerdetail || params.offerDetail || "").trim();
-  const hash = String(params.hash || params.sig || params.signature || "").trim();
-  const type = String(params.type || "1").trim(); // 1 = credit, 2 / -1 = chargeback
+  // Support all parameter variations sent by TimeWall macros (and ignore unreplaced {macro} placeholders)
+  const userid = cleanMacroParam(params.userid || params.userID || params.userId || params.uid || params.subid);
+  const rawCurrency = cleanMacroParam(
+    params.currency !== undefined ? params.currency : (params.currencyAmount !== undefined ? params.currencyAmount : (params.points || params.coins))
+  );
+  const revenue = cleanMacroParam(params.revenue);
+  const rawTxid = cleanMacroParam(params.txid || params.transactionID || params.transactionId || params.trans_id);
+  const withdrawid = cleanMacroParam(params.withdrawid || params.withdrawID || params.withdrawId);
+  const txid = (rawTxid && rawTxid !== "0") ? rawTxid : withdrawid;
+  const ip = cleanMacroParam(params.ip);
+  const reason = cleanMacroParam(params.reason);
+  const offername = cleanMacroParam(params.offername || params.offerName) || "TimeWall Task / Survey";
+  const offerdetail = cleanMacroParam(params.offerdetail || params.offerDetail);
+  const hash = cleanMacroParam(params.hash || params.sig || params.signature);
+  const type = cleanMacroParam(params.type) || "1"; // 1 = credit, 2 / -1 = chargeback
 
-  console.log(`[TimeWall Postback] User: ${userid}, Currency: ${currency}, Revenue: ${revenue}, TxID: ${txid}, Offer: ${offername}, Type: ${type}`);
+  console.log(`[TimeWall Postback] User: ${userid}, Currency: ${rawCurrency}, Revenue: ${revenue}, TxID: ${txid}, WithdrawID: ${withdrawid}, Offer: ${offername}, Type: ${type}`);
 
   // Health check if opened in browser directly
-  if (!userid && !txid && !revenue) {
+  if (!userid && !txid && !revenue && !rawCurrency) {
     return { code: 200, body: "1" };
   }
 
@@ -112,17 +123,24 @@ async function processTimeWallCallback(params) {
   // 2. Calculate TakaReward Coins ($1 USD = 600,000 Coins as configured in TimeWall Placement)
   // 10,000 Coins = 1 BDT (৳1)
   let coinsToAdd = 0;
-  if (currency !== undefined && currency !== "" && !isNaN(Number(currency)) && Number(currency) !== 0) {
-    coinsToAdd = Math.round(Math.abs(Number(currency)));
-  } else if (revenue && !isNaN(Number(revenue)) && Number(revenue) !== 0) {
+  if (rawCurrency !== "" && !isNaN(Number(rawCurrency)) && Number(rawCurrency) !== 0) {
+    coinsToAdd = Math.round(Math.abs(Number(rawCurrency)));
+  } else if (revenue !== "" && !isNaN(Number(revenue)) && Number(revenue) !== 0) {
     // Convert revenue USD -> Coins using TimeWall placement rate ($1 USD = 600,000 Coins)
     coinsToAdd = Math.round(Math.abs(Number(revenue)) * 600000);
   } else {
-    coinsToAdd = 6000;
+    coinsToAdd = 4200;
   }
 
   // Handle chargebacks / reversals
-  const isReversed = (type === "2" || type === "-1" || type.toLowerCase() === "reversed" || Number(currency) < 0 || Number(revenue) < 0);
+  const isReversed = (
+    type === "2" ||
+    type === "-1" ||
+    type.toLowerCase() === "reversed" ||
+    type.toLowerCase() === "chargeback" ||
+    Number(rawCurrency) < 0 ||
+    Number(revenue) < 0
+  );
   if (isReversed) {
     coinsToAdd = -Math.abs(coinsToAdd);
   }
@@ -130,8 +148,8 @@ async function processTimeWallCallback(params) {
   // 3. Obtain Superuser Admin Token for Firestore
   const adminAccessToken = await getGoogleAdminToken();
 
-  // 4. Deduplication Check on (txid, type)
-  const baseTxId = txid || withdrawid || `${userid}_${Date.now()}`;
+  // 4. Deduplication Check on unique WithdrawID / TxID
+  const baseTxId = withdrawid || txid || `${userid}_${Date.now()}`;
   const logDocId = isReversed ? `${baseTxId}_rev` : baseTxId;
   const checkUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/timewall_logs/${encodeURIComponent(logDocId)}`;
 
@@ -146,6 +164,7 @@ async function processTimeWallCallback(params) {
   }
 
   // 5. Update User Document and Save Full Audit Log in Firestore
+  // IMPORTANT: Firestore REST API v1 FieldTransform requires `increment: { integerValue: String(n) }`
   const commitUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents:commit`;
   const userDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${userid}`;
   const logDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/timewall_logs/${encodeURIComponent(logDocId)}`;
@@ -158,11 +177,15 @@ async function processTimeWallCallback(params) {
           fieldTransforms: [
             {
               fieldPath: "coins",
-              integerIncrement: coinsToAdd
+              increment: {
+                integerValue: String(coinsToAdd)
+              }
             },
             {
               fieldPath: "totalTimeWallEarnings",
-              integerIncrement: Math.max(0, coinsToAdd)
+              increment: {
+                integerValue: String(Math.max(0, coinsToAdd))
+              }
             }
           ]
         }
@@ -173,11 +196,11 @@ async function processTimeWallCallback(params) {
           fields: {
             userId: { stringValue: String(userid) },
             txid: { stringValue: String(baseTxId) },
-            withdrawId: { stringValue: String(withdrawid || "") },
+            withdrawId: { stringValue: String(withdrawid || baseTxId) },
             revenue: { stringValue: String(revenue || "0") },
-            coins: { integerValue: coinsToAdd },
-            currencyAmount: { doubleValue: Number(currency) || coinsToAdd },
-            offerName: { stringValue: String(offername || "TimeWall Task / Survey") },
+            coins: { integerValue: String(coinsToAdd) },
+            currencyAmount: { doubleValue: Number(rawCurrency) || coinsToAdd },
+            offerName: { stringValue: String(offername) },
             offerDetail: { stringValue: String(offerdetail || "") },
             ip: { stringValue: String(ip || "") },
             reason: { stringValue: String(reason || "") },
@@ -201,6 +224,11 @@ async function processTimeWallCallback(params) {
 
   const fbData = await fbRes.json();
   console.log("[TimeWall Firestore Commit Result]", JSON.stringify(fbData));
+
+  if (!fbRes.ok || fbData.error) {
+    console.error("[TimeWall Firestore Commit Error]", JSON.stringify(fbData));
+    return { code: 500, body: "Error: Firestore commit failed - " + JSON.stringify(fbData.error || fbData) };
+  }
 
   // TimeWall expects HTTP 200 with body "1"
   return { code: 200, body: "1" };
