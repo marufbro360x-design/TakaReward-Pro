@@ -20,6 +20,13 @@ const SERVICE_ACCOUNT = {
   project_id: "takareward-bd"
 };
 
+function cleanMacroParam(val) {
+  if (val === undefined || val === null) return "";
+  const s = String(val).trim();
+  if (!s || /^\{.*\}$/.test(s) || s === "undefined" || s === "null") return "";
+  return s;
+}
+
 async function getGoogleAdminToken() {
   const now = Math.floor(Date.now() / 1000);
   const header = { alg: "RS256", typ: "JWT" };
@@ -106,16 +113,16 @@ async function verifyConversionViaApi(tx) {
 }
 
 async function processOfferwallCallback(params) {
-  const user = String(params.user || params.userId || params.user_id || params.subid || params.uid || "").trim();
-  const tx = String(params.tx || params.transactionId || params.txid || params.trans_id || "").trim();
-  const amount = params.amount !== undefined
-    ? String(params.amount).trim()
-    : (params.currencyAmount !== undefined
-        ? String(params.currencyAmount).trim()
-        : String(params.points || params.reward || "0").trim());
-  const sig = String(params.sig || params.signature || params.hash || "").trim();
-  const test = String(params.test || "0").trim();
-  const status = String(params.status || (parseFloat(amount) < 0 ? "reversed" : "credited")).toLowerCase().trim();
+  const user = cleanMacroParam(params.user || params.userId || params.user_id || params.subid || params.uid);
+  const tx = cleanMacroParam(params.tx || params.transactionId || params.txid || params.trans_id);
+  const amount = cleanMacroParam(
+    params.amount !== undefined
+      ? params.amount
+      : (params.currencyAmount !== undefined ? params.currencyAmount : (params.points || params.reward || "0"))
+  ) || "0";
+  const sig = cleanMacroParam(params.sig || params.signature || params.hash);
+  const test = cleanMacroParam(params.test) || "0";
+  const status = (cleanMacroParam(params.status) || (parseFloat(amount) < 0 ? "reversed" : "credited")).toLowerCase();
 
   console.log(`[Offerwall.GG Postback] User: ${user}, Tx: ${tx}, Amount: ${amount}, Status: ${status}, Test: ${test}`);
 
@@ -137,7 +144,7 @@ async function processOfferwallCallback(params) {
     if (apiConversion) {
       console.log(`[Offerwall.GG API Verified Conversion] tx=${tx}`);
     } else {
-      console.warn(`[Offerwall.GG Proceeding with Postback] Accepting conversion for user=${user}, tx=${tx} (Placement Secret differs from API Key)`);
+      console.warn(`[Offerwall.GG Proceeding with Postback] Accepting conversion for user=${user}, tx=${tx}`);
     }
   }
 
@@ -168,9 +175,10 @@ async function processOfferwallCallback(params) {
   const coinsDelta = status === "reversed" ? -Math.abs(rawCoins) : rawCoins;
 
   // 6. Commit User Balance Update & Conversion Log to Firestore
+  // IMPORTANT: Firestore REST API v1 FieldTransform requires `increment: { integerValue: String(n) }`
   const commitUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents:commit`;
   const userDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${user}`;
-  const logDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/offerwall_gg_logs/${logDocId}`;
+  const logDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/offerwall_gg_logs/${encodeURIComponent(logDocId)}`;
 
   const commitPayload = {
     writes: [
@@ -180,11 +188,15 @@ async function processOfferwallCallback(params) {
           fieldTransforms: [
             {
               fieldPath: "coins",
-              integerIncrement: coinsDelta
+              increment: {
+                integerValue: String(coinsDelta)
+              }
             },
             {
               fieldPath: "totalOfferwallEarnings",
-              integerIncrement: Math.max(0, coinsDelta)
+              increment: {
+                integerValue: String(Math.max(0, coinsDelta))
+              }
             }
           ]
         }
@@ -193,14 +205,14 @@ async function processOfferwallCallback(params) {
         update: {
           name: logDocPath,
           fields: {
-            userId: { stringValue: user },
-            transactionId: { stringValue: tx },
+            userId: { stringValue: String(user) },
+            transactionId: { stringValue: String(tx) },
             currencyAmount: { doubleValue: parsedAmount },
-            coins: { integerValue: coinsDelta },
-            status: { stringValue: status },
-            payoutUsd: { stringValue: String(params.payoutUsd || "0") },
-            offerId: { stringValue: String(params.offerId || params.offer_id || "") },
-            offerName: { stringValue: String(params.offerName || "Offerwall.GG Offer") },
+            coins: { integerValue: String(coinsDelta) },
+            status: { stringValue: String(status) },
+            payoutUsd: { stringValue: String(cleanMacroParam(params.payoutUsd) || "0") },
+            offerId: { stringValue: String(cleanMacroParam(params.offerId || params.offer_id) || "") },
+            offerName: { stringValue: String(cleanMacroParam(params.offerName || params.offer_name) || "Offerwall.GG Offer") },
             createdAt: { timestampValue: new Date().toISOString() }
           }
         }
@@ -219,6 +231,11 @@ async function processOfferwallCallback(params) {
 
   const fbData = await fbRes.json();
   console.log("[Offerwall.GG Firestore Commit Result]", JSON.stringify(fbData));
+
+  if (!fbRes.ok || fbData.error) {
+    console.error("[Offerwall.GG Firestore Commit Error]", JSON.stringify(fbData));
+    return { code: 500, body: "error: Firestore commit failed - " + JSON.stringify(fbData.error || fbData) };
+  }
 
   return { code: 200, body: "ok" };
 }
