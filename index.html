@@ -5351,125 +5351,107 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     ];
 
-    // TimeWall Micro-Tasks (Loaded right after Admin Uploaded Tasks in Apps & Offers!)
-    window.DEFAULT_TIMEWALL_TASKS = [
+    // Cointo Media Custom SVG Artworks for Fallback Offers
+    const SVG_COINTO_PLATACASH = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="pc" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs><rect width="200" height="200" rx="36" fill="url(#pc)"/><circle cx="100" cy="82" r="42" fill="#10b981" stroke="#a7f3d0" stroke-width="5"/><text x="100" y="96" font-family="Arial,sans-serif" font-weight="900" font-size="42" fill="#ffffff" text-anchor="middle">$</text><rect x="28" y="142" width="144" height="32" rx="12" fill="#ffffff" fill-opacity="0.14"/><text x="100" y="163" font-family="Arial,sans-serif" font-weight="900" font-size="18" fill="#6ee7b7" text-anchor="middle">PLATACASH</text></svg>');
+    const SVG_COINTO_SWEDPLAY = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="sp" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1e1b4b"/></linearGradient></defs><rect width="200" height="200" rx="36" fill="url(#sp)"/><polygon points="82,58 82,114 130,86" fill="#facc15"/><rect x="28" y="142" width="144" height="32" rx="12" fill="#ffffff" fill-opacity="0.14"/><text x="100" y="163" font-family="Arial,sans-serif" font-weight="900" font-size="18" fill="#fde047" text-anchor="middle">SWEDPLAY</text></svg>');
+    const SVG_COINTO_BOREWARDS = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="br" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#311042"/></linearGradient></defs><rect width="200" height="200" rx="36" fill="url(#br)"/><rect x="62" y="48" width="76" height="72" rx="18" fill="#f43f5e" stroke="#fecdd3" stroke-width="4"/><text x="100" y="96" font-family="Arial,sans-serif" font-weight="900" font-size="34" fill="#ffffff" text-anchor="middle">BO</text><rect x="26" y="142" width="148" height="32" rx="12" fill="#ffffff" fill-opacity="0.14"/><text x="100" y="163" font-family="Arial,sans-serif" font-weight="900" font-size="17" fill="#fda4af" text-anchor="middle">BOREWARDS</text></svg>');
+    const SVG_COINTO_AUDIBLE = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="au" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#1c1917"/></linearGradient></defs><rect width="200" height="200" rx="36" fill="url(#au)"/><path d="M55 95 L100 125 L145 95" fill="none" stroke="#fde047" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="72" r="20" fill="#ffffff"/><rect x="28" y="142" width="144" height="32" rx="12" fill="#ffffff" fill-opacity="0.14"/><text x="100" y="163" font-family="Arial,sans-serif" font-weight="900" font-size="18" fill="#fed7aa" text-anchor="middle">AUDIBLE</text></svg>');
+
+    // Cointo Media Offers (Live API synced + Built-in Fallback Offers: PlataCash, Whale.io, SwedPlay, BoRewards, Audible)
+    window.DEFAULT_COINTO_OFFERS = [
       {
-        id: "tw_task_visit_click",
-        provider: "timewall",
-        name: "Click Button & Visit Website",
-        description: "Visit the promoted website via TimeWall Tasks, click the required button, and follow the engagement instructions.",
-        requirements: "Complete all steps in the TimeWall task instructions and submit proof inside TimeWall for 71,400 Coins.",
-        image: SVG_TW_CLICK_VISIT,
+        id: "cointo_platacash",
+        provider: "cointo",
+        name: "PlataCash",
+        title: "PlataCash",
+        description: "Install and register on PlataCash via Cointo Media and complete your first task to earn 1,440,000 Coins (৳144)!",
+        requirements: "Open PlataCash via Cointo Media, sign up as a new user, and complete the starter reward milestone.",
+        image: SVG_COINTO_PLATACASH,
         categories: ["offers", "signups"],
         devices: ["android", "ios", "desktop"],
-        rewardCoins: 71400,
-        rewardTaka: 7.1,
+        rewardCoins: 1440000,
+        rewardTaka: 144.0,
         isGame: false,
         isSurvey: false,
+        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
         goals: [
-          { stepNumber: 1, description: "Click button, visit website & complete engagement (28 mins)", rewardCoins: 71400, rewardTaka: 7.14 }
+          { stepNumber: 1, description: "Register a new account on PlataCash & complete starter task", rewardCoins: 1440000, rewardTaka: 144.0 }
         ]
       },
       {
-        id: "tw_task_web_engage",
-        provider: "timewall",
-        name: "Website Engagement Task",
-        description: "Browse the advertiser website and complete the engagement steps listed on TimeWall.",
-        requirements: "Visit the website and follow the step-by-step instructions on TimeWall Tasks.",
-        image: SVG_TW_WEB_ENGAGE,
-        categories: ["offers", "signups"],
+        id: "cointo_whale_io",
+        provider: "cointo",
+        name: "Whale.io (Cointo)",
+        title: "Whale.io (Cointo)",
+        description: "Create an account on Whale.io via Cointo Media and complete the welcome activity for 3,600,000 Coins (৳360)!",
+        requirements: "Register as a new user on Whale.io through Cointo Media and complete the required onboarding step.",
+        image: SVG_OFFER_WHALE,
+        categories: ["offers", "signups", "deposits"],
         devices: ["android", "ios", "desktop"],
-        rewardCoins: 71400,
-        rewardTaka: 7.1,
+        rewardCoins: 3600000,
+        rewardTaka: 360.0,
         isGame: false,
         isSurvey: false,
+        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
         goals: [
-          { stepNumber: 1, description: "Complete Website Engagement Task on TimeWall (22 mins)", rewardCoins: 71400, rewardTaka: 7.14 }
+          { stepNumber: 1, description: "Sign up on Whale.io & complete welcome milestone", rewardCoins: 3600000, rewardTaka: 360.0 }
         ]
       },
       {
-        id: "tw_task_reg_refer",
-        provider: "timewall",
-        name: "Registration and enter refer code",
-        description: "Create a new account on the partner platform and enter the referral code shown in TimeWall Tasks.",
-        requirements: "Register as a new user, enter the required code, and submit verification on TimeWall.",
-        image: SVG_TW_REGISTER,
+        id: "cointo_swedplay",
+        provider: "cointo",
+        name: "SwedPlay",
+        title: "SwedPlay",
+        description: "Join SwedPlay via Cointo Media, explore featured mini-apps, and earn 960,000 Coins (৳96) automatically!",
+        requirements: "Register a new SwedPlay account via Cointo Media and complete the verification step.",
+        image: SVG_COINTO_SWEDPLAY,
         categories: ["offers", "signups"],
         devices: ["android", "ios", "desktop"],
-        rewardCoins: 63000,
-        rewardTaka: 6.3,
+        rewardCoins: 960000,
+        rewardTaka: 96.0,
         isGame: false,
         isSurvey: false,
+        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
         goals: [
-          { stepNumber: 1, description: "Register new account & apply referral code (8 mins)", rewardCoins: 63000, rewardTaka: 6.3 }
+          { stepNumber: 1, description: "Complete SwedPlay registration & profile activation", rewardCoins: 960000, rewardTaka: 96.0 }
         ]
       },
       {
-        id: "tw_task_google_signup",
-        provider: "timewall",
-        name: "Register by Google New Sign up",
-        description: "Quick 60-second Google registration task on TimeWall for new users.",
-        requirements: "Sign up using your Google account as a new user and verify completion on TimeWall.",
-        image: SVG_TW_GOOGLE_REG,
+        id: "cointo_borewards",
+        provider: "cointo",
+        name: "BoRewards",
+        title: "BoRewards",
+        description: "Sign up on BoRewards via Cointo Media and complete 1 quick offer to unlock 780,000 Coins (৳78)!",
+        requirements: "Register as a new user on BoRewards and reach the first payout threshold.",
+        image: SVG_COINTO_BOREWARDS,
         categories: ["offers", "signups"],
         devices: ["android", "ios", "desktop"],
-        rewardCoins: 16800,
-        rewardTaka: 1.7,
+        rewardCoins: 780000,
+        rewardTaka: 78.0,
         isGame: false,
         isSurvey: false,
+        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
         goals: [
-          { stepNumber: 1, description: "Complete Google 1-click sign-up (60 secs)", rewardCoins: 16800, rewardTaka: 1.68 }
+          { stepNumber: 1, description: "Create BoRewards account & complete first task", rewardCoins: 780000, rewardTaka: 78.0 }
         ]
       },
       {
-        id: "tw_task_wa_channel",
-        provider: "timewall",
-        name: "Join the TimeWall Whatsapp Channel",
-        description: "Join the official TimeWall WhatsApp Channel in 30 seconds and earn instant coins.",
-        requirements: "Click the link inside TimeWall Tasks, follow the WhatsApp channel, and submit screenshot proof on TimeWall.",
-        image: SVG_TW_WHATSAPP,
-        categories: ["offers", "signups"],
+        id: "cointo_audible_trial",
+        provider: "cointo",
+        name: "Try Audible: 30-Day Free Trial",
+        title: "Try Audible: 30-Day Free Trial",
+        description: "Start your 30-Day Free Trial on Audible via Cointo Media and earn 672,000 Coins (৳67.2)!",
+        requirements: "Sign up for the 30-day Audible free trial as a new customer via Cointo Media.",
+        image: SVG_COINTO_AUDIBLE,
+        categories: ["offers", "signups", "shopping"],
         devices: ["android", "ios", "desktop"],
-        rewardCoins: 4200,
-        rewardTaka: 0.4,
+        rewardCoins: 672000,
+        rewardTaka: 67.2,
         isGame: false,
         isSurvey: false,
+        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
         goals: [
-          { stepNumber: 1, description: "Join TimeWall WhatsApp Channel (31 secs)", rewardCoins: 4200, rewardTaka: 0.42 }
-        ]
-      },
-      {
-        id: "tw_task_wa_gifts",
-        provider: "timewall",
-        name: "Join TimeWall Gifts Whatsapp Channel",
-        description: "Follow the TimeWall Gifts WhatsApp Channel and claim your instant coin reward.",
-        requirements: "Join the WhatsApp Gifts channel via TimeWall Tasks and confirm participation.",
-        image: SVG_TW_WHATSAPP,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 4200,
-        rewardTaka: 0.4,
-        isGame: false,
-        isSurvey: false,
-        goals: [
-          { stepNumber: 1, description: "Join TimeWall Gifts WhatsApp Channel (39 secs)", rewardCoins: 4200, rewardTaka: 0.42 }
-        ]
-      },
-      {
-        id: "tw_task_retweet",
-        provider: "timewall",
-        name: "Retweet on your Twitter profile",
-        description: "Retweet the featured post on your X / Twitter profile via TimeWall Micro-tasks.",
-        requirements: "Open the tweet link in TimeWall Tasks, repost it on your profile, and submit proof.",
-        image: SVG_TW_TWITTER,
-        categories: ["offers", "signups"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 4200,
-        rewardTaka: 0.4,
-        isGame: false,
-        isSurvey: false,
-        goals: [
-          { stepNumber: 1, description: "Retweet on your Twitter/X profile (2 mins)", rewardCoins: 4200, rewardTaka: 0.42 }
+          { stepNumber: 1, description: "Activate 30-Day Free Trial on Audible", rewardCoins: 672000, rewardTaka: 67.2 }
         ]
       }
     ];
@@ -5550,7 +5532,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.offerwallGGState = {
       games: [...window.DEFAULT_OFFERWALL_GG_GAMES],
       timewallGames: [...window.DEFAULT_TIMEWALL_GAMES],
-      timewallTasks: [...window.DEFAULT_TIMEWALL_TASKS],
+      cointoOffers: [...window.DEFAULT_COINTO_OFFERS],
       offers: [...window.DEFAULT_OFFERWALL_GG_OFFERS],
       surveys: [
         { id: "tw_srv_1", provider: "TimeWall", name: "TimeWall Daily Consumer Poll", lengthMinutes: 7, rewardCoins: 1260000, rewardTaka: 126.0 },
@@ -5570,6 +5552,19 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.getOfferwallGGUrlForOffer = function(offer) {
       const uid = encodeURIComponent(currentUser?.uid || "guest");
+      if (offer && (String(offer.provider || "").toLowerCase() === "cointo" || String(offer.id || "").startsWith("cointo_"))) {
+        if (offer.clickUrl) {
+          let url = String(offer.clickUrl).replace(/\[USER_ID\]|\{USER_ID\}|\{subId\}|\{sub_id\}/gi, uid);
+          if (url.includes("/offer/Dv0Ou9/")) {
+            return `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${uid}`;
+          }
+          if (/[?&]sub_id=/i.test(url)) {
+            return url.replace(/([?&]sub_id=)[^&]*/i, `$1${uid}`);
+          }
+          return url + (url.includes("?") ? "&" : "?") + `sub_id=${uid}`;
+        }
+        return `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${uid}`;
+      }
       if (offer && String(offer.provider || "").toLowerCase() === "timewall") {
         const tab = offer.isGame ? "games" : (offer.isSurvey ? "surveys" : "tasks");
         return `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=${tab}`;
@@ -5583,7 +5578,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}?userId=${uid}`;
     };
 
-    // Fetch live offers, games, surveys & traffic from /api/offers
+    // Fetch live offers, Cointo offers, games, surveys & traffic from /api/offers
     window.fetchOfferwallGGLiveData = async function() {
       const uid = currentUser?.uid || "guest";
       let countryCode = "BD";
@@ -5602,6 +5597,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             const apiGames = Array.isArray(json.data.games) ? json.data.games : [];
             const apiSignups = Array.isArray(json.data.signups) ? json.data.signups : [];
             const apiAll = Array.isArray(json.data.allOffers) ? json.data.allOffers : [];
+            const apiCointo = Array.isArray(json.data.cointoOffers)
+              ? json.data.cointoOffers
+              : [...apiSignups, ...apiAll].filter(o => String(o.provider || "").toLowerCase() === "cointo");
             const apiSurveys = Array.isArray(json.data.surveys) ? json.data.surveys : [];
             const apiTraffic = Array.isArray(json.data.traffic) ? json.data.traffic : [];
 
@@ -5609,6 +5607,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             const seenGameNames = new Set();
             const mergedGames = [];
             for (const g of [...apiGames, ...window.DEFAULT_OFFERWALL_GG_GAMES]) {
+              if (String(g.provider || "").toLowerCase() === "cointo") continue;
               const k = String(g.name || "").toLowerCase().trim();
               if (k && !seenGameNames.has(k)) {
                 seenGameNames.add(k);
@@ -5617,11 +5616,24 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             }
             window.offerwallGGState.games = mergedGames;
 
-            // Merge live Offerwall.GG offers (non-games first so Apps & Offers stays clean)
+            // Merge live Cointo offers + fallback Cointo offers (PlataCash, Whale.io, SwedPlay, BoRewards, etc.)
+            const seenCointoNames = new Set();
+            const mergedCointo = [];
+            for (const co of [...apiCointo, ...window.DEFAULT_COINTO_OFFERS]) {
+              const k = String(co.name || co.title || "").toLowerCase().trim();
+              if (k && !seenCointoNames.has(k)) {
+                seenCointoNames.add(k);
+                mergedCointo.push({ ...co, provider: "cointo" });
+              }
+            }
+            window.offerwallGGState.cointoOffers = mergedCointo;
+
+            // Merge live Offerwall.GG offers (excluding Cointo so there is no duplication)
             const seenOfferNames = new Set();
             const mergedOffers = [];
-            const nonGameApiOffers = [...apiSignups, ...apiAll].filter(o => !o.isGame);
-            const gameApiOffers = [...apiSignups, ...apiAll].filter(o => o.isGame);
+            const owOnlySignups = [...apiSignups, ...apiAll].filter(o => String(o.provider || "").toLowerCase() !== "cointo");
+            const nonGameApiOffers = owOnlySignups.filter(o => !o.isGame);
+            const gameApiOffers = owOnlySignups.filter(o => o.isGame);
             for (const o of [...nonGameApiOffers, ...window.DEFAULT_OFFERWALL_GG_OFFERS, ...gameApiOffers]) {
               const k = String(o.name || "").toLowerCase().trim();
               if (k && !seenOfferNames.has(k)) {
@@ -5763,7 +5775,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       // 2. Prepare Combined Offers & Sign-up Tasks List:
       //    (A) Admin Uploaded Tasks FIRST
-      //    (B) TimeWall Tasks SECOND (right after Admin Uploaded Tasks!)
+      //    (B) Cointo Media Live Offers SECOND (Replaces static TimeWall tasks!)
       //    (C) Offerwall.GG Offers THIRD
       const unattemptedFirestoreTasks = (allAvailableTasks || []).filter(t => {
         if (userSubmissions && userSubmissions[t.id]) return false;
@@ -5788,9 +5800,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       unattemptedFirestoreTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
 
-      const twTasksList = (window.offerwallGGState.timewallTasks || []).map(t => ({
-        ...t,
-        provider: 'timewall',
+      const cointoOffersList = (window.offerwallGGState.cointoOffers || []).map(c => ({
+        ...c,
+        provider: 'cointo',
         isFirestoreTask: false
       }));
 
@@ -5800,7 +5812,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         isFirestoreTask: false
       }));
 
-      let combinedOffers = [...unattemptedFirestoreTasks, ...twTasksList, ...owOffersList].filter(item => {
+      let combinedOffers = [...unattemptedFirestoreTasks, ...cointoOffersList, ...owOffersList].filter(item => {
         if (!matchesDeviceFilter(item)) return false;
         if (searchQ && !String(item.name || item.title || '').toLowerCase().includes(searchQ)) return false;
         if (partnerFilter !== 'all' && String(item.provider || '').toLowerCase() !== partnerFilter) return false;
@@ -5993,7 +6005,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const allItems = [
         ...(window.offerwallGGState.games || []),
         ...(window.offerwallGGState.timewallGames || []),
-        ...(window.offerwallGGState.timewallTasks || []),
+        ...(window.offerwallGGState.cointoOffers || []),
         ...(window.offerwallGGState.offers || [])
       ];
       const found = allItems.find(x => String(x.id) === String(offerId));
@@ -6045,11 +6057,15 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           : `<span class="w-4 h-4 rounded-full bg-purple-100 dark:bg-purple-950/60 text-purple-600 dark:text-purple-400 inline-flex items-center justify-center text-[10px]">⏳</span><span>Not started</span>`;
       }
 
-      const isTimeWall = String(found.provider || '').toLowerCase() === 'timewall';
+      const provLower = String(found.provider || '').toLowerCase();
       if (providerBadgeEl) {
-        providerBadgeEl.innerHTML = isTimeWall
-          ? `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px]">🕒</span><span>TimeWall</span>`
-          : `<span class="w-4 h-4 rounded-full bg-orange-100 text-[#f97316] inline-flex items-center justify-center text-[10px]">⚡</span><span>Offerwall.GG</span>`;
+        if (provLower === 'cointo') {
+          providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px] font-black">S</span><span>Cointo Media</span>`;
+        } else if (provLower === 'timewall') {
+          providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px]">🕒</span><span>TimeWall</span>`;
+        } else {
+          providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-orange-100 text-[#f97316] inline-flex items-center justify-center text-[10px]">⚡</span><span>Offerwall.GG</span>`;
+        }
       }
 
       if (categoryBadgeEl) {
