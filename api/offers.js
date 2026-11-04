@@ -1,10 +1,16 @@
-// Vercel & Netlify Universal Serverless Function: Offerwall.GG + TimeWall Live Proxy
+// Vercel & Netlify Universal Serverless Function: Offerwall.GG + Cointo Media + TimeWall Live Proxy
 // File Location in GitHub Repo: api/offers.js
 // Live Endpoint: https://takarewardpro.com/api/offers
 
 const OFFERWALL_APP_ID = process.env.OFFERWALL_APP_ID || "7495f3f6d2e6b19774fc1b67a4eecfa6";
 const OFFERWALL_SECRET = process.env.OFFERWALL_SECRET || "38420234f0f6e719f28054f43da7e5b0199a31f00d42a2790df1e0e4ed703ace";
 const OFFERWALL_API_BASE = "https://offerwall.gg/api/v1";
+
+// Cointo Media Integration Credentials ($1.00 USD = 600,000 Coins, 10,000 Coins = ৳1.00 BDT)
+const COINTO_PUBLIC_KEY = process.env.COINTO_PUBLIC_KEY || "Dv0Ou9";
+const COINTO_SECRET_KEY = process.env.COINTO_SECRET_KEY || "Nd8Ds2Jo9Aq2Hc7";
+const COINTO_API_BASE = "https://cointomedia.com/api/v1/offers";
+const COINTO_COINS_PER_USD = 600000;
 
 // TimeWall Configuration (Bearer Token, Signing Key & Placement OID from TimeWall Siteowner Dashboard)
 const TIMEWALL_SURVEY_API_KEY = process.env.TIMEWALL_SURVEY_API_KEY || "tw_e8c7a7d151ffaa0d9215127d48e95590df925ced577a949f9ea850deb4b1934f";
@@ -41,6 +47,194 @@ async function fetchOfferwallEndpoint(path, queryParams = {}) {
   } catch (err) {
     clearTimeout(timer);
     return { success: false, error: err.message };
+  }
+}
+
+// Helper to build a Cointo click URL with the user's UID (&sub_id=${uid})
+function buildCointoClickUrl(rawClickUrl, offerId, userId) {
+  const uid = encodeURIComponent(userId || "guest");
+  if (rawClickUrl && typeof rawClickUrl === "string") {
+    let urlStr = rawClickUrl.trim().replace(/\[USER_ID\]|\{USER_ID\}|\{subId\}|\{sub_id\}/gi, uid);
+    if (/[?&]sub_id=/i.test(urlStr)) {
+      urlStr = urlStr.replace(/([?&]sub_id=)[^&]*/i, `$1${uid}`);
+    } else if (/[?&]subId=/i.test(urlStr)) {
+      urlStr = urlStr.replace(/([?&]subId=)[^&]*/i, `$1${uid}`);
+    } else {
+      urlStr += (urlStr.includes("?") ? "&" : "?") + `sub_id=${uid}`;
+    }
+    return urlStr;
+  }
+  return `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${uid}`;
+}
+
+// Normalize a single Cointo offer to TakaReward Pro standard format
+function normalizeCointoOffer(offer, userId, idx = 0) {
+  const rawId = offer.offer_id || offer.id || offer.company_id || (idx + 1);
+  const payoutUsd = Number(offer.payout || offer.cpi || offer.revenue || 0);
+  const rawReward = Number(offer.reward || offer.points || offer.coins || 0);
+
+  // Currency Rate: $1.00 USD = 600,000 Coins (10,000 Coins = ৳1.00 BDT)
+  const rewardCoins = payoutUsd > 0
+    ? Math.round(payoutUsd * COINTO_COINS_PER_USD)
+    : (rawReward > 0 ? Math.round(rawReward) : 60000);
+  const rewardTaka = Number((rewardCoins / 10000).toFixed(2));
+
+  // Normalize device array: devices: [offer.device]
+  let devices = ["android", "ios", "desktop"];
+  if (Array.isArray(offer.devices) && offer.devices.length > 0) {
+    devices = offer.devices.map(d => String(d).toLowerCase());
+  } else if (offer.device) {
+    const devStr = String(offer.device).toLowerCase().trim();
+    if (devStr === "all" || devStr === "any" || devStr === "mobile") {
+      devices = devStr === "mobile" ? ["android", "ios"] : ["android", "ios", "desktop"];
+    } else {
+      devices = devStr.split(/[,|/+\s]+/).map(d => d.trim()).filter(Boolean);
+    }
+  }
+
+  const countries = Array.isArray(offer.country)
+    ? offer.country
+    : (Array.isArray(offer.countries) ? offer.countries : (offer.country ? [String(offer.country).toUpperCase()] : ["*"]));
+
+  const name = String(offer.name || offer.title || offer.offer_name || "Cointo Special Offer").trim();
+  const description = String(
+    offer.description ||
+    offer.instructions ||
+    `Complete "${name}" via Cointo Media and earn ${rewardCoins.toLocaleString()} Coins (৳${rewardTaka}) automatically!`
+  ).trim();
+  const requirements = String(
+    offer.requirements ||
+    offer.conversion_flow ||
+    offer.description ||
+    "Click Start Offer, complete the required registration or milestone steps on Cointo Media, and your reward will be credited automatically."
+  ).trim();
+
+  const rawEvents = offer.events || offer.goals || offer.steps || [];
+  const goals = Array.isArray(rawEvents) && rawEvents.length > 0
+    ? normalizeGoals(rawEvents.map((ev, i) => {
+        const evPayout = Number(ev.payout || ev.revenue || 0);
+        const evCoins = evPayout > 0
+          ? Math.round(evPayout * COINTO_COINS_PER_USD)
+          : Math.round(Number(ev.reward || ev.points || ev.coins || 0));
+        return {
+          goalId: String(ev.event_id || ev.id || i + 1),
+          description: String(ev.event_name || ev.name || ev.description || `Step ${i + 1}`),
+          reward: evCoins,
+          optional: Boolean(ev.optional)
+        };
+      }))
+    : [
+        {
+          stepNumber: 1,
+          goalId: "1",
+          description: requirements,
+          rewardCoins,
+          rewardTaka,
+          rewardFormatted: `${rewardCoins.toLocaleString()} Coins`,
+          optional: false
+        }
+      ];
+
+  const isMultiStep = String(offer.type || "").toLowerCase() === "multireward" || goals.length > 1;
+  const clickUrl = buildCointoClickUrl(offer.click_url || offer.clickUrl || offer.tracking_url || offer.url, rawId, userId);
+
+  const normalizedObj = {
+    id: `cointo_${rawId}`,
+    externalId: String(rawId),
+    provider: "cointo",
+    name,
+    title: name,
+    description,
+    requirements,
+    image: String(offer.preview || offer.image || offer.icon || offer.thumbnail || ""),
+    type: isMultiStep ? "multistep" : "singlestep",
+    multipleConversions: isMultiStep,
+    categories: ["offers", "signups"],
+    devices,
+    countries,
+    payoutUsd,
+    rewardCoins,
+    rewardTaka,
+    rewardFormatted: `${rewardCoins.toLocaleString()} Coins`,
+    rewardIsVariable: false,
+    featured: true,
+    isGame: false,
+    isSurvey: false,
+    clickUrl,
+    goals
+  };
+
+  if (isGameOffer(normalizedObj)) {
+    normalizedObj.categories.push("games");
+  }
+
+  return normalizedObj;
+}
+
+// Fetch live offers from Cointo Offers API (GET https://cointomedia.com/api/v1/offers)
+async function fetchCointoOffers(userId, country) {
+  const fetchFromCointoUrl = async (queryObj) => {
+    const url = new URL(COINTO_API_BASE);
+    url.searchParams.set("site_key", COINTO_PUBLIC_KEY);
+    url.searchParams.set("site_secret", COINTO_SECRET_KEY);
+    url.searchParams.set("limit", "150");
+    Object.entries(queryObj).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== "") {
+        url.searchParams.set(k, String(v));
+      }
+    });
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 7000);
+    try {
+      const res = await fetch(url.toString(), {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "User-Agent": "TakaRewardPro-Server/1.0"
+        },
+        signal: controller.signal
+      });
+      clearTimeout(timer);
+      if (!res.ok) return [];
+      const data = await res.json();
+      const rawOffers = Array.isArray(data?.offers)
+        ? data.offers
+        : (Array.isArray(data?.data?.offers)
+            ? data.data.offers
+            : (Array.isArray(data?.data) ? data.data : (Array.isArray(data) ? data : [])));
+      return rawOffers;
+    } catch (err) {
+      clearTimeout(timer);
+      return [];
+    }
+  };
+
+  try {
+    // Fetch country-matched offers first; if few or empty, also merge global offers so catalogue stays full
+    const [countryList, globalList] = await Promise.all([
+      country ? fetchFromCointoUrl({ country }) : Promise.resolve([]),
+      fetchFromCointoUrl({})
+    ]);
+
+    const combinedRaw = [...countryList, ...globalList];
+    const seenIds = new Set();
+    const normalizedList = [];
+
+    combinedRaw.forEach((rawOffer, idx) => {
+      if (!rawOffer) return;
+      const key = String(rawOffer.offer_id || rawOffer.id || rawOffer.name || idx);
+      if (seenIds.has(key)) return;
+      seenIds.add(key);
+      normalizedList.push(normalizeCointoOffer(rawOffer, userId, idx));
+    });
+
+    // Sort by highest reward first
+    normalizedList.sort((a, b) => (b.rewardCoins || 0) - (a.rewardCoins || 0));
+    return normalizedList;
+  } catch (err) {
+    console.warn("[Cointo Offers Fetch Notice]", err.message);
+    return [];
   }
 }
 
@@ -137,7 +331,7 @@ function isSurveyOffer(offer) {
   return text.includes("survey") || text.includes("theoremreach") || text.includes("bitlabs") || text.includes("sayorbit") || text.includes("cpx");
 }
 
-// Normalize goal ladder / reward steps array from Offerwall.GG and sort in ascending order
+// Normalize goal ladder / reward steps array and sort in ascending order
 function normalizeGoals(rawGoals) {
   if (!Array.isArray(rawGoals) || rawGoals.length === 0) return [];
   const mapped = rawGoals.map((g, idx) => {
@@ -145,7 +339,6 @@ function normalizeGoals(rawGoals) {
     const rewardTaka = rewardCoins > 0 ? Number((rewardCoins / 10000).toFixed(2)) : 0;
     const desc = String(g.description || g.name || g.title || `Step ${idx + 1}`).trim();
     const isOptional = Boolean(g.optional || /purchase|deposit|buy|spend/i.test(desc));
-    // Extract numeric stage/level if present for natural sorting
     const stageMatch = desc.match(/(?:stage|level|step|milestone|kingdom|day)\s*(\d+)/i);
     const stageOrder = stageMatch ? parseInt(stageMatch[1], 10) : null;
     return {
@@ -160,7 +353,6 @@ function normalizeGoals(rawGoals) {
     };
   });
 
-  // Sort ascending by stage number (if all have stage numbers) or ascending by rewardCoins
   mapped.sort((a, b) => {
     if (a.stageOrder !== null && b.stageOrder !== null && a.stageOrder !== b.stageOrder) {
       return a.stageOrder - b.stageOrder;
@@ -182,7 +374,7 @@ function normalizeGoals(rawGoals) {
   }));
 }
 
-// Normalize an offer object for TakaReward Pro frontend
+// Normalize an Offerwall.GG offer object for TakaReward Pro frontend
 function normalizeOffer(raw, userId) {
   const uid = encodeURIComponent(userId || "guest");
   const id = raw.id || raw.externalId || Math.floor(Math.random() * 1000000);
@@ -210,6 +402,7 @@ function normalizeOffer(raw, userId) {
     externalId: String(raw.externalId || id),
     provider: String(raw.provider || "offerwall.gg"),
     name: String(raw.name || raw.title || "Special Offer"),
+    title: String(raw.name || raw.title || "Special Offer"),
     description: String(raw.description || "Complete this offer to earn instant rewards."),
     requirements: String(
       raw.requirements ||
@@ -291,18 +484,19 @@ async function handleOffersRequest(params, headers = {}) {
     "Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 Chrome/126.0 Mobile Safari/537.36"
   ).slice(0, 500);
 
-  // Fetch Android, iOS, Desktop offers, Offerwall.GG Surveys, TimeWall Surveys, and Traffic in parallel
-  const [androidRes, iosRes, desktopRes, globalGamesRes, surveysRes, timewallSurveys, trafficRes] = await Promise.all([
+  // Fetch Offerwall.GG Offers, Cointo Live Offers, Surveys, TimeWall Surveys, and Traffic in parallel
+  const [androidRes, iosRes, desktopRes, globalGamesRes, cointoOffers, surveysRes, timewallSurveys, trafficRes] = await Promise.all([
     fetchOfferwallEndpoint("/offers", { appId: OFFERWALL_APP_ID, userId, country, device: "android", sort, limit: 150, search }),
     fetchOfferwallEndpoint("/offers", { appId: OFFERWALL_APP_ID, userId, country, device: "ios", sort, limit: 150, search }),
     fetchOfferwallEndpoint("/offers", { appId: OFFERWALL_APP_ID, userId, country, device: "desktop", sort, limit: 150, search }),
     fetchOfferwallEndpoint("/offers", { appId: OFFERWALL_APP_ID, userId, category: "games", sort: "payout", limit: 60 }),
+    fetchCointoOffers(userId, country),
     fetchOfferwallEndpoint("/surveys", { appId: OFFERWALL_APP_ID, userId, ip: rawIp, country, userAgent, limit: 50 }),
     fetchTimeWallSurveys({ userId, ip: rawIp, country, userAgent }),
     fetchOfferwallEndpoint("/traffic", { appId: OFFERWALL_APP_ID, userId, country, limit: 50 })
   ]);
 
-  // Merge & deduplicate offers by ID, combining device tags
+  // Merge & deduplicate Offerwall.GG offers by ID, combining device tags
   const offersMap = new Map();
 
   function mergeOfferList(resObj, defaultDeviceTag) {
@@ -337,20 +531,28 @@ async function handleOffersRequest(params, headers = {}) {
   mergeOfferList(desktopRes, "desktop");
   mergeOfferList(globalGamesRes, null);
 
-  let allOffers = Array.from(offersMap.values());
+  const offerwallGGOffers = Array.from(offersMap.values());
+
+  // Merge Cointo Live Offers into allOffers and signups
+  let allOffers = [...cointoOffers, ...offerwallGGOffers];
 
   // Sort by highest reward first
   allOffers.sort((a, b) => (b.rewardCoins || 0) - (a.rewardCoins || 0));
 
   // Filter by device if explicitly requested
+  let activeCointoOffers = cointoOffers;
   if (requestedDevice && ["android", "ios", "desktop"].includes(requestedDevice)) {
     allOffers = allOffers.filter(o => o.devices.includes(requestedDevice));
+    activeCointoOffers = cointoOffers.filter(o => o.devices.includes(requestedDevice));
   }
 
-  // Separate into Games, Non-Game Offers/Sign-ups, and Surveys
-  const games = allOffers.filter(o => o.isGame && !o.isSurvey);
-  const nonGameOffers = allOffers.filter(o => !o.isGame && !o.isSurvey);
-  const signupsAndOffers = nonGameOffers.length > 0 ? [...nonGameOffers, ...games] : allOffers.filter(o => !o.isSurvey);
+  // Separate into Games, Sign-ups/Offers (with Cointo Offers included), and Surveys
+  const games = offerwallGGOffers.filter(o => o.isGame && !o.isSurvey);
+  const nonGameOfferwallGG = offerwallGGOffers.filter(o => !o.isGame && !o.isSurvey);
+  const signupsAndOffers = [
+    ...activeCointoOffers,
+    ...(nonGameOfferwallGG.length > 0 ? [...nonGameOfferwallGG, ...games] : offerwallGGOffers.filter(o => !o.isSurvey))
+  ];
   const surveyOffers = allOffers.filter(o => o.isSurvey);
 
   // Normalize dedicated surveys from /api/v1/surveys
@@ -413,12 +615,15 @@ async function handleOffersRequest(params, headers = {}) {
   return {
     success: true,
     appId: OFFERWALL_APP_ID,
+    cointoKey: COINTO_PUBLIC_KEY,
     timewallOid: TIMEWALL_PLACEMENT_OID,
     wallUrl: `https://offerwall.gg/wall/${OFFERWALL_APP_ID}?userId=${encodeURIComponent(userId)}`,
+    cointoWallUrl: `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${encodeURIComponent(userId)}`,
     targeting: { country, userId },
     data: {
       offers: filteredOffers,
       allOffers,
+      cointoOffers: activeCointoOffers,
       games: games.length > 0 ? games : signupsAndOffers,
       signups: signupsAndOffers,
       surveys: [...timewallSurveys, ...dedicatedSurveys, ...surveyOffers],
