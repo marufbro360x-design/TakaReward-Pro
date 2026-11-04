@@ -2111,6 +2111,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   <option value="all">Partners: All</option>
                   <option value="offerwall.gg">Offerwall.GG</option>
                   <option value="timewall">TimeWall</option>
+                    <option value="cointo">Cointo Media</option>
                   <option value="custom">Verified Tasks</option>
                 </select>
                 <select id="rj-offer-category-filter" onchange="renderOfferwallGGAllSections()" class="bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs font-bold text-[var(--text)] outline-none focus:border-[#f97316]">
@@ -2248,6 +2249,23 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                       </div>
                     </div>
                     <span class="text-[11px] sm:text-xs font-medium text-slate-700 dark:text-slate-300">Timewall</span>
+                  </div>
+
+                  <!-- 2B. Cointo Media (LIVE) -->
+                  <div onclick="openCointoWall()" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-emerald-400/80 dark:border-emerald-800/60 bg-gradient-to-b from-white via-white to-[#d1fae5] dark:from-slate-900 dark:to-emerald-950/40 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start relative">
+                    <span class="absolute top-2.5 right-2.5 bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">LIVE</span>
+                    <div class="flex-1 flex flex-col items-center justify-center gap-1.5">
+                      <div class="flex items-center gap-2">
+                        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-[#10b981] text-white flex items-center justify-center font-black text-base sm:text-xl shadow-sm shrink-0">
+                          S
+                        </div>
+                        <div class="text-left leading-tight">
+                          <span class="font-black text-sm sm:text-lg text-slate-900 dark:text-white tracking-wider italic block">COINTO</span>
+                          <span class="text-[9px] sm:text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest block">Offerwall</span>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="text-[11px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-300">Cointo Media</span>
                   </div>
 
                   <!-- 3. Torox -->
@@ -2403,6 +2421,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     </div>
                   </div>
                   <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">Timewall Surveys</span>
+                </div>
+
+                <!-- Cointo Surveys & PTC (LIVE) -->
+                <div onclick="openCointoWall()" class="min-w-[125px] sm:min-w-[175px] h-40 sm:h-44 rounded-2xl p-4 flex flex-col items-center justify-between cursor-pointer border border-emerald-300/80 bg-gradient-to-b from-white via-white to-[#d1fae5] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md transition shrink-0 snap-start relative">
+                  <span class="bg-emerald-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider self-end">LIVE</span>
+                  <div class="flex-1 flex items-center justify-center gap-1.5">
+                    <span class="w-8 h-8 rounded-xl bg-[#10b981] text-white font-black text-base flex items-center justify-center shadow-xs">S</span>
+                    <span class="font-black text-base sm:text-lg text-slate-900 dark:text-white italic tracking-wider">COINTO</span>
+                  </div>
+                  <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">Cointo Surveys</span>
                 </div>
 
                 <!-- Offerwall.GG Surveys (Official Logo) -->
@@ -4565,14 +4593,19 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     const TIMEWALL_SURVEY_API_KEY = "tw_e8c7a7d151ffaa0d9215127d48e95590df925ced577a949f9ea850deb4b1934f";
     window.TIMEWALL_SURVEY_API_KEY = TIMEWALL_SURVEY_API_KEY;
 
+    const COINTO_PUBLIC_KEY = "Dv0Ou9";
+    window.COINTO_PUBLIC_KEY = COINTO_PUBLIC_KEY;
     let isClaimingDailyAd = false;
     let manualSubmissionsList = [];
     let timewallCompletionsList = [];
     let offerwallGGCompletionsList = [];
+    let cointoCompletionsList = [];
     let knownOfferwallGGLogIds = new Set();
     let isFirstOfferwallGGSnapshot = true;
     let knownTimeWallLogIds = new Set();
     let isFirstTimeWallSnapshot = true;
+    let knownCointoLogIds = new Set();
+    let isFirstCointoSnapshot = true;
     let adminAllUsersList = [];
     let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
     let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
@@ -6351,6 +6384,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       window.open(url, '_blank');
     };
 
+    window.openCointoWall = function() {
+      if (!currentUser) {
+        window.openAuthModal('login');
+        return;
+      }
+      const uid = encodeURIComponent(currentUser.uid);
+      const url = `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${uid}`;
+      window.open(url, '_blank');
+    };
+
     window.TOROX_APP_ID = ""; // Paste your Torox App/Placement ID here once approved!
     window.AYET_ADSLOT_ID = "30412"; // ayeT-Studios Web Placement #25558 Adslot #30412
     window.openPartnerWall = function(partnerName) {
@@ -7557,7 +7600,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const myOffersBox = document.getElementById('my-offers-container');
       const deskMyOffersBox = document.getElementById('desk-myoffers-list-container');
 
-      const combined = [...offerwallGGCompletionsList, ...timewallCompletionsList, ...manualSubmissionsList];
+      const combined = [...cointoCompletionsList, ...offerwallGGCompletionsList, ...timewallCompletionsList, ...manualSubmissionsList];
       const totalCount = combined.length;
 
       const badgeEl = document.getElementById('myoffers-badge');
@@ -7670,6 +7713,50 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
+    function listenCointoLogs(uid) {
+      const q = query(collection(db, "cointo_logs"), where("userId", "==", uid));
+      onSnapshot(q, (snapshot) => {
+        cointoCompletionsList = [];
+        snapshot.forEach((docItem) => {
+          const log = docItem.data();
+          const coinsAdded = Number(log.coins) || Math.round(Number(log.currencyAmount) || 0);
+          const takaAdded = Number((Math.abs(coinsAdded) / 10000).toFixed(2));
+          const title = log.offerName ? `Cointo: ${log.offerName}` : 'Cointo Offer / Survey';
+          const isReversed = String(log.status || '').toLowerCase() === 'reversed' || String(log.type || '') === '2' || coinsAdded < 0;
+
+          let timeStr = 'Cointo Verified';
+          if (log.createdAt) {
+            try {
+              const d = new Date(log.createdAt);
+              if (!isNaN(d.getTime())) {
+                timeStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+              }
+            } catch(e) {}
+          }
+
+          cointoCompletionsList.push({
+            taskId: docItem.id,
+            taskTitle: title,
+            rewardTaka: takaAdded,
+            rewardCoins: Math.abs(coinsAdded),
+            submittedTime: timeStr,
+            status: isReversed ? 'Rejected' : 'Approved',
+            isAutoPostback: true
+          });
+
+          if (!isFirstCointoSnapshot && !knownCointoLogIds.has(docItem.id) && !isReversed) {
+            playCoinChime();
+            triggerConfettiBlast();
+          }
+          knownCointoLogIds.add(docItem.id);
+        });
+        isFirstCointoSnapshot = false;
+        renderCombinedMyOffersHistory();
+      }, (err) => {
+        console.warn("Cointo logs listen notice:", err);
+      });
+    }
+
     function listenOfferwallGGLogs(uid) {
       const q = query(collection(db, "offerwall_gg_logs"), where("userId", "==", uid));
       onSnapshot(q, (snapshot) => {
@@ -7717,6 +7804,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     function listenUserSubmissions(uid) {
       listenOfferwallGGLogs(uid);
       listenTimeWallLogs(uid);
+      listenCointoLogs(uid);
       const q = query(collection(db, "submissions"), where("userId", "==", uid));
       onSnapshot(q, (snapshot) => {
         manualSubmissionsList = [];
