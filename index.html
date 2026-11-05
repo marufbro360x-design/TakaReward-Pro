@@ -1790,10 +1790,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
         <p class="text-[12.5px] font-semibold" style="color:var(--text-3)">© 2026 TakaReward Pro. All rights reserved.</p>
         <div class="flex flex-wrap items-center gap-4">
-          <a href="https://offerwall.gg" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900 text-white border border-slate-700 text-xs font-extrabold shadow-xs hover:opacity-90 transition">
-            <span class="text-amber-400">⚡</span>
-            <span>Powered by <span class="text-amber-400">OFFERWALL.GG</span></span>
-          </a>
+
           <span class="text-xs text-[var(--text-3)] font-bold">Admin: marufbro360x@gmail.com</span>
         </div>
       </div>
@@ -1815,11 +1812,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
         <!-- Top Right User Controls (Clean RewardJoy Style: Balance Pill + Notification Bell + Profile Icon) -->
         <div class="flex items-center gap-2.5 sm:gap-3">
-          <!-- RewardJoy Gold Coin + Taka Balance Pill -->
+          <!-- RewardJoy Gold Coin + Multi-Currency Balance Pill -->
           <div onclick="desktopSwitchTab('withdraw');" class="cursor-pointer flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-[#fff8f1] dark:bg-orange-950/30 border border-orange-200/80 dark:border-orange-800/40 hover:border-orange-400 transition shadow-2xs" title="Click to Cashout">
-            <span class="w-5 h-5 rounded-full bg-gradient-to-br from-amber-300 via-amber-400 to-orange-500 text-amber-950 font-black text-[11px] inline-flex items-center justify-center shadow-2xs shrink-0">$</span>
+            <span id="desk-app-coin-badge" class="w-5 h-5 rounded-full bg-gradient-to-br from-amber-300 via-amber-400 to-orange-500 text-amber-950 font-black text-[11px] inline-flex items-center justify-center shadow-2xs shrink-0">$</span>
             <div class="flex items-baseline gap-0.5 font-sans font-extrabold text-xs sm:text-sm text-slate-800 dark:text-slate-100">
-              <span>৳</span><span id="desk-app-taka">0.0</span>
+              <span id="desk-app-currency-sym">৳</span><span id="desk-app-taka">0.0</span>
             </div>
           </div>
 
@@ -1864,9 +1861,38 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <button type="button" onclick="closeDeskUserDropdown(); desktopSwitchTab('affiliate');" class="w-full text-left px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer block">
                   Advertise
                 </button>
-                <div class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer">
-                  <span>Currency</span>
-                  <span class="text-xs font-semibold text-slate-600 dark:text-slate-300 flex items-center gap-1">৳ BDT <span class="text-[10px]">⌄</span></span>
+                <!-- Interactive Currency Accordion (Coins / USD / BDT - Exact Match to RewardJoy) -->
+                <div class="rounded-xl overflow-hidden">
+                  <button type="button" id="desk-currency-toggle-btn" onclick="toggleDeskCurrencyMenu(event)" class="w-full flex items-center justify-between px-3 py-2.5 rounded-xl hover:bg-[#fff3eb] dark:hover:bg-slate-800 transition cursor-pointer">
+                    <span id="desk-currency-label-left" class="font-semibold">Currency</span>
+                    <span id="desk-currency-active-pill" class="text-xs font-bold text-[#f97316] flex items-center gap-1">
+                      <span id="desk-currency-current-text">৳ BDT</span>
+                      <span id="desk-currency-chevron" class="text-[10px] transition-transform duration-200">⌄</span>
+                    </span>
+                  </button>
+                  <div id="desk-currency-submenu" class="hidden mt-1 space-y-0.5 bg-slate-50/70 dark:bg-slate-800/60 rounded-xl p-1 border border-slate-100 dark:border-slate-800">
+                    <button type="button" onclick="setAppCurrency('COINS', event)" id="curr-opt-COINS" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-[#fff3eb] dark:hover:bg-slate-700/60 transition cursor-pointer">
+                      <span class="flex items-center gap-2.5">
+                        <span class="w-5 h-5 rounded-full bg-gradient-to-br from-amber-300 to-orange-500 text-white font-black text-[10px] inline-flex items-center justify-center shadow-2xs">C</span>
+                        <span>Coins</span>
+                      </span>
+                      <span id="curr-check-COINS" class="text-[#f97316] font-black hidden">✓</span>
+                    </button>
+                    <button type="button" onclick="setAppCurrency('USD', event)" id="curr-opt-USD" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-[#fff3eb] dark:hover:bg-slate-700/60 transition cursor-pointer">
+                      <span class="flex items-center gap-2.5">
+                        <span class="w-5 h-5 inline-flex items-center justify-center font-extrabold text-slate-700 dark:text-slate-200 text-sm">$</span>
+                        <span>USD</span>
+                      </span>
+                      <span id="curr-check-USD" class="text-[#f97316] font-black hidden">✓</span>
+                    </button>
+                    <button type="button" onclick="setAppCurrency('BDT', event)" id="curr-opt-BDT" class="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold bg-[#fff3eb] dark:bg-orange-950/40 text-[#f97316] transition cursor-pointer">
+                      <span class="flex items-center gap-2.5">
+                        <span class="w-5 h-5 inline-flex items-center justify-center font-extrabold text-[#f97316] text-sm">৳</span>
+                        <span>BDT</span>
+                      </span>
+                      <span id="curr-check-BDT" class="text-[#f97316] font-black">✓</span>
+                    </button>
+                  </div>
                 </div>
                 <div onclick="toggleTheme()" class="flex items-center justify-between px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 transition cursor-pointer">
                   <span>Theme</span>
@@ -1946,7 +1972,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         </aside>
 
         <!-- Right Main Viewport Area -->
-        <main class="flex-1 overflow-y-auto px-3.5 sm:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8 w-full min-w-0">
+        <main class="flex-1 overflow-y-auto overflow-x-hidden px-3.5 sm:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8 w-full max-w-full min-w-0">
           
           <!-- TAB 1: REWARDJOY DASHBOARD VIEW (Screenshot 9 & 10 Exact Replica) -->
           <section id="desk-view-dashboard" class="space-y-6 hidden">
@@ -2785,40 +2811,40 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           </section>
 
           <!-- TAB 7: PROFILE SETTINGS VIEW (Exact 1:1 RewardJoy Profile & Setting UI from image_75d4fa.png & image_75d822.png + Auto IP Country Tracker) -->
-          <section id="desk-view-profile" class="space-y-6 hidden">
-            <div class="card p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs space-y-8">
+          <section id="desk-view-profile" class="space-y-6 hidden overflow-x-hidden w-full max-w-full">
+            <div class="card p-4 sm:p-8 bg-[var(--surface)] border border-[var(--border)] rounded-2xl shadow-2xs space-y-6 sm:space-y-8 overflow-hidden w-full max-w-full">
               
               <!-- Top Row: Avatar + Name + Level Progress on Left | Main Balance + Cashout on Right -->
-              <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="flex items-center gap-6">
+              <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-5 sm:gap-6 w-full">
+                <div class="flex items-center gap-3.5 sm:gap-6 w-full md:w-auto min-w-0">
                   <div class="relative shrink-0">
-                    <img id="desk-profile-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-28 h-28 rounded-full border-2 border-slate-100 dark:border-slate-700 object-cover shadow-sm" alt="Profile" />
-                    <button type="button" onclick="openProfileEditModal()" class="absolute bottom-0 right-0 w-9 h-9 rounded-full bg-slate-200/90 dark:bg-slate-700 text-slate-700 dark:text-slate-200 flex items-center justify-center shadow-xs hover:scale-105 transition cursor-pointer">
+                    <img id="desk-profile-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-20 h-20 sm:w-28 sm:h-28 rounded-full border-2 border-slate-100 dark:border-slate-700 object-cover bg-slate-900 shadow-sm" alt="Avatar" />
+                    <button type="button" onclick="openProfileEditModal()" class="absolute bottom-0 right-0 w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-200/90 dark:bg-slate-800 text-slate-700 dark:text-slate-200 flex items-center justify-center shadow-sm hover:bg-orange-500 hover:text-white transition cursor-pointer" title="Change Avatar & Name">
                       <i data-lucide="camera" class="w-4 h-4"></i>
                     </button>
                   </div>
-                  <div class="space-y-1.5">
-                    <h3 id="desk-profile-name" class="text-2xl font-extrabold text-[var(--text)]">User</h3>
-                    <div id="desk-profile-level-badge" class="text-base font-bold text-[#a16207] dark:text-amber-400">Lv.0</div>
+                  <div class="space-y-1 sm:space-y-1.5 min-w-0 flex-1">
+                    <h3 id="desk-profile-name" class="text-xl sm:text-2xl font-extrabold text-[var(--text)] truncate">User</h3>
+                    <div id="desk-profile-level-badge" class="text-sm sm:text-base font-bold text-[#a16207] dark:text-amber-400">Lv.0</div>
                     <div class="text-xs text-slate-500 dark:text-slate-400 font-medium">1000 coins to level up</div>
-                    <div class="w-60 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-2">
+                    <div class="w-full max-w-[165px] sm:max-w-none sm:w-60 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden mt-2">
                       <div class="h-full bg-[#f97316] w-1/4 rounded-full"></div>
                     </div>
                   </div>
                 </div>
 
                 <!-- Right Main Balance & Soft Peach Cashout Button -->
-                <div class="flex items-center gap-8">
+                <div class="flex items-center justify-between md:justify-end gap-4 sm:gap-8 w-full md:w-auto pt-3 md:pt-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
                   <div>
                     <div class="flex items-center gap-1.5 text-xs font-medium text-slate-400">
                       <span class="w-5 h-5 rounded-full bg-rose-100 dark:bg-rose-950/50 text-rose-500 inline-flex items-center justify-center text-[11px]">🐷</span>
                       <span>Main Balance</span>
                     </div>
-                    <div class="text-2xl font-extrabold text-[var(--text)] mt-1">
-                      ৳ <span id="desk-profile-taka">0.0</span>
+                    <div class="text-xl sm:text-2xl font-extrabold text-[var(--text)] mt-1">
+                      <span id="desk-profile-currency-sym">৳</span> <span id="desk-profile-taka">0.0</span>
                     </div>
                   </div>
-                  <button type="button" onclick="desktopSwitchTab('withdraw');" class="bg-orange-50 hover:bg-orange-100 dark:bg-orange-950/40 text-[#f97316] font-semibold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 transition cursor-pointer">
+                  <button type="button" onclick="desktopSwitchTab('withdraw');" class="bg-orange-50 hover:bg-orange-100 dark:bg-orange-950/40 text-[#f97316] font-semibold text-xs px-4 py-2.5 rounded-lg flex items-center gap-1.5 transition cursor-pointer shrink-0">
                     <span>↗</span>
                     <span>Cashout</span>
                   </button>
@@ -2831,14 +2857,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   Profile
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-16 px-4 text-xs">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-16 px-1 sm:px-4 text-xs">
                   <!-- Email -->
-                  <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-medium">
+                  <div class="flex items-center justify-between gap-2 min-w-0">
+                    <div class="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-medium shrink-0">
                       <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">✉</span>
                       <span>Email</span>
                     </div>
-                    <span id="desk-profile-email" class="font-semibold text-[var(--text)]">user@gmail.com</span>
+                    <span id="desk-profile-email" class="font-semibold text-[var(--text)] truncate max-w-[180px] sm:max-w-none">user@gmail.com</span>
                   </div>
 
                   <!-- Country (Auto IP Tracked!) -->
@@ -2879,7 +2905,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   Setting
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-16 px-4 text-xs">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-y-5 gap-x-16 px-1 sm:px-4 text-xs">
                   <!-- Wallet -->
                   <div class="flex items-center justify-between">
                     <div class="flex items-center gap-2.5 text-slate-500 dark:text-slate-400 font-medium">
@@ -2931,13 +2957,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           </section>
 
           <!-- TAB 8: REWARDJOY WITHDRAW VIEW (Exact 1:1 Replica of rewardjoy.com/dashboard/withdraw) -->
-          <section id="desk-view-withdraw" class="space-y-6 hidden">
+          <section id="desk-view-withdraw" class="space-y-6 hidden overflow-x-hidden w-full max-w-full">
             
-            <!-- Top Row: Professional SVG Cash & Gift Cards Tabs on Left | History Button on Right (Exact match to image_d53f82.png) -->
-            <div class="flex flex-wrap items-center justify-between gap-4">
-              <div class="flex items-center gap-4">
+            <!-- Top Row: Professional SVG Cash & P2P Tabs on Left | History Button on Right -->
+            <div class="flex flex-wrap items-center justify-between gap-3 sm:gap-4 w-full">
+              <div class="grid grid-cols-2 sm:flex items-center gap-2.5 sm:gap-4 w-full sm:w-auto">
                 <!-- Cash Button (Soft Peach bg, Solid Orange Wallet SVG + Orange Text) -->
-                <button type="button" id="rj-wtab-cash" onclick="switchRjWithdrawCategory('cash')" class="w-52 py-3.5 px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] transition cursor-pointer">
+                <button type="button" id="rj-wtab-cash" onclick="switchRjWithdrawCategory('cash')" class="w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 flex items-center justify-center gap-2.5 sm:gap-3 text-[#f97316] font-semibold text-sm sm:text-[15px] transition cursor-pointer">
                   <svg class="w-5 h-5 text-[#f97316] shrink-0" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M21 7.28V5c0-1.1-.9-2-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2v-2.28A2 2 0 0 0 22 15V9a2 2 0 0 0-1-1.72zM20 9v6h-7V9h7zM5 19V5h14v2h-6c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h6v2H5z"/>
                     <circle cx="16" cy="12" r="1.5"/>
@@ -2946,7 +2972,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 </button>
 
                 <!-- P2P Option (Replaces Gift Cards in exactly the same position) -->
-                <button type="button" id="rj-wtab-p2p" onclick="switchRjWithdrawCategory('p2p')" class="w-52 py-3.5 px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer">
+                <button type="button" id="rj-wtab-p2p" onclick="switchRjWithdrawCategory('p2p')" class="w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-2.5 sm:gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-sm sm:text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer">
                   <svg class="w-5 h-5 text-[#9ca3af] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M17 1l4 4-4 4"/>
                     <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
@@ -3159,7 +3185,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <div class="card p-5 sm:p-6 bg-gradient-to-r from-orange-500/10 via-amber-500/5 to-transparent border-orange-200 dark:border-orange-900/40 rounded-3xl flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-2xs">
                 <div>
                   <div class="flex items-center gap-2">
-                    <span class="w-8 h-8 rounded-2xl bg-orange-500 text-white flex items-center justify-center font-bold text-sm shadow-xs">🔄</span>
+                    <img src="https://i.ibb.co.com/FLByYyHC/Whats-App-Image-2026-11-04-at-9-23-19-PM.jpg" alt="P2P Balance Transfer" class="w-9 h-9 rounded-2xl object-cover shadow-xs shrink-0 border border-orange-200/80 dark:border-orange-800/40" border="0" />
                     <h3 class="text-lg sm:text-xl font-black text-slate-900 dark:text-white">P2P ব্যালেন্স ট্রান্সফার</h3>
                     <span class="bg-emerald-100 text-emerald-800 dark:bg-emerald-950/60 dark:text-emerald-400 text-[10px] font-black px-2 py-0.5 rounded-full border border-emerald-300 dark:border-emerald-800">INSTANT &amp; SECURE</span>
                   </div>
@@ -3354,18 +3380,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" class="w-8 h-8 rounded-xl object-cover border border-orange-400" alt="Logo" />
                   <span class="text-xl font-black text-orange-400 font-display">TakaReward Pro</span>
                 </div>
-                <div class="flex items-center gap-2.5">
-                  <button type="button" onclick="toggleTheme()" class="bg-black/30 hover:bg-black/50 text-amber-300 font-bold text-xs px-4 py-2 rounded-full flex items-center gap-2 border border-white/10 cursor-pointer transition">
+                <div class="flex flex-wrap items-center gap-3">
+                  <button type="button" onclick="toggleTheme()" class="bg-black/30 hover:bg-black/50 text-amber-300 font-bold text-xs px-4 py-2.5 rounded-full flex items-center gap-2 border border-white/10 cursor-pointer transition shrink-0">
                     <span>🌙</span>
                     <span>Dark / Light</span>
                   </button>
-                  <button type="button" onclick="installAppDirect()" class="bg-black/40 hover:bg-black/60 text-white font-bold text-xs px-4 py-2 rounded-xl flex items-center gap-2 border border-white/15 cursor-pointer transition">
-                    <span>▶️</span>
-                    <span>Google Play App</span>
+                  <button type="button" onclick="installAppDirect()" class="inline-flex items-center rounded-xl overflow-hidden hover:opacity-90 active:scale-95 transition cursor-pointer bg-transparent border-0 p-0 shadow-xs shrink-0" title="Download Google Play App">
+                    <img src="https://i.ibb.co.com/7tH7FLWb/Google-Play-Badge-on-Black.png" alt="Google-Play-Badge-on-Black" class="h-10 sm:h-11 w-auto object-contain block" border="0" />
                   </button>
-                </div>
-                <div class="pt-1">
-                  <a href="https://offerwall.gg" target="_blank" rel="noopener"><img src="https://offerwall.gg/themes/offerwall/assets/img/badges/badge-pill-light.png" alt="Offerwall.GG" width="160"></a>
                 </div>
               </div>
             </div>
@@ -3881,6 +3903,15 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <span class="truncate">টাস্ক ম্যানেজার</span>
               </button>
 
+              <!-- Tab 4B: Browsing Tasks Manager (NEW!) -->
+              <button type="button" onclick="switchAdminTab('browsing')" id="atab-btn-browsing" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center justify-between gap-2 transition text-left cursor-pointer">
+                <div class="flex items-center gap-2.5 truncate">
+                  <span class="w-5 h-5 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center text-xs shrink-0 shadow-2xs">🌐</span>
+                  <span class="truncate">ব্রাউজিং টাস্ক</span>
+                </div>
+                <span id="admin-browsing-tasks-count" class="bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">0</span>
+              </button>
+
               <!-- Tab 5: Withdrawals -->
               <button type="button" onclick="switchAdminTab('withdraw')" id="atab-btn-withdraw" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center justify-between gap-2 transition text-left cursor-pointer">
                 <div class="flex items-center gap-2.5 truncate">
@@ -3893,7 +3924,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <!-- Tab 6: P2P Transfers -->
               <button type="button" onclick="switchAdminTab('transfers')" id="atab-btn-transfers" class="atab-nav-btn flex-1 md:flex-initial py-2.5 px-3 rounded-2xl text-xs font-bold text-slate-600 hover:bg-slate-100 flex items-center justify-between gap-2 transition text-left cursor-pointer">
                 <div class="flex items-center gap-2.5 truncate">
-                  <span class="w-5 h-5 rounded-lg bg-orange-50 border border-orange-200 flex items-center justify-center text-xs shrink-0 shadow-2xs">🔄</span>
+                  <img src="https://i.ibb.co.com/FLByYyHC/Whats-App-Image-2026-11-04-at-9-23-19-PM.jpg" class="w-5 h-5 rounded-lg object-cover shrink-0 shadow-2xs" alt="P2P" />
                   <span class="truncate">P2P ট্রান্সফার</span>
                 </div>
                 <span id="admin-transfers-count" class="bg-orange-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">0</span>
@@ -4149,6 +4180,102 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <div id="admin-task-list" class="space-y-3 text-xs"></div>
             </div>
 
+            <!-- TAB 4B: BROWSING & TRAFFIC TASKS MANAGER (Add, Remove, Per-Task Clicks & Total User Earnings) -->
+            <div id="admin-view-browsing" class="space-y-4 hidden">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h4 class="font-black text-sm text-slate-900 flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-orange-100 text-[#f97316] flex items-center justify-center text-sm shrink-0">🌐</span>
+                    <span>ব্রাউজিং ও ট্রাফিক টাস্ক ম্যানেজার (Browsing Tasks Control)</span>
+                  </h4>
+                  <p class="text-[11px] text-slate-400 mt-0.5">নতুন ব্রাউজিং টাস্ক যোগ করুন, ডিলিট করুন এবং কোন টাস্ক থেকে কয়টি ক্লিক ও কত আর্নিং হয়েছে তার পূর্ণ হিসাব দেখুন</p>
+                </div>
+                <button type="button" onclick="restoreDefaultBrowsingTasks()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] px-3 py-1.5 rounded-xl border border-slate-200 cursor-pointer transition self-start sm:self-auto">
+                  🔄 ডিফল্ট টাস্ক রিস্টোর করুন
+                </button>
+              </div>
+
+              <!-- 4 KPI Summary Cards for Browsing Tasks -->
+              <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
+                  <span class="text-[10px] font-bold text-slate-400 block uppercase">মোট অ্যাক্টিভ ব্রাউজিং টাস্ক</span>
+                  <strong id="admin-br-stat-active" class="text-base font-black text-slate-900">0টি</strong>
+                </div>
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
+                  <span class="text-[10px] font-bold text-slate-400 block uppercase">সর্বমোট ক্লিক / ভিজিট</span>
+                  <strong id="admin-br-stat-clicks" class="text-base font-black text-blue-600">0টি ক্লিক</strong>
+                </div>
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
+                  <span class="text-[10px] font-bold text-slate-400 block uppercase">ইউজারদের মোট ব্রাউজিং আর্নিং</span>
+                  <strong id="admin-br-stat-earned" class="text-base font-black text-emerald-600">৳0.00</strong>
+                  <span id="admin-br-stat-earned-coins" class="text-[10px] font-bold text-slate-400 block">0 Coins</span>
+                </div>
+                <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-xs">
+                  <span class="text-[10px] font-bold text-slate-400 block uppercase">আজকের ক্লিক ও আর্নিং</span>
+                  <strong id="admin-br-stat-today" class="text-base font-black text-[#f97316]">0টি (৳0.00)</strong>
+                </div>
+              </div>
+
+              <!-- Add New Browsing Task Form Card -->
+              <div class="bg-white border border-slate-200 rounded-3xl p-4 sm:p-5 shadow-xs space-y-3.5">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                  <h5 class="font-black text-xs text-slate-900 flex items-center gap-1.5">
+                    <span>➕</span> নতুন ব্রাউজিং / ডিরেক্ট লিংক টাস্ক যোগ করুন
+                  </h5>
+                  <span class="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full">Frameless Timer Ad</span>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                  <div class="sm:col-span-2">
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1">টাস্কের নাম (Title):</label>
+                    <input id="admin-br-title" type="text" placeholder="যেমন: Sponsored Direct Link Browsing Task — Visit & Engage" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold outline-none focus:border-orange-500 focus:bg-white" />
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1">প্রোভাইডার / ব্যাজ নাম:</label>
+                    <select id="admin-br-provider" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold outline-none focus:border-orange-500">
+                      <option value="Sponsored">Sponsored</option>
+                      <option value="Offerwall.GG">Offerwall.GG</option>
+                      <option value="Cointo Media">Cointo Media</option>
+                      <option value="Direct Link">Direct Link</option>
+                      <option value="Partner Site">Partner Site</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 text-xs">
+                  <div class="sm:col-span-2">
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1">টার্গেট ওয়েবসাইট বা অ্যাড লিংক (Target URL):</label>
+                    <input id="admin-br-url" type="url" placeholder="https://..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-semibold outline-none focus:border-orange-500 focus:bg-white" />
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1">টাইমার সময় (সেকেন্ড):</label>
+                    <input id="admin-br-seconds" type="number" value="15" min="5" max="120" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold outline-none focus:border-orange-500" />
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-bold text-slate-700 mb-1">রিওয়ার্ড কয়েন (500 = ৳0.05):</label>
+                    <input id="admin-br-coins" type="number" value="500" step="100" min="100" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold outline-none focus:border-orange-500" />
+                  </div>
+                </div>
+
+                <button type="button" id="admin-br-publish-btn" onclick="adminPublishBrowsingTask()" class="w-full bg-[#f97316] hover:bg-orange-600 text-white font-extrabold py-3 rounded-2xl text-xs uppercase tracking-wider shadow-sm cursor-pointer transition">
+                  ➕ নতুন ব্রাউজিং টাস্ক যোগ করুন
+                </button>
+              </div>
+
+              <!-- Active Browsing Tasks List & Per-Task Click / Earning Breakdown -->
+              <div class="bg-white border border-slate-200 rounded-3xl p-4 sm:p-5 shadow-xs space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                  <h5 class="font-black text-xs text-slate-900 flex items-center gap-1.5">
+                    <span>📊</span> সকল ব্রাউজিং টাস্কের তালিকা, ক্লিক সংখ্যা ও আর্নিং রিপোর্ট
+                  </h5>
+                  <span class="text-[10px] font-bold text-slate-400">লাইভ আপডেট</span>
+                </div>
+                <div id="admin-browsing-tasks-list" class="space-y-2.5 text-xs">
+                  <p class="text-center py-6 text-slate-400">ব্রাউজিং টাস্ক লোড হচ্ছে...</p>
+                </div>
+              </div>
+            </div>
+
             <!-- TAB 5: WITHDRAWAL REQUESTS -->
             <div id="admin-view-withdraw" class="space-y-3 hidden">
               <div class="flex items-center justify-between">
@@ -4168,7 +4295,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <h4 class="font-black text-sm text-slate-900 flex items-center gap-2">
-                    <span>🔄</span> P2P ব্যালেন্স ট্রান্সফার ও লেজার ম্যানেজমেন্ট
+                    <img src="https://i.ibb.co.com/FLByYyHC/Whats-App-Image-2026-11-04-at-9-23-19-PM.jpg" class="w-5 h-5 rounded-lg object-cover inline-block shrink-0" alt="P2P" /> P2P ব্যালেন্স ট্রান্সফার ও লেজার ম্যানেজমেন্ট
                   </h4>
                   <p class="text-[11px] text-slate-400">সকল P2P লেনদেনের হিসাব, সিস্টেম লিমিট ও কমিশন কনফিগারেশন</p>
                 </div>
@@ -5351,107 +5478,125 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     ];
 
-    // Cointo Media Custom SVG Artworks for Fallback Offers
-    const SVG_COINTO_PLATACASH = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="pc" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#059669"/><stop offset="100%" stop-color="#0f172a"/></linearGradient></defs><rect width="200" height="200" rx="36" fill="url(#pc)"/><circle cx="100" cy="82" r="42" fill="#10b981" stroke="#a7f3d0" stroke-width="5"/><text x="100" y="96" font-family="Arial,sans-serif" font-weight="900" font-size="42" fill="#ffffff" text-anchor="middle">$</text><rect x="28" y="142" width="144" height="32" rx="12" fill="#ffffff" fill-opacity="0.14"/><text x="100" y="163" font-family="Arial,sans-serif" font-weight="900" font-size="18" fill="#6ee7b7" text-anchor="middle">PLATACASH</text></svg>');
-    const SVG_COINTO_SWEDPLAY = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="sp" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2563eb"/><stop offset="100%" stop-color="#1e1b4b"/></linearGradient></defs><rect width="200" height="200" rx="36" fill="url(#sp)"/><polygon points="82,58 82,114 130,86" fill="#facc15"/><rect x="28" y="142" width="144" height="32" rx="12" fill="#ffffff" fill-opacity="0.14"/><text x="100" y="163" font-family="Arial,sans-serif" font-weight="900" font-size="18" fill="#fde047" text-anchor="middle">SWEDPLAY</text></svg>');
-    const SVG_COINTO_BOREWARDS = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="br" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7c3aed"/><stop offset="100%" stop-color="#311042"/></linearGradient></defs><rect width="200" height="200" rx="36" fill="url(#br)"/><rect x="62" y="48" width="76" height="72" rx="18" fill="#f43f5e" stroke="#fecdd3" stroke-width="4"/><text x="100" y="96" font-family="Arial,sans-serif" font-weight="900" font-size="34" fill="#ffffff" text-anchor="middle">BO</text><rect x="26" y="142" width="148" height="32" rx="12" fill="#ffffff" fill-opacity="0.14"/><text x="100" y="163" font-family="Arial,sans-serif" font-weight="900" font-size="17" fill="#fda4af" text-anchor="middle">BOREWARDS</text></svg>');
-    const SVG_COINTO_AUDIBLE = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><defs><linearGradient id="au" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#1c1917"/></linearGradient></defs><rect width="200" height="200" rx="36" fill="url(#au)"/><path d="M55 95 L100 125 L145 95" fill="none" stroke="#fde047" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/><circle cx="100" cy="72" r="20" fill="#ffffff"/><rect x="28" y="142" width="144" height="32" rx="12" fill="#ffffff" fill-opacity="0.14"/><text x="100" y="163" font-family="Arial,sans-serif" font-weight="900" font-size="18" fill="#fed7aa" text-anchor="middle">AUDIBLE</text></svg>');
-
-    // Cointo Media Offers (Live API synced + Built-in Fallback Offers: PlataCash, Whale.io, SwedPlay, BoRewards, Audible)
-    window.DEFAULT_COINTO_OFFERS = [
+    // TimeWall Micro-Tasks (Loaded right after Admin Uploaded Tasks in Apps & Offers!)
+    window.DEFAULT_TIMEWALL_TASKS = [
       {
-        id: "cointo_platacash",
-        provider: "cointo",
-        name: "PlataCash",
-        title: "PlataCash",
-        description: "Install and register on PlataCash via Cointo Media and complete your first task to earn 1,440,000 Coins (৳144)!",
-        requirements: "Open PlataCash via Cointo Media, sign up as a new user, and complete the starter reward milestone.",
-        image: SVG_COINTO_PLATACASH,
+        id: "tw_task_visit_click",
+        provider: "timewall",
+        name: "Click Button & Visit Website",
+        description: "Visit the promoted website via TimeWall Tasks, click the required button, and follow the engagement instructions.",
+        requirements: "Complete all steps in the TimeWall task instructions and submit proof inside TimeWall for 71,400 Coins.",
+        image: SVG_TW_CLICK_VISIT,
         categories: ["offers", "signups"],
         devices: ["android", "ios", "desktop"],
-        rewardCoins: 1440000,
-        rewardTaka: 144.0,
+        rewardCoins: 71400,
+        rewardTaka: 7.1,
         isGame: false,
         isSurvey: false,
-        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
         goals: [
-          { stepNumber: 1, description: "Register a new account on PlataCash & complete starter task", rewardCoins: 1440000, rewardTaka: 144.0 }
+          { stepNumber: 1, description: "Click button, visit website & complete engagement (28 mins)", rewardCoins: 71400, rewardTaka: 7.14 }
         ]
       },
       {
-        id: "cointo_whale_io",
-        provider: "cointo",
-        name: "Whale.io (Cointo)",
-        title: "Whale.io (Cointo)",
-        description: "Create an account on Whale.io via Cointo Media and complete the welcome activity for 3,600,000 Coins (৳360)!",
-        requirements: "Register as a new user on Whale.io through Cointo Media and complete the required onboarding step.",
-        image: SVG_OFFER_WHALE,
-        categories: ["offers", "signups", "deposits"],
-        devices: ["android", "ios", "desktop"],
-        rewardCoins: 3600000,
-        rewardTaka: 360.0,
-        isGame: false,
-        isSurvey: false,
-        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
-        goals: [
-          { stepNumber: 1, description: "Sign up on Whale.io & complete welcome milestone", rewardCoins: 3600000, rewardTaka: 360.0 }
-        ]
-      },
-      {
-        id: "cointo_swedplay",
-        provider: "cointo",
-        name: "SwedPlay",
-        title: "SwedPlay",
-        description: "Join SwedPlay via Cointo Media, explore featured mini-apps, and earn 960,000 Coins (৳96) automatically!",
-        requirements: "Register a new SwedPlay account via Cointo Media and complete the verification step.",
-        image: SVG_COINTO_SWEDPLAY,
+        id: "tw_task_web_engage",
+        provider: "timewall",
+        name: "Website Engagement Task",
+        description: "Browse the advertiser website and complete the engagement steps listed on TimeWall.",
+        requirements: "Visit the website and follow the step-by-step instructions on TimeWall Tasks.",
+        image: SVG_TW_WEB_ENGAGE,
         categories: ["offers", "signups"],
         devices: ["android", "ios", "desktop"],
-        rewardCoins: 960000,
-        rewardTaka: 96.0,
+        rewardCoins: 71400,
+        rewardTaka: 7.1,
         isGame: false,
         isSurvey: false,
-        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
         goals: [
-          { stepNumber: 1, description: "Complete SwedPlay registration & profile activation", rewardCoins: 960000, rewardTaka: 96.0 }
+          { stepNumber: 1, description: "Complete Website Engagement Task on TimeWall (22 mins)", rewardCoins: 71400, rewardTaka: 7.14 }
         ]
       },
       {
-        id: "cointo_borewards",
-        provider: "cointo",
-        name: "BoRewards",
-        title: "BoRewards",
-        description: "Sign up on BoRewards via Cointo Media and complete 1 quick offer to unlock 780,000 Coins (৳78)!",
-        requirements: "Register as a new user on BoRewards and reach the first payout threshold.",
-        image: SVG_COINTO_BOREWARDS,
+        id: "tw_task_reg_refer",
+        provider: "timewall",
+        name: "Registration and enter refer code",
+        description: "Create a new account on the partner platform and enter the referral code shown in TimeWall Tasks.",
+        requirements: "Register as a new user, enter the required code, and submit verification on TimeWall.",
+        image: SVG_TW_REGISTER,
         categories: ["offers", "signups"],
         devices: ["android", "ios", "desktop"],
-        rewardCoins: 780000,
-        rewardTaka: 78.0,
+        rewardCoins: 63000,
+        rewardTaka: 6.3,
         isGame: false,
         isSurvey: false,
-        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
         goals: [
-          { stepNumber: 1, description: "Create BoRewards account & complete first task", rewardCoins: 780000, rewardTaka: 78.0 }
+          { stepNumber: 1, description: "Register new account & apply referral code (8 mins)", rewardCoins: 63000, rewardTaka: 6.3 }
         ]
       },
       {
-        id: "cointo_audible_trial",
-        provider: "cointo",
-        name: "Try Audible: 30-Day Free Trial",
-        title: "Try Audible: 30-Day Free Trial",
-        description: "Start your 30-Day Free Trial on Audible via Cointo Media and earn 672,000 Coins (৳67.2)!",
-        requirements: "Sign up for the 30-day Audible free trial as a new customer via Cointo Media.",
-        image: SVG_COINTO_AUDIBLE,
-        categories: ["offers", "signups", "shopping"],
+        id: "tw_task_google_signup",
+        provider: "timewall",
+        name: "Register by Google New Sign up",
+        description: "Quick 60-second Google registration task on TimeWall for new users.",
+        requirements: "Sign up using your Google account as a new user and verify completion on TimeWall.",
+        image: SVG_TW_GOOGLE_REG,
+        categories: ["offers", "signups"],
         devices: ["android", "ios", "desktop"],
-        rewardCoins: 672000,
-        rewardTaka: 67.2,
+        rewardCoins: 16800,
+        rewardTaka: 1.7,
         isGame: false,
         isSurvey: false,
-        clickUrl: "https://cointomedia.com/offer/Dv0Ou9/[USER_ID]",
         goals: [
-          { stepNumber: 1, description: "Activate 30-Day Free Trial on Audible", rewardCoins: 672000, rewardTaka: 67.2 }
+          { stepNumber: 1, description: "Complete Google 1-click sign-up (60 secs)", rewardCoins: 16800, rewardTaka: 1.68 }
+        ]
+      },
+      {
+        id: "tw_task_wa_channel",
+        provider: "timewall",
+        name: "Join the TimeWall Whatsapp Channel",
+        description: "Join the official TimeWall WhatsApp Channel in 30 seconds and earn instant coins.",
+        requirements: "Click the link inside TimeWall Tasks, follow the WhatsApp channel, and submit screenshot proof on TimeWall.",
+        image: SVG_TW_WHATSAPP,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 4200,
+        rewardTaka: 0.4,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Join TimeWall WhatsApp Channel (31 secs)", rewardCoins: 4200, rewardTaka: 0.42 }
+        ]
+      },
+      {
+        id: "tw_task_wa_gifts",
+        provider: "timewall",
+        name: "Join TimeWall Gifts Whatsapp Channel",
+        description: "Follow the TimeWall Gifts WhatsApp Channel and claim your instant coin reward.",
+        requirements: "Join the WhatsApp Gifts channel via TimeWall Tasks and confirm participation.",
+        image: SVG_TW_WHATSAPP,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 4200,
+        rewardTaka: 0.4,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Join TimeWall Gifts WhatsApp Channel (39 secs)", rewardCoins: 4200, rewardTaka: 0.42 }
+        ]
+      },
+      {
+        id: "tw_task_retweet",
+        provider: "timewall",
+        name: "Retweet on your Twitter profile",
+        description: "Retweet the featured post on your X / Twitter profile via TimeWall Micro-tasks.",
+        requirements: "Open the tweet link in TimeWall Tasks, repost it on your profile, and submit proof.",
+        image: SVG_TW_TWITTER,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 4200,
+        rewardTaka: 0.4,
+        isGame: false,
+        isSurvey: false,
+        goals: [
+          { stepNumber: 1, description: "Retweet on your Twitter/X profile (2 mins)", rewardCoins: 4200, rewardTaka: 0.42 }
         ]
       }
     ];
@@ -5529,9 +5674,191 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     ];
 
+    // Cointo Media Built-in Fallback Catalogue ($1.00 USD = 600,000 Coins, 10,000 Coins = ৳1 BDT)
+    const SVG_COINTO_PLATACASH = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#047857"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="102" r="48" fill="#ffffff" opacity="0.2"/><text x="120" y="122" text-anchor="middle" font-size="56">💵</text><text x="120" y="190" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="24" fill="#ffffff">PLATACASH</text></svg>');
+    const SVG_COINTO_SWEDPLAY = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#312e81"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="102" r="48" fill="#ffffff" opacity="0.18"/><text x="120" y="122" text-anchor="middle" font-size="54">🎮</text><text x="120" y="190" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="24" fill="#e0e7ff">SWEDPLAY</text></svg>');
+    const SVG_COINTO_BOREWARDS = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#b45309"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="102" r="48" fill="#ffffff" opacity="0.22"/><text x="120" y="122" text-anchor="middle" font-size="54">🎁</text><text x="120" y="190" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="22" fill="#ffffff">BOREWARDS</text></svg>');
+    const SVG_COINTO_AUDIBLE = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#f97316"/><stop offset="100%" stop-color="#9a3412"/></linearGradient></defs><rect width="240" height="240" rx="38" fill="url(#bg)"/><circle cx="120" cy="102" r="48" fill="#ffffff" opacity="0.2"/><text x="120" y="122" text-anchor="middle" font-size="54">🎧</text><text x="120" y="190" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="24" fill="#ffffff">AUDIBLE</text></svg>');
+
+    window.DEFAULT_COINTO_OFFERS = [
+      {
+        id: "cointo_platacash_1",
+        provider: "cointo",
+        name: "PlataCash - Earn Rewards",
+        description: "Install PlataCash and complete milestone events via Cointo Media for instant rewards.",
+        requirements: "Install the app and complete the listed milestone steps.",
+        image: SVG_COINTO_PLATACASH,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 4707780,
+        rewardTaka: 470.8,
+        isGame: false,
+        isSurvey: false
+      },
+      {
+        id: "cointo_swedplay",
+        provider: "cointo",
+        name: "SwedPlay - Install & Open",
+        description: "Install SwedPlay app and open it for 30 seconds via Cointo Media.",
+        requirements: "Download and open the app. New users only.",
+        image: SVG_COINTO_SWEDPLAY,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios"],
+        rewardCoins: 292800,
+        rewardTaka: 29.3,
+        isGame: false,
+        isSurvey: false
+      },
+      {
+        id: "cointo_borewards",
+        provider: "cointo",
+        name: "BoRewards - Earn Money",
+        description: "Join BoRewards and complete your first task via Cointo Media.",
+        requirements: "Install BoRewards and complete the introductory step.",
+        image: SVG_COINTO_BOREWARDS,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 2107200,
+        rewardTaka: 210.7,
+        isGame: false,
+        isSurvey: false
+      },
+      {
+        id: "cointo_audible",
+        provider: "cointo",
+        name: "Audible Free Trial",
+        description: "Start your free Audible trial via Cointo Media and earn instant coins.",
+        requirements: "Register for the free trial as a new user.",
+        image: SVG_COINTO_AUDIBLE,
+        categories: ["offers", "signups"],
+        devices: ["android", "ios", "desktop"],
+        rewardCoins: 1860000,
+        rewardTaka: 186.0,
+        isGame: false,
+        isSurvey: false
+      }
+    ];
+
+    // Global Currency Switcher State & Formatting Engine (BDT / USD / COINS)
+    // Conversion standard: 10,000 Coins = ৳1 BDT | 600,000 Coins = $1.00 USD (৳60)
+    window.currentCurrency = localStorage.getItem('tr_currency') || 'BDT';
+
+    window.formatAppCurrencyFromCoins = function(coinsAmount, opts = {}) {
+      const coins = Math.max(0, Number(coinsAmount) || 0);
+      const curr = window.currentCurrency || 'BDT';
+      if (curr === 'COINS') {
+        if (opts.compact && coins >= 1000000) {
+          return '🪙 ' + (coins / 1000000).toFixed(1).replace(/\.0$/, '') + 'M';
+        }
+        return (opts.noSymbol ? '' : '🪙 ') + Math.round(coins).toLocaleString();
+      }
+      if (curr === 'USD') {
+        const usd = coins / 600000;
+        const formatted = usd >= 100 ? Math.round(usd).toLocaleString() : (usd >= 1 ? usd.toFixed(2) : (usd > 0 ? usd.toFixed(3).replace(/0$/, '') : '0.00'));
+        return (opts.noSymbol ? '' : '$') + formatted;
+      }
+      // Default: BDT
+      const taka = coins / 10000;
+      const formatted = opts.exactDecimals
+        ? taka.toFixed(opts.exactDecimals)
+        : (taka >= 100 ? Math.round(taka).toLocaleString() : (taka > 0 ? Number(taka.toFixed(1)) : '0.0'));
+      return (opts.noSymbol ? '' : '৳') + formatted;
+    };
+
+    window.formatAppCurrencyFromTaka = function(takaAmount, opts = {}) {
+      const coins = (Number(takaAmount) || 0) * 10000;
+      return window.formatAppCurrencyFromCoins(coins, opts);
+    };
+
+    window.toggleDeskCurrencyMenu = function(e) {
+      if (e) e.stopPropagation();
+      const submenu = document.getElementById('desk-currency-submenu');
+      const chevron = document.getElementById('desk-currency-chevron');
+      const btn = document.getElementById('desk-currency-toggle-btn');
+      if (!submenu) return;
+      const isHidden = submenu.classList.contains('hidden');
+      if (isHidden) {
+        submenu.classList.remove('hidden');
+        if (chevron) chevron.innerText = '^';
+        if (btn) btn.classList.add('bg-[#fff3eb]', 'text-[#f97316]');
+      } else {
+        submenu.classList.add('hidden');
+        if (chevron) chevron.innerText = '⌄';
+        if (btn) btn.classList.remove('bg-[#fff3eb]', 'text-[#f97316]');
+      }
+    };
+
+    window.syncCurrencyMenuUI = function() {
+      const curr = window.currentCurrency || 'BDT';
+      const curTextEl = document.getElementById('desk-currency-current-text');
+      if (curTextEl) {
+        curTextEl.innerText = curr === 'COINS' ? '🪙 Coins' : (curr === 'USD' ? '$ USD' : '৳ BDT');
+      }
+      ['COINS', 'USD', 'BDT'].forEach(code => {
+        const optBtn = document.getElementById('curr-opt-' + code);
+        const chk = document.getElementById('curr-check-' + code);
+        if (optBtn) {
+          if (code === curr) {
+            optBtn.className = "w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-bold bg-[#fff3eb] dark:bg-orange-950/40 text-[#f97316] transition cursor-pointer";
+          } else {
+            optBtn.className = "w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200 hover:bg-[#fff3eb] dark:hover:bg-slate-700/60 transition cursor-pointer";
+          }
+        }
+        if (chk) {
+          if (code === curr) chk.classList.remove('hidden');
+          else chk.classList.add('hidden');
+        }
+      });
+
+      // Sync top header balance symbol + value & profile balance symbol + value
+      const userCoins = (typeof userData !== 'undefined' && userData && userData.coins) ? Number(userData.coins) : 0;
+      const symEl = document.getElementById('desk-app-currency-sym');
+      const valEl = document.getElementById('desk-app-taka');
+      const pSymEl = document.getElementById('desk-profile-currency-sym');
+      const pValEl = document.getElementById('desk-profile-taka');
+      const dashValEl = document.getElementById('desk-dash-taka');
+
+      if (curr === 'COINS') {
+        if (symEl) symEl.innerText = '';
+        if (valEl) valEl.innerText = Math.round(userCoins).toLocaleString() + ' Coins';
+        if (pSymEl) pSymEl.innerText = '🪙';
+        if (pValEl) pValEl.innerText = Math.round(userCoins).toLocaleString();
+        if (dashValEl) dashValEl.innerText = Math.round(userCoins).toLocaleString() + ' Coins';
+      } else if (curr === 'USD') {
+        const usdStr = (userCoins / 600000).toFixed(2);
+        if (symEl) symEl.innerText = '$';
+        if (valEl) valEl.innerText = usdStr;
+        if (pSymEl) pSymEl.innerText = '$';
+        if (pValEl) pValEl.innerText = usdStr;
+        if (dashValEl) dashValEl.innerText = '$' + usdStr;
+      } else {
+        const bdtStr = (userCoins / 10000).toFixed(1);
+        if (symEl) symEl.innerText = '৳';
+        if (valEl) valEl.innerText = bdtStr;
+        if (pSymEl) pSymEl.innerText = '৳';
+        if (pValEl) pValEl.innerText = bdtStr;
+        if (dashValEl) dashValEl.innerText = bdtStr;
+      }
+    };
+
+    window.setAppCurrency = function(curr, e) {
+      if (e) e.stopPropagation();
+      window.currentCurrency = curr;
+      try {
+        localStorage.setItem('tr_currency', curr);
+      } catch (err) {}
+      window.syncCurrencyMenuUI();
+      if (window.renderOfferwallGGAllSections) window.renderOfferwallGGAllSections();
+      if (window.renderOfferwallGGSurveysSection) window.renderOfferwallGGSurveysSection();
+      if (window.renderOfferwallGGBrowsingTasks) window.renderOfferwallGGBrowsingTasks();
+      if (window.renderOfferwallGGLiveEarnings) window.renderOfferwallGGLiveEarnings();
+      if (window.renderStartedOffersGrid) window.renderStartedOffersGrid();
+    };
+
     window.offerwallGGState = {
       games: [...window.DEFAULT_OFFERWALL_GG_GAMES],
-      timewallGames: [...window.DEFAULT_TIMEWALL_GAMES],
+      timewallGames: [],
+      timewallTasks: [],
       cointoOffers: [...window.DEFAULT_COINTO_OFFERS],
       offers: [...window.DEFAULT_OFFERWALL_GG_OFFERS],
       surveys: [
@@ -5552,16 +5879,15 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.getOfferwallGGUrlForOffer = function(offer) {
       const uid = encodeURIComponent(currentUser?.uid || "guest");
-      if (offer && (String(offer.provider || "").toLowerCase() === "cointo" || String(offer.id || "").startsWith("cointo_"))) {
-        if (offer.clickUrl) {
-          let url = String(offer.clickUrl).replace(/\[USER_ID\]|\{USER_ID\}|\{subId\}|\{sub_id\}/gi, uid);
-          if (url.includes("/offer/Dv0Ou9/")) {
-            return `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${uid}`;
+      if (offer && String(offer.provider || "").toLowerCase() === "cointo") {
+        if (offer.clickUrl && typeof offer.clickUrl === "string") {
+          let cUrl = offer.clickUrl.replace(/\[USER_ID\]|\{USER_ID\}|\{subId\}|\{sub_id\}/gi, uid);
+          if (/[?&]sub_id=/i.test(cUrl)) {
+            cUrl = cUrl.replace(/([?&]sub_id=)[^&]*/i, "$1" + uid);
+          } else {
+            cUrl += (cUrl.includes("?") ? "&" : "?") + "sub_id=" + uid;
           }
-          if (/[?&]sub_id=/i.test(url)) {
-            return url.replace(/([?&]sub_id=)[^&]*/i, `$1${uid}`);
-          }
-          return url + (url.includes("?") ? "&" : "?") + `sub_id=${uid}`;
+          return cUrl;
         }
         return `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${uid}`;
       }
@@ -5578,7 +5904,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}?userId=${uid}`;
     };
 
-    // Fetch live offers, Cointo offers, games, surveys & traffic from /api/offers
+    // Fetch live offers, games, surveys & traffic from /api/offers
     window.fetchOfferwallGGLiveData = async function() {
       const uid = currentUser?.uid || "guest";
       let countryCode = "BD";
@@ -5597,9 +5923,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             const apiGames = Array.isArray(json.data.games) ? json.data.games : [];
             const apiSignups = Array.isArray(json.data.signups) ? json.data.signups : [];
             const apiAll = Array.isArray(json.data.allOffers) ? json.data.allOffers : [];
-            const apiCointo = Array.isArray(json.data.cointoOffers)
-              ? json.data.cointoOffers
-              : [...apiSignups, ...apiAll].filter(o => String(o.provider || "").toLowerCase() === "cointo");
             const apiSurveys = Array.isArray(json.data.surveys) ? json.data.surveys : [];
             const apiTraffic = Array.isArray(json.data.traffic) ? json.data.traffic : [];
 
@@ -5607,7 +5930,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             const seenGameNames = new Set();
             const mergedGames = [];
             for (const g of [...apiGames, ...window.DEFAULT_OFFERWALL_GG_GAMES]) {
-              if (String(g.provider || "").toLowerCase() === "cointo") continue;
               const k = String(g.name || "").toLowerCase().trim();
               if (k && !seenGameNames.has(k)) {
                 seenGameNames.add(k);
@@ -5616,24 +5938,26 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             }
             window.offerwallGGState.games = mergedGames;
 
-            // Merge live Cointo offers + fallback Cointo offers (PlataCash, Whale.io, SwedPlay, BoRewards, etc.)
+            // Separate live Cointo Media offers vs Offerwall.GG offers
+            const apiCointoRaw = Array.isArray(json.data.cointoOffers)
+              ? json.data.cointoOffers
+              : [...apiSignups, ...apiAll].filter(o => String(o.provider || "").toLowerCase() === "cointo");
             const seenCointoNames = new Set();
             const mergedCointo = [];
-            for (const co of [...apiCointo, ...window.DEFAULT_COINTO_OFFERS]) {
-              const k = String(co.name || co.title || "").toLowerCase().trim();
-              if (k && !seenCointoNames.has(k)) {
-                seenCointoNames.add(k);
+            for (const co of [...apiCointoRaw, ...window.DEFAULT_COINTO_OFFERS]) {
+              const ck = String(co.name || co.title || "").toLowerCase().trim();
+              if (ck && !seenCointoNames.has(ck)) {
+                seenCointoNames.add(ck);
                 mergedCointo.push({ ...co, provider: "cointo" });
               }
             }
             window.offerwallGGState.cointoOffers = mergedCointo;
 
-            // Merge live Offerwall.GG offers (excluding Cointo so there is no duplication)
+            // Merge live Offerwall.GG offers (excluding Cointo so they don't duplicate)
             const seenOfferNames = new Set();
             const mergedOffers = [];
-            const owOnlySignups = [...apiSignups, ...apiAll].filter(o => String(o.provider || "").toLowerCase() !== "cointo");
-            const nonGameApiOffers = owOnlySignups.filter(o => !o.isGame);
-            const gameApiOffers = owOnlySignups.filter(o => o.isGame);
+            const nonGameApiOffers = [...apiSignups, ...apiAll].filter(o => !o.isGame && String(o.provider || "").toLowerCase() !== "cointo");
+            const gameApiOffers = [...apiSignups, ...apiAll].filter(o => o.isGame && String(o.provider || "").toLowerCase() !== "cointo");
             for (const o of [...nonGameApiOffers, ...window.DEFAULT_OFFERWALL_GG_OFFERS, ...gameApiOffers]) {
               const k = String(o.name || "").toLowerCase().trim();
               if (k && !seenOfferNames.has(k)) {
@@ -5685,9 +6009,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const fallbackSvg = item.isGame ? SVG_GAME_BUBBLE : SVG_OFFER_WHALE;
       const imgSrc = item.image || item.iconImage || fallbackSvg;
       const takaVal = Number(item.rewardTaka) || 0;
-      const takaFormatted = takaVal >= 100
-        ? "৳" + Math.round(takaVal).toLocaleString()
-        : (takaVal > 0 ? "৳" + Number(takaVal.toFixed(1)) : "৳50+");
+      const coinsVal = Number(item.rewardCoins) || (takaVal * 10000);
+      const takaFormatted = coinsVal > 0
+        ? window.formatAppCurrencyFromCoins(coinsVal, { compact: true })
+        : window.formatAppCurrencyFromTaka(50, { compact: true }) + "+";
 
       const clickHandler = item.isFirestoreTask
         ? `handleOpenTask('${item.id}')`
@@ -5762,11 +6087,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return chkAndroid && chkIos && chkDesktop;
       }
 
-      // 1. Prepare Games List: Offerwall.GG Games first, then TimeWall Games at the end
-      const owGames = (window.offerwallGGState.games || []).map(g => ({ ...g, provider: g.provider || 'offerwall.gg' }));
-      const twGames = (window.offerwallGGState.timewallGames || []).map(g => ({ ...g, provider: 'timewall' }));
+      // 1. Prepare Games List: Offerwall.GG Games ONLY (TimeWall Games completely removed!)
+      const owGames = (window.offerwallGGState.games || []).filter(g => String(g.provider || '').toLowerCase() !== 'timewall').map(g => ({ ...g, provider: g.provider || 'offerwall.gg' }));
 
-      let gamesList = [...owGames, ...twGames].filter(g => {
+      let gamesList = [...owGames].filter(g => {
         if (!matchesDeviceFilter(g)) return false;
         if (searchQ && !String(g.name || '').toLowerCase().includes(searchQ)) return false;
         if (partnerFilter !== 'all' && String(g.provider || '').toLowerCase() !== partnerFilter) return false;
@@ -5775,9 +6099,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       // 2. Prepare Combined Offers & Sign-up Tasks List:
       //    (A) Admin Uploaded Tasks FIRST
-      //    (B) Cointo Media Live Offers SECOND (Replaces static TimeWall tasks!)
+      //    (B) Live Cointo Media Offers SECOND (TimeWall static tasks removed!)
       //    (C) Offerwall.GG Offers THIRD
       const unattemptedFirestoreTasks = (allAvailableTasks || []).filter(t => {
+        if (t.taskType === 'browsing') return false;
         if (userSubmissions && userSubmissions[t.id]) return false;
         const limit = t.workerLimit || 0;
         if (limit > 0 && adminTaskStatsMap && adminTaskStatsMap[t.id] && adminTaskStatsMap[t.id].approved >= limit) {
@@ -5800,13 +6125,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       unattemptedFirestoreTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
 
-      const cointoOffersList = (window.offerwallGGState.cointoOffers || []).map(c => ({
-        ...c,
+      const cointoOffersList = (window.offerwallGGState.cointoOffers || window.DEFAULT_COINTO_OFFERS || []).map(co => ({
+        ...co,
         provider: 'cointo',
         isFirestoreTask: false
       }));
 
-      const owOffersList = (window.offerwallGGState.offers || []).map(o => ({
+      const owOffersList = (window.offerwallGGState.offers || []).filter(o => String(o.provider || '').toLowerCase() !== 'timewall').map(o => ({
         ...o,
         provider: 'offerwall.gg',
         isFirestoreTask: false
@@ -5856,15 +6181,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (offersSection) offersSection.classList.remove('hidden');
         if (partnersSection) partnersSection.classList.remove('hidden');
 
-        // On mobile (<768px): show 6 Offerwall.GG games + 3 TimeWall games at the end (9 total) in Games, and 9 items in Apps & Offers so Admin Tasks + TimeWall Tasks are immediately visible!
+        // On mobile (<768px): show strictly 2 rows (6 cards = 2 lines of 3 cards) in Games and Apps & Offers, with zero TimeWall offers!
         const isMobileScreen = window.innerWidth < 768;
-        let visibleGames = gamesList;
-        if (isMobileScreen && gamesList.length > 9) {
-          const owFiltered = gamesList.filter(g => g.provider !== 'timewall');
-          const twFiltered = gamesList.filter(g => g.provider === 'timewall');
-          visibleGames = [...owFiltered.slice(0, 6), ...twFiltered.slice(0, 3)];
-        }
-        const visibleOffers = isMobileScreen ? combinedOffers.slice(0, 9) : combinedOffers;
+        const visibleGames = isMobileScreen ? gamesList.slice(0, 6) : gamesList;
+        const visibleOffers = isMobileScreen ? combinedOffers.slice(0, 6) : combinedOffers;
 
         if (gamesContainer) {
           gamesContainer.className = "grid grid-cols-3 gap-2.5 sm:gap-4 md:flex md:overflow-x-auto md:pb-2 md:pt-1 md:snap-x hide-scrollbar scroll-smooth";
@@ -6004,8 +6324,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.openOfferwallOfferModal = async function(offerId) {
       const allItems = [
         ...(window.offerwallGGState.games || []),
-        ...(window.offerwallGGState.timewallGames || []),
         ...(window.offerwallGGState.cointoOffers || []),
+        ...(window.DEFAULT_COINTO_OFFERS || []),
         ...(window.offerwallGGState.offers || [])
       ];
       const found = allItems.find(x => String(x.id) === String(offerId));
@@ -6037,9 +6357,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       const coins = Number(found.rewardCoins) || ((Number(found.rewardTaka) || 10) * 10000);
       const taka = Number(found.rewardTaka) || (coins / 10000);
-      const takaFormatted = taka >= 100 ? Math.round(taka).toLocaleString() : Number(taka.toFixed(2));
+      const modalRewardStr = window.formatAppCurrencyFromCoins(coins);
 
-      if (takaEl) takaEl.innerText = `৳ ${takaFormatted}`;
+      if (takaEl) takaEl.innerText = modalRewardStr;
       if (devicesEl) devicesEl.innerHTML = buildDeviceIconsPillHtml(found.devices);
 
       // Check if user already started this offer
@@ -6060,7 +6380,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const provLower = String(found.provider || '').toLowerCase();
       if (providerBadgeEl) {
         if (provLower === 'cointo') {
-          providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px] font-black">S</span><span>Cointo Media</span>`;
+          providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px] font-black">C</span><span>Cointo Media</span>`;
         } else if (provLower === 'timewall') {
           providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px]">🕒</span><span>TimeWall</span>`;
         } else {
@@ -6199,7 +6519,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 </div>
               </div>
             </div>
-            <span class="font-extrabold text-[#f97316] text-[15px] sm:text-[17px] shrink-0 ml-2">৳ ${taka.toFixed(1)}</span>
+            <span class="font-extrabold text-[#f97316] text-[15px] sm:text-[17px] shrink-0 ml-2">${window.formatAppCurrencyFromTaka(taka)}</span>
           </div>
         `;
       }).join('');
@@ -6240,43 +6560,73 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       window.showRjErrorToast(`Your Challenge Stats — Current Balance: ৳${myTaka} | Total Referrals: ${myRefs}`);
     };
 
-    // Render Browsing & Traffic Tasks (Offerwall.GG Browsing Tasks + TimeWall Clicks + 500 Coin Monetag Direct Link Tasks)
+    // Global State for Browsing Tasks & Admin Browsing Analytics
+    window.customBrowsingTasks = [];
+    window.deletedDefaultBrowsingIds = JSON.parse(localStorage.getItem('tr_deleted_default_browsing') || '[]');
+    window.adminBrowsingStatsMap = {};
+    window.adminBrowsingGlobalStats = { totalClicks: 0, totalCoins: 0, todayClicks: 0, todayCoins: 0, userSurfCoinsSum: 0 };
+
+    window.getAllActiveBrowsingTasks = function() {
+      const uid = encodeURIComponent(currentUser?.uid || 'guest');
+      const offerwallTrafficUrl = `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}?userId=${uid}`;
+
+      // Built-in Browsing Tasks (TimeWall removed!)
+      const defaultBrowsing = [
+        { id: 'ow_br_1', provider: 'Offerwall.GG', title: 'Offerwall.GG Traffic & Browsing Task #1 — Visit Partner Site', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: offerwallTrafficUrl, isDefaultBrowsing: true },
+        { id: 'mt_br_1', provider: 'Sponsored', title: 'Sponsored Direct Link Browsing Task #1 — Visit & Engage', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: MONETAG_DIRECT_AD_LINK, isDefaultBrowsing: true },
+        { id: 'mt_br_2', provider: 'Sponsored', title: 'Sponsored Direct Link Browsing Task #2 — Instant 500 Coins', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: MONETAG_DIRECT_AD_LINK, isDefaultBrowsing: true },
+        { id: 'mt_br_3', provider: 'Sponsored', title: 'Sponsored Direct Link Browsing Task #3 — Quick Web Visit', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: MONETAG_DIRECT_AD_LINK, isDefaultBrowsing: true },
+        { id: 'ow_br_2', provider: 'Offerwall.GG', title: 'Offerwall.GG Sponsored Web Visit — Frameless Browsing', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: offerwallTrafficUrl, isDefaultBrowsing: true }
+      ].filter(d => !(window.deletedDefaultBrowsingIds || []).includes(d.id));
+
+      const customList = (window.customBrowsingTasks || []).map(t => ({
+        id: t.id,
+        provider: t.provider || t.category || 'Sponsored',
+        title: t.title || 'Sponsored Web Visit',
+        durationSeconds: Number(t.durationSeconds) || 15,
+        rewardCoins: Number(t.rewardCoins) || 500,
+        rewardTaka: Number(((Number(t.rewardCoins) || 500) / 10000).toFixed(4)),
+        clickUrl: t.link || t.clickUrl || MONETAG_DIRECT_AD_LINK,
+        isDefaultBrowsing: false,
+        isCustomFirestoreBrowsing: true
+      }));
+
+      const apiTraffic = Array.isArray(window.offerwallGGState.traffic)
+        ? window.offerwallGGState.traffic.filter(t => !(window.deletedDefaultBrowsingIds || []).includes(String(t.id))).map(t => ({
+            ...t,
+            provider: t.provider || 'Offerwall.GG',
+            rewardCoins: Number(t.rewardCoins) > 0 ? Number(t.rewardCoins) : 500,
+            isDefaultBrowsing: true
+          }))
+        : [];
+
+      return [...customList, ...apiTraffic, ...defaultBrowsing];
+    };
+
+    // Render Browsing & Traffic Tasks
     window.renderOfferwallGGBrowsingTasks = function() {
       const container = document.getElementById('rj-browsing-tasks-list');
       if (!container) return;
 
-      const uid = encodeURIComponent(currentUser?.uid || 'guest');
-      const offerwallTrafficUrl = `https://offerwall.gg/wall/${window.OFFERWALL_GG_PUBLIC_KEY}?userId=${uid}`;
-      const timewallClicksUrl = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}&tab=clicks`;
+      const tasks = window.getAllActiveBrowsingTasks();
+      const countBadge = document.getElementById('admin-browsing-tasks-count');
+      if (countBadge) countBadge.innerText = String(tasks.length);
 
-      // Offerwall browsing tasks + Monetag Direct Link tasks with exact 500 Coins reward
-      const defaultBrowsing = [
-        { id: 'ow_br_1', provider: 'Offerwall.GG', title: 'Offerwall.GG Traffic & Browsing Task #1 — Visit Partner Site', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: offerwallTrafficUrl },
-        { id: 'tw_br_1', provider: 'TimeWall', title: 'TimeWall PTC & Browsing Clicks — Instant Credit', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: timewallClicksUrl },
-        { id: 'mt_br_1', provider: 'Sponsored', title: 'Sponsored Direct Link Browsing Task #1 — Visit & Engage', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: MONETAG_DIRECT_AD_LINK },
-        { id: 'mt_br_2', provider: 'Sponsored', title: 'Sponsored Direct Link Browsing Task #2 — Instant 500 Coins', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: MONETAG_DIRECT_AD_LINK },
-        { id: 'mt_br_3', provider: 'Sponsored', title: 'Sponsored Direct Link Browsing Task #3 — Quick Web Visit', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: MONETAG_DIRECT_AD_LINK },
-        { id: 'ow_br_2', provider: 'Offerwall.GG', title: 'Offerwall.GG Sponsored Web Visit — Frameless Browsing', durationSeconds: 15, rewardCoins: 500, rewardTaka: 0.05, clickUrl: offerwallTrafficUrl }
-      ];
-
-      const apiTraffic = Array.isArray(window.offerwallGGState.traffic)
-        ? window.offerwallGGState.traffic.map(t => ({
-            ...t,
-            provider: t.provider || 'Offerwall.GG',
-            rewardCoins: Number(t.rewardCoins) > 0 ? Number(t.rewardCoins) : 500
-          }))
-        : [];
-
-      const tasks = apiTraffic.length > 0 ? [...apiTraffic, ...defaultBrowsing] : defaultBrowsing;
+      if (tasks.length === 0) {
+        container.innerHTML = `<div class="card p-8 text-center text-xs text-slate-400">বর্তমানে কোনো ব্রাউজিং টাস্ক অ্যাক্টিভ নেই।</div>`;
+        return;
+      }
 
       container.innerHTML = tasks.map(t => {
         const sec = Number(t.durationSeconds) || 15;
         const coins = Number(t.rewardCoins) || 500;
-        const taka = (coins / 10000).toFixed(2);
-        const provider = t.provider || 'Offerwall.GG';
-        const url = (t.clickUrl || MONETAG_DIRECT_AD_LINK).replace(/'/g, "\\'");
+        const formattedPrice = window.formatAppCurrencyFromCoins(coins, { exactDecimals: 2 });
+        const provider = t.provider || 'Sponsored';
+        const url = String(t.clickUrl || MONETAG_DIRECT_AD_LINK).replace(/'/g, "\\'");
+        const safeId = String(t.id || 'br_task').replace(/'/g, "\\'");
+        const safeTitle = String(t.title || 'Browsing Task').replace(/'/g, "\\'");
         return `
-          <div onclick="startSurfAd('${url}', ${sec}, ${coins})" class="card p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl flex items-center justify-between gap-4 cursor-pointer hover:border-orange-400 transition">
+          <div onclick="startSurfAd('${url}', ${sec}, ${coins}, '${safeId}', '${safeTitle}')" class="card p-4 bg-[var(--surface)] border border-[var(--border)] rounded-2xl flex items-center justify-between gap-4 cursor-pointer hover:border-orange-400 transition">
             <div class="flex items-start gap-3.5 min-w-0">
               <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-lg shrink-0">
                 🌐
@@ -6287,7 +6637,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   <h4 class="font-bold text-xs sm:text-sm text-[var(--text)] leading-snug truncate">${t.title}</h4>
                 </div>
                 <div class="flex items-center gap-3 text-[11px] font-bold text-slate-400 mt-1.5 flex-wrap">
-                  <span class="text-[#f97316] font-extrabold text-xs flex items-center gap-1">🪙 ${coins.toLocaleString()} Coins <span class="text-[10px] text-slate-400 font-semibold">(৳${taka})</span></span>
+                  <span class="text-[#f97316] font-extrabold text-xs flex items-center gap-1">🪙 ${coins.toLocaleString()} Coins <span class="text-[10px] text-slate-400 font-semibold">(${formattedPrice})</span></span>
                   <span>🕒 ${sec}s</span>
                   <span>📌 Frameless</span>
                 </div>
@@ -6325,7 +6675,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               </div>
             </div>
             <div class="text-right shrink-0">
-              <div class="font-extrabold text-sm text-[#f97316]">৳${taka >= 100 ? Math.round(taka).toLocaleString() : taka.toFixed(1)}</div>
+              <div class="font-extrabold text-sm text-[#f97316]">${window.formatAppCurrencyFromTaka(taka)}</div>
               <div class="text-[11px] text-slate-400 mt-1">${times[idx % times.length]}</div>
             </div>
           </div>
@@ -6574,6 +6924,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
     // Trigger IP country detection automatically on load
+    if (window.syncCurrencyMenuUI) window.syncCurrencyMenuUI();
+    window.addEventListener('resize', () => {
+      if (window.renderOfferwallGGAllSections) window.renderOfferwallGGAllSections();
+    });
     window.detectUserCountryByIP(false);
     if (window.renderOfferwallGGAllSections) window.renderOfferwallGGAllSections();
     if (window.renderOfferwallGGSurveysSection) window.renderOfferwallGGSurveysSection();
@@ -6630,8 +6984,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       if (cat === 'p2p') {
         // Activate P2P Tab
-        if (cashBtn) cashBtn.className = "w-52 py-3.5 px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer";
-        if (p2pBtn) p2pBtn.className = "w-52 py-3.5 px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 border border-orange-200/80 dark:border-orange-800/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] shadow-2xs transition cursor-pointer";
+        if (cashBtn) cashBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer";
+        if (p2pBtn) p2pBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 border border-orange-200/80 dark:border-orange-800/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] shadow-2xs transition cursor-pointer";
 
         if (mobCashBtn) mobCashBtn.className = "py-2.5 rounded-xl font-bold text-xs text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1.5 cursor-pointer";
         if (mobP2pBtn) mobP2pBtn.className = "py-2.5 rounded-xl font-black text-xs transition bg-[#fff3eb] text-[#f97316] shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
@@ -6665,8 +7019,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (window.loadP2PTransferSettings) window.loadP2PTransferSettings();
       } else {
         // Activate Cash Tab
-        if (cashBtn) cashBtn.className = "w-52 py-3.5 px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] transition cursor-pointer";
-        if (p2pBtn) p2pBtn.className = "w-52 py-3.5 px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer";
+        if (cashBtn) cashBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] transition cursor-pointer";
+        if (p2pBtn) p2pBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer";
 
         if (mobCashBtn) mobCashBtn.className = "py-2.5 rounded-xl font-black text-xs transition bg-[#fff3eb] text-[#f97316] shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
         if (mobP2pBtn) mobP2pBtn.className = "py-2.5 rounded-xl font-bold text-xs text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1.5 cursor-pointer";
@@ -6699,8 +7053,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const cashBtn = document.getElementById('rj-wtab-cash');
       const p2pBtn = document.getElementById('rj-wtab-p2p');
       if (cashBtn && p2pBtn) {
-        cashBtn.className = "w-52 py-3.5 px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] transition cursor-pointer";
-        p2pBtn.className = "w-52 py-3.5 px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer";
+        cashBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] transition cursor-pointer";
+        p2pBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer";
       }
     };
 
@@ -7151,9 +7505,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       document.documentElement.classList.add('dark');
     }
 
-    // Live Surf Countdown Timer
+    // Live Surf Countdown Timer (Tracks Per-Task Clicks & User Earnings in Firestore)
     window.surfTimerInterval = null;
-    window.startSurfAd = function(adUrl, seconds, rewardCoins) {
+    window.startSurfAd = function(adUrl, seconds, rewardCoins, browsingTaskId = 'ow_br_1', browsingTaskTitle = 'Browsing & Traffic Task') {
       if (!currentUser) {
         alert("বিজ্ঞাপন দেখে কয়েন পেতে অনুগ্রহ করে প্রথমে সাইন-ইন করুন!");
         return;
@@ -7165,7 +7519,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const secEl = document.getElementById('desk-surf-seconds');
       if (banner) banner.classList.remove('hidden');
 
-      let remaining = seconds;
+      let remaining = Number(seconds) || 15;
+      const coinsToCredit = Number(rewardCoins) || 500;
       if (secEl) secEl.innerText = remaining;
 
       clearInterval(window.surfTimerInterval);
@@ -7180,13 +7535,34 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           try {
             const uRef = doc(db, "users", currentUser.uid);
             await updateDoc(uRef, {
-              coins: increment(rewardCoins),
-              totalSurfEarnings: increment(rewardCoins)
+              coins: increment(coinsToCredit),
+              totalSurfEarnings: increment(coinsToCredit)
             });
+
+            // Log click & earning to Firestore submissions collection (submissionType: 'browsing') so Admin Panel tracks clicks & earnings per task
+            try {
+              const nowObj = new Date();
+              const timeStr = nowObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+              await addDoc(collection(db, "submissions"), {
+                taskId: browsingTaskId || 'ow_br_1',
+                taskTitle: browsingTaskTitle || 'Browsing Task',
+                userId: currentUser.uid,
+                userName: userData?.name || currentUser?.displayName || 'User',
+                userEmail: userData?.email || currentUser?.email || '',
+                rewardCoins: coinsToCredit,
+                rewardTaka: Number((coinsToCredit / 10000).toFixed(4)),
+                status: 'Approved',
+                submissionType: 'browsing',
+                submittedTime: timeStr,
+                createdAt: serverTimestamp()
+              });
+            } catch (logErr) {
+              console.warn("Browsing click log notice:", logErr);
+            }
 
             playCoinChime();
             confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
-            alert(`অভিনন্দন! আপনি বিজ্ঞাপনটি সম্পন্ন করায় ${(rewardCoins/10000).toFixed(2)} টাকা পেয়েছেন!`);
+            alert(`অভিনন্দন! আপনি ব্রাউজিং টাস্কটি সম্পন্ন করায় ${window.formatAppCurrencyFromCoins(coinsToCredit, { exactDecimals: 2 })} (${coinsToCredit.toLocaleString()} Coins) পেয়েছেন!`);
           } catch (e) {
             console.error("Surf reward error:", e);
             alert("কয়েন আপডেট হতে সাময়িক সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
@@ -7224,6 +7600,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const dAdminBtn = document.getElementById('desk-admin-btn');
 
       if (dTaka) dTaka.innerText = taka;
+      if (typeof window.syncCurrencyMenuUI === 'function') window.syncCurrencyMenuUI();
       if (dAvatar && user.photoURL) dAvatar.src = user.photoURL;
       if (dName) dName.innerText = (uData?.name || user.displayName || 'User');
 
@@ -7246,6 +7623,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (pName) pName.innerText = (uData?.name || user.displayName || 'User');
       if (pEmail) pEmail.innerText = user.email || 'N/A';
       if (pTaka) pTaka.innerText = taka;
+      if (typeof window.syncCurrencyMenuUI === 'function') window.syncCurrencyMenuUI();
       window.fullOfferTokenUid = user.uid || '';
       if (pUid && user.uid) {
         pUid.innerText = user.uid.length > 8 ? (user.uid.slice(0, 3) + '......' + user.uid.slice(-3)) : user.uid;
@@ -7677,6 +8055,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     function rebuildUserSubmissionsMap() {
       const nextMap = {};
       manualSubmissionsList.forEach(s => {
+        if (s.submissionType === 'browsing') return;
         if (s.taskId) nextMap[s.taskId] = s.status;
       });
       userSubmissions = nextMap;
@@ -7892,17 +8271,43 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     }
 
+    function listenBrowsingConfig() {
+      try {
+        onSnapshot(doc(db, "transfer_settings", "browsing_config"), (snap) => {
+          if (snap.exists()) {
+            const data = snap.data();
+            if (Array.isArray(data.deletedDefaultIds)) {
+              window.deletedDefaultBrowsingIds = data.deletedDefaultIds;
+              try {
+                localStorage.setItem('tr_deleted_default_browsing', JSON.stringify(window.deletedDefaultBrowsingIds));
+              } catch (e) {}
+            }
+          }
+          if (window.renderOfferwallGGBrowsingTasks) window.renderOfferwallGGBrowsingTasks();
+          if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
+        }, (err) => {
+          console.warn("Browsing config listen notice:", err);
+        });
+      } catch (e) {}
+    }
+
     function listenTasks() {
+      listenBrowsingConfig();
       onSnapshot(collection(db, "tasks"), (snapshot) => {
         allAvailableTasks = [];
+        window.customBrowsingTasks = [];
         const adminContainer = document.getElementById('admin-task-list');
         if (adminContainer) adminContainer.innerHTML = '';
 
         snapshot.forEach((docItem) => {
-          allAvailableTasks.push({ id: docItem.id, ...docItem.data() });
+          const t = docItem.data();
+          if (t.taskType === 'browsing') {
+            window.customBrowsingTasks.push({ id: docItem.id, ...t });
+            return;
+          }
+          allAvailableTasks.push({ id: docItem.id, ...t });
 
           if (adminContainer) {
-            const t = docItem.data();
             adminContainer.innerHTML += `
               <div class="bg-slate-50 border border-slate-200 p-2.5 rounded-xl flex items-center justify-between">
                 <div class="flex items-center gap-2">
@@ -7922,6 +8327,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         });
 
         renderOfferTabTasks();
+        if (window.renderOfferwallGGBrowsingTasks) window.renderOfferwallGGBrowsingTasks();
+        if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
       });
     }
 
@@ -8790,10 +9197,17 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (uCount) uCount.innerText = snap.size.toLocaleString();
         
         adminAllUsersList = [];
+        let userSurfCoinsSum = 0;
         snap.forEach(d => {
-          adminAllUsersList.push({ id: d.id, ...d.data() });
+          const u = d.data();
+          userSurfCoinsSum += (Number(u.totalSurfEarnings) || 0);
+          adminAllUsersList.push({ id: d.id, ...u });
         });
+        if (window.adminBrowsingGlobalStats) {
+          window.adminBrowsingGlobalStats.userSurfCoinsSum = userSurfCoinsSum;
+        }
         renderAdminUsersTable(adminAllUsersList);
+        if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
       });
 
       // 2. Total Paid & Pending Amounts Listener
@@ -8814,15 +9228,20 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (pendingEl) pendingEl.innerText = "৳" + totalPending.toLocaleString();
       });
 
-      // 3. Submissions Listener for Graphs & Per-Task Stats
+      // 3. Submissions Listener for Graphs, Per-Task Stats & Browsing Clicks/Earnings
       onSnapshot(collection(db, "submissions"), (snap) => {
         adminTaskStatsMap = {};
         adminDailySubmissionsMap = {};
+        window.adminBrowsingStatsMap = {};
         
         let todaySubsCount = 0;
         let todayApprovedCount = 0;
         let todayRejectedCount = 0;
         let todayRewardsSum = 0;
+        let totalBrClicks = 0;
+        let totalBrCoins = 0;
+        let todayBrClicks = 0;
+        let todayBrCoins = 0;
         const activeUsersTodaySet = new Set();
 
         const todayDateStr = new Date().toISOString().split('T')[0];
@@ -8831,7 +9250,33 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           const sub = docItem.data();
           const tId = sub.taskId;
 
-          // Per-Task Stat Accumulation
+          let subDateStr = '';
+          if (sub.createdAt && sub.createdAt.seconds) {
+            subDateStr = new Date(sub.createdAt.seconds * 1000).toISOString().split('T')[0];
+          } else {
+            subDateStr = todayDateStr;
+          }
+
+          if (sub.submissionType === 'browsing') {
+            const c = Number(sub.rewardCoins) || ((Number(sub.rewardTaka) || 0.05) * 10000);
+            if (!window.adminBrowsingStatsMap[tId]) {
+              window.adminBrowsingStatsMap[tId] = { clicks: 0, coins: 0, todayClicks: 0, todayCoins: 0, title: sub.taskTitle || 'Browsing Task' };
+            }
+            window.adminBrowsingStatsMap[tId].clicks++;
+            window.adminBrowsingStatsMap[tId].coins += c;
+            totalBrClicks++;
+            totalBrCoins += c;
+            if (subDateStr === todayDateStr) {
+              window.adminBrowsingStatsMap[tId].todayClicks++;
+              window.adminBrowsingStatsMap[tId].todayCoins += c;
+              todayBrClicks++;
+              todayBrCoins += c;
+              if (sub.userId) activeUsersTodaySet.add(sub.userId);
+            }
+            return;
+          }
+
+          // Per-Task Stat Accumulation (Manual Proof Tasks)
           if (!adminTaskStatsMap[tId]) {
             adminTaskStatsMap[tId] = { approved: 0, rejected: 0, pending: 0, total: 0, taskTitle: sub.taskTitle || 'Task' };
           }
@@ -8839,14 +9284,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           if (sub.status === 'Approved') adminTaskStatsMap[tId].approved++;
           else if (sub.status === 'Rejected') adminTaskStatsMap[tId].rejected++;
           else adminTaskStatsMap[tId].pending++;
-
-          // Date Matching
-          let subDateStr = '';
-          if (sub.createdAt && sub.createdAt.seconds) {
-            subDateStr = new Date(sub.createdAt.seconds * 1000).toISOString().split('T')[0];
-          } else {
-            subDateStr = todayDateStr;
-          }
 
           adminDailySubmissionsMap[subDateStr] = (adminDailySubmissionsMap[subDateStr] || 0) + 1;
 
@@ -8884,8 +9321,17 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         // Render Overview Task Breakdown
         renderOverviewTaskBreakdown();
 
-        // Re-render admin manage tasks list so limits & stats update live!
+        window.adminBrowsingGlobalStats = {
+          ...(window.adminBrowsingGlobalStats || {}),
+          totalClicks: totalBrClicks,
+          totalCoins: totalBrCoins,
+          todayClicks: todayBrClicks,
+          todayCoins: todayBrCoins
+        };
+
+        // Re-render admin manage tasks list & browsing manager so limits & stats update live!
         renderAdminManageTasksList();
+        if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
         renderOfferTabTasks();
       });
     }
@@ -9615,9 +10061,187 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     };
 
+    // ================= ADMIN BROWSING TASKS MANAGER FUNCTIONS =================
+    window.renderAdminBrowsingTasks = function() {
+      const box = document.getElementById('admin-browsing-tasks-list');
+      const tasks = window.getAllActiveBrowsingTasks ? window.getAllActiveBrowsingTasks() : [];
+      const countBadge = document.getElementById('admin-browsing-tasks-count');
+      if (countBadge) countBadge.innerText = String(tasks.length);
+
+      const gStats = window.adminBrowsingGlobalStats || { totalClicks: 0, totalCoins: 0, todayClicks: 0, todayCoins: 0, userSurfCoinsSum: 0 };
+      const effectiveTotalCoins = Math.max(gStats.totalCoins || 0, gStats.userSurfCoinsSum || 0);
+      const effectiveTotalClicks = Math.max(gStats.totalClicks || 0, Math.round(effectiveTotalCoins / 500));
+
+      const elActive = document.getElementById('admin-br-stat-active');
+      const elClicks = document.getElementById('admin-br-stat-clicks');
+      const elEarned = document.getElementById('admin-br-stat-earned');
+      const elEarnedCoins = document.getElementById('admin-br-stat-earned-coins');
+      const elToday = document.getElementById('admin-br-stat-today');
+
+      if (elActive) elActive.innerText = `${tasks.length}টি`;
+      if (elClicks) elClicks.innerText = `${effectiveTotalClicks.toLocaleString()}টি ক্লিক`;
+      if (elEarned) elEarned.innerText = `৳${(effectiveTotalCoins / 10000).toFixed(2)}`;
+      if (elEarnedCoins) elEarnedCoins.innerText = `${effectiveTotalCoins.toLocaleString()} Coins`;
+      if (elToday) elToday.innerText = `${(gStats.todayClicks || 0).toLocaleString()}টি (৳${((gStats.todayCoins || 0) / 10000).toFixed(2)})`;
+
+      if (!box) return;
+      if (tasks.length === 0) {
+        box.innerHTML = `<div class="text-center py-8 bg-slate-50 border border-dashed border-slate-200 rounded-2xl text-slate-400 font-bold">কোনো ব্রাউজিং টাস্ক নেই। ওপরের ফর্ম থেকে নতুন টাস্ক যোগ করুন অথবা ডিফল্ট টাস্ক রিস্টোর করুন।</div>`;
+        return;
+      }
+
+      const map = window.adminBrowsingStatsMap || {};
+      box.innerHTML = tasks.map(t => {
+        const st = map[t.id] || { clicks: 0, coins: 0, todayClicks: 0, todayCoins: 0 };
+        const coins = Number(t.rewardCoins) || 500;
+        const taka = (coins / 10000).toFixed(2);
+        const sec = Number(t.durationSeconds) || 15;
+        const earnedTaka = (st.coins / 10000).toFixed(2);
+        const safeId = String(t.id).replace(/'/g, "\\'");
+        const isDefault = !!t.isDefaultBrowsing;
+
+        return `
+          <div class="bg-slate-50 hover:bg-white border border-slate-200 p-3.5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition shadow-2xs">
+            <div class="flex items-start gap-3 min-w-0">
+              <div class="w-10 h-10 rounded-xl bg-orange-100 text-[#f97316] flex items-center justify-center text-lg shrink-0 font-bold">🌐</div>
+              <div class="min-w-0 space-y-1">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="text-[10px] font-black px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 border border-emerald-200">${t.provider || 'Sponsored'}</span>
+                  ${isDefault ? `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-600">Built-in</span>` : `<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-700">Custom Admin</span>`}
+                  <strong class="text-xs font-black text-slate-900 truncate">${t.title}</strong>
+                </div>
+                <div class="text-[11px] text-slate-500 font-semibold flex items-center gap-3 flex-wrap">
+                  <span>রিওয়ার্ড: <strong class="text-[#f97316]">${coins.toLocaleString()} Coins (৳${taka})</strong></span>
+                  <span>টাইমার: <strong class="text-slate-700">${sec}s</strong></span>
+                  <a href="${t.clickUrl}" target="_blank" class="text-blue-600 hover:underline truncate max-w-[200px]">🔗 লিংক দেখুন</a>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200/70 shrink-0">
+              <div class="flex items-center gap-2 text-center">
+                <div class="bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-xl">
+                  <span class="text-[9px] text-blue-500 font-bold block uppercase">মোট ক্লিক</span>
+                  <strong class="text-xs font-black text-blue-700">${st.clicks}টি</strong>
+                </div>
+                <div class="bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-xl">
+                  <span class="text-[9px] text-emerald-600 font-bold block uppercase">ইউজার আর্নিং</span>
+                  <strong class="text-xs font-black text-emerald-700">৳${earnedTaka}</strong>
+                </div>
+              </div>
+              <button type="button" onclick="adminDeleteBrowsingTask('${safeId}', ${isDefault})" class="bg-red-50 hover:bg-red-500 text-red-600 hover:text-white border border-red-200 px-3 py-2 rounded-xl text-xs font-extrabold transition cursor-pointer shrink-0">
+                🗑️ রিমুভ
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.adminPublishBrowsingTask = async function() {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) {
+        alert("শুধুমাত্র মাস্টার অ্যাডমিন নতুন ব্রাউজিং টাস্ক যোগ করতে পারবেন!");
+        return;
+      }
+      const titleEl = document.getElementById('admin-br-title');
+      const provEl = document.getElementById('admin-br-provider');
+      const urlEl = document.getElementById('admin-br-url');
+      const secEl = document.getElementById('admin-br-seconds');
+      const coinsEl = document.getElementById('admin-br-coins');
+      const btn = document.getElementById('admin-br-publish-btn');
+
+      const title = (titleEl?.value || '').trim();
+      const provider = (provEl?.value || 'Sponsored').trim();
+      const url = (urlEl?.value || '').trim();
+      const durationSeconds = Math.max(5, parseInt(secEl?.value || '15', 10) || 15);
+      const rewardCoins = Math.max(100, parseInt(coinsEl?.value || '500', 10) || 500);
+      const rewardTaka = Number((rewardCoins / 10000).toFixed(4));
+
+      if (!title || !url) {
+        alert("অনুগ্রহ করে ব্রাউজিং টাস্কের নাম (Title) এবং টার্গেট লিংক (URL) দিন!");
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = "পাবলিশ হচ্ছে...";
+      }
+
+      try {
+        await addDoc(collection(db, "tasks"), {
+          title,
+          provider,
+          category: provider,
+          link: url,
+          clickUrl: url,
+          durationSeconds,
+          rewardCoins,
+          rewardTaka,
+          taskType: 'browsing',
+          createdAt: serverTimestamp()
+        });
+        if (titleEl) titleEl.value = '';
+        if (urlEl) urlEl.value = '';
+        if (secEl) secEl.value = '15';
+        if (coinsEl) coinsEl.value = '500';
+        alert("✅ নতুন ব্রাউজিং টাস্ক সফলভাবে যোগ হয়েছে!");
+      } catch (err) {
+        alert("ব্রাউজিং টাস্ক যোগ করতে সমস্যা: " + err.message);
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerText = "➕ নতুন ব্রাউজিং টাস্ক যোগ করুন";
+        }
+      }
+    };
+
+    window.adminDeleteBrowsingTask = async function(taskId, isDefault) {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      if (!confirm("আপনি কি নিশ্চিতভাবে এই ব্রাউজিং টাস্কটি ডিলিট/রিমুভ করতে চান?")) return;
+
+      try {
+        if (isDefault) {
+          const nextDeleted = Array.from(new Set([...(window.deletedDefaultBrowsingIds || []), String(taskId)]));
+          window.deletedDefaultBrowsingIds = nextDeleted;
+          try {
+            localStorage.setItem('tr_deleted_default_browsing', JSON.stringify(nextDeleted));
+          } catch (e) {}
+          await setDoc(doc(db, "transfer_settings", "browsing_config"), {
+            deletedDefaultIds: nextDeleted,
+            updatedAt: serverTimestamp()
+          }, { merge: true });
+        } else {
+          await deleteDoc(doc(db, "tasks", String(taskId)));
+        }
+        if (window.renderOfferwallGGBrowsingTasks) window.renderOfferwallGGBrowsingTasks();
+        if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
+      } catch (err) {
+        alert("টাস্ক রিমুভ করতে সমস্যা: " + err.message);
+      }
+    };
+
+    window.restoreDefaultBrowsingTasks = async function() {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      try {
+        window.deletedDefaultBrowsingIds = [];
+        try {
+          localStorage.removeItem('tr_deleted_default_browsing');
+        } catch (e) {}
+        await setDoc(doc(db, "transfer_settings", "browsing_config"), {
+          deletedDefaultIds: [],
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+        if (window.renderOfferwallGGBrowsingTasks) window.renderOfferwallGGBrowsingTasks();
+        if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
+        alert("✅ ডিফল্ট ব্রাউজিং টাস্কগুলো পুনরায় চালু করা হয়েছে!");
+      } catch (err) {
+        alert("রিস্টোর করতে সমস্যা: " + err.message);
+      }
+    };
+
     // ================= ADMIN TABS SWITCHER =================
     window.switchAdminTab = function(tab) {
-      const allViews = ['overview', 'proofs', 'add', 'manage', 'withdraw', 'users', 'transfers'];
+      const allViews = ['overview', 'proofs', 'add', 'manage', 'browsing', 'withdraw', 'users', 'transfers'];
       allViews.forEach(v => {
         document.getElementById(`admin-view-${v}`)?.classList.add('hidden');
       });
@@ -9642,6 +10266,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         loadAdminSubmissions();
       } else if (tab === 'manage') {
         renderAdminManageTasksList();
+      } else if (tab === 'browsing') {
+        if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
       } else if (tab === 'withdraw') {
         loadAdminWithdrawals();
       } else if (tab === 'transfers') {
