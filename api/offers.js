@@ -14,7 +14,8 @@ const COINTO_COINS_PER_USD = 600000;
 
 // Gaintwall Integration Credentials ($1.00 USD = 600,000 Coins, Placement Rate = 6,000)
 const GAINTWALL_API_KEY = process.env.GAINTWALL_API_KEY || "VaWkdoWdrn57UEbbm0Fdt2oCAJYXUbRn";
-const GAINTWALL_API_SECRET = process.env.GAINTWALL_API_SECRET || "kBrbjlXlnYfXvzmSwua1J0rr2RfIxcIe";
+const GAINTWALL_API_SECRET = process.env.GAINTWALL_API_SECRET || "CV0WXjgiqcoPQ6A1AblP5O6KMgXQe8WA";
+const GAINTWALL_POSTBACK_SECRET = process.env.GAINTWALL_POSTBACK_SECRET || "kBrbjlXlnYfXvzmSwua1J0rr2RfIxcIe";
 const GAINTWALL_API_BASE = "https://gaintwall.com/api/v1/offers";
 const GAINTWALL_COINS_PER_USD = 600000;
 
@@ -367,10 +368,10 @@ function normalizeGaintwallOffer(offer, userId, idx = 0) {
 }
 
 async function fetchGaintwallOffers(userId, country) {
-  const fetchFromGwUrl = async (queryObj) => {
+  const fetchWithSecret = async (secretKey, queryObj) => {
     const url = new URL(GAINTWALL_API_BASE);
     url.searchParams.set("apiKey", GAINTWALL_API_KEY);
-    url.searchParams.set("apiSecret", GAINTWALL_API_SECRET);
+    url.searchParams.set("apiSecret", secretKey);
     url.searchParams.set("userId", userId || "guest");
     url.searchParams.set("limit", "100");
     Object.entries(queryObj).forEach(([k, v]) => {
@@ -391,13 +392,24 @@ async function fetchGaintwallOffers(userId, country) {
         signal: controller.signal
       });
       clearTimeout(timer);
-      if (!res.ok) return [];
+      if (!res.ok) return null;
       const data = await res.json();
       return Array.isArray(data?.data) ? data.data : (Array.isArray(data?.offers) ? data.offers : []);
     } catch (err) {
       clearTimeout(timer);
-      return [];
+      return null;
     }
+  };
+
+  const fetchFromGwUrl = async (queryObj) => {
+    let list = await fetchWithSecret(GAINTWALL_API_SECRET, queryObj);
+    if ((!list || list.length === 0) && GAINTWALL_POSTBACK_SECRET !== GAINTWALL_API_SECRET) {
+      const fallbackList = await fetchWithSecret(GAINTWALL_POSTBACK_SECRET, queryObj);
+      if (Array.isArray(fallbackList) && fallbackList.length > 0) {
+        list = fallbackList;
+      }
+    }
+    return Array.isArray(list) ? list : [];
   };
 
   try {
