@@ -12,6 +12,12 @@ const COINTO_SECRET_KEY = process.env.COINTO_SECRET_KEY || "Nd8Ds2Jo9Aq2Hc7";
 const COINTO_API_BASE = "https://cointomedia.com/api/v1/offers";
 const COINTO_COINS_PER_USD = 600000;
 
+// Gaintwall Integration Credentials ($1.00 USD = 600,000 Coins, Placement Rate = 6,000)
+const GAINTWALL_API_KEY = process.env.GAINTWALL_API_KEY || "VaWkdoWdrn57UEbbm0Fdt2oCAJYXUbRn";
+const GAINTWALL_API_SECRET = process.env.GAINTWALL_API_SECRET || "kBrbjlXlnYfXvzmSwua1J0rr2RfIxcIe";
+const GAINTWALL_API_BASE = "https://gaintwall.com/api/v1/offers";
+const GAINTWALL_COINS_PER_USD = 600000;
+
 // TimeWall Configuration (Bearer Token, Signing Key & Placement OID from TimeWall Siteowner Dashboard)
 const TIMEWALL_SURVEY_API_KEY = process.env.TIMEWALL_SURVEY_API_KEY || "tw_e8c7a7d151ffaa0d9215127d48e95590df925ced577a949f9ea850deb4b1934f";
 const TIMEWALL_SIGNING_KEY = process.env.TIMEWALL_SIGNING_KEY || "9e7fe018b4c712d8c54fc5b384b849e730eefd4611de7a51b1bc6283fbd7b03";
@@ -234,6 +240,185 @@ async function fetchCointoOffers(userId, country) {
     return normalizedList;
   } catch (err) {
     console.warn("[Cointo Offers Fetch Notice]", err.message);
+    return [];
+  }
+}
+
+// Fetch live offers from Gaintwall API (GET https://gaintwall.com/api/v1/offers)
+function normalizeGaintwallOffer(offer, userId, idx = 0) {
+  const uid = encodeURIComponent(userId || "guest");
+  const rawId = offer.offer_id || offer.id || (idx + 1);
+  const payoutUsd = Number(offer.payout || 0);
+  const payoutLocal = Number(offer.payout_local || offer.reward || 0);
+
+  // Convert to TakaReward Pro standard: $1.00 USD = 600,000 Coins = ৳60 BDT
+  // (Gaintwall placement rate is 6000 per $1, so payout_local * 100 = 600,000 Coins)
+  const rewardCoins = payoutUsd > 0
+    ? Math.round(payoutUsd * GAINTWALL_COINS_PER_USD)
+    : (payoutLocal > 0 ? Math.round(payoutLocal * 100) : 60000);
+  const rewardTaka = Number((rewardCoins / 10000).toFixed(2));
+
+  let devices = ["android", "ios", "desktop"];
+  if (Array.isArray(offer.platforms) && offer.platforms.length > 0) {
+    devices = offer.platforms.map(p => {
+      const pl = String(p).toLowerCase().trim();
+      return pl === "web" ? "desktop" : pl;
+    });
+  }
+
+  const countries = Array.isArray(offer.countries) && offer.countries.length > 0
+    ? offer.countries.map(c => String(c).toUpperCase())
+    : ["*"];
+
+  const name = String(offer.name || offer.title || "Gaintwall Offer").trim();
+  const description = String(
+    offer.description ||
+    `Complete "${name}" via Gaintwall and earn ${rewardCoins.toLocaleString()} Coins (৳${rewardTaka}) automatically!`
+  ).trim();
+
+  const rawSteps = Array.isArray(offer.steps) ? offer.steps : [];
+  const goals = rawSteps.length > 0
+    ? rawSteps.map((st, i) => {
+        if (typeof st === "string") {
+          const stepCoins = i === rawSteps.length - 1 ? rewardCoins : 0;
+          return {
+            stepNumber: i + 1,
+            goalId: String(i + 1),
+            description: st,
+            rewardCoins: stepCoins,
+            rewardTaka: Number((stepCoins / 10000).toFixed(2)),
+            rewardFormatted: stepCoins > 0 ? `${stepCoins.toLocaleString()} Coins` : "Step",
+            optional: false
+          };
+        }
+        const stPayout = Number(st.payout || 0);
+        const stCoins = stPayout > 0 ? Math.round(stPayout * GAINTWALL_COINS_PER_USD) : Math.round(Number(st.reward || 0) * 100);
+        return {
+          stepNumber: i + 1,
+          goalId: String(st.id || i + 1),
+          description: String(st.description || st.name || `Step ${i + 1}`),
+          rewardCoins: stCoins,
+          rewardTaka: Number((stCoins / 10000).toFixed(2)),
+          rewardFormatted: stCoins > 0 ? `${stCoins.toLocaleString()} Coins` : "Bonus",
+          optional: false
+        };
+      })
+    : [
+        {
+          stepNumber: 1,
+          goalId: "1",
+          description,
+          rewardCoins,
+          rewardTaka,
+          rewardFormatted: `${rewardCoins.toLocaleString()} Coins`,
+          optional: false
+        }
+      ];
+
+  let clickUrl = `https://gaintwall.com/api/track?offerId=${encodeURIComponent(rawId)}&apiKey=${encodeURIComponent(GAINTWALL_API_KEY)}&userId=${uid}`;
+  if (offer.link && typeof offer.link === "string") {
+    clickUrl = offer.link
+      .replace(/YOUR_API_KEY|\{API_KEY\}/gi, encodeURIComponent(GAINTWALL_API_KEY))
+      .replace(/USER_ID|\{USER_ID\}/gi, uid);
+    if (/[?&]userId=/i.test(clickUrl)) {
+      clickUrl = clickUrl.replace(/([?&]userId=)[^&]*/i, `$1${uid}`);
+    } else {
+      clickUrl += (clickUrl.includes("?") ? "&" : "?") + `userId=${uid}`;
+    }
+  }
+
+  const catRaw = String(offer.category || "offers").toLowerCase();
+  const categories = ["offers", "signups"];
+  if (catRaw.includes("game") || catRaw.includes("gaming")) categories.push("games");
+  if (catRaw.includes("survey")) categories.push("surveys");
+
+  const normalizedObj = {
+    id: `gw_${rawId}`,
+    externalId: String(rawId),
+    provider: "gaintwall",
+    name,
+    title: name,
+    description,
+    requirements: rawSteps.filter(s => typeof s === "string").join(" • ") || description,
+    image: String(offer.image_url || offer.image || offer.icon || ""),
+    type: goals.length > 1 ? "multistep" : "singlestep",
+    multipleConversions: goals.length > 1,
+    categories,
+    devices,
+    countries,
+    payoutUsd,
+    rewardCoins,
+    rewardTaka,
+    rewardFormatted: `${rewardCoins.toLocaleString()} Coins`,
+    rewardIsVariable: false,
+    featured: true,
+    isGame: categories.includes("games"),
+    isSurvey: categories.includes("surveys"),
+    clickUrl,
+    goals
+  };
+
+  if (isGameOffer(normalizedObj) && !normalizedObj.categories.includes("games")) {
+    normalizedObj.categories.push("games");
+    normalizedObj.isGame = true;
+  }
+
+  return normalizedObj;
+}
+
+async function fetchGaintwallOffers(userId, country) {
+  const fetchFromGwUrl = async (queryObj) => {
+    const url = new URL(GAINTWALL_API_BASE);
+    url.searchParams.set("apiKey", GAINTWALL_API_KEY);
+    url.searchParams.set("apiSecret", GAINTWALL_API_SECRET);
+    url.searchParams.set("userId", userId || "guest");
+    url.searchParams.set("limit", "100");
+    Object.entries(queryObj).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== "") {
+        url.searchParams.set(k, String(v));
+      }
+    });
+
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 7000);
+    try {
+      const res = await fetch(url.toString(), {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "User-Agent": "TakaRewardPro-Server/1.0"
+        },
+        signal: controller.signal
+      });
+      clearTimeout(timer);
+      if (!res.ok) return [];
+      const data = await res.json();
+      return Array.isArray(data?.data) ? data.data : (Array.isArray(data?.offers) ? data.offers : []);
+    } catch (err) {
+      clearTimeout(timer);
+      return [];
+    }
+  };
+
+  try {
+    const [countryList, globalList] = await Promise.all([
+      country ? fetchFromGwUrl({ country }) : Promise.resolve([]),
+      fetchFromGwUrl({})
+    ]);
+    const combinedRaw = [...countryList, ...globalList];
+    const seenIds = new Set();
+    const normalizedList = [];
+    combinedRaw.forEach((rawOffer, idx) => {
+      if (!rawOffer) return;
+      const key = String(rawOffer.offer_id || rawOffer.id || rawOffer.name || idx);
+      if (seenIds.has(key)) return;
+      seenIds.add(key);
+      normalizedList.push(normalizeGaintwallOffer(rawOffer, userId, idx));
+    });
+    normalizedList.sort((a, b) => (b.rewardCoins || 0) - (a.rewardCoins || 0));
+    return normalizedList;
+  } catch (err) {
+    console.warn("[Gaintwall Offers Fetch Notice]", err.message);
     return [];
   }
 }
@@ -485,12 +670,13 @@ async function handleOffersRequest(params, headers = {}) {
   ).slice(0, 500);
 
   // Fetch Offerwall.GG Offers, Cointo Live Offers, Surveys, TimeWall Surveys, and Traffic in parallel
-  const [androidRes, iosRes, desktopRes, globalGamesRes, cointoOffers, surveysRes, timewallSurveys, trafficRes] = await Promise.all([
+  const [androidRes, iosRes, desktopRes, globalGamesRes, cointoOffers, gaintwallOffers, surveysRes, timewallSurveys, trafficRes] = await Promise.all([
     fetchOfferwallEndpoint("/offers", { appId: OFFERWALL_APP_ID, userId, country, device: "android", sort, limit: 150, search }),
     fetchOfferwallEndpoint("/offers", { appId: OFFERWALL_APP_ID, userId, country, device: "ios", sort, limit: 150, search }),
     fetchOfferwallEndpoint("/offers", { appId: OFFERWALL_APP_ID, userId, country, device: "desktop", sort, limit: 150, search }),
     fetchOfferwallEndpoint("/offers", { appId: OFFERWALL_APP_ID, userId, category: "games", sort: "payout", limit: 60 }),
     fetchCointoOffers(userId, country),
+    fetchGaintwallOffers(userId, country),
     fetchOfferwallEndpoint("/surveys", { appId: OFFERWALL_APP_ID, userId, ip: rawIp, country, userAgent, limit: 50 }),
     fetchTimeWallSurveys({ userId, ip: rawIp, country, userAgent }),
     fetchOfferwallEndpoint("/traffic", { appId: OFFERWALL_APP_ID, userId, country, limit: 50 })
@@ -533,24 +719,28 @@ async function handleOffersRequest(params, headers = {}) {
 
   const offerwallGGOffers = Array.from(offersMap.values());
 
-  // Merge Cointo Live Offers into allOffers and signups
-  let allOffers = [...cointoOffers, ...offerwallGGOffers];
+  // Merge Cointo & Gaintwall Live Offers into allOffers and signups
+  let allOffers = [...cointoOffers, ...gaintwallOffers, ...offerwallGGOffers];
 
   // Sort by highest reward first
   allOffers.sort((a, b) => (b.rewardCoins || 0) - (a.rewardCoins || 0));
 
   // Filter by device if explicitly requested
   let activeCointoOffers = cointoOffers;
+  let activeGaintwallOffers = gaintwallOffers;
   if (requestedDevice && ["android", "ios", "desktop"].includes(requestedDevice)) {
     allOffers = allOffers.filter(o => o.devices.includes(requestedDevice));
     activeCointoOffers = cointoOffers.filter(o => o.devices.includes(requestedDevice));
+    activeGaintwallOffers = gaintwallOffers.filter(o => o.devices.includes(requestedDevice));
   }
 
-  // Separate into Games, Sign-ups/Offers (with Cointo Offers included), and Surveys
-  const games = offerwallGGOffers.filter(o => o.isGame && !o.isSurvey);
+  // Separate into Games, Sign-ups/Offers (with Cointo & Gaintwall Offers included), and Surveys
+  const gwGames = activeGaintwallOffers.filter(o => o.isGame && !o.isSurvey);
+  const games = [...gwGames, ...offerwallGGOffers.filter(o => o.isGame && !o.isSurvey)];
   const nonGameOfferwallGG = offerwallGGOffers.filter(o => !o.isGame && !o.isSurvey);
   const signupsAndOffers = [
     ...activeCointoOffers,
+    ...activeGaintwallOffers,
     ...(nonGameOfferwallGG.length > 0 ? [...nonGameOfferwallGG, ...games] : offerwallGGOffers.filter(o => !o.isSurvey))
   ];
   const surveyOffers = allOffers.filter(o => o.isSurvey);
@@ -616,14 +806,17 @@ async function handleOffersRequest(params, headers = {}) {
     success: true,
     appId: OFFERWALL_APP_ID,
     cointoKey: COINTO_PUBLIC_KEY,
+    gaintwallKey: GAINTWALL_API_KEY,
     timewallOid: TIMEWALL_PLACEMENT_OID,
     wallUrl: `https://offerwall.gg/wall/${OFFERWALL_APP_ID}?userId=${encodeURIComponent(userId)}`,
     cointoWallUrl: `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${encodeURIComponent(userId)}`,
+    gaintwallUrl: `https://gaintwall.com/offerwall?apiKey=${GAINTWALL_API_KEY}&userId=${encodeURIComponent(userId)}`,
     targeting: { country, userId },
     data: {
       offers: filteredOffers,
       allOffers,
       cointoOffers: activeCointoOffers,
+      gaintwallOffers: activeGaintwallOffers,
       games: games.length > 0 ? games : signupsAndOffers,
       signups: signupsAndOffers,
       surveys: [...timewallSurveys, ...dedicatedSurveys, ...surveyOffers],
