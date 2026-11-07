@@ -2137,7 +2137,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   <option value="all">Partners: All</option>
                   <option value="offerwall.gg">Offerwall.GG</option>
                   <option value="timewall">TimeWall</option>
-                    <option value="cointo">Cointo Media</option>
+                  <option value="cointo">Cointo Media</option>
+                  <option value="gaintwall">Gaintwall</option>
                   <option value="custom">Verified Tasks</option>
                 </select>
                 <select id="rj-offer-category-filter" onchange="renderOfferwallGGAllSections()" class="bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs font-bold text-[var(--text)] outline-none focus:border-[#f97316]">
@@ -2292,6 +2293,23 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                       </div>
                     </div>
                     <span class="text-[11px] sm:text-xs font-bold text-emerald-700 dark:text-emerald-300">Cointo Media</span>
+                  </div>
+
+                  <!-- 2C. Gaintwall (LIVE) -->
+                  <div onclick="openGaintwall()" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-rose-400/80 dark:border-rose-800/60 bg-gradient-to-b from-white via-white to-[#ffe4e6] dark:from-slate-900 dark:to-rose-950/40 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start relative">
+                    <span class="absolute top-2.5 right-2.5 bg-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">LIVE</span>
+                    <div class="flex-1 flex flex-col items-center justify-center gap-1.5">
+                      <div class="flex items-center gap-2">
+                        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-br from-[#e11d48] to-[#be123c] text-white flex items-center justify-center font-black text-base sm:text-xl shadow-sm shrink-0">
+                          G
+                        </div>
+                        <div class="text-left leading-tight">
+                          <span class="font-black text-sm sm:text-lg text-slate-900 dark:text-white tracking-tight block">Gaintwall</span>
+                          <span class="text-[9px] sm:text-[10px] font-extrabold text-rose-600 dark:text-rose-400 uppercase tracking-widest block">Offerwall</span>
+                        </div>
+                      </div>
+                    </div>
+                    <span class="text-[11px] sm:text-xs font-bold text-rose-700 dark:text-rose-300">Gaintwall</span>
                   </div>
 
                   <!-- 3. Torox -->
@@ -2457,6 +2475,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     <span class="font-black text-base sm:text-lg text-slate-900 dark:text-white italic tracking-wider">COINTO</span>
                   </div>
                   <span class="text-xs font-bold text-emerald-700 dark:text-emerald-400">Cointo Surveys</span>
+                </div>
+
+                <!-- Gaintwall Surveys & Offers (LIVE) -->
+                <div onclick="openGaintwall()" class="min-w-[125px] sm:min-w-[175px] h-40 sm:h-44 rounded-2xl p-4 flex flex-col items-center justify-between cursor-pointer border border-rose-300/80 bg-gradient-to-b from-white via-white to-[#ffe4e6] dark:from-slate-900 dark:to-rose-950/30 shadow-2xs hover:shadow-md transition shrink-0 snap-start relative">
+                  <span class="bg-rose-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider self-end">LIVE</span>
+                  <div class="flex-1 flex items-center justify-center gap-1.5">
+                    <span class="w-8 h-8 rounded-xl bg-[#e11d48] text-white font-black text-base flex items-center justify-center shadow-xs">G</span>
+                    <span class="font-black text-base sm:text-lg text-slate-900 dark:text-white tracking-tight">Gaintwall</span>
+                  </div>
+                  <span class="text-xs font-bold text-rose-700 dark:text-rose-400">Gaintwall Surveys</span>
                 </div>
 
                 <!-- Offerwall.GG Surveys (Official Logo) -->
@@ -4722,17 +4750,22 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     const COINTO_PUBLIC_KEY = "Dv0Ou9";
     window.COINTO_PUBLIC_KEY = COINTO_PUBLIC_KEY;
+    const GAINTWALL_API_KEY = "VaWkdoWdrn57UEbbm0Fdt2oCAJYXUbRn";
+    window.GAINTWALL_API_KEY = GAINTWALL_API_KEY;
     let isClaimingDailyAd = false;
     let manualSubmissionsList = [];
     let timewallCompletionsList = [];
     let offerwallGGCompletionsList = [];
     let cointoCompletionsList = [];
+    let gaintwallCompletionsList = [];
     let knownOfferwallGGLogIds = new Set();
     let isFirstOfferwallGGSnapshot = true;
     let knownTimeWallLogIds = new Set();
     let isFirstTimeWallSnapshot = true;
     let knownCointoLogIds = new Set();
     let isFirstCointoSnapshot = true;
+    let knownGaintwallLogIds = new Set();
+    let isFirstGaintwallSnapshot = true;
     let adminAllUsersList = [];
     let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
     let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
@@ -5699,6 +5732,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       timewallGames: [],
       timewallTasks: [],
       cointoOffers: [...window.DEFAULT_COINTO_OFFERS],
+      gaintwallOffers: [],
       offers: [...window.DEFAULT_OFFERWALL_GG_OFFERS],
       surveys: [
         { id: "tw_srv_1", provider: "TimeWall", name: "TimeWall Daily Consumer Poll", lengthMinutes: 7, rewardCoins: 1260000, rewardTaka: 126.0 },
@@ -5718,6 +5752,18 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.getOfferwallGGUrlForOffer = function(offer) {
       const uid = encodeURIComponent(currentUser?.uid || "guest");
+      if (offer && String(offer.provider || "").toLowerCase() === "gaintwall") {
+        if (offer.clickUrl && typeof offer.clickUrl === "string") {
+          let gUrl = offer.clickUrl.replace(/USER_ID|\{USER_ID\}/gi, uid);
+          if (/[?&]userId=/i.test(gUrl)) {
+            gUrl = gUrl.replace(/([?&]userId=)[^&]*/i, "$1" + uid);
+          } else {
+            gUrl += (gUrl.includes("?") ? "&" : "?") + "userId=" + uid;
+          }
+          return gUrl;
+        }
+        return `https://gaintwall.com/offerwall?apiKey=${GAINTWALL_API_KEY}&userId=${uid}`;
+      }
       if (offer && String(offer.provider || "").toLowerCase() === "cointo") {
         if (offer.clickUrl && typeof offer.clickUrl === "string") {
           let cUrl = offer.clickUrl.replace(/\[USER_ID\]|\{USER_ID\}|\{subId\}|\{sub_id\}/gi, uid);
@@ -5792,11 +5838,17 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             }
             window.offerwallGGState.cointoOffers = mergedCointo;
 
-            // Merge live Offerwall.GG offers (excluding Cointo so they don't duplicate)
+            // Separate live Gaintwall offers
+            const apiGaintwallRaw = Array.isArray(json.data.gaintwallOffers)
+              ? json.data.gaintwallOffers
+              : [...apiSignups, ...apiAll].filter(o => String(o.provider || "").toLowerCase() === "gaintwall");
+            window.offerwallGGState.gaintwallOffers = apiGaintwallRaw.map(go => ({ ...go, provider: "gaintwall" }));
+
+            // Merge live Offerwall.GG offers (excluding Cointo & Gaintwall so they don't duplicate)
             const seenOfferNames = new Set();
             const mergedOffers = [];
-            const nonGameApiOffers = [...apiSignups, ...apiAll].filter(o => !o.isGame && String(o.provider || "").toLowerCase() !== "cointo");
-            const gameApiOffers = [...apiSignups, ...apiAll].filter(o => o.isGame && String(o.provider || "").toLowerCase() !== "cointo");
+            const nonGameApiOffers = [...apiSignups, ...apiAll].filter(o => !o.isGame && !["cointo", "gaintwall"].includes(String(o.provider || "").toLowerCase()));
+            const gameApiOffers = [...apiSignups, ...apiAll].filter(o => o.isGame && !["cointo", "gaintwall"].includes(String(o.provider || "").toLowerCase()));
             for (const o of [...nonGameApiOffers, ...window.DEFAULT_OFFERWALL_GG_OFFERS, ...gameApiOffers]) {
               const k = String(o.name || "").toLowerCase().trim();
               if (k && !seenOfferNames.has(k)) {
@@ -5970,13 +6022,19 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         isFirestoreTask: false
       }));
 
+      const gaintwallOffersList = (window.offerwallGGState.gaintwallOffers || []).map(go => ({
+        ...go,
+        provider: 'gaintwall',
+        isFirestoreTask: false
+      }));
+
       const owOffersList = (window.offerwallGGState.offers || []).filter(o => String(o.provider || '').toLowerCase() !== 'timewall').map(o => ({
         ...o,
         provider: 'offerwall.gg',
         isFirestoreTask: false
       }));
 
-      let combinedOffers = [...unattemptedFirestoreTasks, ...cointoOffersList, ...owOffersList].filter(item => {
+      let combinedOffers = [...unattemptedFirestoreTasks, ...gaintwallOffersList, ...cointoOffersList, ...owOffersList].filter(item => {
         if (!matchesDeviceFilter(item)) return false;
         if (searchQ && !String(item.name || item.title || '').toLowerCase().includes(searchQ)) return false;
         if (partnerFilter !== 'all' && String(item.provider || '').toLowerCase() !== partnerFilter) return false;
@@ -6167,6 +6225,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.openOfferwallOfferModal = async function(offerId) {
       const allItems = [
         ...(window.offerwallGGState.games || []),
+        ...(window.offerwallGGState.gaintwallOffers || []),
         ...(window.offerwallGGState.cointoOffers || []),
         ...(window.DEFAULT_COINTO_OFFERS || []),
         ...(window.offerwallGGState.offers || [])
@@ -6222,7 +6281,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       const provLower = String(found.provider || '').toLowerCase();
       if (providerBadgeEl) {
-        if (provLower === 'cointo') {
+        if (provLower === 'gaintwall') {
+          providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-rose-100 text-rose-600 inline-flex items-center justify-center text-[10px] font-black">G</span><span>Gaintwall</span>`;
+        } else if (provLower === 'cointo') {
           providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px] font-black">C</span><span>Cointo Media</span>`;
         } else if (provLower === 'timewall') {
           providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px]">🕒</span><span>TimeWall</span>`;
@@ -6630,6 +6691,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
       const uid = encodeURIComponent(currentUser.uid);
       const url = `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${uid}`;
+      window.open(url, '_blank');
+    };
+
+    window.openGaintwall = function() {
+      if (!currentUser) {
+        window.openAuthModal('login');
+        return;
+      }
+      const uid = encodeURIComponent(currentUser.uid);
+      const url = `https://gaintwall.com/offerwall?apiKey=${GAINTWALL_API_KEY}&userId=${uid}&subId=${uid}`;
       window.open(url, '_blank');
     };
 
@@ -7892,7 +7963,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const myOffersBox = document.getElementById('my-offers-container');
       const deskMyOffersBox = document.getElementById('desk-myoffers-list-container');
 
-      const combined = [...cointoCompletionsList, ...offerwallGGCompletionsList, ...timewallCompletionsList, ...manualSubmissionsList];
+      const combined = [...gaintwallCompletionsList, ...cointoCompletionsList, ...offerwallGGCompletionsList, ...timewallCompletionsList, ...manualSubmissionsList];
       const totalCount = combined.length;
 
       const badgeEl = document.getElementById('myoffers-badge');
@@ -8112,10 +8183,55 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
+    function listenGaintwallLogs(uid) {
+      const q = query(collection(db, "gaintwall_logs"), where("userId", "==", uid));
+      onSnapshot(q, (snapshot) => {
+        gaintwallCompletionsList = [];
+        snapshot.forEach((docItem) => {
+          const log = docItem.data();
+          const coinsAdded = Number(log.coins) || Math.round(Number(log.currencyAmount) || 0);
+          const takaAdded = Number((Math.abs(coinsAdded) / 10000).toFixed(2));
+          const title = log.offerName ? `Gaintwall: ${log.offerName}` : 'Gaintwall Offer / Survey';
+          const isReversed = String(log.status || '').toLowerCase() === 'reversed' || String(log.type || '') === '2' || coinsAdded < 0;
+
+          let timeStr = 'Gaintwall Verified';
+          if (log.createdAt) {
+            try {
+              const d = typeof log.createdAt.toDate === 'function' ? log.createdAt.toDate() : new Date(log.createdAt);
+              if (!isNaN(d.getTime())) {
+                timeStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+              }
+            } catch(e) {}
+          }
+
+          gaintwallCompletionsList.push({
+            taskId: docItem.id,
+            taskTitle: title,
+            rewardTaka: takaAdded,
+            rewardCoins: Math.abs(coinsAdded),
+            submittedTime: timeStr,
+            status: isReversed ? 'Rejected' : 'Approved',
+            isAutoPostback: true
+          });
+
+          if (!isFirstGaintwallSnapshot && !knownGaintwallLogIds.has(docItem.id) && !isReversed) {
+            playCoinChime();
+            triggerConfettiBlast();
+          }
+          knownGaintwallLogIds.add(docItem.id);
+        });
+        isFirstGaintwallSnapshot = false;
+        renderCombinedMyOffersHistory();
+      }, (err) => {
+        console.warn("Gaintwall logs listen notice:", err);
+      });
+    }
+
     function listenUserSubmissions(uid) {
       listenOfferwallGGLogs(uid);
       listenTimeWallLogs(uid);
       listenCointoLogs(uid);
+      listenGaintwallLogs(uid);
       const q = query(collection(db, "submissions"), where("userId", "==", uid));
       onSnapshot(q, (snapshot) => {
         manualSubmissionsList = [];
@@ -10544,7 +10660,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const surfCoins = parseInt(userData.totalSurfEarnings, 10) || 0;
       const baseOfferwallCoins = Math.max(
         parseInt(userData.totalOfferwallEarnings, 10) || 0,
-        parseInt(userData.totalCointoEarnings, 10) || 0
+        (parseInt(userData.totalCointoEarnings, 10) || 0) + (parseInt(userData.totalGaintwallEarnings, 10) || 0)
       );
       const offerwallCoins = (parseInt(userData.totalTimeWallEarnings, 10) || 0) +
                              baseOfferwallCoins +
