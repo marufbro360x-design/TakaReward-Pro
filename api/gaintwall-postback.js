@@ -8,6 +8,7 @@ const crypto = require('crypto');
 const FIREBASE_PROJECT_ID = "takareward-bd";
 const GAINTWALL_API_KEY = process.env.GAINTWALL_API_KEY || "VaWkdoWdrn57UEbbm0Fdt2oCAJYXUbRn";
 const GAINTWALL_POSTBACK_SECRET = process.env.GAINTWALL_POSTBACK_SECRET || "kBrbjlXlnYfXvzmSwua1J0rr2RfIxcIe";
+const GAINTWALL_API_SECRET = process.env.GAINTWALL_API_SECRET || "CV0WXjgiqcoPQ6A1AblP5O6KMgXQe8WA";
 
 // Conversion Rate:
 // TakaReward Pro Standard: $1.00 USD = 600,000 Coins = ৳60 BDT (10,000 Coins = ৳1 BDT)
@@ -79,11 +80,18 @@ async function processGaintwallPostback(params) {
   // Gaintwall Official Macros:
   // userId={user_id}&offerId={offer_id}&offerName={offer_name}&payout={payout}&reward={reward}&transactionId={transaction_id}&status={status}&ip={ip}&country={country}&sub1={aff_sub}&sub2={aff_sub2}&hash={hash}
   const userId = String(params.userId || params.user_id || params.uid || params.subId || params.sub1 || "").trim();
-  const rawOfferId = String(params.offerId || params.offer_id || "gaintwall_offer").trim();
+  const rawOfferIdForHash = String(
+    params.offerId !== undefined ? params.offerId : (params.offer_id !== undefined ? params.offer_id : "")
+  ).trim();
+  const rawOfferId = rawOfferIdForHash || "gaintwall_offer";
   const offerName = String(params.offerName || params.offer_name || "Gaintwall Offer").trim();
   const rawTransId = String(params.transactionId || params.transaction_id || params.transId || params.txid || "").trim();
-  const payoutRaw = params.payout !== undefined ? String(params.payout).trim() : "0";
-  const rewardRaw = params.reward !== undefined ? String(params.reward).trim() : "0";
+  const payoutRaw = String(
+    params.payout !== undefined ? params.payout : (params.payout_usd !== undefined ? params.payout_usd : (params.yout !== undefined ? params.yout : "0"))
+  ).trim();
+  const rewardRaw = String(
+    params.reward !== undefined ? params.reward : (params.amount !== undefined ? params.amount : (params.points !== undefined ? params.points : "0"))
+  ).trim();
   const statusRaw = String(params.status || "approved").trim().toLowerCase();
   const userIp = String(params.ip || params.userIp || "").trim();
   const country = String(params.country || "").trim();
@@ -97,27 +105,41 @@ async function processGaintwallPostback(params) {
 
   // 1. Verify SHA256 Hash: SHA256(user_id + offer_id + transaction_id + secret)
   if (providedHash && !providedHash.startsWith("{") && !providedHash.startsWith("[")) {
-    const expectedHash = sha256Hash(`${userId}${rawOfferId}${rawTransId}${GAINTWALL_POSTBACK_SECRET}`).toLowerCase();
-    if (providedHash !== expectedHash) {
-      console.warn(`[Gaintwall Postback] Hash mismatch for userId=${userId}, transId=${rawTransId}. Provided=${providedHash}, Expected=${expectedHash}`);
+    const validHashes = [
+      sha256Hash(`${userId}${rawOfferIdForHash}${rawTransId}${GAINTWALL_POSTBACK_SECRET}`).toLowerCase(),
+      sha256Hash(`${userId}${rawOfferId}${rawTransId}${GAINTWALL_POSTBACK_SECRET}`).toLowerCase(),
+      sha256Hash(`${userId}${rawOfferIdForHash}${rawTransId}${GAINTWALL_API_SECRET}`).toLowerCase()
+    ];
+    if (!validHashes.includes(providedHash)) {
+      console.warn(`[Gaintwall Postback] Hash mismatch for userId=${userId}, transId=${rawTransId}. Provided=${providedHash}`);
       return { status: 403, text: "Invalid hash signature" };
     }
   }
 
   // 2. Calculate TakaReward Pro Coins ($1.00 USD = 600,000 Coins = ৳60 BDT)
-  // On Gaintwall placement, exchange rate is 6000 per $1 USD, so reward * 100 = 600,000 Coins per $1 USD
+  // On Gaintwall placement, exchange rate is 6000 per $1 USD (so 1 Gaintwall Coin = 100 TakaReward Coins).
+  // For example, $0.04 USD = 240 Gaintwall Coins = 24,000 TakaReward Coins = ৳2.40 BDT!
   const payoutUsd = parseFloat(payoutRaw) || 0;
   const rewardNum = parseFloat(rewardRaw) || 0;
 
-  let baseCoins = 0;
-  if (Math.abs(payoutUsd) > 0) {
-    baseCoins = Math.round(Math.abs(payoutUsd) * COINS_PER_USD);
-  } else if (Math.abs(rewardNum) > 0) {
-    // If Gaintwall sent 6000-rate reward, multiply by 100 to match 600,000 Coins standard
-    baseCoins = Math.abs(rewardNum) < 50000
-      ? Math.round(Math.abs(rewardNum) * GAINTWALL_REWARD_MULTIPLIER)
-      : Math.round(Math.abs(rewardNum));
+  const coinsFromPayout = Math.abs(payoutUsd) > 0
+    ? Math.round(Math.abs(payoutUsd) * COINS_PER_USD)
+    : 0;
+
+  let coinsFromReward = 0;
+  if (Math.abs(rewardNum) > 0) {
+    if (Math.abs(rewardNum) < 1) {
+      // If reward was sent as raw USD decimal (e.g. 0.04)
+      coinsFromReward = Math.round(Math.abs(rewardNum) * COINS_PER_USD);
+    } else if (Math.abs(rewardNum) < 50000) {
+      // Gaintwall 6000-rate reward (e.g. 240 for $0.04) -> multiply by 100 -> 24,000 Coins (৳2.40 BDT)
+      coinsFromReward = Math.round(Math.abs(rewardNum) * GAINTWALL_REWARD_MULTIPLIER);
+    } else {
+      coinsFromReward = Math.round(Math.abs(rewardNum));
+    }
   }
+
+  let baseCoins = Math.max(coinsFromPayout, coinsFromReward);
 
   if (baseCoins <= 0) {
     baseCoins = 6000; // Minimum fallback (৳0.60) for test postbacks
