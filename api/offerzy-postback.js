@@ -1,7 +1,7 @@
 // Universal Serverless Auto-Postback Handler for Offerzy (offerzy.io)
 // File Location in GitHub Repo: api/offerzy-postback.js
 // Live Postback URL set in Offerzy Placement -> Postback:
-// https://takarewardpro.com/api/offerzy-postback?user_id={user_id}&transaction_id={transaction_id}&reward={reward}&status={status_code}&payout={payout}&signature={signature}&offer_id={offer_id}&offer_name={offer_name}&ip={ip}&country={country}&sub1={sub1}&sub2={sub2}&sub3={sub3}&sub4={sub4}&sub5={sub5}
+// https://www.takarewardpro.com/api/offerzy-postback?user_id={user_id}&transaction_id={transaction_id}&reward={reward}&status={status_code}&payout={payout}&signature={signature}&offer_id={offer_id}&offer_name={offer_name}&ip={ip}&country={country}&sub1={sub1}&sub2={sub2}&sub3={sub3}&sub4={sub4}&sub5={sub5}
 
 const crypto = require('crypto');
 
@@ -85,7 +85,9 @@ async function processOfferzyPostback(params) {
   const userId = rawUserId.trim();
 
   const rawRewardForSig = params.reward !== undefined ? String(params.reward) : String(params.amount || params.coins || "");
-  const rawOfferIdForSig = params.offer_id !== undefined ? String(params.offer_id) : String(params.offerId || "");
+  const rawOfferIdForSig = params.offer_id !== undefined && !String(params.offer_id).startsWith("{")
+    ? String(params.offer_id)
+    : String(params.offerId || "");
 
   const offerId = rawOfferIdForSig.trim() || "offerzy_offer";
   const offerName = String(params.offer_name || params.offerName || "Offerzy Offer").trim();
@@ -102,25 +104,31 @@ async function processOfferzyPostback(params) {
 
   const transId = rawTransId || `ofzy_${userId}_${Date.now()}`;
 
-  // 1. Verify Offerzy Signature:
+  // 1. Strictly Verify Offerzy Signature (Mandatory Security Check):
   // Official Formula: md5(user_id + reward + offer_id + PRIVATE_KEY) == signature
-  if (providedSig && !providedSig.startsWith("{") && !providedSig.startsWith("[")) {
-    const validSignatures = [
-      md5Hash(`${rawUserId}${rawRewardForSig}${rawOfferIdForSig}${OFFERZY_PRIVATE_KEY}`),
-      md5Hash(`${userId}${rawRewardForSig.trim()}${rawOfferIdForSig.trim()}${OFFERZY_PRIVATE_KEY}`),
-      md5Hash(`${userId}${rawRewardForSig.trim()}${offerId}${OFFERZY_PRIVATE_KEY}`),
-      sha256Hash(`${rawUserId}${rawRewardForSig}${rawOfferIdForSig}${OFFERZY_PRIVATE_KEY}`)
-    ];
-    if (!validSignatures.includes(providedSig)) {
-      console.warn(`[Offerzy Postback] Signature mismatch for user_id=${userId}, tx=${transId}. Provided=${providedSig}, Expected=${validSignatures[0]}`);
-      return { status: 403, text: "invalid signature" };
-    }
+  if (!providedSig || providedSig.startsWith("{") || providedSig.startsWith("[")) {
+    console.warn(`[Offerzy Postback] Missing signature for user_id=${userId}, tx=${transId}`);
+    return { status: 403, text: "invalid signature" };
+  }
+
+  const cleanRewardNoCommas = rawRewardForSig.trim().replace(/,/g, "");
+  const validSignatures = [
+    md5Hash(`${rawUserId}${rawRewardForSig}${rawOfferIdForSig}${OFFERZY_PRIVATE_KEY}`),
+    md5Hash(`${userId}${rawRewardForSig.trim()}${rawOfferIdForSig.trim()}${OFFERZY_PRIVATE_KEY}`),
+    md5Hash(`${userId}${cleanRewardNoCommas}${rawOfferIdForSig.trim()}${OFFERZY_PRIVATE_KEY}`),
+    md5Hash(`${userId}${rawRewardForSig.trim()}${offerId}${OFFERZY_PRIVATE_KEY}`),
+    md5Hash(`${userId}${rawRewardForSig.trim()}${""}${OFFERZY_PRIVATE_KEY}`),
+    sha256Hash(`${rawUserId}${rawRewardForSig}${rawOfferIdForSig}${OFFERZY_PRIVATE_KEY}`)
+  ];
+  if (!validSignatures.includes(providedSig)) {
+    console.warn(`[Offerzy Postback] Signature mismatch for user_id=${userId}, tx=${transId}. Provided=${providedSig}, Expected=${validSignatures[0]}`);
+    return { status: 403, text: "invalid signature" };
   }
 
   // 2. Calculate TakaReward Pro Coins ($1.00 USD = 600,000 Coins = ৳60 BDT)
   // Since Offerzy Placement Currency is set to Units per $1 = 600000, `reward` is already in TakaReward Pro Coins!
-  const payoutUsd = parseFloat(payoutRaw) || 0;
-  const rewardNum = parseFloat(rawRewardForSig) || 0;
+  const payoutUsd = parseFloat(payoutRaw.replace(/,/g, "")) || 0;
+  const rewardNum = parseFloat(cleanRewardNoCommas) || 0;
 
   const coinsFromPayout = Math.abs(payoutUsd) > 0
     ? Math.round(Math.abs(payoutUsd) * COINS_PER_USD)
@@ -160,7 +168,7 @@ async function processOfferzyPostback(params) {
     }
   }
 
-  // 4. Commit Credit/Debit to User & Write Log + Notification
+  // 4. Commit Credit/Debit to User & Write Log + In-App Notification
   const nowIso = new Date().toISOString();
   const commitUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents:commit`;
   const userDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${userId}`;
@@ -253,6 +261,7 @@ const universalHandler = async (reqOrEvent, res) => {
   if (res && typeof res.status === "function") {
     res.setHeader("Access-Control-Allow-Origin", "*");
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+    res.setHeader("Content-Type", "text/plain");
 
     if (reqOrEvent.method === "OPTIONS") {
       return res.status(200).send("ok");
@@ -264,7 +273,7 @@ const universalHandler = async (reqOrEvent, res) => {
       const merged = { ...queryParams, ...bodyParams };
 
       if (!merged.user_id && !merged.userId && !merged.uid && !merged.sub1) {
-        return res.status(200).send("ok - TakaReward Pro Offerzy S2S Postback Endpoint Active");
+        return res.status(200).send("ok");
       }
 
       const result = await processOfferzyPostback(merged);
@@ -276,19 +285,24 @@ const universalHandler = async (reqOrEvent, res) => {
   }
 
   // Netlify Function fallback
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Content-Type": "text/plain"
+  };
+
   try {
     const queryParams = reqOrEvent.queryStringParameters || {};
     const bodyParams = reqOrEvent.body ? JSON.parse(reqOrEvent.body) : {};
     const merged = { ...queryParams, ...bodyParams };
 
     if (!merged.user_id && !merged.userId && !merged.uid && !merged.sub1) {
-      return { statusCode: 200, body: "ok - TakaReward Pro Offerzy S2S Postback Endpoint Active" };
+      return { statusCode: 200, headers, body: "ok" };
     }
 
     const result = await processOfferzyPostback(merged);
-    return { statusCode: result.status, body: result.text };
+    return { statusCode: result.status, headers, body: result.text };
   } catch (err) {
-    return { statusCode: 500, body: "ERROR: " + err.message };
+    return { statusCode: 500, headers, body: "ERROR: " + err.message };
   }
 };
 
