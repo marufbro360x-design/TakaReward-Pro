@@ -2135,6 +2135,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <div class="grid grid-cols-2 gap-3">
                 <select id="rj-offer-partner-filter" onchange="renderOfferwallGGAllSections()" class="bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs font-bold text-[var(--text)] outline-none focus:border-[#f97316]">
                   <option value="all">Partners: All</option>
+                  <option value="offerzy">Offerzy</option>
                   <option value="offerwall.gg">Offerwall.GG</option>
                   <option value="timewall">TimeWall</option>
                   <option value="cointo">Cointo Media</option>
@@ -2248,6 +2249,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 </button>
 
                 <div id="desk-offerwall-partners-scroll" class="flex gap-3 sm:gap-4 overflow-x-auto pb-2 pt-1 snap-x hide-scrollbar scroll-smooth">
+                  <!-- 0. Offerzy (FIRST PARTNER - LIVE OFFICIAL ARTWORK) -->
+                  <div onclick="openOfferzy()" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border-2 border-[#f97316]/80 dark:border-orange-500/60 bg-gradient-to-b from-white via-white to-[#fff3eb] dark:from-slate-900 dark:to-orange-950/40 shadow-xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start relative">
+                    <span class="absolute top-2.5 right-2.5 bg-[#f97316] text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">LIVE</span>
+                    <div class="flex-1 flex flex-col items-center justify-center w-full px-1">
+                      <img src="https://cdn.offerzy.io/brand/offerwall-light.png" alt="Offerzy" class="w-24 sm:w-32 h-auto object-contain dark:hidden drop-shadow-2xs" />
+                      <img src="https://cdn.offerzy.io/brand/offerwall-dark.png" onerror="this.onerror=null;this.src='https://cdn.offerzy.io/brand/offerwall-light.png';" alt="Offerzy" class="w-24 sm:w-32 h-auto object-contain hidden dark:block drop-shadow-2xs" />
+                    </div>
+                    <span class="text-[11px] sm:text-xs font-extrabold text-[#ea580c] dark:text-orange-400">Offerzy</span>
+                  </div>
+
                   <!-- 1. Offerwall.GG (LIVE OFFICIAL LOGO) -->
                   <div onclick="openOfferwallGG()" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-emerald-300/80 dark:border-emerald-900/40 bg-gradient-to-b from-white via-white to-[#ecfdf5] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start">
                     <div class="flex-1 flex flex-col items-center justify-center gap-1.5">
@@ -2456,6 +2467,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             <div class="space-y-3.5">
               <h3 class="text-[16px] sm:text-[18px] font-extrabold text-[var(--text)]">Survey Partners</h3>
               <div class="flex gap-3 sm:gap-4 overflow-x-auto pb-2 pt-1 snap-x hide-scrollbar">
+                <!-- Offerzy Surveys & Offers (FIRST - LIVE OFFICIAL ARTWORK) -->
+                <div onclick="openOfferzy()" class="min-w-[125px] sm:min-w-[175px] h-40 sm:h-44 rounded-2xl p-4 flex flex-col items-center justify-between cursor-pointer border-2 border-[#f97316]/80 bg-gradient-to-b from-white via-white to-[#fff3eb] dark:from-slate-900 dark:to-orange-950/40 shadow-2xs hover:shadow-md transition shrink-0 snap-start relative">
+                  <span class="bg-[#f97316] text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider self-end">LIVE</span>
+                  <div class="flex-1 flex items-center justify-center w-full px-1">
+                    <img src="https://cdn.offerzy.io/brand/offerwall-light.png" alt="Offerzy" class="w-24 sm:w-28 h-auto object-contain dark:hidden" />
+                    <img src="https://cdn.offerzy.io/brand/offerwall-dark.png" onerror="this.onerror=null;this.src='https://cdn.offerzy.io/brand/offerwall-light.png';" alt="Offerzy" class="w-24 sm:w-28 h-auto object-contain hidden dark:block" />
+                  </div>
+                  <span class="text-xs font-extrabold text-[#ea580c] dark:text-orange-400">Offerzy Surveys</span>
+                </div>
+
                 <!-- Timewall Surveys (API Connected) -->
                 <div onclick="openTimeWall('surveys')" class="min-w-[125px] sm:min-w-[175px] h-40 sm:h-44 rounded-2xl p-4 flex flex-col items-center justify-between cursor-pointer border border-emerald-300/80 bg-gradient-to-b from-white via-white to-[#e6f9f0] dark:from-slate-900 dark:to-emerald-950/30 shadow-2xs hover:shadow-md transition shrink-0 snap-start">
                   <div class="flex-1 flex items-center justify-center">
@@ -4262,6 +4283,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     <label class="block text-[11px] font-bold text-slate-700 mb-1">প্রোভাইডার / ব্যাজ নাম:</label>
                     <select id="admin-br-provider" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold outline-none focus:border-orange-500">
                       <option value="Sponsored">Sponsored</option>
+                      <option value="Offerzy">Offerzy</option>
                       <option value="Offerwall.GG">Offerwall.GG</option>
                       <option value="Cointo Media">Cointo Media</option>
                       <option value="Gaintwall">Gaintwall</option>
@@ -4753,12 +4775,15 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.COINTO_PUBLIC_KEY = COINTO_PUBLIC_KEY;
     const GAINTWALL_API_KEY = "VaWkdoWdrn57UEbbm0Fdt2oCAJYXUbRn";
     window.GAINTWALL_API_KEY = GAINTWALL_API_KEY;
+    const OFFERZY_PUBLIC_KEY = "ofzy_live_98c8b36e8e4e41fad945150cbafa5f23";
+    window.OFFERZY_PUBLIC_KEY = OFFERZY_PUBLIC_KEY;
     let isClaimingDailyAd = false;
     let manualSubmissionsList = [];
     let timewallCompletionsList = [];
     let offerwallGGCompletionsList = [];
     let cointoCompletionsList = [];
     let gaintwallCompletionsList = [];
+    let offerzyCompletionsList = [];
     let knownOfferwallGGLogIds = new Set();
     let isFirstOfferwallGGSnapshot = true;
     let knownTimeWallLogIds = new Set();
@@ -4767,6 +4792,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     let isFirstCointoSnapshot = true;
     let knownGaintwallLogIds = new Set();
     let isFirstGaintwallSnapshot = true;
+    let knownOfferzyLogIds = new Set();
+    let isFirstOfferzySnapshot = true;
     let adminAllUsersList = [];
     let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
     let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
@@ -5732,6 +5759,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       games: [...window.DEFAULT_OFFERWALL_GG_GAMES],
       timewallGames: [],
       timewallTasks: [],
+      offerzyOffers: [],
       cointoOffers: [...window.DEFAULT_COINTO_OFFERS],
       gaintwallOffers: [],
       offers: [...window.DEFAULT_OFFERWALL_GG_OFFERS],
@@ -5753,6 +5781,18 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     window.getOfferwallGGUrlForOffer = function(offer) {
       const uid = encodeURIComponent(currentUser?.uid || "guest");
+      if (offer && String(offer.provider || "").toLowerCase() === "offerzy") {
+        if (offer.clickUrl && typeof offer.clickUrl === "string") {
+          let ozUrl = offer.clickUrl.replace(/USER_ID|\{USER_ID\}/gi, uid);
+          if (/[?&]user_id=/i.test(ozUrl)) {
+            ozUrl = ozUrl.replace(/([?&]user_id=)[^&]*/i, "$1" + uid);
+          } else {
+            ozUrl += (ozUrl.includes("?") ? "&" : "?") + "user_id=" + uid;
+          }
+          return ozUrl;
+        }
+        return `https://offerwall.offerzy.io/?placement_id=${OFFERZY_PUBLIC_KEY}&user_id=${uid}`;
+      }
       if (offer && String(offer.provider || "").toLowerCase() === "gaintwall") {
         if (offer.clickUrl && typeof offer.clickUrl === "string") {
           let gUrl = offer.clickUrl.replace(/USER_ID|\{USER_ID\}/gi, uid);
@@ -5839,17 +5879,23 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             }
             window.offerwallGGState.cointoOffers = mergedCointo;
 
+            // Separate live Offerzy offers
+            const apiOfferzyRaw = Array.isArray(json.data.offerzyOffers)
+              ? json.data.offerzyOffers
+              : [...apiSignups, ...apiAll].filter(o => String(o.provider || "").toLowerCase() === "offerzy");
+            window.offerwallGGState.offerzyOffers = apiOfferzyRaw.map(ozo => ({ ...ozo, provider: "offerzy" }));
+
             // Separate live Gaintwall offers
             const apiGaintwallRaw = Array.isArray(json.data.gaintwallOffers)
               ? json.data.gaintwallOffers
               : [...apiSignups, ...apiAll].filter(o => String(o.provider || "").toLowerCase() === "gaintwall");
             window.offerwallGGState.gaintwallOffers = apiGaintwallRaw.map(go => ({ ...go, provider: "gaintwall" }));
 
-            // Merge live Offerwall.GG offers (excluding Cointo & Gaintwall so they don't duplicate)
+            // Merge live Offerwall.GG offers (excluding Offerzy, Cointo & Gaintwall so they don't duplicate)
             const seenOfferNames = new Set();
             const mergedOffers = [];
-            const nonGameApiOffers = [...apiSignups, ...apiAll].filter(o => !o.isGame && !["cointo", "gaintwall"].includes(String(o.provider || "").toLowerCase()));
-            const gameApiOffers = [...apiSignups, ...apiAll].filter(o => o.isGame && !["cointo", "gaintwall"].includes(String(o.provider || "").toLowerCase()));
+            const nonGameApiOffers = [...apiSignups, ...apiAll].filter(o => !o.isGame && !["offerzy", "cointo", "gaintwall"].includes(String(o.provider || "").toLowerCase()));
+            const gameApiOffers = [...apiSignups, ...apiAll].filter(o => o.isGame && !["offerzy", "cointo", "gaintwall"].includes(String(o.provider || "").toLowerCase()));
             for (const o of [...nonGameApiOffers, ...window.DEFAULT_OFFERWALL_GG_OFFERS, ...gameApiOffers]) {
               const k = String(o.name || "").toLowerCase().trim();
               if (k && !seenOfferNames.has(k)) {
@@ -6023,6 +6069,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         isFirestoreTask: false
       }));
 
+      const offerzyOffersList = (window.offerwallGGState.offerzyOffers || []).map(ozo => ({
+        ...ozo,
+        provider: 'offerzy',
+        isFirestoreTask: false
+      }));
+
       const gaintwallOffersList = (window.offerwallGGState.gaintwallOffers || []).map(go => ({
         ...go,
         provider: 'gaintwall',
@@ -6035,7 +6087,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         isFirestoreTask: false
       }));
 
-      let combinedOffers = [...unattemptedFirestoreTasks, ...gaintwallOffersList, ...cointoOffersList, ...owOffersList].filter(item => {
+      let combinedOffers = [...unattemptedFirestoreTasks, ...offerzyOffersList, ...gaintwallOffersList, ...cointoOffersList, ...owOffersList].filter(item => {
         if (!matchesDeviceFilter(item)) return false;
         if (searchQ && !String(item.name || item.title || '').toLowerCase().includes(searchQ)) return false;
         if (partnerFilter !== 'all' && String(item.provider || '').toLowerCase() !== partnerFilter) return false;
@@ -6226,6 +6278,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.openOfferwallOfferModal = async function(offerId) {
       const allItems = [
         ...(window.offerwallGGState.games || []),
+        ...(window.offerwallGGState.offerzyOffers || []),
         ...(window.offerwallGGState.gaintwallOffers || []),
         ...(window.offerwallGGState.cointoOffers || []),
         ...(window.DEFAULT_COINTO_OFFERS || []),
@@ -6282,7 +6335,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       const provLower = String(found.provider || '').toLowerCase();
       if (providerBadgeEl) {
-        if (provLower === 'gaintwall') {
+        if (provLower === 'offerzy') {
+          providerBadgeEl.innerHTML = `<img src="https://cdn.offerzy.io/brand/offerwall-icon.png" class="w-4 h-4 rounded-full object-cover inline-block" alt="Offerzy" /><span>Offerzy</span>`;
+        } else if (provLower === 'gaintwall') {
           providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-rose-100 text-rose-600 inline-flex items-center justify-center text-[10px] font-black">G</span><span>Gaintwall</span>`;
         } else if (provLower === 'cointo') {
           providerBadgeEl.innerHTML = `<span class="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 inline-flex items-center justify-center text-[10px] font-black">C</span><span>Cointo Media</span>`;
@@ -6692,6 +6747,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
       const uid = encodeURIComponent(currentUser.uid);
       const url = `https://cointomedia.com/offer/${COINTO_PUBLIC_KEY}/${uid}`;
+      window.open(url, '_blank');
+    };
+
+    window.openOfferzy = function() {
+      if (!currentUser) {
+        window.openAuthModal('login');
+        return;
+      }
+      const uid = encodeURIComponent(currentUser.uid);
+      const url = `https://offerwall.offerzy.io/?placement_id=${OFFERZY_PUBLIC_KEY}&user_id=${uid}`;
       window.open(url, '_blank');
     };
 
@@ -7964,7 +8029,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const myOffersBox = document.getElementById('my-offers-container');
       const deskMyOffersBox = document.getElementById('desk-myoffers-list-container');
 
-      const combined = [...gaintwallCompletionsList, ...cointoCompletionsList, ...offerwallGGCompletionsList, ...timewallCompletionsList, ...manualSubmissionsList];
+      const combined = [...offerzyCompletionsList, ...gaintwallCompletionsList, ...cointoCompletionsList, ...offerwallGGCompletionsList, ...timewallCompletionsList, ...manualSubmissionsList];
       const totalCount = combined.length;
 
       const badgeEl = document.getElementById('myoffers-badge');
@@ -8228,7 +8293,52 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
+    function listenOfferzyLogs(uid) {
+      const q = query(collection(db, "offerzy_logs"), where("userId", "==", uid));
+      onSnapshot(q, (snapshot) => {
+        offerzyCompletionsList = [];
+        snapshot.forEach((docItem) => {
+          const log = docItem.data();
+          const coinsAdded = Number(log.coins) || Math.round(Number(log.currencyAmount) || 0);
+          const takaAdded = Number((Math.abs(coinsAdded) / 10000).toFixed(2));
+          const title = log.offerName ? `Offerzy: ${log.offerName}` : 'Offerzy Offer / Survey';
+          const isReversed = String(log.status || '').toLowerCase() === 'reversed' || String(log.type || '') === '2' || coinsAdded < 0;
+
+          let timeStr = 'Offerzy Verified';
+          if (log.createdAt) {
+            try {
+              const d = typeof log.createdAt.toDate === 'function' ? log.createdAt.toDate() : new Date(log.createdAt);
+              if (!isNaN(d.getTime())) {
+                timeStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+              }
+            } catch(e) {}
+          }
+
+          offerzyCompletionsList.push({
+            taskId: docItem.id,
+            taskTitle: title,
+            rewardTaka: takaAdded,
+            rewardCoins: Math.abs(coinsAdded),
+            submittedTime: timeStr,
+            status: isReversed ? 'Rejected' : 'Approved',
+            isAutoPostback: true
+          });
+
+          if (!isFirstOfferzySnapshot && !knownOfferzyLogIds.has(docItem.id) && !isReversed) {
+            playCoinChime();
+            triggerConfettiBlast();
+          }
+          knownOfferzyLogIds.add(docItem.id);
+        });
+        isFirstOfferzySnapshot = false;
+        renderCombinedMyOffersHistory();
+      }, (err) => {
+        console.warn("Offerzy logs listen notice:", err);
+      });
+    }
+
     function listenUserSubmissions(uid) {
+      listenOfferzyLogs(uid);
       listenOfferwallGGLogs(uid);
       listenTimeWallLogs(uid);
       listenCointoLogs(uid);
@@ -10661,7 +10771,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const surfCoins = parseInt(userData.totalSurfEarnings, 10) || 0;
       const baseOfferwallCoins = Math.max(
         parseInt(userData.totalOfferwallEarnings, 10) || 0,
-        (parseInt(userData.totalCointoEarnings, 10) || 0) + (parseInt(userData.totalGaintwallEarnings, 10) || 0)
+        (parseInt(userData.totalOfferzyEarnings, 10) || 0) + (parseInt(userData.totalCointoEarnings, 10) || 0) + (parseInt(userData.totalGaintwallEarnings, 10) || 0)
       );
       const offerwallCoins = (parseInt(userData.totalTimeWallEarnings, 10) || 0) +
                              baseOfferwallCoins +
