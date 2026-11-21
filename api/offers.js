@@ -3,32 +3,32 @@
 // Live Endpoint: https://takarewardpro.com/api/offers
 
 const OFFERWALL_APP_ID = process.env.OFFERWALL_APP_ID || "7495f3f6d2e6b19774fc1b67a4eecfa6";
-const OFFERWALL_SECRET = process.env.OFFERWALL_SECRET || "38420234f0f6e719f28054f43da7e5b0199a31f00d42a2790df1e0e4ed703ace";
+const OFFERWALL_SECRET = process.env.OFFERWALL_SECRET || "";
 const OFFERWALL_API_BASE = "https://offerwall.gg/api/v1";
 
 // Cointo Media Integration Credentials ($1.00 USD = 600,000 Coins, 10,000 Coins = ৳1.00 BDT)
 const COINTO_PUBLIC_KEY = process.env.COINTO_PUBLIC_KEY || "Dv0Ou9";
-const COINTO_SECRET_KEY = process.env.COINTO_SECRET_KEY || "Nd8Ds2Jo9Aq2Hc7";
+const COINTO_SECRET_KEY = process.env.COINTO_SECRET_KEY || "";
 const COINTO_API_BASE = "https://cointomedia.com/api/v1/offers";
 const COINTO_COINS_PER_USD = 600000;
 
 // Gaintwall Integration Credentials ($1.00 USD = 600,000 Coins, Placement Rate = 6,000)
 const GAINTWALL_API_KEY = process.env.GAINTWALL_API_KEY || "VaWkdoWdrn57UEbbm0Fdt2oCAJYXUbRn";
-const GAINTWALL_API_SECRET = process.env.GAINTWALL_API_SECRET || "CV0WXjgiqcoPQ6A1AblP5O6KMgXQe8WA";
-const GAINTWALL_POSTBACK_SECRET = process.env.GAINTWALL_POSTBACK_SECRET || "kBrbjlXlnYfXvzmSwua1J0rr2RfIxcIe";
+const GAINTWALL_API_SECRET = process.env.GAINTWALL_API_SECRET || "";
+const GAINTWALL_POSTBACK_SECRET = process.env.GAINTWALL_POSTBACK_SECRET || "";
 const GAINTWALL_API_BASE = "https://gaintwall.com/api/v1/offers";
 const GAINTWALL_COINS_PER_USD = 600000;
 
 // Offerzy Integration Credentials ($1.00 USD = 600,000 Coins, Placement Units per $1 = 600000)
 const OFFERZY_PUBLIC_KEY = process.env.OFFERZY_PUBLIC_KEY || "ofzy_live_98c8b36e8e4e41fad945150cbafa5f23";
-const OFFERZY_PRIVATE_KEY = process.env.OFFERZY_PRIVATE_KEY || "ofzy_sk_e2192dd7edae93b555cc0f7965ca9b46";
+const OFFERZY_PRIVATE_KEY = process.env.OFFERZY_PRIVATE_KEY || "";
 const OFFERZY_API_KEY = process.env.OFFERZY_API_KEY || "";
 const OFFERZY_API_BASE = "https://api.offerzy.io/v1/offers";
 const OFFERZY_COINS_PER_USD = 600000;
 
 // TimeWall Configuration (Bearer Token, Signing Key & Placement OID from TimeWall Siteowner Dashboard)
-const TIMEWALL_SURVEY_API_KEY = process.env.TIMEWALL_SURVEY_API_KEY || "tw_e8c7a7d151ffaa0d9215127d48e95590df925ced577a949f9ea850deb4b1934f";
-const TIMEWALL_SIGNING_KEY = process.env.TIMEWALL_SIGNING_KEY || "9e7fe018b4c712d8c54fc5b384b849e730eefd4611de7a51b1bc6283fbd7b03";
+const TIMEWALL_SURVEY_API_KEY = process.env.TIMEWALL_SURVEY_API_KEY || "";
+const TIMEWALL_SIGNING_KEY = process.env.TIMEWALL_SIGNING_KEY || "";
 const TIMEWALL_PLACEMENT_OID = process.env.TIMEWALL_PLACEMENT_OID || "22db97d7a055bb22";
 
 // Helper to fetch an Offerwall.GG endpoint safely with timeout
