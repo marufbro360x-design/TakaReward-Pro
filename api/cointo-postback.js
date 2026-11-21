@@ -94,14 +94,20 @@ async function processCointoPostback(params) {
 
   const transId = rawTransId || `cointo_${subId}_${Date.now()}`;
 
-  // 1. Verify MD5 Signature if provided: md5(subId + transId + reward + SECRET_KEY)
-  if (providedSig && !providedSig.startsWith("{") && !providedSig.startsWith("[")) {
-    const expectedSig1 = md5Hash(`${subId}${rawTransId}${rewardRaw}${COINTO_SECRET_KEY}`).toLowerCase();
-    const expectedSig2 = md5Hash(`${subId}${rawTransId}${payoutRaw}${COINTO_SECRET_KEY}`).toLowerCase();
-    if (providedSig !== expectedSig1 && providedSig !== expectedSig2) {
-      console.warn(`[Cointo Postback] Signature mismatch for subId=${subId}, transId=${rawTransId}. Provided=${providedSig}, Expected=${expectedSig1}`);
-      return { status: 403, text: "Invalid signature" };
-    }
+  // 1. Mandatory MD5 Signature Verification: md5(subId + transId + reward + SECRET_KEY)
+  if (!COINTO_SECRET_KEY) {
+    console.error("[Cointo Postback] COINTO_SECRET_KEY environment variable is not configured");
+    return { status: 500, text: "Server configuration error" };
+  }
+  if (!providedSig || providedSig.startsWith("{") || providedSig.startsWith("[")) {
+    console.warn(`[Cointo Postback] Missing signature for subId=${subId}, transId=${rawTransId}`);
+    return { status: 403, text: "Missing signature" };
+  }
+  const expectedSig1 = md5Hash(`${subId}${rawTransId}${rewardRaw}${COINTO_SECRET_KEY}`).toLowerCase();
+  const expectedSig2 = md5Hash(`${subId}${rawTransId}${payoutRaw}${COINTO_SECRET_KEY}`).toLowerCase();
+  if (providedSig !== expectedSig1 && providedSig !== expectedSig2) {
+    console.warn(`[Cointo Postback] Signature mismatch for subId=${subId}, transId=${rawTransId}. Provided=${providedSig}, Expected=${expectedSig1}`);
+    return { status: 403, text: "Invalid signature" };
   }
 
   // 2. Calculate Coins & USD Payout
