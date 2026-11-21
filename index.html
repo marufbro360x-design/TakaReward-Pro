@@ -2136,6 +2136,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <select id="rj-offer-partner-filter" onchange="renderOfferwallGGAllSections()" class="bg-[var(--surface-2)] border border-[var(--border)] rounded-xl px-3 py-2 text-xs font-bold text-[var(--text)] outline-none focus:border-[#f97316]">
                   <option value="all">Partners: All</option>
                   <option value="offerzy">Offerzy</option>
+                  <option value="pubscale">PubScale</option>
                   <option value="offerwall.gg">Offerwall.GG</option>
                   <option value="timewall">TimeWall</option>
                   <option value="cointo">Cointo Media</option>
@@ -2257,6 +2258,19 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                       <img src="https://cdn.offerzy.io/brand/offerwall-dark.png" onerror="this.onerror=null;this.src='https://cdn.offerzy.io/brand/offerwall-light.png';" alt="Offerzy" class="w-24 sm:w-32 h-auto object-contain hidden dark:block drop-shadow-2xs" />
                     </div>
                     <span class="text-[11px] sm:text-xs font-extrabold text-[#ea580c] dark:text-orange-400">Offerzy</span>
+                  </div>
+
+                  <!-- 0B. PubScale (LIVE) -->
+                  <div onclick="openPubscale()" class="min-w-[115px] sm:min-w-[180px] h-36 sm:h-48 rounded-2xl p-3.5 sm:p-5 flex flex-col items-center justify-between cursor-pointer border border-teal-300/80 dark:border-teal-800/60 bg-gradient-to-b from-white via-white to-[#e6fffa] dark:from-slate-900 dark:to-teal-950/40 shadow-2xs hover:shadow-md hover:-translate-y-1 transition shrink-0 snap-start relative">
+                    <span class="absolute top-2.5 right-2.5 bg-[#14b8a6] text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider shadow-2xs">LIVE</span>
+                    <div class="flex-1 flex flex-col items-center justify-center">
+                      <svg viewBox="0 0 64 64" class="w-11 h-11 sm:w-14 sm:h-14 drop-shadow-2xs" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22 48V24C22 17.3726 27.3726 12 34 12H38" stroke="#0f172a" class="dark:stroke-white" stroke-width="6.5" stroke-linecap="round"/>
+                        <path d="M22 48V38C22 33.5817 25.5817 30 30 30H35C39.4183 30 43 26.4183 43 22V17" stroke="#14b8a6" stroke-width="6.5" stroke-linecap="round"/>
+                        <path d="M35 20L43 10L51 20H35Z" fill="#14b8a6"/>
+                      </svg>
+                    </div>
+                    <span class="text-[11px] sm:text-xs font-extrabold text-slate-800 dark:text-teal-300">PubScale</span>
                   </div>
 
                   <!-- 1. Offerwall.GG (LIVE OFFICIAL LOGO) -->
@@ -4284,6 +4298,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     <select id="admin-br-provider" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-bold outline-none focus:border-orange-500">
                       <option value="Sponsored">Sponsored</option>
                       <option value="Offerzy">Offerzy</option>
+                      <option value="PubScale">PubScale</option>
                       <option value="Offerwall.GG">Offerwall.GG</option>
                       <option value="Cointo Media">Cointo Media</option>
                       <option value="Gaintwall">Gaintwall</option>
@@ -4777,6 +4792,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.GAINTWALL_API_KEY = GAINTWALL_API_KEY;
     const OFFERZY_PUBLIC_KEY = "ofzy_live_98c8b36e8e4e41fad945150cbafa5f23";
     window.OFFERZY_PUBLIC_KEY = OFFERZY_PUBLIC_KEY;
+    const PUBSCALE_APP_ID = "73908721";
+    window.PUBSCALE_APP_ID = PUBSCALE_APP_ID;
     let isClaimingDailyAd = false;
     let manualSubmissionsList = [];
     let timewallCompletionsList = [];
@@ -4784,6 +4801,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     let cointoCompletionsList = [];
     let gaintwallCompletionsList = [];
     let offerzyCompletionsList = [];
+    let pubscaleCompletionsList = [];
     let knownOfferwallGGLogIds = new Set();
     let isFirstOfferwallGGSnapshot = true;
     let knownTimeWallLogIds = new Set();
@@ -4794,6 +4812,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     let isFirstGaintwallSnapshot = true;
     let knownOfferzyLogIds = new Set();
     let isFirstOfferzySnapshot = true;
+    let knownPubscaleLogIds = new Set();
+    let isFirstPubscaleSnapshot = true;
     let adminAllUsersList = [];
     let adminTaskStatsMap = {}; // taskId -> { approved: 0, rejected: 0, pending: 0, total: 0 }
     let adminDailySubmissionsMap = {}; // 'YYYY-MM-DD' -> count
@@ -6760,6 +6780,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       window.open(url, '_blank');
     };
 
+    window.openPubscale = function() {
+      if (!currentUser) {
+        window.openAuthModal('login');
+        return;
+      }
+      const uid = encodeURIComponent(currentUser.uid);
+      const url = `https://wow.pubscale.com?app_id=${PUBSCALE_APP_ID}&user_id=${uid}`;
+      window.open(url, '_blank');
+    };
+
     window.openGaintwall = function() {
       if (!currentUser) {
         window.openAuthModal('login');
@@ -8029,7 +8059,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const myOffersBox = document.getElementById('my-offers-container');
       const deskMyOffersBox = document.getElementById('desk-myoffers-list-container');
 
-      const combined = [...offerzyCompletionsList, ...gaintwallCompletionsList, ...cointoCompletionsList, ...offerwallGGCompletionsList, ...timewallCompletionsList, ...manualSubmissionsList];
+      const combined = [...pubscaleCompletionsList, ...offerzyCompletionsList, ...gaintwallCompletionsList, ...cointoCompletionsList, ...offerwallGGCompletionsList, ...timewallCompletionsList, ...manualSubmissionsList];
       const totalCount = combined.length;
 
       const badgeEl = document.getElementById('myoffers-badge');
@@ -8337,7 +8367,52 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
+    function listenPubscaleLogs(uid) {
+      const q = query(collection(db, "pubscale_logs"), where("userId", "==", uid));
+      onSnapshot(q, (snapshot) => {
+        pubscaleCompletionsList = [];
+        snapshot.forEach((docItem) => {
+          const log = docItem.data();
+          const coinsAdded = Number(log.coins) || Math.round(Number(log.currencyAmount) || 0);
+          const takaAdded = Number((Math.abs(coinsAdded) / 10000).toFixed(2));
+          const title = log.offerName ? `PubScale: ${log.offerName}` : 'PubScale Offer';
+          const isReversed = String(log.status || '').toLowerCase() === 'reversed' || String(log.type || '') === '2' || coinsAdded < 0;
+
+          let timeStr = 'PubScale Verified';
+          if (log.createdAt) {
+            try {
+              const d = typeof log.createdAt.toDate === 'function' ? log.createdAt.toDate() : new Date(log.createdAt);
+              if (!isNaN(d.getTime())) {
+                timeStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+              }
+            } catch(e) {}
+          }
+
+          pubscaleCompletionsList.push({
+            taskId: docItem.id,
+            taskTitle: title,
+            rewardTaka: takaAdded,
+            rewardCoins: Math.abs(coinsAdded),
+            submittedTime: timeStr,
+            status: isReversed ? 'Rejected' : 'Approved',
+            isAutoPostback: true
+          });
+
+          if (!isFirstPubscaleSnapshot && !knownPubscaleLogIds.has(docItem.id) && !isReversed) {
+            playCoinChime();
+            triggerConfettiBlast();
+          }
+          knownPubscaleLogIds.add(docItem.id);
+        });
+        isFirstPubscaleSnapshot = false;
+        renderCombinedMyOffersHistory();
+      }, (err) => {
+        console.warn("PubScale logs listen notice:", err);
+      });
+    }
+
     function listenUserSubmissions(uid) {
+      listenPubscaleLogs(uid);
       listenOfferzyLogs(uid);
       listenOfferwallGGLogs(uid);
       listenTimeWallLogs(uid);
@@ -10771,7 +10846,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const surfCoins = parseInt(userData.totalSurfEarnings, 10) || 0;
       const baseOfferwallCoins = Math.max(
         parseInt(userData.totalOfferwallEarnings, 10) || 0,
-        (parseInt(userData.totalOfferzyEarnings, 10) || 0) + (parseInt(userData.totalCointoEarnings, 10) || 0) + (parseInt(userData.totalGaintwallEarnings, 10) || 0)
+        (parseInt(userData.totalPubscaleEarnings, 10) || 0) + (parseInt(userData.totalOfferzyEarnings, 10) || 0) + (parseInt(userData.totalCointoEarnings, 10) || 0) + (parseInt(userData.totalGaintwallEarnings, 10) || 0)
       );
       const offerwallCoins = (parseInt(userData.totalTimeWallEarnings, 10) || 0) +
                              baseOfferwallCoins +
