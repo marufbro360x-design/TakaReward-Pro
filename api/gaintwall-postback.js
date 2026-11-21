@@ -106,17 +106,24 @@ async function processGaintwallPostback(params) {
 
   const transId = rawTransId || `gw_${userId}_${Date.now()}`;
 
-  // 1. Verify SHA256 Hash: SHA256(user_id + offer_id + transaction_id + secret)
-  if (providedHash && !providedHash.startsWith("{") && !providedHash.startsWith("[")) {
-    const validHashes = [
-      sha256Hash(`${userId}${rawOfferIdForHash}${rawTransId}${GAINTWALL_POSTBACK_SECRET}`).toLowerCase(),
-      sha256Hash(`${userId}${rawOfferId}${rawTransId}${GAINTWALL_POSTBACK_SECRET}`).toLowerCase(),
-      sha256Hash(`${userId}${rawOfferIdForHash}${rawTransId}${GAINTWALL_API_SECRET}`).toLowerCase()
-    ];
-    if (!validHashes.includes(providedHash)) {
-      console.warn(`[Gaintwall Postback] Hash mismatch for userId=${userId}, transId=${rawTransId}. Provided=${providedHash}`);
-      return { status: 403, text: "Invalid hash signature" };
-    }
+  // 1. Mandatory SHA256 Hash Verification: SHA256(user_id + offer_id + transaction_id + secret)
+  if (!GAINTWALL_POSTBACK_SECRET) {
+    throw new Error("Missing GAINTWALL_POSTBACK_SECRET in Environment Variables");
+  }
+  if (!providedHash || providedHash.startsWith("{") || providedHash.startsWith("[")) {
+    console.warn(`[Gaintwall Postback] Missing hash for userId=${userId}, transId=${rawTransId}`);
+    return { status: 403, text: "Invalid hash signature" };
+  }
+  const validHashes = [
+    sha256Hash(`${userId}${rawOfferIdForHash}${rawTransId}${GAINTWALL_POSTBACK_SECRET}`).toLowerCase(),
+    sha256Hash(`${userId}${rawOfferId}${rawTransId}${GAINTWALL_POSTBACK_SECRET}`).toLowerCase()
+  ];
+  if (GAINTWALL_API_SECRET) {
+    validHashes.push(sha256Hash(`${userId}${rawOfferIdForHash}${rawTransId}${GAINTWALL_API_SECRET}`).toLowerCase());
+  }
+  if (!validHashes.includes(providedHash)) {
+    console.warn(`[Gaintwall Postback] Hash mismatch for userId=${userId}, transId=${rawTransId}`);
+    return { status: 403, text: "Invalid hash signature" };
   }
 
   // 2. Calculate TakaReward Pro Coins ($1.00 USD = 600,000 Coins = ৳60 BDT)
