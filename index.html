@@ -4951,6 +4951,28 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return dId;
     }
 
+    // Secure Server-Side Wallet Action Helper (Verifies Firebase ID Token on Vercel)
+    async function callSecureWalletAction(payload) {
+      const activeUser = auth.currentUser || currentUser;
+      if (!activeUser) {
+        throw new Error("অনুগ্রহ করে প্রথমে লগইন করুন!");
+      }
+      const idToken = await activeUser.getIdToken();
+      const res = await fetch("/api/wallet-action", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + idToken
+        },
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) {
+        throw new Error(data.error || "সার্ভার রিকোয়েস্ট ব্যর্থ হয়েছে। আবার চেষ্টা করুন।");
+      }
+      return data;
+    }
+
     // Direct Google Sign In (Single-Request Lock: isGoogleAuthInFlight, No Double Listener, No 2nd Redirect Request)
     provider.setCustomParameters({ prompt: 'select_account' });
     let isGoogleAuthInFlight = false;
@@ -5068,26 +5090,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (!snap.exists()) {
           let pendingCode = localStorage.getItem('tr_pending_invite') || sessionStorage.getItem('tr_pending_invite') || '';
           pendingCode = extractCleanInviteCode(pendingCode);
-
-          let welcomeCoins = 0;
-          let validReferrerDoc = null;
-
-          if (pendingCode) {
-            try {
-              const q = query(collection(db, "users"), where("myInviteCode", "==", pendingCode));
-              const rSnap = await getDocs(q);
-              if (!rSnap.empty) {
-                const foundDoc = rSnap.docs[0];
-                if (foundDoc.id !== user.uid) {
-                  validReferrerDoc = foundDoc;
-                  welcomeCoins = 30000; // New User gets 30,000 Coins Bonus!
-                }
-              }
-            } catch (e) {
-              console.warn("Referral verify notice:", e);
-            }
-          }
-
           const myCode = "TR" + Math.floor(10000 + Math.random() * 90000);
 
           await setDoc(userRef, {
@@ -5096,10 +5098,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             email: user.email || "",
             photoURL: user.photoURL || "",
             deviceId: getDeviceId(),
-            coins: welcomeCoins,
+            coins: 0,
             myInviteCode: myCode,
-            referredBy: validReferrerDoc ? pendingCode : null,
-            referredByUid: validReferrerDoc ? validReferrerDoc.id : null,
+            referredBy: null,
+            referredByUid: null,
             referralCount: 0,
             completedApprovedTasks: 0,
             lastDailyClaimTime: 0,
@@ -5108,14 +5110,15 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             createdAt: serverTimestamp()
           });
 
-          if (validReferrerDoc) {
+          if (pendingCode) {
             try {
-              await updateDoc(doc(db, "users", validReferrerDoc.id), {
-                coins: increment(10000),
-                referralCount: increment(1)
+              await callSecureWalletAction({
+                action: "apply_referral",
+                inviteCode: pendingCode,
+                deviceId: getDeviceId()
               });
             } catch (re) {
-              console.warn("Direct referrer reward notice:", re);
+              console.warn("Server referral apply notice:", re.message);
             }
           }
 
@@ -7411,28 +7414,22 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const takaAmount = Number((coinsToWithdraw / 10000).toFixed(2));
 
       try {
-        await updateDoc(doc(db, "users", currentUser.uid), {
-          coins: increment(-coinsToWithdraw)
-        });
-
-        await addDoc(collection(db, "withdrawals"), {
-          userId: currentUser.uid,
-          userName: holderVal !== '--' ? holderVal : (userData?.name || currentUser?.displayName || 'User'),
-          email: userData?.email || currentUser?.email || '',
+        const resData = await callSecureWalletAction({
+          action: "request_withdraw",
+          source: "web",
           method: m.name,
-          taka: takaAmount,
           coins: coinsToWithdraw,
           phone: accVal,
           contactPhone: phoneVal,
-          status: "Pending",
-          createdAt: serverTimestamp()
+          holderName: holderVal !== '--' ? holderVal : (userData?.name || currentUser?.displayName || 'User'),
+          deviceId: getDeviceId()
         });
 
         if (coinsInput) coinsInput.value = '';
         window.updateRjCalculatedBdt();
         playCoinChime();
         triggerConfettiBlast();
-        alert(`✅ উইথড্রল রিকোয়েস্ট সফল হয়েছে! সর্বোচ্চ ২৪ ঘণ্টার মধ্যে ৳${takaAmount} আপনার ${m.name} একাউন্টে (${accVal}) পাঠানো হবে।`);
+        alert(resData.message || `✅ উইথড্রল রিকোয়েস্ট সফল হয়েছে! সর্বোচ্চ ২৪ ঘণ্টার মধ্যে ৳${takaAmount} আপনার ${m.name} একাউন্টে (${accVal}) পাঠানো হবে।`);
       } catch (err) {
         console.error("Desktop withdraw error:", err);
         alert("উইথড্রল রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে: " + (err.message || err));
@@ -7584,15 +7581,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           if (banner) banner.classList.add('hidden');
 
           try {
-            const claimTs = Date.now();
-            const uRef = doc(db, "users", currentUser.uid);
-            await updateDoc(uRef, {
-              coins: increment(coinsToCredit),
-              totalSurfEarnings: increment(coinsToCredit),
-              lastSurfClaimTime: claimTs
+            const resData = await callSecureWalletAction({
+              action: "browsing_claim",
+              taskId: browsingTaskId || 'ow_br_1',
+              taskTitle: browsingTaskTitle || 'Browsing Task'
             });
+            const claimTs = resData.lastSurfClaimTime || Date.now();
+            const credited = resData.coinsAdded || coinsToCredit;
 
-            // Save 24h cooldown for this browsingTaskId
             window.userBrowsingCompletedMap = window.userBrowsingCompletedMap || {};
             window.userBrowsingCompletedMap[browsingTaskId] = claimTs;
             try {
@@ -7602,33 +7598,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             } catch (e) {}
             if (window.renderOfferwallGGBrowsingTasks) window.renderOfferwallGGBrowsingTasks();
 
-            // Log click & earning to Firestore submissions collection (submissionType: 'browsing') so Admin Panel tracks clicks & earnings per task
-            try {
-              const nowObj = new Date();
-              const timeStr = nowObj.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-              await addDoc(collection(db, "submissions"), {
-                taskId: browsingTaskId || 'ow_br_1',
-                taskTitle: browsingTaskTitle || 'Browsing Task',
-                userId: currentUser.uid,
-                userName: userData?.name || currentUser?.displayName || 'User',
-                userEmail: userData?.email || currentUser?.email || '',
-                rewardCoins: coinsToCredit,
-                rewardTaka: Number((coinsToCredit / 10000).toFixed(4)),
-                status: 'Approved',
-                submissionType: 'browsing',
-                submittedTime: timeStr,
-                createdAt: serverTimestamp()
-              });
-            } catch (logErr) {
-              console.warn("Browsing click log notice:", logErr);
-            }
-
             playCoinChime();
             confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
-            alert(`অভিনন্দন! আপনি ব্রাউজিং টাস্কটি সম্পন্ন করায় ${window.formatAppCurrencyFromCoins(coinsToCredit, { exactDecimals: 2 })} (${coinsToCredit.toLocaleString()} Coins) পেয়েছেন!`);
+            alert(`অভিনন্দন! আপনি ব্রাউজিং টাস্কটি সম্পন্ন করায় ${window.formatAppCurrencyFromCoins(credited, { exactDecimals: 2 })} (${credited.toLocaleString()} Coins) পেয়েছেন!`);
           } catch (e) {
             console.error("Surf reward error:", e);
-            alert("কয়েন আপডেট হতে সাময়িক সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+            alert(e.message || "কয়েন আপডেট হতে সাময়িক সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
           }
         }
       }, 1000);
@@ -7811,7 +7786,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
         window.fetchOfferwallGGLiveData();
         listenTasks();
-        listenNotifications();
+        listenNotifications(user.uid);
         listenUserSubmissions(user.uid);
         listenRealLeaderboard();
         loadAdminSubmissions();
@@ -8032,16 +8007,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         } else {
           clearInterval(timer);
           try {
-            const claimTs = Date.now();
-            await updateDoc(doc(db, "users", currentUser.uid), {
-              coins: increment(10000),
-              lastDailyClaimTime: claimTs
-            });
+            const resData = await callSecureWalletAction({ action: "daily_claim" });
+            const claimTs = resData.lastDailyClaimTime || Date.now();
             isClaimingDailyAd = false;
             checkDailyRewardStatus(claimTs);
             playCoinChime();
             triggerConfettiBlast();
-            alert("🎉 অভিনন্দন! বিজ্ঞাপন দেখা সম্পন্ন হয়েছে এবং ১.০০ টাকা (১০,০০০ কয়েন) ফ্রি বোনাস আপনার একাউন্টে যোগ হয়েছে!");
+            alert(resData.message || "🎉 অভিনন্দন! বিজ্ঞাপন দেখা সম্পন্ন হয়েছে এবং ১.০০ টাকা (১০,০০০ কয়েন) ফ্রি বোনাস আপনার একাউন্টে যোগ হয়েছে!");
           } catch (err) {
             isClaimingDailyAd = false;
             checkDailyRewardStatus(userData?.lastDailyClaimTime || 0);
@@ -8433,25 +8405,41 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
-    function listenNotifications() {
+    let unsubPersonalNotifs = null;
+    let unsubGlobalNotifs = null;
+
+    function listenNotifications(uid) {
+      const targetUid = uid || currentUser?.uid;
+      if (!targetUid) return;
       try {
-        const q = query(collection(db, "notifications"), orderBy("createdAt", "desc"), limit(15));
-        onSnapshot(q, (snapshot) => {
+        if (unsubPersonalNotifs) { unsubPersonalNotifs(); unsubPersonalNotifs = null; }
+        if (unsubGlobalNotifs) { unsubGlobalNotifs(); unsubGlobalNotifs = null; }
+
+        let personalNotifs = [];
+        let globalNotifs = [];
+
+        const getNotifTs = (n) => {
+          if (!n || !n.createdAt) return 0;
+          if (typeof n.createdAt.toMillis === "function") return n.createdAt.toMillis();
+          if (typeof n.createdAt.seconds === "number") return n.createdAt.seconds * 1000;
+          const parsed = Date.parse(n.createdAt);
+          return Number.isFinite(parsed) ? parsed : 0;
+        };
+
+        const renderMergedNotifications = () => {
           const listEl = document.getElementById("notification-list");
           const countEl = document.getElementById("notification-counter");
           const deskDot = document.getElementById("desk-notif-counter");
-          if (snapshot.empty) return;
-          if (countEl) {
-            countEl.innerText = String(snapshot.size);
-            countEl.classList.remove("hidden");
-          }
-          if (deskDot) deskDot.classList.remove("hidden");
-          const visibleNotifs = [];
-          snapshot.forEach((docSnap) => {
-            const n = docSnap.data();
-            if (n.userId && n.userId !== currentUser?.uid) return;
-            visibleNotifs.push(n);
+
+          const seen = new Set();
+          const merged = [...personalNotifs, ...globalNotifs].filter((item) => {
+            if (seen.has(item._id)) return false;
+            seen.add(item._id);
+            return true;
           });
+          merged.sort((a, b) => getNotifTs(b) - getNotifTs(a));
+          const visibleNotifs = merged.slice(0, 15);
+
           if (countEl) {
             if (visibleNotifs.length > 0) {
               countEl.innerText = String(visibleNotifs.length);
@@ -8479,8 +8467,29 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             });
             listEl.innerHTML = itemsHtml;
           }
+        };
+
+        // Filtered queries comply strictly with hardened firestore.rules (no permission-denied for regular users)
+        const qPersonal = query(collection(db, "notifications"), where("userId", "==", targetUid));
+        unsubPersonalNotifs = onSnapshot(qPersonal, (snapshot) => {
+          personalNotifs = [];
+          snapshot.forEach((docSnap) => {
+            personalNotifs.push({ _id: docSnap.id, ...docSnap.data() });
+          });
+          renderMergedNotifications();
         }, (err) => {
-          console.warn("Notifications listener notice:", err);
+          console.warn("Personal notifications listener notice:", err);
+        });
+
+        const qGlobal = query(collection(db, "notifications"), where("userId", "==", null));
+        unsubGlobalNotifs = onSnapshot(qGlobal, (snapshot) => {
+          globalNotifs = [];
+          snapshot.forEach((docSnap) => {
+            globalNotifs.push({ _id: docSnap.id, ...docSnap.data() });
+          });
+          renderMergedNotifications();
+        }, (err) => {
+          console.warn("Global notifications listener notice:", err);
         });
       } catch (e) {
         console.warn("Notifications setup notice:", e);
@@ -9388,25 +9397,23 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return;
       }
 
-      await updateDoc(doc(db, "users", currentUser.uid), {
-        coins: increment(-selectedCoins)
-      });
-
-      await addDoc(collection(db, "withdrawals"), {
-        userId: currentUser.uid,
-        userName: userData?.name || currentUser?.displayName || 'User',
-        email: userData?.email || currentUser?.email || '',
-        method: selectedMethod,
-        taka: selectedTaka,
-        coins: selectedCoins,
-        phone: num,
-        status: "Pending",
-        createdAt: serverTimestamp()
-      });
-
-      playCoinChime();
-      alert(`উইথড্রল রিকোয়েস্ট সফল হয়েছে! সর্বোচ্চ ২৪ ঘণ্টার মধ্যে ৳${selectedTaka} আপনার ${selectedMethod} পার্সোনাল নম্বরে (${num}) পাঠানো হবে।`);
-      document.getElementById('withdraw-number').value = '';
+      try {
+        const resData = await callSecureWalletAction({
+          action: "request_withdraw",
+          source: "mobile",
+          method: selectedMethod,
+          coins: selectedCoins,
+          phone: num,
+          contactPhone: num,
+          holderName: userData?.name || currentUser?.displayName || 'User',
+          deviceId: getDeviceId()
+        });
+        playCoinChime();
+        alert(resData.message || `উইথড্রল রিকোয়েস্ট সফল হয়েছে! সর্বোচ্চ ২৪ ঘণ্টার মধ্যে ৳${selectedTaka} আপনার ${selectedMethod} পার্সোনাল নম্বরে (${num}) পাঠানো হবে।`);
+        document.getElementById('withdraw-number').value = '';
+      } catch (err) {
+        alert("উইথড্রল রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে: " + (err.message || err));
+      }
     };
 
     // ================= REALTIME ADVANCED ANALYTICS & 7-DAY GRAPH =================
@@ -9929,6 +9936,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           const nNow = new Date();
           const nTime = nNow.toLocaleString('en-GB', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', hour12: true });
           await addDoc(collection(db, "notifications"), {
+            userId: null,
             title: "🔥 নতুন কাজ যুক্ত হয়েছে!",
             message: `"${title}" টাস্কটি সম্পন্ন করে জিতে নিন ৳${rewardTaka}!`,
             time: nTime,
@@ -10595,41 +10603,18 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
 
       try {
-        const q = query(collection(db, "users"), where("myInviteCode", "==", code));
-        const rSnap = await getDocs(q);
-        if (rSnap.empty) {
-          alert("⚠️ এই রেফারেল কোডটি পাওয়া যায়নি! দয়া করে সঠিক কোড দিন।");
-          if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
-          return;
-        }
-
-        const rDoc = rSnap.docs[0];
-        if (rDoc.id === currentUser.uid) {
-          alert("⚠️ আপনি নিজের রেফারেল কোড নিজে ব্যবহার করতে পারবেন না!");
-          if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
-          return;
-        }
-
-        // 1. Give Current User 30,000 Coins & save referral
-        await updateDoc(doc(db, "users", currentUser.uid), {
-          coins: increment(30000),
-          referredBy: code,
-          referredByUid: rDoc.id
+        const resData = await callSecureWalletAction({
+          action: "apply_referral",
+          inviteCode: code,
+          deviceId: getDeviceId()
         });
-
-        // 2. Give Referrer 10,000 Coins INSTANTLY & increment referralCount
-        await updateDoc(doc(db, "users", rDoc.id), {
-          coins: increment(10000),
-          referralCount: increment(1)
-        });
-
         playCoinChime();
         triggerConfettiBlast();
-        alert("🎉 অভিনন্দন! আপনার একাউন্টে ৩০,০০০ কয়েন যুক্ত হয়েছে এবং আপনার রেফারার ১০,০০০ কয়েন পেয়েছেন!");
+        alert(resData.message || "🎉 অভিনন্দন! আপনার একাউন্টে ৩০,০০০ কয়েন যুক্ত হয়েছে এবং আপনার রেফারার ১০,০০০ কয়েন পেয়েছেন!");
         document.getElementById('card-apply-referral')?.classList.add('hidden');
       } catch (err) {
         console.error("Apply in-app invite error:", err);
-        alert("রেফারেল কোড প্রয়োগে সমস্যা হয়েছে: " + (err.code || err.message));
+        alert("রেফারেল কোড প্রয়োগে সমস্যা হয়েছে: " + (err.message || err.code));
       } finally {
         if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
       }
