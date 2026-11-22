@@ -687,24 +687,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return (isStandalone || isFlagged);
     }
 
-    // Auto-check on load
-    window.addEventListener('DOMContentLoaded', () => {
-      if (isAppAlreadyInstalled()) {
-        document.getElementById('pwa-install-banner')?.classList.add('hidden');
-      }
-    });
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredAppInstallPrompt = e;
-      if (!isAppAlreadyInstalled()) {
-        document.getElementById('pwa-install-banner')?.classList.remove('hidden');
-      }
     });
 
     window.addEventListener('appinstalled', () => {
       localStorage.setItem('tr_pwa_installed', 'true');
-      document.getElementById('pwa-install-banner')?.classList.add('hidden');
     });
 
     function installAppDirect() {
@@ -713,18 +702,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         deferredAppInstallPrompt.userChoice.then((choice) => {
           if (choice.outcome === 'accepted') {
             localStorage.setItem('tr_pwa_installed', 'true');
-            document.getElementById('pwa-install-banner')?.classList.add('hidden');
           }
           deferredAppInstallPrompt = null;
         });
       } else {
         alert("📲 ব্রাউজারের ৩-ডট (Three dots) মেনুতে গিয়ে 'Install App' বা 'Add to Home screen'-এ চাপ দিন!");
       }
-    }
-
-    function dismissInstallBanner() {
-      localStorage.setItem('tr_pwa_installed', 'true');
-      document.getElementById('pwa-install-banner')?.classList.add('hidden');
     }
   </script>
 
@@ -943,7 +926,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 </div>
                 <div class="relative">
                   <i data-lucide="gift" class="w-[17px] h-[17px] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" style="color:var(--brand)"></i>
-                  <input id="heroInviteCode" type="text" oninput="const el=document.getElementById('input-invite-code'); if(el) el.value=this.value;" class="input !pl-11 uppercase tracking-wider text-xs" placeholder="Invite Code (Optional - 30,000 Coins Bonus)" />
+                  <input id="heroInviteCode" type="text" class="input !pl-11 uppercase tracking-wider text-xs" placeholder="Invite Code (Optional - 30,000 Coins Bonus)" />
                 </div>
                 <button type="submit" class="btn btn-primary w-full !py-3.5 !text-[14px]"><i data-lucide="zap"></i> Start earning now</button>
               </form>
@@ -3295,55 +3278,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
 <!-- image-viewer-modal moved above z-[250] -->
 
-    <!-- ================= 9. ADMIN USER INSPECTION MODAL ================= -->
-    <div id="admin-user-inspect-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-      <div class="bg-white rounded-3xl w-full max-w-md p-5 space-y-3.5 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
-        <div class="flex items-center justify-between border-b pb-2">
-          <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
-            <span>🔎</span> ইউজার প্রোফাইল ও টাস্ক অডিট
-          </h3>
-          <button onclick="closeUserInspectModal()" class="text-slate-400 hover:text-slate-800 text-lg font-bold cursor-pointer">✕</button>
-        </div>
-
-        <div id="inspect-user-summary" class="bg-slate-50 border border-slate-200 p-3 rounded-2xl text-xs space-y-1">
-          লোড হচ্ছে...
-        </div>
-
-        <div class="flex-1 overflow-y-auto space-y-2 pr-1 hide-scrollbar">
-          <h4 class="font-extrabold text-xs text-slate-700 uppercase">ইউজারের সাবমিট করা কাজের তালিকা:</h4>
-          <div id="inspect-submissions-list" class="space-y-2 text-xs"></div>
-        </div>
-
-        <button onclick="closeUserInspectModal()" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 rounded-xl text-xs cursor-pointer">
-          বন্ধ করুন
-        </button>
-      </div>
-    </div>
-
-    <!-- ================= 10. PRO TABBED ADMIN MODAL ================= -->
-        <!-- ================= ADMIN ALL USERS LIST MODAL ================= -->
-    <div id="admin-all-users-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
-      <div class="bg-white rounded-3xl w-full max-w-md p-5 space-y-3 shadow-2xl text-slate-900 max-h-[90vh] flex flex-col justify-between">
-        <div class="flex items-center justify-between border-b pb-2.5">
-          <div>
-            <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
-              <span>👥</span> সকল রেজিস্টার্ড ইউজার তালিকা
-            </h3>
-            <span id="admin-total-users-badge" class="text-[10px] text-blue-600 font-bold">মোট ইউজার: ০ জন</span>
-          </div>
-          <button onclick="closeAdminAllUsersModal()" class="text-slate-400 hover:text-slate-800 text-xl font-bold cursor-pointer">✕</button>
-        </div>
-
-        <!-- Users List with Live Balance & Details -->
-        <div id="admin-all-users-list" class="flex-1 overflow-y-auto space-y-2 pr-1 hide-scrollbar">
-          <p class="text-slate-400 text-center py-6 text-xs">ইউজার লিস্ট লোড হচ্ছে...</p>
-        </div>
-
-        <button onclick="closeAdminAllUsersModal()" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider cursor-pointer">
-          বন্ধ করুন
-        </button>
-      </div>
-    </div>
 
         <!-- ================= ENTERPRISE PRO MASTER ADMIN DASHBOARD (DUAL PC & MOBILE MODE) ================= -->
     <div id="admin-modal" class="fixed inset-0 bg-slate-900/80 z-50 flex items-center justify-center p-2 sm:p-4 hidden backdrop-blur-md transition-all duration-300">
@@ -4293,12 +4227,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           sessionStorage.setItem('tr_pending_invite', cleanRef);
 
           const applyToInput = () => {
-            const input = document.getElementById('input-invite-code');
-            const badge = document.getElementById('invite-code-badge');
-            if (input) input.value = cleanRef;
-            if (badge) {
-              badge.classList.remove('hidden');
-              badge.innerText = `✓ রেফারেল কোড যুক্ত হয়েছে: ${cleanRef} (৩০,০০০ কয়েন পাবেন)`;
+            const heroInput = document.getElementById('heroInviteCode');
+            if (heroInput) {
+              heroInput.value = cleanRef;
+              heroInput.title = `রেফারেল কোড যুক্ত হয়েছে: ${cleanRef} (৩০,০০০ কয়েন বোনাস)`;
             }
           };
 
@@ -4341,14 +4273,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     (function restoreCachedBalance() {
       try {
-        const cCoins = localStorage.getItem('tr_cached_coins');
         const cTaka = localStorage.getItem('tr_cached_taka');
-        if (cCoins && document.getElementById('app-coins')) {
-          document.getElementById('app-coins').innerText = Number(cCoins).toLocaleString();
-        }
-        if (cTaka && document.getElementById('app-taka')) {
-          document.getElementById('app-taka').innerText = cTaka;
-        }
         if (cTaka && document.getElementById('desk-app-taka')) {
           document.getElementById('desk-app-taka').innerText = cTaka;
         }
@@ -4536,7 +4461,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         clickedBtn.innerHTML = '<span>⏳ গুগল কানেক্ট হচ্ছে...</span>';
       }
 
-      let inputCode = document.getElementById('input-invite-code')?.value?.trim() || document.getElementById('heroInviteCode')?.value?.trim() || '';
+      let inputCode = document.getElementById('heroInviteCode')?.value?.trim() || '';
       inputCode = extractCleanInviteCode(inputCode);
       if (inputCode) {
         localStorage.setItem('tr_pending_invite', inputCode);
@@ -4550,8 +4475,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (res && res.user) {
           currentUser = res.user;
           if (typeof window.closeAuthModal === 'function') window.closeAuthModal();
-          document.getElementById('screen-login')?.classList.add('hidden');
-          document.getElementById('screen-app')?.classList.remove('hidden');
           if (typeof window.syncDesktopUI === 'function') {
             try { window.syncDesktopUI(userData, res.user); } catch (uiErr) { console.warn("UI sync notice:", uiErr); }
           }
@@ -4564,8 +4487,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (auth.currentUser) {
           currentUser = auth.currentUser;
           if (typeof window.closeAuthModal === 'function') window.closeAuthModal();
-          document.getElementById('screen-login')?.classList.add('hidden');
-          document.getElementById('screen-app')?.classList.remove('hidden');
           if (typeof window.syncDesktopUI === 'function') {
             try { window.syncDesktopUI(userData, auth.currentUser); } catch (uiErr) { console.warn("UI sync notice:", uiErr); }
           }
@@ -4609,8 +4530,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         const res = await getRedirectResult(auth);
         if (res && res.user) {
           currentUser = res.user;
-          document.getElementById('screen-login')?.classList.add('hidden');
-          document.getElementById('screen-app')?.classList.remove('hidden');
         syncDesktopUI(userData, typeof user !== 'undefined' ? user : currentUser);
           processUserRegistration(res.user);
         }
@@ -4742,8 +4661,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (e && e.preventDefault) e.preventDefault();
       const heroInv = document.getElementById('heroInviteCode')?.value?.trim();
       if (heroInv) {
-        const inp = document.getElementById('input-invite-code');
-        if (inp) inp.value = heroInv;
+        const cleanHero = extractCleanInviteCode(heroInv);
+        if (cleanHero) {
+          localStorage.setItem('tr_pending_invite', cleanHero);
+          sessionStorage.setItem('tr_pending_invite', cleanHero);
+        }
       }
       window.loginWithGoogleSmart(e);
       return false;
@@ -6550,21 +6472,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       window.currentWithdrawCategory = cat;
       const cashBtn = document.getElementById('rj-wtab-cash');
       const p2pBtn = document.getElementById('rj-wtab-p2p');
-      const mobCashBtn = document.getElementById('mob-wtab-cash');
-      const mobP2pBtn = document.getElementById('mob-wtab-p2p');
       const p2pPanel = document.getElementById('rj-p2p-transfer-panel');
-      const mobCashContent = document.getElementById('mob-cash-content');
-      const mobP2pContent = document.getElementById('mob-p2p-content');
       const deskWithdraw = document.getElementById('desk-view-withdraw');
-      const isLegacyMobileActive = false;
 
       if (cat === 'p2p') {
         // Activate P2P Tab
         if (cashBtn) cashBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer";
         if (p2pBtn) p2pBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 border border-orange-200/80 dark:border-orange-800/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] shadow-2xs transition cursor-pointer";
-
-        if (mobCashBtn) mobCashBtn.className = "py-2.5 rounded-xl font-bold text-xs text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1.5 cursor-pointer";
-        if (mobP2pBtn) mobP2pBtn.className = "py-2.5 rounded-xl font-black text-xs transition bg-[#fff3eb] text-[#f97316] shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
 
         // Hide Cash withdraw elements
         document.getElementById('rj-withdraw-step-cards')?.classList.add('hidden');
@@ -6572,19 +6486,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         document.getElementById('rj-withdraw-loading')?.classList.add('hidden');
         document.getElementById('rj-withdraw-back-btn')?.classList.add('hidden');
 
-        // Keep p2pPanel inside #desk-view-withdraw unless legacy #mobile-app-wrapper is actively open
-        if (isLegacyMobileActive) {
-          if (mobCashContent) mobCashContent.classList.add('hidden');
-          if (mobP2pContent && p2pPanel) {
-            mobP2pContent.classList.remove('hidden');
-            if (!mobP2pContent.contains(p2pPanel)) {
-              mobP2pContent.appendChild(p2pPanel);
-            }
-          }
-        } else {
-          if (deskWithdraw && p2pPanel && !deskWithdraw.contains(p2pPanel)) {
-            deskWithdraw.appendChild(p2pPanel);
-          }
+        if (deskWithdraw && p2pPanel && !deskWithdraw.contains(p2pPanel)) {
+          deskWithdraw.appendChild(p2pPanel);
         }
 
         // Show P2P panel
@@ -6598,12 +6501,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (cashBtn) cashBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-[#fff3eb] dark:bg-orange-950/40 flex items-center justify-center gap-3 text-[#f97316] font-semibold text-[15px] transition cursor-pointer";
         if (p2pBtn) p2pBtn.className = "w-full sm:w-52 py-3 sm:py-3.5 px-3 sm:px-6 rounded-xl bg-white dark:bg-[var(--surface)] border border-slate-200/70 dark:border-[var(--border)] flex items-center justify-center gap-3 text-[#6b7280] dark:text-slate-400 font-semibold text-[15px] shadow-2xs hover:text-slate-800 transition cursor-pointer";
 
-        if (mobCashBtn) mobCashBtn.className = "py-2.5 rounded-xl font-black text-xs transition bg-[#fff3eb] text-[#f97316] shadow-xs flex items-center justify-center gap-1.5 cursor-pointer";
-        if (mobP2pBtn) mobP2pBtn.className = "py-2.5 rounded-xl font-bold text-xs text-slate-500 hover:text-slate-800 transition flex items-center justify-center gap-1.5 cursor-pointer";
 
         if (p2pPanel) p2pPanel.classList.add('hidden');
-        if (mobCashContent) mobCashContent.classList.remove('hidden');
-        if (mobP2pContent) mobP2pContent.classList.add('hidden');
 
         if (deskWithdraw && p2pPanel && !deskWithdraw.contains(p2pPanel)) {
           deskWithdraw.appendChild(p2pPanel);
@@ -6975,76 +6874,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       window.desktopSwitchTab('withdraw');
     };
 
-    window.closeCashoutModalDirect = function() {
-      const m = document.getElementById('cashout-modal');
-      if (m) m.classList.add('hidden');
-    };
-
-    window.selectDesktopGate = function(gate) {
-      selectedMethod = gate;
-      const isBkash = (gate === 'bKash');
-      const activeImg = isBkash ? BKASH_LOGO : NAGAD_LOGO;
-      const activeText = isBkash ? "বিকাশ" : "নগদ";
-      const activeColor = isBkash ? "text-pink-600" : "text-orange-600";
-      const activeBorder = isBkash ? "border-pink-200" : "border-orange-200";
-      const activeBg = isBkash ? "bg-pink-50" : "bg-orange-50";
-
-      const nagadBtn = document.getElementById('desk-gate-btn-nagad');
-      const bkashBtn = document.getElementById('desk-gate-btn-bkash');
-
-      if (nagadBtn && bkashBtn) {
-        if (isBkash) {
-          bkashBtn.className = "flex-1 border-2 border-pink-500 bg-pink-50/80 dark:bg-pink-950/30 font-black text-pink-600 py-3 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
-          nagadBtn.className = "flex-1 border-2 border-slate-200 dark:border-slate-700 bg-[var(--surface-2)] font-bold text-[var(--text-2)] py-3 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
-        } else {
-          nagadBtn.className = "flex-1 border-2 border-orange-500 bg-orange-50/80 dark:bg-orange-950/30 font-black text-orange-600 py-3 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
-          bkashBtn.className = "flex-1 border-2 border-slate-200 dark:border-slate-700 bg-[var(--surface-2)] font-bold text-[var(--text-2)] py-3 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
-        }
-      }
-
-      document.querySelectorAll('.desk-card-method-img').forEach(img => img.src = activeImg);
-      document.querySelectorAll('.desk-card-method-name').forEach(nameSpan => {
-        nameSpan.innerText = activeText;
-        nameSpan.className = `desk-card-method-name text-[10px] font-bold ${activeColor}`;
-      });
-      document.querySelectorAll('.desk-w-badge').forEach(badge => {
-        badge.className = `desk-w-badge flex items-center gap-1 ${activeBg} border ${activeBorder} px-2 py-0.5 rounded-lg`;
-      });
-
-      // Also sync mobile gate buttons
-      const mobGateBtn = document.getElementById(isBkash ? 'gate-btn-bkash' : 'gate-btn-nagad');
-      if (window.selectGate && mobGateBtn) window.selectGate(gate, mobGateBtn);
-    };
-
-    window.selectDesktopWithdrawCard = function(taka, coins, el) {
-      selectedTaka = taka;
-      selectedCoins = coins;
-      document.querySelectorAll('.desk-w-card').forEach(c => {
-        c.classList.remove('border-emerald-500');
-        c.classList.add('border-[var(--border)]');
-      });
-      if (el) {
-        el.classList.remove('border-[var(--border)]');
-        el.classList.add('border-emerald-500');
-      }
-      const btnAmt = document.getElementById('desk-cashout-btn-amount');
-      if (btnAmt) btnAmt.innerText = '৳' + taka;
-    };
-
-    window.executeDesktopCashout = async function() {
-      const deskInput = document.getElementById('desk-withdraw-number');
-      const mobInput = document.getElementById('withdraw-number');
-      const num = (deskInput?.value || mobInput?.value || '').trim();
-      if (!num || num.length < 11) {
-        alert("দয়া করে সঠিক ১১ ডিজিটের ব্যক্তিগত (Personal) মোবাইল নম্বর দিন।");
-        return;
-      }
-      if (mobInput) mobInput.value = num;
-      await window.executeCashout();
-      if (deskInput) deskInput.value = '';
-      window.closeCashoutModalDirect();
-    };
-
     // Live Clock Updater (RewardJoy Exact Format: YYYY.MM.DD HH:MM:SS)
     setInterval(() => {
       const clockEl = document.getElementById('desk-live-clock');
@@ -7277,8 +7106,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         }
 
         // 1. Instantly show the app screen with cached balance & tasks
-        document.getElementById('screen-login')?.classList.add('hidden');
-        document.getElementById('screen-app')?.classList.remove('hidden');
         syncDesktopUI(userData, typeof user !== 'undefined' ? user : currentUser);
 
         // 2. Admin Check
@@ -7340,7 +7167,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             }
 
             updateVIPTierStatus(userData.completedApprovedTasks || 0);
-            updateTimeWallLinks(user.uid);
             checkDailyRewardStatus(userData.lastDailyClaimTime || 0);
           }
         }, (err) => {
@@ -7356,8 +7182,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       } else {
         currentUser = null;
         userData = null;
-        document.getElementById('screen-login')?.classList.remove('hidden');
-        document.getElementById('screen-app')?.classList.add('hidden');
         syncDesktopUI(null, null);
       }
     });
@@ -8263,12 +8087,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       return url;
     }
 
-    function updateTimeWallLinks(uid) {
-      const iframe = document.getElementById('timewall-iframe');
-      if (iframe && uid) {
-        iframe.src = `https://timewall.io/users/login?oid=${TIMEWALL_PLACEMENT_ID}&uid=${uid}`;
-      }
-    }
 
     window.openTimeWall = function(tab = '') {
       if (window.guardAgainstVpn && !window.guardAgainstVpn()) return;
@@ -8278,21 +8096,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
       const url = getTimeWallUrl(tab);
       window.open(url, '_blank');
-    };
-
-    window.toggleTimeWallIframe = function() {
-      const container = document.getElementById('timewall-iframe-container');
-      const btnText = document.getElementById('timewall-toggle-text');
-      if (!container) return;
-      const isHidden = container.classList.contains('hidden');
-      if (isHidden) {
-        container.classList.remove('hidden');
-        if (btnText) btnText.innerText = 'বন্ধ করুন 🔼';
-        if (currentUser) updateTimeWallLinks(currentUser.uid);
-      } else {
-        container.classList.add('hidden');
-        if (btnText) btnText.innerText = 'অ্যাপে দেখুন 🔽';
-      }
     };
 
     function renderTaskInstructionsInModal(task) {
@@ -8552,92 +8355,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         submitBtn.disabled = false;
       }
     };
-
-    function listenRealLeaderboard() {
-      const q = query(collection(db, "users"), orderBy("referralCount", "desc"), limit(10));
-      onSnapshot(q, (snapshot) => {
-        let usersList = [];
-        snapshot.forEach((d) => usersList.push(d.data()));
-
-        // Calculate dynamic growing values based on date
-        const baseDays = Math.floor((Date.now() - 1726300000000) / 86400000);
-        const dynamicAdminRefs = 14750 + (baseDays * 45) + Math.floor(Math.random() * 5);
-        const dynamicRank2Refs = 3543 + (baseDays * 15) + Math.floor(Math.random() * 3);
-        const dynamicRank3Refs = 1767 + (baseDays * 9) + Math.floor(Math.random() * 2);
-
-        const dynamicAdminPrize = 23544 + (baseDays * 120);
-        const dynamicRank2Prize = 17480 + (baseDays * 80);
-        const dynamicRank3Prize = 11630 + (baseDays * 50);
-
-        // 1. Admin ALWAYS #1 Champion with Real Profile Picture!
-        const userHeaderAvatar = document.getElementById('user-avatar')?.src;
-        const realAdminAvatar = (userData && userData.photoURL) || (currentUser && currentUser.photoURL) || userHeaderAvatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=AdminMaruf";
-
-        if (document.getElementById('podium-name-1')) document.getElementById('podium-name-1').innerText = "MD Maruf Khan (Admin)";
-        if (document.getElementById('podium-ref-1')) document.getElementById('podium-ref-1').innerText = `👤 ${dynamicAdminRefs.toLocaleString()}`;
-        if (document.getElementById('podium-img-1')) document.getElementById('podium-img-1').src = realAdminAvatar;
-        if (document.getElementById('podium-prize-1')) document.getElementById('podium-prize-1').innerText = "৳" + dynamicAdminPrize.toLocaleString();
-
-        // 2. Second Place (Silver) - 3,543+ referrals
-        const rank2User = usersList.find(u => u.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) || { name: "Maicro" };
-        if (document.getElementById('podium-name-2')) document.getElementById('podium-name-2').innerText = rank2User.name || "Maicro";
-        if (document.getElementById('podium-ref-2')) document.getElementById('podium-ref-2').innerText = `👤 ${dynamicRank2Refs.toLocaleString()}`;
-        if (document.getElementById('podium-prize-2')) document.getElementById('podium-prize-2').innerText = "৳" + dynamicRank2Prize.toLocaleString();
-
-        // 3. Third Place (Bronze) - 1,767+ referrals
-        const nonAdminUsers = usersList.filter(u => u.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase());
-        const rank3User = nonAdminUsers[1] || { name: "Md Rasel" };
-        if (document.getElementById('podium-name-3')) document.getElementById('podium-name-3').innerText = rank3User.name || "Md Rasel";
-        if (document.getElementById('podium-ref-3')) document.getElementById('podium-ref-3').innerText = `👤 ${dynamicRank3Refs.toLocaleString()}`;
-        if (document.getElementById('podium-prize-3')) document.getElementById('podium-prize-3').innerText = "৳" + dynamicRank3Prize.toLocaleString();
-
-        // Bottom User Rank Status Strip
-        const myRankPos = document.getElementById('my-rank-position');
-        const myRankPrize = document.getElementById('my-rank-prize');
-        if (currentUser && currentUser.email?.toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) {
-          if (myRankPos) myRankPos.innerText = "1st 👑";
-          if (myRankPrize) myRankPrize.innerText = "৳" + dynamicAdminPrize.toLocaleString();
-        } else if (userData) {
-          if (myRankPos) myRankPos.innerText = "99+";
-          if (myRankPrize) myRankPrize.innerText = "৳0.00";
-        }
-      }, (err) => {
-        console.warn("Leaderboard error callback:", err);
-      });
-    }
-
-    function startLiveWithdrawalsSimulation() {
-      const liveNames = ['z***c', 'r***m', 's***l', 'a***n', 'k***r', 'm***d', 'f***a', 'h***n', 't***q', 'j***l'];
-      const amounts = [105, 200, 105, 300, 200, 105, 500];
-      const ticker = document.getElementById('live-withdrawals-ticker');
-
-      function updateTicker() {
-        if (!ticker) return;
-        ticker.innerHTML = '';
-        for (let i = 0; i < 3; i++) {
-          const randName = liveNames[Math.floor(Math.random() * liveNames.length)];
-          const randAmt = amounts[Math.floor(Math.random() * amounts.length)];
-          const timeText = i === 0 ? 'Just now' : `${i} Minute Before`;
-          const avatarLetter = randName[0].toUpperCase();
-
-          ticker.innerHTML += `
-            <div class="bg-white border border-slate-200 rounded-2xl p-3 flex items-center justify-between shadow-xs">
-              <div class="flex items-center gap-2.5">
-                <div class="w-8 h-8 rounded-full bg-slate-900 text-white font-bold flex items-center justify-center text-xs">${avatarLetter}</div>
-                <div>
-                  <strong class="text-slate-800 block">${randName} শুধু প্রত্যাহার</strong>
-                  <span class="text-[10px] text-slate-400">${timeText}</span>
-                </div>
-              </div>
-              <span class="font-black text-slate-900 text-sm">৳${randAmt}</span>
-            </div>
-          `;
-        }
-      }
-
-      updateTicker();
-      setInterval(updateTicker, 60000);
-    }
 
     // ================= ENTERPRISE MASTER ADMIN LOGIC =================
     // Admin state maps & bnStepNumbers hoisted to top of module
@@ -8923,66 +8640,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       selectedCoins = coins;
       document.querySelectorAll('.w-card').forEach(c => c.classList.replace('border-emerald-500', 'border-slate-200'));
       el.classList.replace('border-slate-200', 'border-emerald-500');
-    };
-
-    window.selectGate = function(gate, el) {
-      selectedMethod = gate;
-      const isBkash = (gate === 'bKash');
-      const activeImg = isBkash ? BKASH_LOGO : NAGAD_LOGO;
-      const activeText = isBkash ? "বিকাশ" : "নগদ";
-      const activeColor = isBkash ? "text-pink-600" : "text-orange-600";
-      const activeBorder = isBkash ? "border-pink-200" : "border-orange-200";
-      const activeBg = isBkash ? "bg-pink-50" : "bg-orange-50";
-
-      const nagadBtn = document.getElementById('gate-btn-nagad');
-      const bkashBtn = document.getElementById('gate-btn-bkash');
-
-      if (isBkash) {
-        bkashBtn.className = "gate-btn flex-1 border-2 border-pink-500 bg-pink-50/80 font-black text-pink-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
-        nagadBtn.className = "gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
-      } else {
-        nagadBtn.className = "gate-btn flex-1 border-2 border-orange-500 bg-orange-50/80 font-black text-orange-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
-        bkashBtn.className = "gate-btn flex-1 border-2 border-slate-200 bg-white font-bold text-slate-600 py-2.5 px-3 rounded-2xl text-xs flex items-center justify-center gap-2 shadow-xs transition cursor-pointer";
-      }
-
-      document.querySelectorAll('.card-method-img').forEach(img => img.src = activeImg);
-      document.querySelectorAll('.card-method-name').forEach(nameSpan => {
-        nameSpan.innerText = activeText;
-        nameSpan.className = `card-method-name text-[11px] font-bold ${activeColor}`;
-      });
-      document.querySelectorAll('.w-card-badge').forEach(badge => {
-        badge.className = `w-card-badge flex items-center gap-1 ${activeBg} border ${activeBorder} px-2 py-1 rounded-lg`;
-      });
-    };
-
-    window.executeCashout = async function() {
-      const num = (document.getElementById('withdraw-number')?.value || '').trim();
-      if (!num || num.length < 11) {
-        alert("দয়া করে সঠিক ১১ ডিজিটের ব্যক্তিগত (Personal) মোবাইল নম্বর দিন।");
-        return;
-      }
-      if ((userData?.coins || 0) < selectedCoins) {
-        alert(`পর্যাপ্ত কয়েন নেই! ৳${selectedTaka} তুলতে ${selectedCoins.toLocaleString()} কয়েন প্রয়োজন।`);
-        return;
-      }
-
-      try {
-        const resData = await callSecureWalletAction({
-          action: "request_withdraw",
-          source: "mobile",
-          method: selectedMethod,
-          coins: selectedCoins,
-          phone: num,
-          contactPhone: num,
-          holderName: userData?.name || currentUser?.displayName || 'User',
-          deviceId: getDeviceId()
-        });
-        playCoinChime();
-        alert(resData.message || `উইথড্রল রিকোয়েস্ট সফল হয়েছে! সর্বোচ্চ ২৪ ঘণ্টার মধ্যে ৳${selectedTaka} আপনার ${selectedMethod} পার্সোনাল নম্বরে (${num}) পাঠানো হবে।`);
-        const wnEl = document.getElementById('withdraw-number'); if (wnEl) wnEl.value = '';
-      } catch (err) {
-        alert("উইথড্রল রিকোয়েস্ট পাঠাতে সমস্যা হয়েছে: " + (err.message || err));
-      }
     };
 
     // ================= REALTIME ADVANCED ANALYTICS & 7-DAY GRAPH =================
@@ -10227,51 +9884,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     };
 
-    window.applyInAppInviteCode = async function() {
-      if (!currentUser || !userData) {
-        alert("দয়া করে প্রথমে লগইন করুন!");
-        return;
-      }
-      if (userData.referredBy) {
-        alert("আপনি ইতিমধ্যে একটি রেফারেল কোড ব্যবহার করেছেন!");
-        return;
-      }
-      const inputEl = document.getElementById('input-inapp-invite-code');
-      const btn = document.getElementById('btn-apply-inapp-invite');
-      const rawCode = inputEl?.value || '';
-      const code = extractCleanInviteCode(rawCode);
-      if (!code) {
-        alert("অনুগ্রহ করে একটি সঠিক রেফারেল কোড দিন!");
-        return;
-      }
-      if (code === userData.myInviteCode) {
-        alert("⚠️ আপনি নিজের রেফারেল কোড নিজে ব্যবহার করতে পারবেন না!");
-        return;
-      }
-
-      if (btn) {
-        btn.disabled = true;
-        btn.innerText = "যাচাই হচ্ছে...";
-      }
-
-      try {
-        const resData = await callSecureWalletAction({
-          action: "apply_referral",
-          inviteCode: code,
-          deviceId: getDeviceId()
-        });
-        playCoinChime();
-        triggerConfettiBlast();
-        alert(resData.message || "🎉 অভিনন্দন! আপনার একাউন্টে ৩০,০০০ কয়েন যুক্ত হয়েছে এবং আপনার রেফারার ১০,০০০ কয়েন পেয়েছেন!");
-        document.getElementById('card-apply-referral')?.classList.add('hidden');
-      } catch (err) {
-        console.error("Apply in-app invite error:", err);
-        alert("রেফারেল কোড প্রয়োগে সমস্যা হয়েছে: " + (err.message || err.code));
-      } finally {
-        if (btn) { btn.disabled = false; btn.innerText = "বোনাস নিন ➔"; }
-      }
-    };
-
     // Live Real-Time Referrals Tracker for Current User
     // Referral listener state hoisted to top of module
     function listenMyReferrals(uid, myInviteCode) {
@@ -10371,44 +9983,6 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       const text = `TakaReward Pro অ্যাপে জয়েন করে সাথে সাথে ৩০,০০০ কয়েন বোনাস নিন! প্রতিদিন সহজ কাজ করে বিকাশ ও নগদে টাকা উত্তোলন করুন। আমার রেফারেল কোড: ${code}`;
       if (p === 'fb') window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(refUrl)}`);
       if (p === 'tg') window.open(`https://t.me/share/url?url=${encodeURIComponent(refUrl)}&text=${encodeURIComponent(text)}`);
-    };
-
-    window.switchAppTab = function(tab) {
-      document.getElementById('tab-content-offer')?.classList.add('hidden');
-      document.getElementById('tab-content-myoffers')?.classList.add('hidden');
-      document.getElementById('tab-content-refer')?.classList.add('hidden');
-      document.getElementById('tab-content-cashout')?.classList.add('hidden');
-
-      document.querySelectorAll('nav button').forEach(b => {
-        b.classList.remove('text-emerald-primary', 'font-bold');
-        b.classList.add('text-slate-400', 'font-medium');
-      });
-
-      // Hide floating support button on Refer tab so it does not block the Copy button!
-      const supportBtn = document.getElementById('floating-support-btn');
-      if (tab === 'refer') {
-        supportBtn?.classList.add('hidden');
-      } else {
-        supportBtn?.classList.remove('hidden');
-      }
-
-      if (tab === 'offer') {
-        document.getElementById('tab-content-offer')?.classList.remove('hidden');
-        document.getElementById('nav-btn-offer')?.classList.add('text-emerald-primary', 'font-bold');
-      } else if (tab === 'myoffers') {
-        document.getElementById('tab-content-myoffers')?.classList.remove('hidden');
-        document.getElementById('nav-btn-myoffers')?.classList.add('text-emerald-primary', 'font-bold');
-        if (currentUser) listenUserSubmissions(currentUser.uid);
-      } else if (tab === 'refer') {
-        document.getElementById('tab-content-refer')?.classList.remove('hidden');
-        document.getElementById('nav-btn-refer')?.classList.add('text-emerald-primary', 'font-bold');
-        if (currentUser && userData?.myInviteCode) {
-          listenMyReferrals(currentUser.uid, userData.myInviteCode);
-        }
-      } else if (tab === 'cashout') {
-        document.getElementById('tab-content-cashout')?.classList.remove('hidden');
-        document.getElementById('nav-btn-cashout')?.classList.add('text-emerald-primary', 'font-bold');
-      }
     };
   
 
