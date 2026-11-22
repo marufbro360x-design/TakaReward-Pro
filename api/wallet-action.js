@@ -24,6 +24,13 @@ const DEFAULT_BROWSING_REWARDS = {
   mt_br_2: 500,
   mt_br_3: 500
 };
+const MAX_DAILY_BROWSING_CLAIMS = 20;
+
+function getBdDateKey(tsMs) {
+  // Bangladesh Standard Time (UTC+6)
+  const bd = new Date(tsMs + 6 * 60 * 60 * 1000);
+  return bd.toISOString().slice(0, 10);
+}
 
 let cachedCerts = null;
 let cachedCertsExpiry = 0;
@@ -223,6 +230,11 @@ async function commitWrites(token, writes) {
   });
   if (!res.ok) {
     const errText = await res.text();
+    if (res.status === 409 || /FAILED_PRECONDITION|ABORTED/i.test(errText)) {
+      const conflictErr = new Error("আরেকটি রিকোয়েস্ট প্রসেস হচ্ছে, ১ সেকেন্ড পর আবার চেষ্টা করুন।");
+      conflictErr.statusCode = 409;
+      throw conflictErr;
+    }
     throw new Error(`Firestore commit failed (${res.status}): ${errText}`);
   }
   return await res.json();
@@ -264,6 +276,7 @@ async function handleDailyClaim(uid, adminToken) {
   }
 
   const DAILY_COINS = 10000;
+  const userPrecondition = userDoc.updateTime ? { updateTime: userDoc.updateTime } : { exists: true };
   await commitWrites(adminToken, [
     {
       update: {
@@ -272,7 +285,8 @@ async function handleDailyClaim(uid, adminToken) {
           lastDailyClaimTime: { integerValue: String(now) }
         }
       },
-      updateMask: { fieldPaths: ["lastDailyClaimTime"] }
+      updateMask: { fieldPaths: ["lastDailyClaimTime"] },
+      currentDocument: userPrecondition
     },
     {
       transform: {
@@ -314,11 +328,21 @@ async function handleBrowsingClaim(uid, body, adminToken, clientIp) {
     return { status: 403, body: { success: false, error: "Account is suspended" } };
   }
 
-  // 1. Global 12-second anti-spam cooldown between browsing claims
+  // 1. Global 12-second anti-spam cooldown + strict daily browsing cap
   const now = Date.now();
   const lastSurf = getFieldNumber(uFields, "lastSurfClaimTime", 0);
   if (now - lastSurf < 12000) {
     return { status: 429, body: { success: false, error: "অনুগ্রহ করে কয়েক সেকেন্ড অপেক্ষা করে আবার চেষ্টা করুন।" } };
+  }
+
+  const todayKey = getBdDateKey(now);
+  const storedDateKey = getFieldString(uFields, "browsingClaimDate", "");
+  const countToday = storedDateKey === todayKey ? getFieldNumber(uFields, "browsingClaimCountToday", 0) : 0;
+  if (countToday >= MAX_DAILY_BROWSING_CLAIMS) {
+    return {
+      status: 429,
+      body: { success: false, error: `আপনি আজকের সর্বোচ্চ ${MAX_DAILY_BROWSING_CLAIMS}টি ব্রাউজিং টাস্ক সম্পন্ন করেছেন! আগামীকাল আবার চেষ্টা করুন।` }
+    };
   }
 
   // 2. Per-task 24-hour server cooldown check
@@ -335,7 +359,7 @@ async function handleBrowsingClaim(uid, body, adminToken, clientIp) {
     }
   }
 
-  // 3. Determine authoritative rewardCoins from server (never trust client reward amount!)
+  // 3. Determine authoritative rewardCoins from server (never trust client reward or arbitrary fake IDs!)
   let rewardCoins = DEFAULT_BROWSING_REWARDS[rawTaskId] || 0;
   let taskTitle = String(body.taskTitle || "Browsing Task").slice(0, 120);
 
@@ -347,9 +371,11 @@ async function handleBrowsingClaim(uid, body, adminToken, clientIp) {
       }
       rewardCoins = Math.min(5000, Math.max(100, getFieldNumber(taskDoc.fields, "rewardCoins", 500)));
       taskTitle = getFieldString(taskDoc.fields, "title", taskTitle);
-    } else {
-      // Allow live Offerwall.GG traffic IDs with strict 500 coin cap
+    } else if (/^(ow_|trf_|traffic_|offerwall_|\d{3,12}$)/i.test(rawTaskId)) {
+      // Allow valid live Offerwall.GG traffic IDs with strict 500 coin cap (protected by daily cap)
       rewardCoins = 500;
+    } else {
+      return { status: 400, body: { success: false, error: "অবৈধ ব্রাউজিং টাস্ক আইডি!" } };
     }
   }
 
@@ -358,16 +384,23 @@ async function handleBrowsingClaim(uid, body, adminToken, clientIp) {
   const subDocId = `br_${uid}_${safeTaskId}_${now}`;
   const userName = getFieldString(uFields, "name", "User");
   const userEmail = getFieldString(uFields, "email", "");
+  const userPrecondition = userDoc.updateTime ? { updateTime: userDoc.updateTime } : { exists: true };
+  const claimPrecondition = (prevClaim && prevClaim.updateTime)
+    ? { updateTime: prevClaim.updateTime }
+    : { exists: false };
 
   await commitWrites(adminToken, [
     {
       update: {
         name: docPath(`users/${uid}`),
         fields: {
-          lastSurfClaimTime: { integerValue: String(now) }
+          lastSurfClaimTime: { integerValue: String(now) },
+          browsingClaimDate: { stringValue: todayKey },
+          browsingClaimCountToday: { integerValue: String(countToday + 1) }
         }
       },
-      updateMask: { fieldPaths: ["lastSurfClaimTime"] }
+      updateMask: { fieldPaths: ["lastSurfClaimTime", "browsingClaimDate", "browsingClaimCountToday"] },
+      currentDocument: userPrecondition
     },
     {
       transform: {
@@ -387,7 +420,8 @@ async function handleBrowsingClaim(uid, body, adminToken, clientIp) {
           lastClaimedAt: { integerValue: String(now) },
           updatedAt: { timestampValue: nowIso }
         }
-      }
+      },
+      currentDocument: claimPrecondition
     },
     {
       update: {
@@ -458,6 +492,7 @@ async function handleApplyReferral(uid, body, adminToken) {
     return { status: 403, body: { success: false, error: "একই ডিভাইস থেকে নিজের রেফারেল কোড ব্যবহার করা যাবে না!" } };
   }
 
+  const userPrecondition = userDoc.updateTime ? { updateTime: userDoc.updateTime } : { exists: true };
   await commitWrites(adminToken, [
     {
       update: {
@@ -467,7 +502,8 @@ async function handleApplyReferral(uid, body, adminToken) {
           referredByUid: { stringValue: referrer.id }
         }
       },
-      updateMask: { fieldPaths: ["referredBy", "referredByUid"] }
+      updateMask: { fieldPaths: ["referredBy", "referredByUid"] },
+      currentDocument: userPrecondition
     },
     {
       transform: {
@@ -550,7 +586,8 @@ async function handleRequestWithdraw(uid, body, adminToken, clientIp) {
   const nowIso = new Date(now).toISOString();
   const wDocId = `wd_${uid.slice(0, 8)}_${now}_${Math.floor(100 + Math.random() * 900)}`;
 
-  // Atomic commit: deduct coins + create Pending withdrawal in a single transaction
+  // Atomic commit with optimistic concurrency lock (prevents double-spend / negative balance on rapid double-clicks)
+  const userPrecondition = userDoc.updateTime ? { updateTime: userDoc.updateTime } : { exists: true };
   await commitWrites(adminToken, [
     {
       transform: {
@@ -558,7 +595,8 @@ async function handleRequestWithdraw(uid, body, adminToken, clientIp) {
         fieldTransforms: [
           { fieldPath: "coins", increment: { integerValue: String(-coinsToWithdraw) } }
         ]
-      }
+      },
+      currentDocument: userPrecondition
     },
     {
       update: {
@@ -642,7 +680,9 @@ const universalHandler = async (req, res) => {
   } catch (err) {
     console.error("[Wallet Action Error]", err);
     const msg = err && err.message ? err.message : "Internal server error";
-    const status = /token|auth|expired|signature|audience|issuer/i.test(msg) ? 401 : 500;
+    const status = (err && err.statusCode)
+      ? err.statusCode
+      : (/token|auth|expired|signature|audience|issuer/i.test(msg) ? 401 : 500);
     return res.status(status).json({ success: false, error: msg });
   }
 };
