@@ -4884,7 +4884,16 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
     } catch(e) {}
 
-    // Instant Restore Cached Balance on load so balance never flashes 0
+    // Instant Restore Cached Balance & Custom Tasks on load (prevents ৳0.0 flash & delayed tasks)
+    let allAvailableTasks = [];
+    try {
+      const cachedTasksRaw = localStorage.getItem('tr_cached_tasks');
+      if (cachedTasksRaw) {
+        const parsedTasks = JSON.parse(cachedTasksRaw);
+        if (Array.isArray(parsedTasks)) allAvailableTasks = parsedTasks;
+      }
+    } catch(e) {}
+
     (function restoreCachedBalance() {
       try {
         const cCoins = localStorage.getItem('tr_cached_coins');
@@ -4895,9 +4904,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (cTaka && document.getElementById('app-taka')) {
           document.getElementById('app-taka').innerText = cTaka;
         }
+        if (cTaka && document.getElementById('desk-app-taka')) {
+          document.getElementById('desk-app-taka').innerText = cTaka;
+        }
       } catch(e) {}
     })();
-    let allAvailableTasks = [];
     let adminSubmissionsMap = {};
     let clientIP = "Unknown";
     let selectedAvatarUrl = "";
@@ -7791,11 +7802,36 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
 
+    let adminListenersStarted = false;
+    window.ensureAdminListenersStarted = function() {
+      if (adminListenersStarted) return;
+      if (!currentUser || !currentUser.email || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      adminListenersStarted = true;
+      loadAdminSubmissions();
+      loadAdminWithdrawals();
+      updateAdminAnalytics();
+    };
+
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         currentUser = user;
+        if (!userData) {
+          try {
+            const cachedUid = localStorage.getItem('tr_cached_uid');
+            const cachedCoins = localStorage.getItem('tr_cached_coins');
+            const cachedName = localStorage.getItem('tr_cached_name');
+            const cachedCode = localStorage.getItem('tr_cached_invite');
+            if (cachedUid === user.uid && cachedCoins !== null) {
+              userData = {
+                coins: Number(cachedCoins) || 0,
+                name: cachedName || user.displayName || 'User',
+                myInviteCode: cachedCode || ''
+              };
+            }
+          } catch(e) {}
+        }
 
-        // 1. Instantly show the app screen
+        // 1. Instantly show the app screen with cached balance & tasks
         document.getElementById('screen-login')?.classList.add('hidden');
         document.getElementById('screen-app')?.classList.remove('hidden');
         syncDesktopUI(userData, typeof user !== 'undefined' ? user : currentUser);
@@ -7827,8 +7863,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             syncDesktopUI(userData, currentUser);
 
             try {
+              localStorage.setItem('tr_cached_uid', user.uid);
               localStorage.setItem('tr_cached_coins', userCoins);
               localStorage.setItem('tr_cached_taka', userTaka);
+              if (userData.name) localStorage.setItem('tr_cached_name', userData.name);
+              if (userData.myInviteCode) localStorage.setItem('tr_cached_invite', userData.myInviteCode);
             } catch(e) {}
 
             const inviteCodeEl = document.getElementById('my-invite-code');
@@ -7869,9 +7908,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         listenNotifications(user.uid);
         listenUserSubmissions(user.uid);
         listenRealLeaderboard();
-        loadAdminSubmissions();
-        loadAdminWithdrawals();
-        updateAdminAnalytics();
+        // Heavy admin analytics & base64 proof listeners load lazily when Admin Panel is opened
         startLiveWithdrawalsSimulation();
       } else {
         currentUser = null;
@@ -8637,6 +8674,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           }
         });
 
+        try {
+          const compactTasks = allAvailableTasks.map(t => ({
+            id: t.id, title: t.title, category: t.category, rewardTaka: t.rewardTaka,
+            link: t.link, desc: t.desc, isPinned: !!t.isPinned, workerLimit: t.workerLimit || 0,
+            iconImage: (t.iconImage && t.iconImage.length < 2000) ? t.iconImage : null
+          }));
+          localStorage.setItem('tr_cached_tasks', JSON.stringify(compactTasks));
+        } catch(e) {}
         renderOfferTabTasks();
         if (window.renderOfferwallGGBrowsingTasks) window.renderOfferwallGGBrowsingTasks();
         if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
@@ -10871,11 +10916,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       modal.classList.toggle('hidden');
       if (!modal.classList.contains('hidden')) {
         switchAdminTab('proofs');
-        loadAdminSubmissions();
-        loadAdminWithdrawals();
+        if (typeof window.ensureAdminListenersStarted === 'function') window.ensureAdminListenersStarted();
         loadAdminTransfers();
         if (typeof window.loadP2PTransferSettings === 'function') window.loadP2PTransferSettings();
-        updateAdminAnalytics();
       }
     };
 
