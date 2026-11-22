@@ -247,9 +247,273 @@ function getClientIp(req) {
 }
 
 // =========================================================================
+
+// =========================================================================
+// STEP 2 ANTI-FRAUD: IP REPUTATION (VPN / PROXY / DATACENTER CHECK)
+// =========================================================================
+const ipReputationCache = new Map();
+const IP_CACHE_TTL_MS = 10 * 60 * 1000;
+
+function isPrivateOrLocalIp(ip) {
+  if (!ip || ip === "Unknown" || ip === "::1" || ip === "127.0.0.1") return true;
+  if (/^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/.test(ip)) return true;
+  return false;
+}
+
+async function checkIpReputation(ip) {
+  const cleanIp = String(ip || "").trim();
+  if (isPrivateOrLocalIp(cleanIp)) {
+    return { isVpn: false, country: "BD", isp: "", checked: false };
+  }
+  const cached = ipReputationCache.get(cleanIp);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.data;
+  }
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 2500);
+    const res = await fetch(
+      `http://ip-api.com/json/${encodeURIComponent(cleanIp)}?fields=status,countryCode,proxy,hosting,isp`,
+      { signal: controller.signal }
+    );
+    clearTimeout(timer);
+    if (!res.ok) return { isVpn: false, country: "", isp: "", checked: false };
+    const data = await res.json();
+    if (data && data.status === "success") {
+      const result = {
+        isVpn: Boolean(data.proxy || data.hosting),
+        country: String(data.countryCode || ""),
+        isp: String(data.isp || ""),
+        checked: true
+      };
+      ipReputationCache.set(cleanIp, { data: result, expiresAt: Date.now() + IP_CACHE_TTL_MS });
+      return result;
+    }
+  } catch (e) {
+    // Fail-open on timeout so legitimate users are never blocked by upstream hiccups
+  }
+  return { isVpn: false, country: "", isp: "", checked: false };
+}
+
+// =========================================================================
+// ACTION 0: SECURITY CHECK (VPN / Proxy + Multi-Account Device Check)
+// =========================================================================
+async function handleSecurityCheck(uid, body, adminToken, clientIp) {
+  const userDoc = await getFirestoreDoc(adminToken, `users/${uid}`);
+  if (!userDoc || !userDoc.fields) {
+    return { status: 404, body: { success: false, error: "User profile not found" } };
+  }
+  const uFields = userDoc.fields;
+  const isBlocked = getFieldBool(uFields, "isBlocked") || getFieldBool(uFields, "isSuspended");
+  const deviceId = getFieldString(uFields, "deviceId", "") || String(body.deviceId || "").trim();
+
+  const [ipRep, sameDeviceDocs] = await Promise.all([
+    checkIpReputation(clientIp),
+    deviceId ? queryFirestoreEq(adminToken, "users", "deviceId", deviceId, 5).catch(() => []) : Promise.resolve([])
+  ]);
+
+  const otherDeviceAccounts = sameDeviceDocs.filter(d => d.id !== uid).length;
+  const multiAccountFlag = otherDeviceAccounts > 0;
+  const nowIso = new Date().toISOString();
+
+  // Persist telemetry safely on users/{uid} (Admin OAuth — no firestore.rules change needed)
+  try {
+    await commitWrites(adminToken, [
+      {
+        update: {
+          name: docPath(`users/${uid}`),
+          fields: {
+            lastIP: { stringValue: clientIp || "Unknown" },
+            lastCountry: { stringValue: ipRep.country || "" },
+            vpnDetected: { booleanValue: Boolean(ipRep.isVpn) },
+            multiAccountFlag: { booleanValue: multiAccountFlag },
+            lastSeenAt: { timestampValue: nowIso }
+          }
+        },
+        updateMask: {
+          fieldPaths: ["lastIP", "lastCountry", "vpnDetected", "multiAccountFlag", "lastSeenAt"]
+        }
+      }
+    ]);
+  } catch (e) {
+    console.warn("[Security Check] Telemetry save notice:", e.message);
+  }
+
+  return {
+    status: 200,
+    body: {
+      success: true,
+      vpnBlocked: Boolean(ipRep.isVpn),
+      isBlocked,
+      multiAccountFlag,
+      ip: clientIp,
+      country: ipRep.country || "",
+      isp: ipRep.isp || ""
+    }
+  };
+}
+
+
+// =========================================================================
+// ACTION 0B: HARD 1-DEVICE 1-ACCOUNT + ANTI-VPN + CROSS-BROWSER REGISTRATION
+// =========================================================================
+const MASTER_ADMIN_EMAIL = "marufbro360x@gmail.com";
+
+function getIpSubnet(ip) {
+  const s = String(ip || "").trim();
+  if (!s || s === "Unknown") return "unknown";
+  if (s.includes(".")) {
+    const parts = s.split(".");
+    if (parts.length === 4) return `${parts[0]}.${parts[1]}.${parts[2]}`;
+  }
+  if (s.includes(":")) {
+    return s.split(":").slice(0, 4).join(":");
+  }
+  return s;
+}
+
+async function handleRegisterUser(uid, decodedEmail, body, adminToken, clientIp) {
+  // If user already exists, allow login immediately
+  const existingDoc = await getFirestoreDoc(adminToken, `users/${uid}`);
+  if (existingDoc && existingDoc.fields) {
+    const isBlocked = getFieldBool(existingDoc.fields, "isBlocked") || getFieldBool(existingDoc.fields, "isSuspended");
+    if (isBlocked) {
+      return { status: 403, body: { success: false, blocked: true, error: "🚫 আপনার অ্যাকাউন্টটি ব্যান/স্থগিত করা হয়েছে। সাপোর্টে যোগাযোগ করুন।" } };
+    }
+    return { status: 200, body: { success: true, alreadyExists: true } };
+  }
+
+  const email = String(decodedEmail || body.email || "").trim().toLowerCase();
+  const isMasterAdmin = email === MASTER_ADMIN_EMAIL;
+  const deviceId = String(body.deviceId || "").trim().slice(0, 80);
+  const hwFp = String(body.hardwareFingerprint || "").trim().slice(0, 80);
+  const ipSubnet = getIpSubnet(clientIp);
+  const crossBrowserKey = hwFp ? `${hwFp}_${ipSubnet}` : "";
+
+  if (!isMasterAdmin) {
+    // Layer 1: Hard Anti-VPN / Proxy / Datacenter Block on Registration
+    const ipRep = await checkIpReputation(clientIp);
+    if (ipRep.isVpn) {
+      return {
+        status: 403,
+        body: {
+          success: false,
+          blocked: true,
+          reason: "VPN_BLOCKED",
+          error: "🛡️ VPN বা Proxy চালু রেখে নতুন অ্যাকাউন্ট খোলা যাবে না! অনুগ্রহ করে VPN বন্ধ করে আসল ইন্টারনেট দিয়ে চেষ্টা করুন।"
+        }
+      };
+    }
+
+    // Layer 2, 3 & 4: Parallel Device Lock, Cross-Browser Fingerprint+Subnet Lock, and IP Lock
+    const [sameDeviceDocs, sameCrossDocs, sameIpDocs] = await Promise.all([
+      deviceId ? queryFirestoreEq(adminToken, "users", "deviceId", deviceId, 3).catch(() => []) : Promise.resolve([]),
+      crossBrowserKey ? queryFirestoreEq(adminToken, "users", "crossBrowserKey", crossBrowserKey, 3).catch(() => []) : Promise.resolve([]),
+      (!isPrivateOrLocalIp(clientIp)) ? queryFirestoreEq(adminToken, "users", "registerIP", clientIp, 3).catch(() => []) : Promise.resolve([])
+    ]);
+
+    if (sameDeviceDocs.some(d => d.id !== uid)) {
+      return {
+        status: 403,
+        body: {
+          success: false,
+          blocked: true,
+          reason: "DUPLICATE_DEVICE",
+          error: "🚫 এই ডিভাইসে ইতিমধ্যে একটি অ্যাকাউন্ট খোলা আছে! ১টি ফোনে ১টির বেশি অ্যাকাউন্ট খোলা নিষিদ্ধ — অনুগ্রহ করে আপনার আগের ইমেইল দিয়ে লগইন করুন।"
+        }
+      };
+    }
+
+    if (sameCrossDocs.some(d => d.id !== uid)) {
+      return {
+        status: 403,
+        body: {
+          success: false,
+          blocked: true,
+          reason: "CROSS_BROWSER_DEVICE",
+          error: "🚫 অন্য ব্রাউজার বা ইনকগনিটো ব্যবহার করেও এই ডিভাইসে নতুন অ্যাকাউন্ট খোলা যাবে না! অনুগ্রহ করে আপনার আগের অ্যাকাউন্টে লগইন করুন।"
+        }
+      };
+    }
+
+    if (sameIpDocs.filter(d => d.id !== uid).length >= 2) {
+      return {
+        status: 403,
+        body: {
+          success: false,
+          blocked: true,
+          reason: "IP_LIMIT",
+          error: "🚫 এই ইন্টারনেট/IP থেকে সর্বোচ্চ অ্যাকাউন্ট লিমিট পূর্ণ হয়ে গেছে! নতুন অ্যাকাউন্ট খোলা সম্ভব নয়।"
+        }
+      };
+    }
+  }
+
+  // Create new user document safely on server (always starts with coins: 0)
+  const myCode = "TR" + Math.floor(10000 + Math.random() * 90000);
+  const name = String(body.name || "User").trim().slice(0, 80);
+  const photoURL = String(body.photoURL || "").trim().slice(0, 500);
+  const nowIso = new Date().toISOString();
+
+  await commitWrites(adminToken, [
+    {
+      update: {
+        name: docPath(`users/${uid}`),
+        fields: {
+          uid: { stringValue: uid },
+          name: { stringValue: name },
+          email: { stringValue: email },
+          photoURL: { stringValue: photoURL },
+          deviceId: { stringValue: deviceId },
+          hardwareFingerprint: { stringValue: hwFp },
+          crossBrowserKey: { stringValue: crossBrowserKey },
+          registerIP: { stringValue: clientIp || "Unknown" },
+          lastIP: { stringValue: clientIp || "Unknown" },
+          coins: { integerValue: "0" },
+          myInviteCode: { stringValue: myCode },
+          referredBy: { nullValue: null },
+          referredByUid: { nullValue: null },
+          referralCount: { integerValue: "0" },
+          completedApprovedTasks: { integerValue: "0" },
+          lastDailyClaimTime: { integerValue: "0" },
+          referralBonusAwarded: { booleanValue: false },
+          createdAt: { timestampValue: nowIso }
+        }
+      },
+      currentDocument: { exists: false }
+    }
+  ]);
+
+  // Apply referral code if provided during signup
+  let referralApplied = false;
+  const rawInvite = String(body.inviteCode || "").trim();
+  if (rawInvite) {
+    try {
+      const refRes = await handleApplyReferral(uid, { inviteCode: rawInvite, deviceId }, adminToken, clientIp);
+      if (refRes && refRes.status === 200) referralApplied = true;
+    } catch (e) {
+      console.warn("[Register] Referral apply notice:", e.message);
+    }
+  }
+
+  return {
+    status: 200,
+    body: {
+      success: true,
+      created: true,
+      myInviteCode: myCode,
+      referralApplied
+    }
+  };
+}
+
 // ACTION 1: DAILY SIGN-IN BONUS (+10,000 Coins, strict server 24h cooldown)
 // =========================================================================
-async function handleDailyClaim(uid, adminToken) {
+async function handleDailyClaim(uid, adminToken, clientIp) {
+  const ipRep = await checkIpReputation(clientIp);
+  if (ipRep.isVpn) {
+    return { status: 403, body: { success: false, error: "🛡️ VPN বা Proxy চালু আছে! অনুগ্রহ করে VPN বন্ধ করে ডেইলি বোনাস ক্লেইম করুন।" } };
+  }
   const userDoc = await getFirestoreDoc(adminToken, `users/${uid}`);
   if (!userDoc || !userDoc.fields) {
     return { status: 404, body: { success: false, error: "User profile not found" } };
@@ -313,6 +577,10 @@ async function handleDailyClaim(uid, adminToken) {
 // ACTION 2: BROWSING / SURF AD CLAIM (server-verified reward + 24h per-task cooldown)
 // =========================================================================
 async function handleBrowsingClaim(uid, body, adminToken, clientIp) {
+  const ipRep = await checkIpReputation(clientIp);
+  if (ipRep.isVpn) {
+    return { status: 403, body: { success: false, error: "🛡️ VPN বা Proxy ব্যবহার করে ব্রাউজিং টাস্ক ক্লেইম করা যাবে না!" } };
+  }
   const rawTaskId = String(body.taskId || "").trim();
   if (!rawTaskId || rawTaskId.length > 80) {
     return { status: 400, body: { success: false, error: "Invalid browsing task ID" } };
@@ -457,7 +725,11 @@ async function handleBrowsingClaim(uid, body, adminToken, clientIp) {
 // =========================================================================
 // ACTION 3: APPLY REFERRAL CODE (+30,000 to user, +10,000 to referrer, once ever)
 // =========================================================================
-async function handleApplyReferral(uid, body, adminToken) {
+async function handleApplyReferral(uid, body, adminToken, clientIp) {
+  const ipRep = await checkIpReputation(clientIp);
+  if (ipRep.isVpn) {
+    return { status: 403, body: { success: false, error: "🛡️ VPN বা Proxy বন্ধ করে আসল ইন্টারনেট দিয়ে রেফারেল কোড ব্যবহার করুন।" } };
+  }
   let code = String(body.inviteCode || "").trim().replace(/[^a-zA-Z0-9]/g, "").toUpperCase();
   if (/^\d{5}$/.test(code)) code = "TR" + code;
   if (!code || code.length < 4 || code.length > 20) {
@@ -586,6 +858,38 @@ async function handleRequestWithdraw(uid, body, adminToken, clientIp) {
   const nowIso = new Date(now).toISOString();
   const wDocId = `wd_${uid.slice(0, 8)}_${now}_${Math.floor(100 + Math.random() * 900)}`;
 
+  // Step 2 Fraud Intelligence: Check VPN, Duplicate bKash/Nagad Number, and Duplicate Device across other accounts
+  const [ipRep, phoneMatches, deviceMatches] = await Promise.all([
+    checkIpReputation(clientIp),
+    queryFirestoreEq(adminToken, "withdrawals", "phone", phone, 10).catch(() => []),
+    deviceId ? queryFirestoreEq(adminToken, "users", "deviceId", deviceId, 10).catch(() => []) : Promise.resolve([])
+  ]);
+
+  const otherPhoneUsers = Array.from(new Set(
+    phoneMatches.map(d => getFieldString(d.fields, "userId", "")).filter(id => id && id !== uid)
+  ));
+  const otherDeviceUsers = deviceMatches.map(d => d.id).filter(id => id && id !== uid);
+
+  const fraudFlags = [];
+  const fraudReasons = [];
+  if (otherPhoneUsers.length > 0) {
+    fraudFlags.push("DUPLICATE_PHONE");
+    fraudReasons.push(`একই ${method} নম্বর আগে আরও ${otherPhoneUsers.length}টি ভিন্ন অ্যাকাউন্টে ব্যবহৃত হয়েছে`);
+  }
+  if (otherDeviceUsers.length > 0) {
+    fraudFlags.push("DUPLICATE_DEVICE");
+    fraudReasons.push(`একই ডিভাইসে আরও ${otherDeviceUsers.length}টি অ্যাকাউন্ট পাওয়া গেছে`);
+  }
+  if (ipRep.isVpn) {
+    fraudFlags.push("VPN_DETECTED");
+    fraudReasons.push(`VPN/Proxy IP (${clientIp}) থেকে উইথড্রল রিকোয়েস্ট পাঠানো হয়েছে`);
+  }
+
+  const fraudRisk = (otherPhoneUsers.length > 0 || fraudFlags.length >= 2)
+    ? "HIGH"
+    : (fraudFlags.length === 1 ? "MEDIUM" : "LOW");
+  const fraudSummary = fraudReasons.join(" • ");
+
   // Atomic commit with optimistic concurrency lock (prevents double-spend / negative balance on rapid double-clicks)
   const userPrecondition = userDoc.updateTime ? { updateTime: userDoc.updateTime } : { exists: true };
   await commitWrites(adminToken, [
@@ -613,6 +917,10 @@ async function handleRequestWithdraw(uid, body, adminToken, clientIp) {
           userIP: { stringValue: clientIp },
           deviceId: { stringValue: deviceId },
           verifiedByServer: { booleanValue: true },
+          fraudRisk: { stringValue: fraudRisk },
+          fraudFlags: { stringValue: fraudFlags.join(",") },
+          fraudSummary: { stringValue: fraudSummary },
+          vpnFlagged: { booleanValue: Boolean(ipRep.isVpn) },
           status: { stringValue: "Pending" },
           createdAt: { timestampValue: nowIso }
         }
@@ -664,12 +972,16 @@ const universalHandler = async (req, res) => {
     const clientIp = getClientIp(req);
 
     let result;
-    if (action === "daily_claim") {
-      result = await handleDailyClaim(uid, adminToken);
+    if (action === "register_user") {
+      result = await handleRegisterUser(uid, decoded.email, body, adminToken, clientIp);
+    } else if (action === "security_check") {
+      result = await handleSecurityCheck(uid, body, adminToken, clientIp);
+    } else if (action === "daily_claim") {
+      result = await handleDailyClaim(uid, adminToken, clientIp);
     } else if (action === "browsing_claim") {
       result = await handleBrowsingClaim(uid, body, adminToken, clientIp);
     } else if (action === "apply_referral") {
-      result = await handleApplyReferral(uid, body, adminToken);
+      result = await handleApplyReferral(uid, body, adminToken, clientIp);
     } else if (action === "request_withdraw") {
       result = await handleRequestWithdraw(uid, body, adminToken, clientIp);
     } else {
