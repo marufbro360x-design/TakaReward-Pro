@@ -93,6 +93,10 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://takareward-bd.firebaseapp.com" crossorigin>
+  <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
+  <link rel="preconnect" href="https://unpkg.com" crossorigin>
+  <link rel="preconnect" href="https://i.ibb.co.com" crossorigin>
   <script>
     // Instant Mobile Auth & Modal Stub (Prevents dead clicks before Firebase ES Module finishes loading on slow 3G/4G)
     window.__pendingAuthAction = null;
@@ -182,17 +186,13 @@ body{
 .cj-sparkle-small{ animation:cjTwinkle 3s ease-in-out infinite .8s; transform-origin:center; }
 @keyframes cjTwinkle{ 0%,100%{ transform:scale(1); opacity:1; } 50%{ transform:scale(.75); opacity:.7; } }
 
-/* ORBS */
-.orb{ position:fixed; border-radius:50%; pointer-events:none; z-index:0; filter:blur(90px); opacity:.5; will-change:transform; }
-.dark .orb{ opacity:.32; }
-.orb-1{ width:660px;height:660px; top:-260px; left:-180px; background:radial-gradient(circle at 30% 30%, #FF8A3D, #FF3D6E 55%, transparent 72%); animation:drift1 26s ease-in-out infinite; }
-.orb-2{ width:580px;height:580px; top:10%; right:-220px; background:radial-gradient(circle at 40% 40%, #FFB27A, #FF5F1F 50%, transparent 72%); animation:drift2 32s ease-in-out infinite; }
-.orb-3{ width:540px;height:540px; bottom:-220px; left:34%; background:radial-gradient(circle at 50% 50%, #C084FC, #FF5F1F 60%, transparent 75%); opacity:.28; animation:drift3 38s ease-in-out infinite; }
-@keyframes drift1{ 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(70px,60px) scale(1.12)} }
-@keyframes drift2{ 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(-60px,80px) scale(1.08)} }
-@keyframes drift3{ 0%,100%{transform:translate(0,0) scale(1)} 50%{transform:translate(50px,-70px) scale(1.15)} }
-.grain{ position:fixed; inset:0; z-index:1; pointer-events:none; opacity:var(--noise-opacity); mix-blend-mode:overlay;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E"); }
+/* ORBS (GPU-Optimized: soft radial glow without heavy blur(90px) or infinite compositor thrash) */
+.orb{ position:fixed; border-radius:50%; pointer-events:none; z-index:0; opacity:.26; }
+.dark .orb{ opacity:.18; }
+.orb-1{ width:660px;height:660px; top:-260px; left:-180px; background:radial-gradient(circle at 50% 50%, rgba(255,138,61,.55), rgba(255,61,110,.22) 45%, transparent 70%); }
+.orb-2{ width:580px;height:580px; top:10%; right:-220px; background:radial-gradient(circle at 50% 50%, rgba(255,178,122,.50), rgba(255,95,31,.20) 45%, transparent 70%); }
+.orb-3{ width:540px;height:540px; bottom:-220px; left:34%; background:radial-gradient(circle at 50% 50%, rgba(192,132,252,.42), rgba(255,95,31,.16) 48%, transparent 72%); opacity:.18; }
+.grain{ display:none; }
 
 /* CARDS */
 .card{ position:relative; background:var(--surface); border:1px solid var(--border); border-radius:28px; box-shadow:var(--shadow-1);
@@ -201,7 +201,7 @@ body{
   background:linear-gradient(160deg, rgba(255,255,255,.55), transparent 42%); opacity:.7; }
 .dark .card::before{ background:linear-gradient(160deg, rgba(255,255,255,.06), transparent 42%); opacity:1; }
 .card-lift:hover{ transform:translateY(-5px); box-shadow:var(--shadow-2); border-color:rgba(255,95,31,.24); }
-.glass{ background:var(--glass); backdrop-filter:blur(26px) saturate(180%); -webkit-backdrop-filter:blur(26px) saturate(180%); border:1px solid var(--border); }
+.glass{ background:var(--glass); backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%); border:1px solid var(--border); }
 
 /* CLAY ICONS */
 .clay{ position:relative; display:grid; place-items:center; border-radius:18px; flex-shrink:0; color:var(--brand);
@@ -357,14 +357,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 @keyframes coinFloat{ 0%,100%{ transform:translateY(0) rotate(0); } 50%{ transform:translateY(-16px) rotate(20deg); } }
 
 /* TOPBAR */
-.topbar{ position:sticky; top:0; z-index:40; background:var(--glass-strong); backdrop-filter:blur(24px) saturate(180%); -webkit-backdrop-filter:blur(24px) saturate(180%); border-bottom:1px solid var(--border); transition:box-shadow .4s, background .5s; }
+.topbar{ position:sticky; top:0; z-index:40; background:var(--glass-strong); backdrop-filter:blur(10px) saturate(140%); -webkit-backdrop-filter:blur(10px) saturate(140%); border-bottom:1px solid var(--border); transition:box-shadow .4s, background .5s; }
 .topbar.scrolled{ box-shadow: 0 12px 30px -18px rgba(16,16,32,.28); }
 .lang-btn{ display:inline-flex; align-items:center; gap:8px; padding:9px 14px; border-radius:14px; background:var(--surface-2); border:1px solid var(--border); font-size:13px; font-weight:700; color:var(--text-2); cursor:pointer; transition:all .3s cubic-bezier(.2,.8,.2,1); }
 .lang-btn:hover{ color:var(--text); border-color:rgba(255,95,31,.3); transform:translateY(-1px); }
 
 /* SIDEBAR & DASHBOARD */
 .sidebar{ position:fixed; z-index:60; left:18px; top:18px; bottom:18px; width:266px; border-radius:30px;
-  background:var(--glass-strong); backdrop-filter:blur(30px) saturate(180%); -webkit-backdrop-filter:blur(30px) saturate(180%);
+  background:var(--glass-strong); backdrop-filter:blur(12px) saturate(140%); -webkit-backdrop-filter:blur(12px) saturate(140%);
   border:1px solid var(--border); box-shadow:var(--shadow-2); display:flex; flex-direction:column; padding:18px 14px;
   transition:transform .5s cubic-bezier(.16,1,.3,1), box-shadow .4s; }
 @media (max-width:1023px){ .sidebar{ transform:translateX(calc(-100% - 30px)); } .sidebar.open{ transform:translateX(0); box-shadow:0 40px 90px -20px rgba(0,0,0,.5); } }
@@ -828,7 +828,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <!-- Card 3: Rocket Hit -->
               <div onclick="openAuthModal('signup')" class="bg-white dark:bg-slate-900 rounded-2xl p-2.5 shadow-md border border-slate-100 dark:border-slate-800 text-left cursor-pointer active:scale-95 transition">
                 <div class="w-full aspect-square rounded-xl overflow-hidden bg-slate-900">
-                  <img src="https://i.ibb.co.com/23vKWhJC/Screenshot-2026-10-04-025422.png" alt="Rocket Hit" class="w-full h-full object-cover" />
+                  <img src="https://i.ibb.co.com/23vKWhJC/Screenshot-2026-10-04-025422.png" alt="Rocket Hit" class="w-full h-full object-cover"  loading="lazy" decoding="async" />
                 </div>
                 <div class="text-[11px] font-semibold text-slate-600 dark:text-slate-300 truncate mt-2">Rocket Hit</div>
                 <div class="text-[14px] font-black text-slate-900 dark:text-white mt-0.5">৳5,203</div>
@@ -1232,7 +1232,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         <div class="flex items-center">
           <!-- Web Logo Icon ONLY (Clicking Logo opens/toggles the Sidebar Menu Drawer on Mobile & Desktop) -->
           <button type="button" onclick="toggleMobileRjDrawer()" class="flex items-center justify-center rounded-full p-0.5 cursor-pointer active:scale-95 transition focus:outline-none" title="মেনু খুলুন (Menu)">
-            <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro Menu" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover border-2 border-[#f97316] shadow-xs hover:scale-105 transition-transform" />
+            <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro Menu" class="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover border-2 border-[#f97316] shadow-xs hover:scale-105 transition-transform"  loading="lazy" decoding="async" />
           </button>
         </div>
 
@@ -1260,7 +1260,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           <!-- User Profile Avatar + RewardJoy Dropdown Menu (Exact Match to frame_106.jpg) -->
           <div class="relative" id="desk-user-menu-wrap">
             <div onclick="toggleDeskUserDropdown(event)" class="flex items-center gap-2 p-0.5 sm:px-2.5 sm:py-1.5 rounded-full sm:rounded-2xl cursor-pointer bg-[var(--surface-2)] border border-[var(--border)] hover:border-brand-500/40 transition">
-              <img id="desk-user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full border border-orange-400 object-cover" alt="User" />
+              <img id="desk-user-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=User" class="w-8 h-8 sm:w-8 sm:h-8 rounded-full border border-orange-400 object-cover" alt="User"  loading="lazy" decoding="async" />
               <div class="text-left hidden lg:block">
                 <div id="desk-user-name" class="font-bold text-xs truncate max-w-[100px]">User</div>
                 <div id="desk-user-level" class="text-[10px] font-bold text-brand-500">Lv. 0</div>
@@ -2913,7 +2913,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     <div class="modal-panel max-w-[420px]">
       <div class="flex items-center justify-between mb-3">
         <div class="flex items-center gap-2.5">
-          <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-9 h-9 rounded-xl object-cover border border-orange-500 shadow-xs" />
+          <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="TakaReward Pro" class="w-9 h-9 rounded-xl object-cover border border-orange-500 shadow-xs"  loading="lazy" decoding="async" />
           <h3 id="authTitle" class="section-title text-[20px] sm:text-[21px]">Sign in to TakaReward Pro</h3>
         </div>
         <button type="button" onclick="closeAuthModal()" class="icon-btn !w-9 !h-9">✕</button>
@@ -4714,19 +4714,23 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       document.getElementById('rj-mobile-drawer-backdrop')?.classList.remove('show');
     };
 
+    let _lucideDebounceTimer = null;
     function refreshAllLucideIcons() {
-      try {
-        if (window.lucide && typeof window.lucide.createIcons === 'function') {
-          window.lucide.createIcons();
-        }
-      } catch (e) {}
+      if (_lucideDebounceTimer) clearTimeout(_lucideDebounceTimer);
+      _lucideDebounceTimer = setTimeout(() => {
+        _lucideDebounceTimer = null;
+        requestAnimationFrame(() => {
+          try {
+            if (window.lucide && typeof window.lucide.createIcons === 'function') {
+              window.lucide.createIcons();
+            }
+          } catch (e) {}
+        });
+      }, 80);
     }
 
-    refreshAllLucideIcons();
     window.addEventListener('DOMContentLoaded', refreshAllLucideIcons);
     window.addEventListener('load', refreshAllLucideIcons);
-    setTimeout(refreshAllLucideIcons, 250);
-    setTimeout(refreshAllLucideIcons, 800);
 
     window.selectDesktopLang = function(label) {
       const lbl = document.getElementById('currentLangLabel');
@@ -4878,8 +4882,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         window.ensureOfferwallGGSurveyFrame();
       }
       if (tabName === 'myoffers') {
+        if (window.ensureOfferwallLogListenersStarted) window.ensureOfferwallLogListenersStarted();
         window.renderStartedOffersGrid();
         renderCombinedMyOffersHistory();
+      }
+      if (tabName === 'affiliate') {
+        if (window.ensureMyReferralsListenerStarted) window.ensureMyReferralsListenerStarted();
       }
       if (tabName === 'browsing') {
         window.renderOfferwallGGBrowsingTasks();
@@ -4891,13 +4899,18 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       refreshAllLucideIcons();
     };
 
+    window._lastGreetingBucket = null;
     window.updateDesktopGreetingByLocalTime = function() {
       const greetTextEl = document.getElementById('desk-greeting-text');
       const greetIconEl = document.getElementById('desk-greeting-icon');
       if (!greetTextEl || !greetIconEl) return;
 
       const hr = new Date().getHours();
-      if (hr >= 5 && hr < 12) {
+      const bucket = (hr >= 5 && hr < 12) ? 'morning' : ((hr >= 12 && hr < 17) ? 'afternoon' : 'evening');
+      if (window._lastGreetingBucket === bucket && greetIconEl.childElementCount > 0) return;
+      window._lastGreetingBucket = bucket;
+
+      if (bucket === 'morning') {
         greetTextEl.innerText = 'Good morning,';
         greetIconEl.innerHTML = `<svg class="w-10 h-10" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="14" fill="#FACC15"/><circle cx="20" cy="22" r="1.8" fill="#422006"/><circle cx="28" cy="22" r="1.8" fill="#422006"/><path d="M21 27c1.5 1.5 4.5 1.5 6 0" stroke="#422006" stroke-width="2" stroke-linecap="round"/><g stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"><line x1="24" y1="4" x2="24" y2="7"/><line x1="24" y1="41" x2="24" y2="44"/><line x1="4" y1="24" x2="7" y2="24"/><line x1="41" y1="24" x2="44" y2="24"/><line x1="9.8" y1="9.8" x2="12" y2="12"/><line x1="36" y1="36" x2="38.2" y2="38.2"/><line x1="38.2" y1="9.8" x2="36" y2="12"/><line x1="12" y1="36" x2="9.8" y2="38.2"/></g></svg>`;
       } else if (hr >= 12 && hr < 17) {
@@ -7270,8 +7283,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               }
             }
 
-            // Start listening to referrals safely
-            if (userData.myInviteCode && userData.myInviteCode !== 'TR-----') {
+            // Start listening to referrals list lazily when Affiliate tab is open (count & commission stay 100% live via users/{uid})
+            if (window.desktopActiveTab === 'affiliate' && userData.myInviteCode && userData.myInviteCode !== 'TR-----') {
               listenMyReferrals(user.uid, userData.myInviteCode);
             }
 
@@ -7874,13 +7887,23 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       });
     }
 
+    let _offerwallLogsStartedUid = null;
+    window.ensureOfferwallLogListenersStarted = function(uidArg) {
+      const targetUid = uidArg || currentUser?.uid;
+      if (!targetUid || _offerwallLogsStartedUid === targetUid) return;
+      _offerwallLogsStartedUid = targetUid;
+      listenPubscaleLogs(targetUid);
+      listenOfferzyLogs(targetUid);
+      listenOfferwallGGLogs(targetUid);
+      listenTimeWallLogs(targetUid);
+      listenCointoLogs(targetUid);
+      listenGaintwallLogs(targetUid);
+    };
+
     function listenUserSubmissions(uid) {
-      listenPubscaleLogs(uid);
-      listenOfferzyLogs(uid);
-      listenOfferwallGGLogs(uid);
-      listenTimeWallLogs(uid);
-      listenCointoLogs(uid);
-      listenGaintwallLogs(uid);
+      if (window.desktopActiveTab === 'myoffers') {
+        window.ensureOfferwallLogListenersStarted(uid);
+      }
       const q = query(collection(db, "submissions"), where("userId", "==", uid));
       onSnapshot(q, (snapshot) => {
         manualSubmissionsList = [];
@@ -8804,8 +8827,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     };
 
     // ================= REALTIME ADVANCED ANALYTICS & 7-DAY GRAPH =================
+    let _adminAnalyticsStarted = false;
     function updateAdminAnalytics() {
       if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      if (_adminAnalyticsStarted) return;
+      _adminAnalyticsStarted = true;
       
       // 1. Total Registered Users Listener
       onSnapshot(collection(db, "users"), (snap) => {
@@ -8826,22 +8852,32 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
       });
 
-      // 2. Total Paid & Pending Amounts Listener
+      // 2. Total Paid & Pending Amounts Listener (shared single feed with Profit Tracker)
       onSnapshot(collection(db, "withdrawals"), (snap) => {
         let totalPaid = 0;
         let totalPending = 0;
+        const profitWdList = [];
         snap.forEach((docItem) => {
-          const w = docItem.data();
+          const w = docItem.data() || {};
           if (w.status === "Paid") {
             totalPaid += (Number(w.taka) || 0);
           } else if (w.status === "Pending") {
             totalPending += (Number(w.taka) || 0);
           }
+          profitWdList.push({
+            status: w.status || '',
+            taka: Number(w.taka) || 0,
+            ts: typeof parseAdminLogDateMs === 'function' ? parseAdminLogDateMs(w.paidAt || w.updatedAt || w.createdAt) : 0
+          });
         });
         const paidEl = document.getElementById("admin-stat-paid");
         const pendingEl = document.getElementById("admin-stat-pending");
         if (paidEl) paidEl.innerText = "৳" + totalPaid.toLocaleString();
         if (pendingEl) pendingEl.innerText = "৳" + totalPending.toLocaleString();
+        if (window.adminProfitTrackerState) {
+          window.adminProfitTrackerState.withdrawals = profitWdList;
+          if (typeof scheduleAdminProfitRender === 'function') scheduleAdminProfitRender();
+        }
       });
 
       // 3. Submissions Listener for Graphs, Per-Task Stats & Browsing Clicks/Earnings
@@ -9068,28 +9104,21 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             });
           });
           window.adminProfitTrackerState.logsByNetwork[net.key] = items;
-          renderAdminProfitTracker();
+          scheduleAdminProfitRender();
         }, (err) => {
           console.warn(`Profit tracker (${net.col}) listener notice:`, err?.message || err);
         });
       });
+      scheduleAdminProfitRender();
+    }
 
-      // Track withdrawals with timestamps for period cash-flow comparison
-      onSnapshot(collection(db, "withdrawals"), (snap) => {
-        const list = [];
-        snap.forEach(d => {
-          const w = d.data() || {};
-          list.push({
-            status: w.status || '',
-            taka: Number(w.taka) || 0,
-            ts: parseAdminLogDateMs(w.paidAt || w.updatedAt || w.createdAt)
-          });
-        });
-        window.adminProfitTrackerState.withdrawals = list;
+    let _adminProfitRenderTimer = null;
+    function scheduleAdminProfitRender() {
+      if (_adminProfitRenderTimer) clearTimeout(_adminProfitRenderTimer);
+      _adminProfitRenderTimer = setTimeout(() => {
+        _adminProfitRenderTimer = null;
         renderAdminProfitTracker();
-      }, (err) => {
-        console.warn("Profit tracker withdrawals notice:", err?.message || err);
-      });
+      }, 60);
     }
 
     function renderAdminProfitTracker() {
@@ -9412,8 +9441,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     }
 
     // ================= PENDING PROOFS AUDIT & APPROVAL =================
+    let _adminSubmissionsStarted = false;
     function loadAdminSubmissions() {
       if (currentUser?.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      if (_adminSubmissionsStarted) return;
+      _adminSubmissionsStarted = true;
       const q = query(collection(db, "submissions"), where("status", "==", "Pending"));
       onSnapshot(q, (snapshot) => {
         const box = document.getElementById('admin-submissions-list');
@@ -9489,8 +9521,11 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     }
 
     // ================= WITHDRAWALS & PAYOUTS DESK =================
+    let _adminWithdrawalsStarted = false;
     function loadAdminWithdrawals() {
       if (currentUser?.email?.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      if (_adminWithdrawalsStarted) return;
+      _adminWithdrawalsStarted = true;
       const q = query(collection(db, "withdrawals"), where("status", "==", "Pending"));
       onSnapshot(q, (snap) => {
         const box = document.getElementById('admin-withdraw-list');
@@ -10318,6 +10353,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     // Live Real-Time Referrals Tracker for Current User
     // Referral listener state hoisted to top of module
+    window.ensureMyReferralsListenerStarted = function() {
+      if (currentUser?.uid && userData?.myInviteCode && userData.myInviteCode !== 'TR-----') {
+        listenMyReferrals(currentUser.uid, userData.myInviteCode);
+      }
+    };
+
     function listenMyReferrals(uid, myInviteCode) {
       if (!myInviteCode || myInviteCode === 'TR-----') return;
       if (activeReferralListenerCode === myInviteCode && unsubMyReferrals) return;
