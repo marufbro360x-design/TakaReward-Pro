@@ -3428,6 +3428,95 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 </div>
               </div>
 
+              <!-- ================= LIVE ADMIN PROFIT & REVENUE TRACKER ================= -->
+              <div id="admin-profit-tracker-card" class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
+                  <div>
+                    <h4 class="font-black text-sm text-slate-900 flex items-center gap-2">
+                      <span class="w-7 h-7 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm shrink-0">💰</span>
+                      <span>লাইভ প্রফিট ও রেভিনিউ ট্র্যাকার (Profit vs Payout)</span>
+                    </h4>
+                    <p class="text-[11px] text-slate-400 mt-0.5">সব অফারওয়ালের আয়, ইউজার কয়েন খরচ, পেইড উইথড্র এবং নেট প্রফিটের রিয়েল-টাইম হিসাব</p>
+                  </div>
+
+                  <div class="flex flex-wrap items-center gap-2">
+                    <!-- Editable USD to BDT Rate -->
+                    <label class="inline-flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-xl px-2.5 py-1 text-[11px] font-bold text-slate-600" title="আপনার প্রকৃত ১ ডলারের বাংলা টাকা রেট দিন">
+                      <span>$1 = ৳</span>
+                      <input id="admin-profit-usd-rate" type="number" min="80" max="200" step="1" value="120" onchange="updateAdminProfitUsdRate(this.value)" class="w-12 bg-white border border-slate-200 rounded-lg px-1.5 py-0.5 text-center font-black text-slate-900 focus:outline-none focus:border-emerald-500" />
+                    </label>
+
+                    <!-- Time Range Switcher -->
+                    <div class="inline-flex bg-slate-100 p-1 rounded-xl border border-slate-200 text-[11px] font-bold">
+                      <button type="button" id="pt-range-today" onclick="setAdminProfitRange('today')" class="px-2.5 py-1 rounded-lg bg-slate-900 text-white shadow-2xs transition cursor-pointer">আজ</button>
+                      <button type="button" id="pt-range-7d" onclick="setAdminProfitRange('7d')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">৭ দিন</button>
+                      <button type="button" id="pt-range-30d" onclick="setAdminProfitRange('30d')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">৩০ দিন</button>
+                      <button type="button" id="pt-range-all" onclick="setAdminProfitRange('all')" class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer">সর্বমোট</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4 Financial KPI Cards -->
+                <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                  <div class="bg-emerald-50/70 border border-emerald-200/80 p-3.5 rounded-2xl">
+                    <span class="text-[10px] font-extrabold text-emerald-700 uppercase block">মোট অফারওয়াল রেভিনিউ</span>
+                    <strong id="pt-gross-bdt" class="text-base sm:text-lg font-black text-emerald-900 block mt-0.5">৳0.00</strong>
+                    <span id="pt-gross-usd" class="text-[11px] font-bold text-emerald-600">$0.00 USD</span>
+                  </div>
+
+                  <div class="bg-rose-50/70 border border-rose-200/80 p-3.5 rounded-2xl">
+                    <span class="text-[10px] font-extrabold text-rose-700 uppercase block">ইউজার কয়েন খরচ + উইথড্র</span>
+                    <strong id="pt-cost-bdt" class="text-base sm:text-lg font-black text-rose-900 block mt-0.5">৳0.00</strong>
+                    <span id="pt-paid-sub" class="text-[11px] font-bold text-rose-600">পেইড উইথড্র: ৳0</span>
+                  </div>
+
+                  <div id="pt-net-card" class="bg-indigo-50/70 border border-indigo-200/80 p-3.5 rounded-2xl">
+                    <div class="flex items-center justify-between gap-1">
+                      <span class="text-[10px] font-extrabold text-indigo-700 uppercase">আনুমানিক নেট প্রফিট</span>
+                      <span id="pt-margin-badge" class="text-[10px] font-black px-1.5 py-0.5 rounded-md bg-indigo-100 text-indigo-700">0%</span>
+                    </div>
+                    <strong id="pt-net-bdt" class="text-base sm:text-lg font-black text-indigo-900 block mt-0.5">৳0.00</strong>
+                    <span id="pt-cashflow-sub" class="text-[11px] font-bold text-indigo-600">ক্যাশ-ফ্লো: ৳0.00</span>
+                  </div>
+
+                  <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl">
+                    <span class="text-[10px] font-extrabold text-slate-500 uppercase block">কনভার্শন ও রিভার্সাল</span>
+                    <strong id="pt-conv-count" class="text-base sm:text-lg font-black text-slate-900 block mt-0.5">0টি</strong>
+                    <span id="pt-rev-sub" class="text-[11px] font-bold text-slate-500">চার্জব্যাক: 0টি</span>
+                  </div>
+                </div>
+
+                <!-- Network-by-Network Breakdown -->
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between">
+                    <h5 class="text-xs font-extrabold text-slate-700 flex items-center gap-1.5">
+                      <span>📊</span> নেটওয়ার্ক অনুযায়ী আয় ও লাভের হিসাব
+                    </h5>
+                    <span id="pt-last-updated" class="text-[10px] font-bold text-slate-400">লাইভ সিঙ্ক চালু</span>
+                  </div>
+
+                  <div class="overflow-x-auto rounded-2xl border border-slate-200">
+                    <table class="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr class="bg-slate-50 text-[10px] uppercase font-extrabold text-slate-500 border-b border-slate-200">
+                          <th class="py-2.5 px-3">নেটওয়ার্ক</th>
+                          <th class="py-2.5 px-2 text-right">কনভার্শন</th>
+                          <th class="py-2.5 px-2 text-right">রেভিনিউ ($)</th>
+                          <th class="py-2.5 px-2 text-right">রেভিনিউ (৳)</th>
+                          <th class="py-2.5 px-2 text-right">ইউজার খরচ (৳)</th>
+                          <th class="py-2.5 px-3 text-right">নেট লাভ (৳)</th>
+                        </tr>
+                      </thead>
+                      <tbody id="pt-network-table-body" class="divide-y divide-slate-100 text-slate-700 font-semibold">
+                        <tr>
+                          <td colspan="6" class="py-5 text-center text-slate-400 text-xs">অফারওয়াল লগ লোড হচ্ছে...</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
               <!-- GRAPH 1: 7-DAY SUBMISSIONS TREND CHART -->
               <div class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs space-y-3">
                 <div class="flex items-center justify-between">
@@ -8789,6 +8878,277 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (window.renderAdminBrowsingTasks) window.renderAdminBrowsingTasks();
         renderOfferTabTasks();
       });
+
+      // 4. LIVE ADMIN PROFIT & REVENUE TRACKER (All Offerwall Postbacks vs Payouts)
+      initAdminProfitTracker();
+    }
+
+    // ================= LIVE ADMIN PROFIT & REVENUE TRACKER ENGINE =================
+    window.adminProfitTrackerState = {
+      initialized: false,
+      range: 'today',
+      usdToBdtRate: Number(localStorage.getItem('tr_admin_usd_bdt_rate')) || 120,
+      logsByNetwork: {
+        offerzy: [],
+        pubscale: [],
+        cointo: [],
+        gaintwall: [],
+        timewall: [],
+        offerwall_gg: []
+      },
+      withdrawals: []
+    };
+
+    const ADMIN_PROFIT_NETWORKS = [
+      { key: 'offerzy', col: 'offerzy_logs', label: 'Offerzy', badge: 'bg-purple-100 text-purple-700' },
+      { key: 'pubscale', col: 'pubscale_logs', label: 'PubScale', badge: 'bg-blue-100 text-blue-700' },
+      { key: 'cointo', col: 'cointo_logs', label: 'Cointo Media', badge: 'bg-emerald-100 text-emerald-700' },
+      { key: 'gaintwall', col: 'gaintwall_logs', label: 'Gaintwall', badge: 'bg-amber-100 text-amber-700' },
+      { key: 'timewall', col: 'timewall_logs', label: 'TimeWall', badge: 'bg-cyan-100 text-cyan-700' },
+      { key: 'offerwall_gg', col: 'offerwall_gg_logs', label: 'Offerwall.GG', badge: 'bg-indigo-100 text-indigo-700' }
+    ];
+
+    function parseAdminLogDateMs(val) {
+      if (!val) return 0;
+      try {
+        if (typeof val === 'number') return val > 1e12 ? val : val * 1000;
+        if (typeof val.toDate === 'function') return val.toDate().getTime();
+        if (val.seconds) return val.seconds * 1000;
+        const t = Date.parse(val);
+        return isNaN(t) ? 0 : t;
+      } catch (e) {
+        return 0;
+      }
+    }
+
+    function getBdDayStartMs(daysAgo = 0) {
+      // Asia/Dhaka is fixed UTC+6
+      const offsetMs = 6 * 60 * 60 * 1000;
+      const nowBd = new Date(Date.now() + offsetMs);
+      nowBd.setUTCHours(0, 0, 0, 0);
+      nowBd.setUTCDate(nowBd.getUTCDate() - daysAgo);
+      return nowBd.getTime() - offsetMs;
+    }
+
+    window.setAdminProfitRange = function(range) {
+      window.adminProfitTrackerState.range = range;
+      ['today', '7d', '30d', 'all'].forEach(r => {
+        const btn = document.getElementById(`pt-range-${r}`);
+        if (!btn) return;
+        if (r === range) {
+          btn.className = "px-2.5 py-1 rounded-lg bg-slate-900 text-white shadow-2xs transition cursor-pointer";
+        } else {
+          btn.className = "px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900 transition cursor-pointer";
+        }
+      });
+      renderAdminProfitTracker();
+    };
+
+    window.updateAdminProfitUsdRate = function(val) {
+      const rate = Number(val);
+      if (!isNaN(rate) && rate >= 50 && rate <= 300) {
+        window.adminProfitTrackerState.usdToBdtRate = rate;
+        localStorage.setItem('tr_admin_usd_bdt_rate', String(rate));
+        renderAdminProfitTracker();
+      }
+    };
+
+    function initAdminProfitTracker() {
+      if (window.adminProfitTrackerState.initialized) {
+        renderAdminProfitTracker();
+        return;
+      }
+      window.adminProfitTrackerState.initialized = true;
+
+      const rateInput = document.getElementById('admin-profit-usd-rate');
+      if (rateInput) rateInput.value = window.adminProfitTrackerState.usdToBdtRate;
+
+      // Subscribe to each offerwall postback log collection
+      ADMIN_PROFIT_NETWORKS.forEach(net => {
+        onSnapshot(collection(db, net.col), (snap) => {
+          const items = [];
+          snap.forEach(d => {
+            const log = d.data() || {};
+            const coinsRaw = Number(log.coins ?? log.currencyAmount ?? log.amountCoins ?? 0) || 0;
+            const isReversed = String(log.status || '').toLowerCase() === 'reversed' ||
+              String(log.status || '').toLowerCase() === 'chargeback' ||
+              String(log.type || '') === '2' ||
+              coinsRaw < 0;
+
+            const absCoins = Math.abs(coinsRaw);
+            // User coin cost in BDT (10,000 coins = ৳1)
+            const userCostBdt = absCoins / 10000;
+
+            // Extract actual gross USD payout from postback if stored; else derive from site standard ($1 = 600,000 coins)
+            const rawUsd = Number(log.payoutUsd ?? log.revenueUsd ?? log.payout ?? log.revenue ?? log.usd ?? log.amountUsd ?? 0);
+            const grossUsd = (!isNaN(rawUsd) && Math.abs(rawUsd) > 0 && Math.abs(rawUsd) < 5000)
+              ? Math.abs(rawUsd)
+              : (absCoins / 600000);
+
+            const ts = parseAdminLogDateMs(log.createdAt || log.timestamp || log.date);
+            items.push({
+              id: d.id,
+              ts,
+              isReversed,
+              absCoins,
+              userCostBdt,
+              grossUsd
+            });
+          });
+          window.adminProfitTrackerState.logsByNetwork[net.key] = items;
+          renderAdminProfitTracker();
+        }, (err) => {
+          console.warn(`Profit tracker (${net.col}) listener notice:`, err?.message || err);
+        });
+      });
+
+      // Track withdrawals with timestamps for period cash-flow comparison
+      onSnapshot(collection(db, "withdrawals"), (snap) => {
+        const list = [];
+        snap.forEach(d => {
+          const w = d.data() || {};
+          list.push({
+            status: w.status || '',
+            taka: Number(w.taka) || 0,
+            ts: parseAdminLogDateMs(w.paidAt || w.updatedAt || w.createdAt)
+          });
+        });
+        window.adminProfitTrackerState.withdrawals = list;
+        renderAdminProfitTracker();
+      }, (err) => {
+        console.warn("Profit tracker withdrawals notice:", err?.message || err);
+      });
+    }
+
+    function renderAdminProfitTracker() {
+      const st = window.adminProfitTrackerState;
+      const rate = st.usdToBdtRate || 120;
+      let minTs = 0;
+      if (st.range === 'today') minTs = getBdDayStartMs(0);
+      else if (st.range === '7d') minTs = getBdDayStartMs(6);
+      else if (st.range === '30d') minTs = getBdDayStartMs(29);
+
+      let totalGrossUsd = 0;
+      let totalUserCostBdt = 0;
+      let totalConversions = 0;
+      let totalReversals = 0;
+      let totalReversedBdt = 0;
+
+      const rows = ADMIN_PROFIT_NETWORKS.map(net => {
+        const items = st.logsByNetwork[net.key] || [];
+        let conv = 0, rev = 0, usd = 0, costBdt = 0;
+
+        items.forEach(item => {
+          if (minTs > 0 && item.ts > 0 && item.ts < minTs) return;
+          if (minTs > 0 && item.ts === 0) return;
+
+          if (item.isReversed) {
+            rev++;
+            totalReversals++;
+            totalReversedBdt += item.userCostBdt;
+            usd -= item.grossUsd;
+            costBdt -= item.userCostBdt;
+          } else {
+            conv++;
+            totalConversions++;
+            usd += item.grossUsd;
+            costBdt += item.userCostBdt;
+          }
+        });
+
+        const grossBdt = usd * rate;
+        const netBdt = grossBdt - costBdt;
+        totalGrossUsd += usd;
+        totalUserCostBdt += costBdt;
+
+        return {
+          ...net,
+          conv,
+          rev,
+          usd,
+          grossBdt,
+          costBdt,
+          netBdt
+        };
+      });
+
+      // Paid withdrawals in selected period
+      let periodPaidWithdrawals = 0;
+      (st.withdrawals || []).forEach(w => {
+        if (w.status !== 'Paid') return;
+        if (minTs > 0 && (w.ts === 0 || w.ts < minTs)) return;
+        periodPaidWithdrawals += w.taka;
+      });
+
+      const totalGrossBdt = totalGrossUsd * rate;
+      const netProfitBdt = totalGrossBdt - totalUserCostBdt;
+      const cashFlowBdt = totalGrossBdt - periodPaidWithdrawals;
+      const marginPct = totalGrossBdt > 0 ? ((netProfitBdt / totalGrossBdt) * 100) : 0;
+
+      const elGrossBdt = document.getElementById('pt-gross-bdt');
+      const elGrossUsd = document.getElementById('pt-gross-usd');
+      const elCostBdt = document.getElementById('pt-cost-bdt');
+      const elPaidSub = document.getElementById('pt-paid-sub');
+      const elNetBdt = document.getElementById('pt-net-bdt');
+      const elMarginBadge = document.getElementById('pt-margin-badge');
+      const elCashflowSub = document.getElementById('pt-cashflow-sub');
+      const elNetCard = document.getElementById('pt-net-card');
+      const elConvCount = document.getElementById('pt-conv-count');
+      const elRevSub = document.getElementById('pt-rev-sub');
+      const elLastUpd = document.getElementById('pt-last-updated');
+
+      if (elGrossBdt) elGrossBdt.innerText = `৳${totalGrossBdt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      if (elGrossUsd) elGrossUsd.innerText = `$${totalGrossUsd.toFixed(2)} USD`;
+      if (elCostBdt) elCostBdt.innerText = `৳${totalUserCostBdt.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      if (elPaidSub) elPaidSub.innerText = `পেইড উইথড্র: ৳${periodPaidWithdrawals.toLocaleString('en-US', { maximumFractionDigits: 1 })}`;
+
+      if (elNetBdt) elNetBdt.innerText = `${netProfitBdt < 0 ? '-' : ''}৳${Math.abs(netProfitBdt).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      if (elMarginBadge) {
+        elMarginBadge.innerText = `${marginPct.toFixed(0)}% মার্জিন`;
+        elMarginBadge.className = netProfitBdt >= 0
+          ? "text-[10px] font-black px-1.5 py-0.5 rounded-md bg-emerald-100 text-emerald-700"
+          : "text-[10px] font-black px-1.5 py-0.5 rounded-md bg-red-100 text-red-700";
+      }
+      if (elNetCard) {
+        elNetCard.className = netProfitBdt >= 0
+          ? "bg-indigo-50/70 border border-indigo-200/80 p-3.5 rounded-2xl"
+          : "bg-red-50/80 border border-red-300 p-3.5 rounded-2xl";
+      }
+      if (elCashflowSub) elCashflowSub.innerText = `ক্যাশ-ফ্লো: ${cashFlowBdt < 0 ? '-' : ''}৳${Math.abs(cashFlowBdt).toLocaleString('en-US', { maximumFractionDigits: 1 })}`;
+
+      if (elConvCount) elConvCount.innerText = `${totalConversions.toLocaleString()}টি`;
+      if (elRevSub) {
+        elRevSub.innerText = totalReversals > 0
+          ? `চার্জব্যাক: ${totalReversals}টি (-৳${totalReversedBdt.toFixed(1)})`
+          : `চার্জব্যাক: 0টি (সুরক্ষিত)`;
+        elRevSub.className = totalReversals > 0 ? "text-[11px] font-bold text-red-600" : "text-[11px] font-bold text-emerald-600";
+      }
+      if (elLastUpd) {
+        const now = new Date();
+        elLastUpd.innerText = `আপডেট: ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
+      }
+
+      // Render network breakdown table sorted by gross revenue desc
+      const tbody = document.getElementById('pt-network-table-body');
+      if (!tbody) return;
+      rows.sort((a, b) => b.grossBdt - a.grossBdt);
+
+      tbody.innerHTML = rows.map(r => {
+        const netColor = r.netBdt >= 0 ? 'text-emerald-700' : 'text-red-600';
+        const revTag = r.rev > 0 ? `<span class="text-[10px] text-red-500 ml-1">(-${r.rev})</span>` : '';
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="py-2.5 px-3">
+              <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[11px] font-extrabold ${r.badge}">${r.label}</span>
+            </td>
+            <td class="py-2.5 px-2 text-right font-bold text-slate-800">${r.conv}${revTag}</td>
+            <td class="py-2.5 px-2 text-right font-bold text-slate-700">$${r.usd.toFixed(2)}</td>
+            <td class="py-2.5 px-2 text-right font-bold text-emerald-700">৳${r.grossBdt.toFixed(1)}</td>
+            <td class="py-2.5 px-2 text-right font-bold text-rose-600">৳${r.costBdt.toFixed(1)}</td>
+            <td class="py-2.5 px-3 text-right font-black ${netColor}">${r.netBdt < 0 ? '-' : ''}৳${Math.abs(r.netBdt).toFixed(1)}</td>
+          </tr>
+        `;
+      }).join('');
     }
 
     // Render 7-Day Submissions Curved Area Chart (Replicating Screenshot 2 Exactly)
