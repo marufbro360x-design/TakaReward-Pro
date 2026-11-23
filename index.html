@@ -2257,7 +2257,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               <h3 class="section-title text-xl sm:text-2xl flex items-center gap-2">
                 <span>👥</span> Affiliate &amp; Lifetime Referral Program
               </h3>
-              <p class="text-xs text-[var(--text-3)] mt-1 leading-relaxed">বন্ধুদের রেফার করুন এবং আজীবন ১০% কমিশন ও ৩০,০০০ কয়েন ইনস্ট্যান্ট বোনাস উপভোগ করুন</p>
+              <p class="text-xs text-[var(--text-3)] mt-1 leading-relaxed">আপনার রেফারে জয়েন করা বন্ধু অন্তত ১টি অফারওয়াল বা মাইক্রো-টাস্ক কমপ্লিট করলেই <b>Active রেফার</b> হিসেবে কাউন্ট হবে এবং আপনি পাবেন <b>১০,০০০ কয়েন আনলক বোনাস</b> + তার প্রতিটি কাজের <b>আজীবন ১০% কমিশন</b>!</p>
             </div>
 
             <!-- Referral Link & Commission Card -->
@@ -2266,10 +2266,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <span class="text-xs font-black uppercase text-[var(--text-3)] tracking-wider">Your Unique Referral Link</span>
                 <div class="grid grid-cols-2 sm:flex items-center gap-2 sm:gap-3 text-[11px] sm:text-xs font-bold">
                   <div class="bg-orange-500/10 border border-orange-500/20 text-slate-700 dark:text-slate-200 px-2.5 py-1.5 rounded-xl text-center">
-                    Commission: <span class="text-brand-500 font-black">10% Lifetime</span>
+                    Task Commission: <span class="text-brand-500 font-black">10% Lifetime</span>
                   </div>
                   <div class="bg-emerald-500/10 border border-emerald-500/20 text-slate-700 dark:text-slate-200 px-2.5 py-1.5 rounded-xl text-center">
-                    Signup Bonus: <span class="text-emerald-600 dark:text-emerald-400 font-black">৩০,০০০ কয়েন</span>
+                    Active Unlock: <span class="text-emerald-600 dark:text-emerald-400 font-black">১০,০০০ কয়েন</span>
                   </div>
                 </div>
               </div>
@@ -2282,19 +2282,36 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               </div>
             </div>
 
-            <!-- 3 Stat Cards (Clean Mobile & Desktop Grid - Zero Overflow) -->
-            <div class="grid grid-cols-3 gap-2.5 sm:gap-5">
+            <!-- 4 Stat Cards (Active, Pending, Commission, Invite Code) -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
               <div class="card p-3.5 sm:p-5 text-center flex flex-col justify-between rounded-2xl">
-                <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-tight text-[var(--text-3)]">Total Friends</span>
-                <span id="desk-total-ref-count" class="text-lg sm:text-3xl font-black mt-2 font-mono text-[var(--text)] block truncate">0 জন</span>
+                <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-tight text-emerald-600 dark:text-emerald-400">Active Referrals</span>
+                <span id="desk-total-ref-count" class="text-lg sm:text-2xl font-black mt-2 font-mono text-[var(--text)] block truncate">0 জন</span>
               </div>
               <div class="card p-3.5 sm:p-5 text-center flex flex-col justify-between rounded-2xl">
-                <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-tight text-[var(--text-3)]">Commission</span>
-                <span id="desk-total-ref-coins" class="text-lg sm:text-3xl font-black mt-2 font-mono text-emerald-500 block truncate">0 🪙</span>
+                <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-tight text-amber-600 dark:text-amber-400">Pending (১ম কাজ বাকি)</span>
+                <span id="desk-pending-ref-count" class="text-lg sm:text-2xl font-black mt-2 font-mono text-amber-600 dark:text-amber-400 block truncate">0 জন</span>
+              </div>
+              <div class="card p-3.5 sm:p-5 text-center flex flex-col justify-between rounded-2xl">
+                <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-tight text-[var(--text-3)]">Total Commission</span>
+                <span id="desk-total-ref-coins" class="text-lg sm:text-2xl font-black mt-2 font-mono text-emerald-500 block truncate">0 🪙</span>
               </div>
               <div onclick="copyOnlyCode()" class="card p-3.5 sm:p-5 text-center flex flex-col justify-between rounded-2xl cursor-pointer hover:border-orange-400 transition" title="Click to copy code">
                 <span class="text-[10px] sm:text-xs font-extrabold uppercase tracking-tight text-[var(--text-3)]">Invite Code</span>
                 <span id="desk-my-invite-code" class="text-base sm:text-2xl font-black mt-2 font-mono text-brand-500 block truncate">TR-----</span>
+              </div>
+            </div>
+
+            <!-- Live Friends & Activation Status List -->
+            <div class="card p-4 sm:p-5 space-y-3">
+              <div class="flex items-center justify-between border-b border-[var(--border)] pb-2.5">
+                <h4 class="font-extrabold text-sm text-[var(--text)] flex items-center gap-2">
+                  <span>📋</span> আপনার রেফার্ড বন্ধুদের তালিকা
+                </h4>
+                <span class="text-[11px] font-bold text-[var(--text-3)]">১ম টাস্ক কমপ্লিট = Active</span>
+              </div>
+              <div id="desk-referral-list-container" class="space-y-2.5 max-h-[360px] overflow-y-auto pr-1">
+                <p class="text-xs text-[var(--text-3)] text-center py-6">রেফারেল তালিকা লোড হচ্ছে...</p>
               </div>
             </div>
           </section>
@@ -7135,7 +7152,10 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (refLink) refLink.value = `https://takarewardpro.com/?ref=${code}`;
       if (myInviteCode) myInviteCode.innerText = code;
       if (totalRefCount) totalRefCount.innerText = (uData?.referralCount || 0) + ' জন';
-      if (totalRefCoins) totalRefCoins.innerText = ((uData?.referralCount || 0) * 100000).toLocaleString() + ' 🪙';
+      const totalEarnedRefCoins = (typeof uData?.referralCommissionEarned === 'number')
+        ? uData.referralCommissionEarned
+        : ((uData?.referralCount || 0) * 10000);
+      if (totalRefCoins) totalRefCoins.innerText = Math.round(totalEarnedRefCoins).toLocaleString() + ' 🪙';
 
       if (dAdminBtn) {
         if (user.email === 'marufbro360x@gmail.com') {
@@ -8555,16 +8575,68 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
     window.approveSubmission = async function(subId, userId, coins) {
       if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
       if (confirm("টাস্কটি অনুমোদন করে ইউজারের অ্যাকাউন্টে কয়েন যোগ করতে চান?")) {
+        const numericCoins = Number(coins) || 0;
         await updateDoc(doc(db, "submissions", subId), { status: "Approved" });
 
         const uRef = doc(db, "users", userId);
         await updateDoc(uRef, {
-          coins: increment(coins),
+          coins: increment(numericCoins),
           completedApprovedTasks: increment(1)
         });
 
+        // Targeted Referral Unlock (1st Task -> Active + 10k bonus) & 10% Lifetime Task Commission
+        try {
+          const uSnap = await getDoc(uRef);
+          if (uSnap.exists()) {
+            const uData = uSnap.data();
+            if (uData.referredBy) {
+              const refQ = query(collection(db, "users"), where("myInviteCode", "==", uData.referredBy));
+              const refSnap = await getDocs(refQ);
+              if (!refSnap.empty) {
+                const referrerDoc = refSnap.docs[0];
+                if (referrerDoc.id !== userId) {
+                  const referrerRef = doc(db, "users", referrerDoc.id);
+                  const isFirstActivation = !uData.referralActivated;
+                  const unlockBonus = isFirstActivation ? 10000 : 0;
+                  const commissionCoins = Math.round(numericCoins * 0.10);
+                  const totalReferrerCredit = unlockBonus + commissionCoins;
+
+                  const refUpdates = {};
+                  if (isFirstActivation) {
+                    refUpdates.referralCount = increment(1);
+                    await updateDoc(uRef, {
+                      referralActivated: true,
+                      referralActivatedAt: serverTimestamp()
+                    });
+                  }
+                  if (totalReferrerCredit > 0) {
+                    refUpdates.coins = increment(totalReferrerCredit);
+                    refUpdates.referralCommissionEarned = increment(totalReferrerCredit);
+                  }
+                  if (Object.keys(refUpdates).length > 0) {
+                    await updateDoc(referrerRef, refUpdates);
+                    const msgParts = [];
+                    if (isFirstActivation) msgParts.push(`🎉 আপনার রেফার্ড বন্ধু (${uData.name || 'ইউজার'}) ১ম টাস্ক কমপ্লিট করে Active হয়েছে! আনলক বোনাস +১০,০০০ কয়েন`);
+                    if (commissionCoins > 0) msgParts.push(`১০% টাস্ক কমিশন +${commissionCoins.toLocaleString()} কয়েন যুক্ত হয়েছে।`);
+                    await addDoc(collection(db, "notifications"), {
+                      userId: referrerDoc.id,
+                      title: isFirstActivation ? "🔥 Active রেফারেল আনলক ও কমিশন!" : "💸 ১০% রেফারেল কমিশন!",
+                      message: msgParts.join(" এবং "),
+                      type: "referral",
+                      read: false,
+                      createdAt: serverTimestamp()
+                    });
+                  }
+                }
+              }
+            }
+          }
+        } catch (refErr) {
+          console.warn("Referral unlock/commission notice:", refErr);
+        }
+
         playCoinChime();
-        alert("টাস্ক অনুমোদিত এবং কয়েন যুক্ত হয়েছে!");
+        alert("টাস্ক অনুমোদিত এবং কয়েন (ও রেফারেল কমিশন) যুক্ত হয়েছে!");
       }
     };
 
@@ -10258,34 +10330,43 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       );
 
       unsubMyReferrals = onSnapshot(q, (snapshot) => {
-        const listContainer = document.getElementById('my-referral-list-container');
-        const countEl = document.getElementById('my-total-ref-count');
-        const coinsEl = document.getElementById('my-total-ref-coins');
+        const listContainer = document.getElementById('desk-referral-list-container');
+        const activeCountEl = document.getElementById('desk-total-ref-count');
+        const pendingCountEl = document.getElementById('desk-pending-ref-count');
 
         const referrals = [];
         snapshot.forEach((docSnap) => {
           referrals.push({ id: docSnap.id, ...docSnap.data() });
         });
 
-        const totalCount = referrals.length;
-        if (countEl) countEl.innerText = `${totalCount} জন`;
-        if (coinsEl) coinsEl.innerText = (totalCount * 10000).toLocaleString();
+        let activeCount = 0;
+        let pendingCount = 0;
+        referrals.forEach((r) => {
+          if (r.referralActivated === true) activeCount++;
+          else pendingCount++;
+        });
+
+        if (activeCountEl) activeCountEl.innerText = `${activeCount} জন`;
+        if (pendingCountEl) pendingCountEl.innerText = `${pendingCount} জন`;
 
         if (!listContainer) return;
 
-        if (totalCount === 0) {
+        if (referrals.length === 0) {
           listContainer.innerHTML = `
-            <div class="text-center py-6 px-4 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+            <div class="text-center py-6 px-4 bg-[var(--surface-2)] rounded-2xl border border-dashed border-[var(--border)]">
               <span class="text-3xl block mb-2">👥</span>
-              <p class="text-xs font-bold text-slate-700">এখনও কোনো সফল রেফারেল নেই</p>
-              <p class="text-[11px] text-slate-400 mt-1">আপনার বন্ধুদের সাথে লিংক শেয়ার করুন এবং প্রতি রেফারে ১০,০০০ কয়েন ও ১ম ক্যাশআউটে ৳১০ বোনাস পান!</p>
+              <p class="text-xs font-bold text-[var(--text)]">এখনও কোনো রেফার্ড বন্ধু নেই</p>
+              <p class="text-[11px] text-[var(--text-3)] mt-1">বন্ধুকে লিংক শেয়ার করুন — সে ১টি অফারওয়াল বা মাইক্রো-টাস্ক কমপ্লিট করলেই Active হবে এবং আপনি পাবেন ১০,০০০ কয়েন + আজীবন ১০% কমিশন!</p>
             </div>
           `;
           return;
         }
 
-        // Sort latest first
+        // Sort Active first, then latest joined
         referrals.sort((a, b) => {
+          if (Boolean(a.referralActivated) !== Boolean(b.referralActivated)) {
+            return a.referralActivated ? -1 : 1;
+          }
           const tA = a.createdAt?.seconds || 0;
           const tB = b.createdAt?.seconds || 0;
           return tB - tA;
@@ -10299,23 +10380,24 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             const d = new Date(r.createdAt.seconds * 1000);
             dateStr = d.toLocaleDateString('bn-BD', { day: 'numeric', month: 'short' });
           }
-          const isPaid = r.referralBonusAwarded;
+          const isActive = r.referralActivated === true;
 
           return `
-            <div class="bg-white p-3 rounded-2xl border border-slate-100 shadow-2xs flex items-center justify-between gap-3">
+            <div class="bg-[var(--surface-2)] p-3 rounded-2xl border border-[var(--border)] flex items-center justify-between gap-3">
               <div class="flex items-center gap-2.5 min-w-0">
-                <img src="${avatar}" class="w-10 h-10 rounded-full border border-emerald-200 object-cover flex-shrink-0" />
+                <img src="${avatar}" class="w-10 h-10 rounded-full border ${isActive ? 'border-emerald-400' : 'border-amber-300'} object-cover flex-shrink-0" />
                 <div class="truncate">
-                  <div class="font-bold text-xs text-slate-800 truncate">${name}</div>
-                  <div class="text-[10px] text-slate-400">জয়েন: ${dateStr}</div>
+                  <div class="font-bold text-xs text-[var(--text)] truncate">${name}</div>
+                  <div class="text-[10px] text-[var(--text-3)]">জয়েন: ${dateStr}</div>
                 </div>
               </div>
               <div class="text-right flex-shrink-0">
-                <span class="inline-block bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-full mb-1">
-                  +১০,০০০ কয়েন ✓
-                </span>
-                <div class="text-[9px] font-bold ${isPaid ? 'text-emerald-600' : 'text-amber-600'}">
-                  ${isPaid ? '🎉 ১ম ক্যাশআউট বোনাস পেইড' : '⏳ ১ম ক্যাশআউট পেন্ডিং'}
+                ${isActive
+                  ? `<span class="inline-block bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full mb-1">✓ Active (+১০k &amp; ১০%)</span>`
+                  : `<span class="inline-block bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30 text-[10px] font-extrabold px-2.5 py-0.5 rounded-full mb-1">⏳ Pending (১ম কাজ বাকি)</span>`
+                }
+                <div class="text-[10px] font-bold ${isActive ? 'text-emerald-600 dark:text-emerald-400' : 'text-[var(--text-3)]'}">
+                  ${isActive ? 'প্রতিটি কাজে ১০% কমিশন চালু' : '১টি টাস্ক করলেই আনলক হবে'}
                 </div>
               </div>
             </div>
