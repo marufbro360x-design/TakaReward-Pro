@@ -473,7 +473,9 @@ async function handleRegisterUser(uid, decodedEmail, body, adminToken, clientIp)
           myInviteCode: { stringValue: myCode },
           referredBy: { nullValue: null },
           referredByUid: { nullValue: null },
+          referralActivated: { booleanValue: false },
           referralCount: { integerValue: "0" },
+          referralCommissionEarned: { integerValue: "0" },
           completedApprovedTasks: { integerValue: "0" },
           lastDailyClaimTime: { integerValue: "0" },
           referralBonusAwarded: { booleanValue: false },
@@ -723,7 +725,7 @@ async function handleBrowsingClaim(uid, body, adminToken, clientIp) {
 }
 
 // =========================================================================
-// ACTION 3: APPLY REFERRAL CODE (+30,000 to user, +10,000 to referrer, once ever)
+// ACTION 3: APPLY REFERRAL CODE (Pending until 1st Offerwall/Micro-Task -> Active + 10k & 10% Commission)
 // =========================================================================
 async function handleApplyReferral(uid, body, adminToken, clientIp) {
   const ipRep = await checkIpReputation(clientIp);
@@ -764,6 +766,9 @@ async function handleApplyReferral(uid, body, adminToken, clientIp) {
     return { status: 403, body: { success: false, error: "একই ডিভাইস থেকে নিজের রেফারেল কোড ব্যবহার করা যাবে না!" } };
   }
 
+  // Targeted Referral Unlock: Referrer gets 0 coins & 0 active count on signup.
+  // Referrer unlocks Active count (+1) + 10,000 coins + 10% lifetime task commission
+  // only when this user completes at least 1 Offerwall or Micro-Task!
   const userPrecondition = userDoc.updateTime ? { updateTime: userDoc.updateTime } : { exists: true };
   await commitWrites(adminToken, [
     {
@@ -771,10 +776,11 @@ async function handleApplyReferral(uid, body, adminToken, clientIp) {
         name: docPath(`users/${uid}`),
         fields: {
           referredBy: { stringValue: code },
-          referredByUid: { stringValue: referrer.id }
+          referredByUid: { stringValue: referrer.id },
+          referralActivated: { booleanValue: false }
         }
       },
-      updateMask: { fieldPaths: ["referredBy", "referredByUid"] },
+      updateMask: { fieldPaths: ["referredBy", "referredByUid", "referralActivated"] },
       currentDocument: userPrecondition
     },
     {
@@ -782,15 +788,6 @@ async function handleApplyReferral(uid, body, adminToken, clientIp) {
         document: docPath(`users/${uid}`),
         fieldTransforms: [
           { fieldPath: "coins", increment: { integerValue: "30000" } }
-        ]
-      }
-    },
-    {
-      transform: {
-        document: docPath(`users/${referrer.id}`),
-        fieldTransforms: [
-          { fieldPath: "coins", increment: { integerValue: "10000" } },
-          { fieldPath: "referralCount", increment: { integerValue: "1" } }
         ]
       }
     }
@@ -802,7 +799,8 @@ async function handleApplyReferral(uid, body, adminToken, clientIp) {
       success: true,
       coinsAdded: 30000,
       referredBy: code,
-      message: "🎉 অভিনন্দন! আপনার একাউন্টে ৩০,০০০ কয়েন যুক্ত হয়েছে এবং আপনার রেফারার ১০,০০০ কয়েন পেয়েছেন!"
+      referralActivated: false,
+      message: "🎉 অভিনন্দন! রেফারেল কোড যুক্ত হয়েছে এবং আপনি ৩০,০০০ কয়েন ওয়েলকাম বোনাস পেয়েছেন। আপনার ১ম অফারওয়াল বা মাইক্রো-টাস্ক কমপ্লিট হলেই রেফারার Active বোনাস ও ১০% কমিশন পাবেন!"
     }
   };
 }
