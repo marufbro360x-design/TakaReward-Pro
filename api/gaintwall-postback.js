@@ -79,6 +79,152 @@ function sha256Hash(str) {
   return crypto.createHash('sha256').update(String(str)).digest('hex');
 }
 
+
+// =========================================================================
+// TARGETED REFERRAL UNLOCK (1st Task -> Active + 10k Bonus) + 10% COMMISSION
+// =========================================================================
+async function processReferralUnlockAndCommission(adminToken, userId, earnedCoins, providerName, txId) {
+  try {
+    const positiveCoins = Math.round(Number(earnedCoins) || 0);
+    if (!userId || positiveCoins <= 0) return;
+
+    const baseUrl = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents`;
+    const userRes = await fetch(`${baseUrl}/users/${encodeURIComponent(userId)}`, {
+      method: "GET",
+      headers: { "Authorization": `Bearer ${adminToken}` }
+    });
+    if (!userRes.ok) return;
+    const userDoc = await userRes.json();
+    const uFields = userDoc && userDoc.fields;
+    if (!uFields) return;
+
+    const referredByCode = (uFields.referredBy && uFields.referredBy.stringValue) ? uFields.referredBy.stringValue.trim() : "";
+    let referrerUid = (uFields.referredByUid && uFields.referredByUid.stringValue) ? uFields.referredByUid.stringValue.trim() : "";
+
+    if (!referrerUid && !referredByCode) return;
+
+    // Fallback lookup by myInviteCode for legacy users without referredByUid
+    if (!referrerUid && referredByCode) {
+      const qRes = await fetch(`${baseUrl}:runQuery`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+          structuredQuery: {
+            from: [{ collectionId: "users" }],
+            where: {
+              fieldFilter: {
+                field: { fieldPath: "myInviteCode" },
+                op: "EQUAL",
+                value: { stringValue: referredByCode }
+              }
+            },
+            limit: 1
+          }
+        })
+      });
+      if (qRes.ok) {
+        const rows = await qRes.json();
+        const match = Array.isArray(rows) ? rows.find(r => r && r.document && r.document.name) : null;
+        if (match) referrerUid = match.document.name.split("/").pop();
+      }
+    }
+
+    if (!referrerUid || referrerUid === userId) return;
+
+    const alreadyActivated = Boolean(uFields.referralActivated && uFields.referralActivated.booleanValue === true);
+    const isFirstActivation = !alreadyActivated;
+    const unlockBonus = isFirstActivation ? 10000 : 0;
+    const commissionCoins = Math.round(positiveCoins * 0.10);
+    const totalReferrerCredit = unlockBonus + commissionCoins;
+    if (totalReferrerCredit <= 0) return;
+
+    const nowIso = new Date().toISOString();
+    const userDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${userId}`;
+    const referrerDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${referrerUid}`;
+    const safeTx = String(txId || Date.now()).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 60);
+    const notifDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/notifications/ref_${safeTx}`;
+    const friendName = (uFields.name && uFields.name.stringValue) ? uFields.name.stringValue : "আপনার রেফার্ড বন্ধু";
+
+    const refTransforms = [
+      { fieldPath: "coins", increment: { integerValue: String(totalReferrerCredit) } },
+      { fieldPath: "referralCommissionEarned", increment: { integerValue: String(totalReferrerCredit) } }
+    ];
+    if (isFirstActivation) {
+      refTransforms.push({ fieldPath: "referralCount", increment: { integerValue: "1" } });
+    }
+
+    const writes = [];
+    if (isFirstActivation) {
+      const activateWrite = {
+        update: {
+          name: userDocPath,
+          fields: {
+            referralActivated: { booleanValue: true },
+            referralActivatedAt: { timestampValue: nowIso },
+            referredByUid: { stringValue: referrerUid }
+          }
+        },
+        updateMask: { fieldPaths: ["referralActivated", "referralActivatedAt", "referredByUid"] }
+      };
+      if (userDoc.updateTime) {
+        activateWrite.currentDocument = { updateTime: userDoc.updateTime };
+      }
+      writes.push(activateWrite);
+    }
+
+    writes.push({
+      transform: {
+        document: referrerDocPath,
+        fieldTransforms: refTransforms
+      }
+    });
+
+    const msgParts = [];
+    if (isFirstActivation) {
+      msgParts.push(`🎉 ${friendName} ১ম ${providerName} টাস্ক কমপ্লিট করে Active হয়েছে! আনলক বোনাস +১০,০০০ কয়েন`);
+    }
+    if (commissionCoins > 0) {
+      msgParts.push(`${providerName} থেকে ১০% কমিশন +${commissionCoins.toLocaleString()} কয়েন যুক্ত হয়েছে।`);
+    }
+
+    writes.push({
+      update: {
+        name: notifDocPath,
+        fields: {
+          userId: { stringValue: referrerUid },
+          title: { stringValue: isFirstActivation ? "🔥 Active রেফারেল আনলক ও কমিশন!" : "💸 ১০% রেফারেল কমিশন!" },
+          message: { stringValue: msgParts.join(" এবং ") },
+          type: { stringValue: "referral" },
+          read: { booleanValue: false },
+          time: { stringValue: "Just now" },
+          createdAt: { timestampValue: nowIso }
+        }
+      }
+    });
+
+    const commitRes = await fetch(`${baseUrl}:commit`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${adminToken}`
+      },
+      body: JSON.stringify({ writes })
+    });
+
+    if (!commitRes.ok) {
+      const errTxt = await commitRes.text();
+      console.warn(`[${providerName} Referral Commit Notice]`, errTxt);
+    } else {
+      console.log(`[${providerName} Referral OK] Referrer=${referrerUid}, FirstUnlock=${isFirstActivation}, Commission=${commissionCoins}, Total=${totalReferrerCredit}`);
+    }
+  } catch (err) {
+    console.warn(`[${providerName} Referral Error]`, err && err.message ? err.message : err);
+  }
+}
+
 async function processGaintwallPostback(params) {
   // Gaintwall Official Macros:
   // userId={user_id}&offerId={offer_id}&offerName={offer_name}&payout={payout}&reward={reward}&transactionId={transaction_id}&status={status}&ip={ip}&country={country}&sub1={aff_sub}&sub2={aff_sub2}&hash={hash}
@@ -253,6 +399,10 @@ async function processGaintwallPostback(params) {
     const errText = await commitRes.text();
     console.error("[Gaintwall Postback Commit Error]", errText);
     return { status: 500, text: "ERROR: Database commit failed" };
+  }
+
+  if (!isReversed && finalCoinsDelta > 0) {
+    await processReferralUnlockAndCommission(adminToken, userId, finalCoinsDelta, "Gaintwall", docId);
   }
 
   console.log(`[Gaintwall Postback OK] User=${userId}, Trans=${transId}, Coins=${finalCoinsDelta}, Offer=${offerName}`);
