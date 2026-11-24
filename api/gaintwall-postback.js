@@ -83,6 +83,21 @@ function sha256Hash(str) {
 // =========================================================================
 // TARGETED REFERRAL UNLOCK (1st Task -> Active + 10k Bonus) + 10% COMMISSION
 // =========================================================================
+function getChallengeBdDateKey(ms = Date.now()) {
+  const bd = new Date(ms + 6 * 3600 * 1000);
+  return bd.toISOString().slice(0, 10);
+}
+
+function getChallengeBdWeekKey(ms = Date.now()) {
+  const bd = new Date(ms + 6 * 3600 * 1000);
+  const d = new Date(Date.UTC(bd.getUTCFullYear(), bd.getUTCMonth(), bd.getUTCDate()));
+  const dayNum = d.getUTCDay() || 7;
+  d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+  const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+  return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, "0")}`;
+}
+
 async function processReferralUnlockAndCommission(adminToken, userId, earnedCoins, providerName, txId) {
   try {
     const positiveCoins = Math.round(Number(earnedCoins) || 0);
@@ -98,12 +113,46 @@ async function processReferralUnlockAndCommission(adminToken, userId, earnedCoin
     const uFields = userDoc && userDoc.fields;
     if (!uFields) return;
 
+    const todayBdKey = getChallengeBdDateKey();
+    const weekBdKey = getChallengeBdWeekKey();
+    const nowIso = new Date().toISOString();
+    const userDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${userId}`;
+
+    // 1. Update User's Real-Time Daily Challenge Earnings (BD UTC+6, resets automatically on new day)
+    try {
+      const prevDailyDate = (uFields.dailyEarnedDate && uFields.dailyEarnedDate.stringValue) ? uFields.dailyEarnedDate.stringValue.trim() : "";
+      const prevDailyCoins = Number((uFields.dailyEarnedCoins && (uFields.dailyEarnedCoins.integerValue || uFields.dailyEarnedCoins.doubleValue)) || 0) || 0;
+      const nextDailyCoins = (prevDailyDate === todayBdKey) ? (prevDailyCoins + positiveCoins) : positiveCoins;
+
+      await fetch(`${baseUrl}:commit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${adminToken}`
+        },
+        body: JSON.stringify({
+          writes: [{
+            update: {
+              name: userDocPath,
+              fields: {
+                dailyEarnedDate: { stringValue: todayBdKey },
+                dailyEarnedCoins: { integerValue: String(nextDailyCoins) }
+              }
+            },
+            updateMask: { fieldPaths: ["dailyEarnedDate", "dailyEarnedCoins"] }
+          }]
+        })
+      });
+    } catch (dailyErr) {
+      console.warn(`[${providerName} Daily Challenge Update Notice]`, dailyErr && dailyErr.message ? dailyErr.message : dailyErr);
+    }
+
+    // 2. Targeted Referral Unlock + 10% Lifetime Commission + Weekly Affiliate Challenge Tracking
     const referredByCode = (uFields.referredBy && uFields.referredBy.stringValue) ? uFields.referredBy.stringValue.trim() : "";
     let referrerUid = (uFields.referredByUid && uFields.referredByUid.stringValue) ? uFields.referredByUid.stringValue.trim() : "";
 
     if (!referrerUid && !referredByCode) return;
 
-    // Fallback lookup by myInviteCode for legacy users without referredByUid
     if (!referrerUid && referredByCode) {
       const qRes = await fetch(`${baseUrl}:runQuery`, {
         method: "POST",
@@ -141,12 +190,31 @@ async function processReferralUnlockAndCommission(adminToken, userId, earnedCoin
     const totalReferrerCredit = unlockBonus + commissionCoins;
     if (totalReferrerCredit <= 0) return;
 
-    const nowIso = new Date().toISOString();
-    const userDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${userId}`;
     const referrerDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${referrerUid}`;
     const safeTx = String(txId || Date.now()).replace(/[^a-zA-Z0-9_-]/g, "_").slice(0, 60);
     const notifDocPath = `projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents/notifications/ref_${safeTx}`;
     const friendName = (uFields.name && uFields.name.stringValue) ? uFields.name.stringValue : "আপনার রেফার্ড বন্ধু";
+
+    // Read referrer's current weekly challenge fields for clean weekly rollover
+    let nextWeeklyTeamCoins = positiveCoins;
+    let nextWeeklyActiveRefs = isFirstActivation ? 1 : 0;
+    try {
+      const refGetRes = await fetch(`${baseUrl}/users/${encodeURIComponent(referrerUid)}`, {
+        method: "GET",
+        headers: { "Authorization": `Bearer ${adminToken}` }
+      });
+      if (refGetRes.ok) {
+        const refDoc = await refGetRes.json();
+        const rFields = refDoc && refDoc.fields ? refDoc.fields : {};
+        const prevWeekKey = (rFields.weeklyChallengeKey && rFields.weeklyChallengeKey.stringValue) ? rFields.weeklyChallengeKey.stringValue.trim() : "";
+        const prevWeekTeamCoins = Number((rFields.weeklyTeamEarnedCoins && (rFields.weeklyTeamEarnedCoins.integerValue || rFields.weeklyTeamEarnedCoins.doubleValue)) || 0) || 0;
+        const prevWeekRefs = Number((rFields.weeklyActiveReferrals && (rFields.weeklyActiveReferrals.integerValue || rFields.weeklyActiveReferrals.doubleValue)) || 0) || 0;
+        if (prevWeekKey === weekBdKey) {
+          nextWeeklyTeamCoins = prevWeekTeamCoins + positiveCoins;
+          nextWeeklyActiveRefs = prevWeekRefs + (isFirstActivation ? 1 : 0);
+        }
+      }
+    } catch (rwErr) {}
 
     const refTransforms = [
       { fieldPath: "coins", increment: { integerValue: String(totalReferrerCredit) } },
@@ -169,11 +237,20 @@ async function processReferralUnlockAndCommission(adminToken, userId, earnedCoin
         },
         updateMask: { fieldPaths: ["referralActivated", "referralActivatedAt", "referredByUid"] }
       };
-      if (userDoc.updateTime) {
-        activateWrite.currentDocument = { updateTime: userDoc.updateTime };
-      }
       writes.push(activateWrite);
     }
+
+    writes.push({
+      update: {
+        name: referrerDocPath,
+        fields: {
+          weeklyChallengeKey: { stringValue: weekBdKey },
+          weeklyTeamEarnedCoins: { integerValue: String(nextWeeklyTeamCoins) },
+          weeklyActiveReferrals: { integerValue: String(nextWeeklyActiveRefs) }
+        }
+      },
+      updateMask: { fieldPaths: ["weeklyChallengeKey", "weeklyTeamEarnedCoins", "weeklyActiveReferrals"] }
+    });
 
     writes.push({
       transform: {
@@ -218,7 +295,7 @@ async function processReferralUnlockAndCommission(adminToken, userId, earnedCoin
       const errTxt = await commitRes.text();
       console.warn(`[${providerName} Referral Commit Notice]`, errTxt);
     } else {
-      console.log(`[${providerName} Referral OK] Referrer=${referrerUid}, FirstUnlock=${isFirstActivation}, Commission=${commissionCoins}, Total=${totalReferrerCredit}`);
+      console.log(`[${providerName} Referral+Challenge OK] Referrer=${referrerUid}, FirstUnlock=${isFirstActivation}, Commission=${commissionCoins}, WeekTeamCoins=${nextWeeklyTeamCoins}`);
     }
   } catch (err) {
     console.warn(`[${providerName} Referral Error]`, err && err.message ? err.message : err);
