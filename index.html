@@ -2066,33 +2066,45 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
           <!-- TAB 5: CHALLENGE VIEW (Exact 1:1 RewardJoy Professional Challenge UI from Video) -->
           <section id="desk-view-challenge" class="space-y-6 hidden">
-            
-            <!-- Top Awards & Total Prizes Bar (Exact Match to Video 00:00) -->
+
+            <!-- Top Real-Time Awards & Total USDT Prizes Bar -->
             <div class="card p-4 sm:p-5 bg-white dark:bg-[var(--surface)] border border-slate-100 dark:border-[var(--border)] rounded-2xl shadow-2xs space-y-3.5">
               <div class="grid grid-cols-2 divide-x divide-slate-200 dark:divide-slate-800 text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400">
                 <div class="flex items-center gap-2 pr-3">
                   <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs shrink-0">🏅</span>
-                  <span class="truncate">Number of awards: <strong id="rj-chal-awards-count" class="text-slate-800 dark:text-white font-bold">0</strong></span>
+                  <span class="truncate">Awards Won: <strong id="rj-chal-awards-count" class="text-slate-800 dark:text-white font-bold">0</strong></span>
                 </div>
                 <div class="flex items-center gap-2 pl-3">
                   <span class="w-6 h-6 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs shrink-0">🏆</span>
-                  <span class="truncate">Total Prizes: <strong id="rj-chal-total-prizes" class="text-slate-800 dark:text-white font-bold">৳ 0</strong></span>
+                  <span class="truncate">Total Prizes Won: <strong id="rj-chal-total-prizes" class="text-slate-800 dark:text-white font-bold">$0.00 USDT</strong></span>
                 </div>
               </div>
-              <div>
+              <div class="flex flex-wrap items-center justify-between gap-2">
                 <button type="button" onclick="openRjChallengeStatsModal()" class="bg-[#fff3eb] hover:bg-orange-100 dark:bg-orange-950/40 text-[#f97316] border border-orange-200/80 dark:border-orange-800/50 font-semibold text-xs px-4 py-2 rounded-lg inline-flex items-center gap-1.5 transition cursor-pointer">
-                  <span>More Statistics</span>
+                  <span>Challenge Rules &amp; Stats</span>
                   <span>&gt;</span>
                 </button>
+                <span class="text-[11px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/70 dark:border-emerald-800/50 px-3 py-1 rounded-full">
+                  ● 100% Live Real-Time USDT Leaderboard
+                </span>
               </div>
             </div>
 
-            <!-- Challenge Cards Grid (Daily $100 + Affiliate $1500) -->
+            <!-- Challenge Cards Grid (Real-Time Daily USDT + Weekly Affiliate % Bonus) -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              
-              <!-- CARD 1: Daily Challenge ($100 Prize - Exact Match to Video 00:03-00:05) -->
+
+              <!-- CARD 1: Real-Time Daily Challenge ($20.50 USDT Pool) -->
               <div class="card p-4 sm:p-6 bg-white dark:bg-[var(--surface)] border border-slate-100 dark:border-[var(--border)] rounded-3xl shadow-2xs space-y-4">
-                <h3 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">Daily</h3>
+                <div class="flex items-center justify-between gap-2">
+                  <div>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">Daily Challenge</h3>
+                    <p class="text-[11px] text-slate-400 font-medium">Real Offerwall &amp; Approved Task Earnings Only</p>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Resets In (BD)</span>
+                    <span id="rj-daily-countdown" class="text-xs font-extrabold text-[#f97316] bg-orange-50 dark:bg-orange-950/40 px-2.5 py-1 rounded-lg border border-orange-200/60 dark:border-orange-800/40 inline-block mt-0.5">--:--:--</span>
+                  </div>
+                </div>
 
                 <div class="rounded-2xl p-4 sm:p-6 bg-gradient-to-b from-[#fffdfa] via-[#fff5ec] to-[#ffe4cc]/65 dark:from-slate-800/90 dark:to-slate-900 border border-orange-100/80 dark:border-slate-800 space-y-5 relative overflow-hidden">
                   <!-- Prize Banner with Laurel Wreaths -->
@@ -2102,8 +2114,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                       <path d="M18 26c-5-3-8-8-8-15 0-3 1-6 3-8-4 2-7 6-7 11 0 6 5 11 12 12z"/>
                     </svg>
                     <div class="text-center">
-                      <div class="text-xs font-bold text-[#f97316] tracking-wide">Prize</div>
-                      <div class="text-3xl sm:text-4xl font-black text-[#f97316] tracking-tight leading-none mt-0.5">$100</div>
+                      <div class="text-xs font-bold text-[#f97316] tracking-wide uppercase">Daily USDT Pool</div>
+                      <div class="text-3xl sm:text-4xl font-black text-[#f97316] tracking-tight leading-none mt-0.5">$20.50</div>
+                      <div class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1">1st $10 • 2nd $5 • 3rd $2 • 4th–10th $0.50 USDT</div>
                     </div>
                     <svg class="w-8 h-8 text-[#f59e0b]/70 shrink-0 scale-x-[-1]" viewBox="0 0 32 32" fill="currentColor">
                       <path d="M22 28c-6-2-10-7-11-14-1 3-3 5-5 6 1-4 3-7 6-9-2 0-4-1-5-3 3-1 6 0 8 2 0-3 1-6 4-8-1 3 0 6 2 8 2-2 5-3 8-2-1 2-3 3-5 3 3 2 5 5 6 9-2-1-4-3-5-6-1 7-5 12-11 14z" opacity="0.35"/>
@@ -2111,67 +2124,59 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     </svg>
                   </div>
 
-                  <!-- Top 3 Crowned Podium Avatars -->
-                  <div class="grid grid-cols-3 gap-2 items-end pt-3 text-center">
-                    <!-- Rank 2 (Left - Silver Crown) -->
-                    <div class="flex flex-col items-center">
-                      <svg class="w-5 h-5 text-slate-300 mb-1 drop-shadow-2xs" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v2H3v-2zm0-2L5 7l5 4 2-6 2 6 5-4 2 9H3z"/></svg>
-                      <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-full p-0.5 bg-gradient-to-b from-slate-200 to-slate-400 shadow-md">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=EduardoD" alt="EduardoD" class="w-full h-full rounded-full object-cover bg-amber-100"  loading="lazy" decoding="async" />
-                      </div>
-                      <div class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate w-full mt-2">EduardoD...</div>
-                      <span class="mt-1 inline-block bg-orange-100/90 dark:bg-orange-950/60 text-[#f97316] font-extrabold text-[11px] px-2.5 py-0.5 rounded-full">৳ 4,886</span>
-                    </div>
-
-                    <!-- Rank 1 (Center - Gold Crown, Larger) -->
-                    <div class="flex flex-col items-center -mt-3">
-                      <svg class="w-6 h-6 text-amber-400 mb-1 drop-shadow-xs animate-bounce" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v2H3v-2zm0-2L5 7l5 4 2-6 2 6 5-4 2 9H3z"/></svg>
-                      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#ad1457] text-white font-bold text-2xl sm:text-3xl flex items-center justify-center border-2 border-amber-300 shadow-lg">
-                        J
-                      </div>
-                      <div class="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-white truncate w-full mt-2">LesBriacins</div>
-                      <span class="mt-1 inline-block bg-orange-100 dark:bg-orange-950/70 text-[#f97316] font-extrabold text-xs px-3 py-0.5 rounded-full shadow-2xs">৳ 5,578</span>
-                    </div>
-
-                    <!-- Rank 3 (Right - Bronze Crown) -->
-                    <div class="flex flex-col items-center">
-                      <svg class="w-5 h-5 text-amber-600/70 mb-1 drop-shadow-2xs" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v2H3v-2zm0-2L5 7l5 4 2-6 2 6 5-4 2 9H3z"/></svg>
-                      <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#9fa8da] text-white font-bold text-xl flex items-center justify-center border-2 border-amber-200 shadow-md">
-                        M
-                      </div>
-                      <div class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate w-full mt-2">xxxxxq</div>
-                      <span class="mt-1 inline-block bg-orange-100/90 dark:bg-orange-950/60 text-[#f97316] font-extrabold text-[11px] px-2.5 py-0.5 rounded-full">৳ 1,240</span>
-                    </div>
+                  <!-- Dynamic Real Top 3 Podium -->
+                  <div id="rj-daily-podium" class="grid grid-cols-3 gap-2 items-end pt-3 text-center">
+                    <div class="col-span-3 text-xs text-slate-400 py-6 font-medium">Loading live daily rankings...</div>
                   </div>
 
-                  <!-- Your Rank & Current Earnings Sub-Card -->
+                  <!-- Your Real Rank & Today's Real Earnings Sub-Card -->
                   <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-2xs border border-orange-100/60 dark:border-slate-800 space-y-3">
                     <div class="flex items-center justify-between">
                       <div>
                         <div class="text-xs font-medium text-slate-500 dark:text-slate-400">Your Rank</div>
-                        <div id="rj-daily-chal-rank" class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">#1664</div>
+                        <div id="rj-daily-chal-rank" class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">--</div>
                       </div>
                       <div class="text-right">
-                        <div class="text-xs font-medium text-slate-500 dark:text-slate-400">Current Earnings</div>
-                        <div id="rj-daily-chal-earnings" class="text-2xl sm:text-3xl font-black text-[#f97316] mt-1">0</div>
+                        <div class="text-xs font-medium text-slate-500 dark:text-slate-400">Today's Real Earnings</div>
+                        <div id="rj-daily-chal-earnings" class="text-2xl sm:text-3xl font-black text-[#f97316] mt-1">$0.00</div>
                       </div>
                     </div>
                     <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
-                    <p class="text-xs text-slate-400 font-medium leading-relaxed">
-                      Only ৳ 151.4 away from an extra $0.3 bonus
+                    <p id="rj-daily-chal-hint" class="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                      Earn at least <strong class="text-[#f97316]">$1.25 USDT</strong> today from real offers to qualify for Top 10 prizes.
                     </p>
+                  </div>
+
+                  <!-- Top 10 Live Daily Leaderboard List -->
+                  <div class="bg-white/90 dark:bg-slate-900/90 rounded-2xl p-3 border border-orange-100/60 dark:border-slate-800 space-y-2">
+                    <div class="flex items-center justify-between px-1">
+                      <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">Top 10 Today</span>
+                      <span class="text-[10px] font-bold text-slate-400">Min: 1st $15 • 2nd $7.5 • 3rd $3.5 • 4–10 $1.25</span>
+                    </div>
+                    <div id="rj-daily-top10-list" class="space-y-1.5 max-h-60 overflow-y-auto pr-1 text-xs">
+                      <p class="text-center text-slate-400 py-4">No earners yet today — be the first!</p>
+                    </div>
                   </div>
 
                   <!-- Join Daily Challenge Button -->
                   <button type="button" id="btn-join-daily-challenge" onclick="joinRjChallenge('daily')" class="w-full bg-[#f97316] hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl text-sm shadow-md shadow-orange-500/20 transition cursor-pointer">
-                    Join Daily Challenge
+                    Start Earning for Daily Challenge
                   </button>
                 </div>
               </div>
 
-              <!-- CARD 2: Affiliate Challenge ($1500 Prize - Exact Match to Video 00:06-00:08) -->
+              <!-- CARD 2: Real-Time Weekly Affiliate Challenge (Up to 5% Team Income Bonus in USDT) -->
               <div class="card p-4 sm:p-6 bg-white dark:bg-[var(--surface)] border border-slate-100 dark:border-[var(--border)] rounded-3xl shadow-2xs space-y-4">
-                <h3 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">Affiliate</h3>
+                <div class="flex items-center justify-between gap-2">
+                  <div>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-800 dark:text-white">Weekly Affiliate</h3>
+                    <p class="text-[11px] text-slate-400 font-medium">Ranked by Active Referrals + Team Weekly Income</p>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-[10px] uppercase font-bold text-slate-400 block">Week Ends In</span>
+                    <span id="rj-weekly-countdown" class="text-xs font-extrabold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/40 px-2.5 py-1 rounded-lg border border-emerald-200/60 dark:border-emerald-800/40 inline-block mt-0.5">--d --h --m</span>
+                  </div>
+                </div>
 
                 <div class="rounded-2xl p-4 sm:p-6 bg-gradient-to-b from-[#fffdfa] via-[#f2fbf7] to-[#a7f3d0]/60 dark:from-slate-800/90 dark:to-emerald-950/30 border border-emerald-100/80 dark:border-slate-800 space-y-5 relative overflow-hidden">
                   <!-- Prize Banner with Laurel Wreaths -->
@@ -2181,8 +2186,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                       <path d="M18 26c-5-3-8-8-8-15 0-3 1-6 3-8-4 2-7 6-7 11 0 6 5 11 12 12z"/>
                     </svg>
                     <div class="text-center">
-                      <div class="text-xs font-bold text-[#f97316] tracking-wide">Prize</div>
-                      <div class="text-3xl sm:text-4xl font-black text-[#f97316] tracking-tight leading-none mt-0.5">$1500</div>
+                      <div class="text-xs font-bold text-emerald-600 dark:text-emerald-400 tracking-wide uppercase">Extra Team Bonus (USDT)</div>
+                      <div class="text-3xl sm:text-4xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight leading-none mt-0.5">Up to 5%</div>
+                      <div class="text-[10px] font-bold text-slate-500 dark:text-slate-400 mt-1">1st 5% • 2nd 3% • 3rd 2% • 4th–10th 1% of Team Weekly Income</div>
                     </div>
                     <svg class="w-8 h-8 text-[#f59e0b]/70 shrink-0 scale-x-[-1]" viewBox="0 0 32 32" fill="currentColor">
                       <path d="M22 28c-6-2-10-7-11-14-1 3-3 5-5 6 1-4 3-7 6-9-2 0-4-1-5-3 3-1 6 0 8 2 0-3 1-6 4-8-1 3 0 6 2 8 2-2 5-3 8-2-1 2-3 3-5 3 3 2 5 5 6 9-2-1-4-3-5-6-1 7-5 12-11 14z" opacity="0.35"/>
@@ -2190,60 +2196,43 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                     </svg>
                   </div>
 
-                  <!-- Top 3 Crowned Podium Avatars -->
-                  <div class="grid grid-cols-3 gap-2 items-end pt-3 text-center">
-                    <!-- Rank 2 (Left - Silver Crown) -->
-                    <div class="flex flex-col items-center">
-                      <svg class="w-5 h-5 text-slate-300 mb-1 drop-shadow-2xs" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v2H3v-2zm0-2L5 7l5 4 2-6 2 6 5-4 2 9H3z"/></svg>
-                      <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-full p-0.5 bg-gradient-to-b from-slate-200 to-slate-400 shadow-md">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=follow3346" alt="follow3346" class="w-full h-full rounded-full object-cover bg-slate-100"  loading="lazy" decoding="async" />
-                      </div>
-                      <div class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate w-full mt-2">follow3346</div>
-                      <span class="mt-1 inline-block bg-orange-100/90 dark:bg-orange-950/60 text-[#f97316] font-extrabold text-[11px] px-2.5 py-0.5 rounded-full">★ 246.781</span>
-                    </div>
-
-                    <!-- Rank 1 (Center - Gold Crown, Larger) -->
-                    <div class="flex flex-col items-center -mt-3">
-                      <svg class="w-6 h-6 text-amber-400 mb-1 drop-shadow-xs animate-bounce" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v2H3v-2zm0-2L5 7l5 4 2-6 2 6 5-4 2 9H3z"/></svg>
-                      <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full p-0.5 bg-gradient-to-b from-amber-300 to-amber-500 shadow-lg">
-                        <img src="https://i.ibb.co.com/wZSwySgh/Whats-App-Image-2026-09-08-at-8-13-28-AM.jpg" alt="Rochester" class="w-full h-full rounded-full object-cover bg-slate-900"  loading="lazy" decoding="async" />
-                      </div>
-                      <div class="text-xs sm:text-sm font-extrabold text-slate-800 dark:text-white truncate w-full mt-2">Rochester</div>
-                      <span class="mt-1 inline-block bg-orange-100 dark:bg-orange-950/70 text-[#f97316] font-extrabold text-xs px-3 py-0.5 rounded-full shadow-2xs">★ 307.767</span>
-                    </div>
-
-                    <!-- Rank 3 (Right - Bronze Crown) -->
-                    <div class="flex flex-col items-center">
-                      <svg class="w-5 h-5 text-amber-600/70 mb-1 drop-shadow-2xs" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v2H3v-2zm0-2L5 7l5 4 2-6 2 6 5-4 2 9H3z"/></svg>
-                      <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-full p-0.5 bg-gradient-to-b from-amber-200 to-amber-400 shadow-md">
-                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Thenix557" alt="Thenix557" class="w-full h-full rounded-full object-cover bg-sky-100"  loading="lazy" decoding="async" />
-                      </div>
-                      <div class="text-xs font-bold text-slate-700 dark:text-slate-200 truncate w-full mt-2">Thenix557</div>
-                      <span class="mt-1 inline-block bg-orange-100/90 dark:bg-orange-950/60 text-[#f97316] font-extrabold text-[11px] px-2.5 py-0.5 rounded-full">★ 217.033</span>
-                    </div>
+                  <!-- Dynamic Real Top 3 Affiliate Podium -->
+                  <div id="rj-aff-podium" class="grid grid-cols-3 gap-2 items-end pt-3 text-center">
+                    <div class="col-span-3 text-xs text-slate-400 py-6 font-medium">Loading live weekly affiliate rankings...</div>
                   </div>
 
-                  <!-- Your Rank & Current Score Sub-Card -->
+                  <!-- Your Real Rank & Team Weekly Income Sub-Card -->
                   <div class="bg-white dark:bg-slate-900 rounded-2xl p-4 shadow-2xs border border-emerald-100/60 dark:border-slate-800 space-y-3">
                     <div class="flex items-center justify-between">
                       <div>
                         <div class="text-xs font-medium text-slate-500 dark:text-slate-400">Your Rank</div>
-                        <div id="rj-aff-chal-rank" class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">#296</div>
+                        <div id="rj-aff-chal-rank" class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white mt-1">--</div>
                       </div>
                       <div class="text-right">
-                        <div class="text-xs font-medium text-slate-500 dark:text-slate-400">Current Score</div>
-                        <div id="rj-aff-chal-score" class="text-2xl sm:text-3xl font-black text-[#f97316] mt-1">0</div>
+                        <div class="text-xs font-medium text-slate-500 dark:text-slate-400">Weekly Score</div>
+                        <div id="rj-aff-chal-score" class="text-2xl sm:text-3xl font-black text-emerald-600 dark:text-emerald-400 mt-1">0</div>
                       </div>
                     </div>
                     <div class="h-px bg-slate-100 dark:bg-slate-800"></div>
-                    <p class="text-xs text-slate-400 font-medium leading-relaxed">
-                      Only 6.63 more score to reach Top 25.
+                    <p id="rj-aff-chal-hint" class="text-xs text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
+                      Bring active friends who complete real offers to earn up to <strong class="text-emerald-600">5% extra USDT</strong> on their weekly income!
                     </p>
                   </div>
 
+                  <!-- Top 10 Live Weekly Affiliate Leaderboard List -->
+                  <div class="bg-white/90 dark:bg-slate-900/90 rounded-2xl p-3 border border-emerald-100/60 dark:border-slate-800 space-y-2">
+                    <div class="flex items-center justify-between px-1">
+                      <span class="text-[11px] font-extrabold uppercase tracking-wider text-slate-500">Top 10 Affiliates This Week</span>
+                      <span class="text-[10px] font-bold text-slate-400">Min Active Refs: 1st 3 • 2–3rd 2 • 4–10th 1</span>
+                    </div>
+                    <div id="rj-aff-top10-list" class="space-y-1.5 max-h-60 overflow-y-auto pr-1 text-xs">
+                      <p class="text-center text-slate-400 py-4">No active affiliate teams yet this week — invite friends now!</p>
+                    </div>
+                  </div>
+
                   <!-- Join Affiliate Challenge Button -->
-                  <button type="button" id="btn-join-affiliate-challenge" onclick="joinRjChallenge('affiliate')" class="w-full bg-[#f97316] hover:bg-orange-600 text-white font-bold py-3.5 rounded-xl text-sm shadow-md shadow-orange-500/20 transition cursor-pointer">
-                    Join Affiliate Challenge
+                  <button type="button" id="btn-join-affiliate-challenge" onclick="joinRjChallenge('affiliate')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm shadow-md shadow-emerald-500/20 transition cursor-pointer">
+                    Invite Friends for Weekly Bonus
                   </button>
                 </div>
               </div>
@@ -3559,6 +3548,55 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <div id="chart-7day-submissions" class="pt-4 pb-2">
                   <div class="flex items-end justify-between gap-2 h-44 border-b border-slate-200 px-2">
                     <!-- Bars injected dynamically via JS -->
+                  </div>
+                </div>
+              </div>
+
+              <!-- Real-Time Challenge Payout Desk (Daily USDT + Weekly Affiliate % Bonus) -->
+              <div id="admin-challenge-payout-card" class="bg-white p-4 sm:p-5 rounded-3xl border border-slate-200 shadow-xs space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <h4 class="font-black text-sm sm:text-base text-slate-900 flex items-center gap-2">
+                      <span>🏆</span> রিয়েল-টাইম চ্যালেঞ্জ পেআউট ডেস্ক (USDT)
+                    </h4>
+                    <p class="text-[11px] text-slate-500 mt-0.5">এক ক্লিকে আজকের Daily ($10/$5/$2/$0.50) ও সাপ্তাহিক Affiliate (5%/3%/2%/1%) বিজয়ীদের কয়েন ও নোটিফিকেশন পাঠান (ডাবল-পেআউট লকসহ)</p>
+                  </div>
+                  <button type="button" onclick="window.refreshAdminChallengePreview && window.refreshAdminChallengePreview()" class="text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1.5 rounded-xl transition cursor-pointer">
+                    🔄 রিফ্রেশ
+                  </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  <!-- Daily Challenge Payout Box -->
+                  <div class="bg-orange-50/60 border border-orange-200/80 rounded-2xl p-3.5 space-y-2.5">
+                    <div class="flex items-center justify-between gap-2">
+                      <div>
+                        <div class="text-xs font-black text-slate-800">Daily Challenge (<span id="admin-chal-daily-key">--</span>)</div>
+                        <div id="admin-chal-daily-summary" class="text-[11px] text-orange-700 font-semibold">লোড হচ্ছে...</div>
+                      </div>
+                      <button type="button" id="btn-admin-pay-daily" onclick="window.adminDistributeDailyChallenge && window.adminDistributeDailyChallenge()" class="bg-[#f97316] hover:bg-orange-600 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-xs transition cursor-pointer shrink-0">
+                        💸 Pay Daily Winners
+                      </button>
+                    </div>
+                    <div id="admin-chal-daily-list" class="space-y-1.5 max-h-48 overflow-y-auto text-xs bg-white rounded-xl p-2 border border-orange-100">
+                      <p class="text-slate-400 text-center py-3">কোনো কোয়ালিফাইড উইনার নেই।</p>
+                    </div>
+                  </div>
+
+                  <!-- Weekly Affiliate Payout Box -->
+                  <div class="bg-emerald-50/60 border border-emerald-200/80 rounded-2xl p-3.5 space-y-2.5">
+                    <div class="flex items-center justify-between gap-2">
+                      <div>
+                        <div class="text-xs font-black text-slate-800">Weekly Affiliate (<span id="admin-chal-weekly-key">--</span>)</div>
+                        <div id="admin-chal-weekly-summary" class="text-[11px] text-emerald-700 font-semibold">লোড হচ্ছে...</div>
+                      </div>
+                      <button type="button" id="btn-admin-pay-weekly" onclick="window.adminDistributeWeeklyAffiliate && window.adminDistributeWeeklyAffiliate()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-2 rounded-xl shadow-xs transition cursor-pointer shrink-0">
+                        💸 Pay Weekly Winners
+                      </button>
+                    </div>
+                    <div id="admin-chal-weekly-list" class="space-y-1.5 max-h-48 overflow-y-auto text-xs bg-white rounded-xl p-2 border border-emerald-100">
+                      <p class="text-slate-400 text-center py-3">কোনো কোয়ালিফাইড অ্যাফিলিয়েট উইনার নেই।</p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -4889,6 +4927,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (tabName === 'affiliate') {
         if (window.ensureMyReferralsListenerStarted) window.ensureMyReferralsListenerStarted();
       }
+      if (tabName === 'challenge') {
+        if (window.ensureChallengeListenersStarted) window.ensureChallengeListenersStarted();
+      }
       if (tabName === 'browsing') {
         window.renderOfferwallGGBrowsingTasks();
       }
@@ -5219,7 +5260,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return (opts.noSymbol ? '' : '🪙 ') + Math.round(coins).toLocaleString();
       }
       if (curr === 'USD') {
-        const usd = coins / 600000;
+        const usd = coins / 1200000;
         const formatted = usd >= 100 ? Math.round(usd).toLocaleString() : (usd >= 1 ? usd.toFixed(2) : (usd > 0 ? usd.toFixed(3).replace(/0$/, '') : '0.00'));
         return (opts.noSymbol ? '' : '$') + formatted;
       }
@@ -5295,7 +5336,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         if (dashValEl) dashValEl.innerText = Math.round(userCoins).toLocaleString() + ' Coins';
         if (dashPurchEl) dashPurchEl.innerText = '🪙 0 Coins';
       } else if (curr === 'USD') {
-        const usdStr = (userCoins / 600000).toFixed(2);
+        const usdStr = (userCoins / 1200000).toFixed(2);
         if (symEl) symEl.innerText = '$';
         if (valEl) valEl.innerText = usdStr;
         if (pSymEl) pSymEl.innerText = '$';
@@ -6080,7 +6121,503 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       // Extra bottom iframe removed as requested; surveys open via cards and partner walls
     };
 
-    // Challenge Interactive Handlers (RewardJoy Professional Challenge)
+    // ================= 100% REAL-TIME USDT CHALLENGE ENGINE (DAILY + WEEKLY AFFILIATE) =================
+    const CHALLENGE_COINS_PER_USDT = 1200000; // Global Rate: $1.00 USDT = 1,200,000 Coins = ৳120
+    const DAILY_CHALLENGE_TIERS = [
+      { maxRank: 1, prizeUsd: 10.0, minUsd: 15.0 },
+      { maxRank: 2, prizeUsd: 5.0, minUsd: 7.5 },
+      { maxRank: 3, prizeUsd: 2.0, minUsd: 3.5 },
+      { maxRank: 10, prizeUsd: 0.5, minUsd: 1.25 }
+    ];
+    const WEEKLY_AFFILIATE_TIERS = [
+      { maxRank: 1, pct: 0.05, label: '5%', minRefs: 3 },
+      { maxRank: 2, pct: 0.03, label: '3%', minRefs: 2 },
+      { maxRank: 3, pct: 0.02, label: '2%', minRefs: 2 },
+      { maxRank: 10, pct: 0.01, label: '1%', minRefs: 1 }
+    ];
+
+    window.getChallengeBdDateKey = function(ms = Date.now()) {
+      const bd = new Date(ms + 6 * 3600 * 1000);
+      return bd.toISOString().slice(0, 10);
+    };
+
+    window.getChallengeBdWeekKey = function(ms = Date.now()) {
+      const bd = new Date(ms + 6 * 3600 * 1000);
+      const d = new Date(Date.UTC(bd.getUTCFullYear(), bd.getUTCMonth(), bd.getUTCDate()));
+      const dayNum = d.getUTCDay() || 7;
+      d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
+      const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+      return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+    };
+
+    window.getQualifiedDailyPrizeUsd = function(rank, earnedUsd) {
+      if (rank < 1 || rank > 10 || earnedUsd < 1.25) return 0;
+      const targetTier = DAILY_CHALLENGE_TIERS.find(t => rank <= t.maxRank);
+      if (!targetTier) return 0;
+      if (earnedUsd >= targetTier.minUsd) return targetTier.prizeUsd;
+      for (const t of DAILY_CHALLENGE_TIERS) {
+        if (t.prizeUsd <= targetTier.prizeUsd && earnedUsd >= t.minUsd) {
+          return t.prizeUsd;
+        }
+      }
+      return 0;
+    };
+
+    window.getQualifiedWeeklyAffiliateBonus = function(rank, activeRefs, teamCoins) {
+      if (rank < 1 || rank > 10 || teamCoins <= 0 || activeRefs < 1) return { pct: 0, label: '0%', usd: 0, coins: 0 };
+      const targetTier = WEEKLY_AFFILIATE_TIERS.find(t => rank <= t.maxRank);
+      if (!targetTier) return { pct: 0, label: '0%', usd: 0, coins: 0 };
+      let chosen = null;
+      if (activeRefs >= targetTier.minRefs) {
+        chosen = targetTier;
+      } else {
+        for (const t of WEEKLY_AFFILIATE_TIERS) {
+          if (t.pct <= targetTier.pct && activeRefs >= t.minRefs) {
+            chosen = t;
+            break;
+          }
+        }
+      }
+      if (!chosen) return { pct: 0, label: '0%', usd: 0, coins: 0 };
+      const bonusCoins = Math.round(teamCoins * chosen.pct);
+      return {
+        pct: chosen.pct,
+        label: chosen.label,
+        coins: bonusCoins,
+        usd: bonusCoins / CHALLENGE_COINS_PER_USDT
+      };
+    };
+
+    window.liveDailyLeaderboard = [];
+    window.liveWeeklyAffLeaderboard = [];
+    let _challengeListenersStartedKey = '';
+    let _unsubDailyChallenge = null;
+    let _unsubWeeklyChallenge = null;
+    let _challengeCountdownTimer = null;
+
+    function maskChallengeUserName(name, uid) {
+      const raw = String(name || 'Player').trim();
+      if (raw.length <= 14) return raw;
+      return raw.slice(0, 12) + '...';
+    }
+
+    function escapeHtmlSafe(str) {
+      return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    function renderPodiumSlot(item, rank, valueText, subText) {
+      const isFirst = rank === 1;
+      const crownColor = rank === 1 ? 'text-amber-400' : (rank === 2 ? 'text-slate-300' : 'text-amber-600/70');
+      const ringGrad = rank === 1 ? 'from-amber-300 to-amber-500' : (rank === 2 ? 'from-slate-200 to-slate-400' : 'from-amber-200 to-amber-400');
+      const sizeCls = isFirst ? 'w-16 h-16 sm:w-20 sm:h-20 text-2xl' : 'w-13 h-13 sm:w-14 sm:h-14 text-lg';
+      const wrapCls = isFirst ? 'flex flex-col items-center -mt-3' : 'flex flex-col items-center';
+      if (!item) {
+        return `<div class="${wrapCls} opacity-50">
+          <svg class="${isFirst ? 'w-6 h-6' : 'w-5 h-5'} ${crownColor} mb-1" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v2H3v-2zm0-2L5 7l5 4 2-6 2 6 5-4 2 9H3z"/></svg>
+          <div class="${sizeCls} rounded-full bg-slate-200 dark:bg-slate-700 text-slate-400 font-black flex items-center justify-center border-2 border-white/60">#${rank}</div>
+          <div class="text-xs font-bold text-slate-400 truncate w-full mt-2">Open Spot</div>
+          <span class="mt-1 inline-block bg-slate-100 dark:bg-slate-800 text-slate-400 font-bold text-[11px] px-2.5 py-0.5 rounded-full">$0.00</span>
+        </div>`;
+      }
+      const initial = escapeHtmlSafe((item.name || 'U').trim().charAt(0).toUpperCase() || 'U');
+      const avatarHtml = item.photoURL
+        ? `<img src="${escapeHtmlSafe(item.photoURL)}" alt="${escapeHtmlSafe(item.name)}" class="w-full h-full rounded-full object-cover bg-slate-100" loading="lazy" decoding="async" />`
+        : `<div class="w-full h-full rounded-full bg-gradient-to-br from-[#f97316] to-amber-500 text-white font-black flex items-center justify-center">${initial}</div>`;
+      return `<div class="${wrapCls}">
+        <svg class="${isFirst ? 'w-6 h-6' : 'w-5 h-5'} ${crownColor} mb-1" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v2H3v-2zm0-2L5 7l5 4 2-6 2 6 5-4 2 9H3z"/></svg>
+        <div class="${sizeCls} rounded-full p-0.5 bg-gradient-to-b ${ringGrad} shadow-md overflow-hidden">${avatarHtml}</div>
+        <div class="text-xs ${isFirst ? 'sm:text-sm font-extrabold' : 'font-bold'} text-slate-800 dark:text-white truncate w-full mt-2">${escapeHtmlSafe(maskChallengeUserName(item.name, item.uid))}</div>
+        <span class="mt-1 inline-block bg-orange-100/90 dark:bg-orange-950/60 text-[#f97316] font-extrabold text-[11px] px-2.5 py-0.5 rounded-full">${valueText}</span>
+        ${subText ? `<span class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 mt-0.5">${subText}</span>` : ''}
+      </div>`;
+    }
+
+    function updateChallengeCountdowns() {
+      const now = Date.now();
+      const bdOffset = 6 * 3600 * 1000;
+      const bdNow = new Date(now + bdOffset);
+      const nextMidnightUtc = Date.UTC(bdNow.getUTCFullYear(), bdNow.getUTCMonth(), bdNow.getUTCDate() + 1, 0, 0, 0) - bdOffset;
+      const diffDaily = Math.max(0, nextMidnightUtc - now);
+      const dH = String(Math.floor(diffDaily / 3600000)).padStart(2, '0');
+      const dM = String(Math.floor((diffDaily % 3600000) / 60000)).padStart(2, '0');
+      const dS = String(Math.floor((diffDaily % 60000) / 1000)).padStart(2, '0');
+      const dailyEl = document.getElementById('rj-daily-countdown');
+      if (dailyEl) dailyEl.innerText = `${dH}:${dM}:${dS}`;
+
+      const dayOfWeek = bdNow.getUTCDay() || 7;
+      const daysUntilMon = 8 - dayOfWeek;
+      const nextMonUtc = Date.UTC(bdNow.getUTCFullYear(), bdNow.getUTCMonth(), bdNow.getUTCDate() + daysUntilMon, 0, 0, 0) - bdOffset;
+      const diffWeek = Math.max(0, nextMonUtc - now);
+      const wD = Math.floor(diffWeek / 86400000);
+      const wH = Math.floor((diffWeek % 86400000) / 3600000);
+      const wM = Math.floor((diffWeek % 3600000) / 60000);
+      const weekEl = document.getElementById('rj-weekly-countdown');
+      if (weekEl) weekEl.innerText = `${wD}d ${wH}h ${wM}m`;
+    }
+
+    function renderDailyChallengeUI() {
+      const list = window.liveDailyLeaderboard || [];
+      const podiumEl = document.getElementById('rj-daily-podium');
+      const top10El = document.getElementById('rj-daily-top10-list');
+      const rankEl = document.getElementById('rj-daily-chal-rank');
+      const earnEl = document.getElementById('rj-daily-chal-earnings');
+      const hintEl = document.getElementById('rj-daily-chal-hint');
+
+      const awardsEl = document.getElementById('rj-chal-awards-count');
+      const totalWonEl = document.getElementById('rj-chal-total-prizes');
+      if (awardsEl) awardsEl.innerText = String(Number(userData?.challengeAwardsCount) || 0);
+      if (totalWonEl) totalWonEl.innerText = `$${(Number(userData?.challengeTotalWonUsd) || 0).toFixed(2)} USDT`;
+
+      if (podiumEl) {
+        const p1 = list[0] || null;
+        const p2 = list[1] || null;
+        const p3 = list[2] || null;
+        podiumEl.innerHTML =
+          renderPodiumSlot(p2, 2, p2 ? `$${p2.earnedUsd.toFixed(2)}` : '$0.00', p2 && p2.prizeUsd > 0 ? `Prize: $${p2.prizeUsd.toFixed(2)}` : '') +
+          renderPodiumSlot(p1, 1, p1 ? `$${p1.earnedUsd.toFixed(2)}` : '$0.00', p1 && p1.prizeUsd > 0 ? `Prize: $${p1.prizeUsd.toFixed(2)}` : '') +
+          renderPodiumSlot(p3, 3, p3 ? `$${p3.earnedUsd.toFixed(2)}` : '$0.00', p3 && p3.prizeUsd > 0 ? `Prize: $${p3.prizeUsd.toFixed(2)}` : '');
+      }
+
+      if (top10El) {
+        const top10 = list.slice(0, 10);
+        if (top10.length === 0) {
+          top10El.innerHTML = `<p class="text-center text-slate-400 py-4">No real offer earnings yet today — complete an offer to take #1!</p>`;
+        } else {
+          top10El.innerHTML = top10.map((u, idx) => {
+            const rank = idx + 1;
+            const isMe = currentUser && u.uid === currentUser.uid;
+            const badge = u.prizeUsd > 0
+              ? `<span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 font-extrabold px-2 py-0.5 rounded-full text-[10px]">+$${u.prizeUsd.toFixed(2)} USDT</span>`
+              : `<span class="bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 font-semibold px-2 py-0.5 rounded-full text-[10px]">Need $1.25</span>`;
+            return `<div class="flex items-center justify-between px-2.5 py-2 rounded-xl ${isMe ? 'bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800' : 'bg-slate-50/80 dark:bg-slate-800/50'}">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="w-5 text-center font-black ${rank <= 3 ? 'text-[#f97316]' : 'text-slate-400'}">#${rank}</span>
+                <span class="font-bold text-slate-800 dark:text-white truncate">${escapeHtmlSafe(maskChallengeUserName(u.name, u.uid))}${isMe ? ' (You)' : ''}</span>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="font-extrabold text-slate-700 dark:text-slate-200">$${u.earnedUsd.toFixed(2)}</span>
+                ${badge}
+              </div>
+            </div>`;
+          }).join('');
+        }
+      }
+
+      const todayKey = window.getChallengeBdDateKey();
+      const myCoinsToday = (userData?.dailyEarnedDate === todayKey) ? (Number(userData?.dailyEarnedCoins) || 0) : 0;
+      const myUsdToday = myCoinsToday / CHALLENGE_COINS_PER_USDT;
+      const myIdx = currentUser ? list.findIndex(u => u.uid === currentUser.uid) : -1;
+      const myRank = myIdx >= 0 ? (myIdx + 1) : 0;
+      if (rankEl) rankEl.innerText = myRank > 0 ? `#${myRank}` : 'Unranked';
+      if (earnEl) earnEl.innerText = `$${myUsdToday.toFixed(2)}`;
+      if (hintEl) {
+        const myPrize = myRank > 0 ? window.getQualifiedDailyPrizeUsd(myRank, myUsdToday) : 0;
+        if (myPrize > 0) {
+          hintEl.innerHTML = `🎉 Qualified for <strong class="text-emerald-600">$${myPrize.toFixed(2)} USDT</strong> at Rank #${myRank}! Keep earning to climb higher.`;
+        } else {
+          const needed = Math.max(0, 1.25 - myUsdToday).toFixed(2);
+          hintEl.innerHTML = `Earn <strong class="text-[#f97316]">$${needed} USDT</strong> more today from real offers/tasks to unlock Top 10 prizes (Min $1.25).`;
+        }
+      }
+    }
+
+    function renderWeeklyAffiliateChallengeUI() {
+      const list = window.liveWeeklyAffLeaderboard || [];
+      const podiumEl = document.getElementById('rj-aff-podium');
+      const top10El = document.getElementById('rj-aff-top10-list');
+      const rankEl = document.getElementById('rj-aff-chal-rank');
+      const scoreEl = document.getElementById('rj-aff-chal-score');
+      const hintEl = document.getElementById('rj-aff-chal-hint');
+
+      if (podiumEl) {
+        const p1 = list[0] || null;
+        const p2 = list[1] || null;
+        const p3 = list[2] || null;
+        podiumEl.innerHTML =
+          renderPodiumSlot(p2, 2, p2 ? `★ ${p2.score.toFixed(1)}` : '★ 0', p2 && p2.bonus.usd > 0 ? `${p2.bonus.label}: +$${p2.bonus.usd.toFixed(2)}` : '') +
+          renderPodiumSlot(p1, 1, p1 ? `★ ${p1.score.toFixed(1)}` : '★ 0', p1 && p1.bonus.usd > 0 ? `${p1.bonus.label}: +$${p1.bonus.usd.toFixed(2)}` : '') +
+          renderPodiumSlot(p3, 3, p3 ? `★ ${p3.score.toFixed(1)}` : '★ 0', p3 && p3.bonus.usd > 0 ? `${p3.bonus.label}: +$${p3.bonus.usd.toFixed(2)}` : '');
+      }
+
+      if (top10El) {
+        const top10 = list.slice(0, 10);
+        if (top10.length === 0) {
+          top10El.innerHTML = `<p class="text-center text-slate-400 py-4">No active affiliate teams yet this week — refer friends to lead #1!</p>`;
+        } else {
+          top10El.innerHTML = top10.map((u, idx) => {
+            const rank = idx + 1;
+            const isMe = currentUser && u.uid === currentUser.uid;
+            const bonusTag = u.bonus.usd > 0
+              ? `<span class="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400 font-extrabold px-2 py-0.5 rounded-full text-[10px]">${u.bonus.label} (+$${u.bonus.usd.toFixed(2)})</span>`
+              : `<span class="bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400 font-semibold px-2 py-0.5 rounded-full text-[10px]">Need 1 Active Ref</span>`;
+            return `<div class="flex items-center justify-between px-2.5 py-2 rounded-xl ${isMe ? 'bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800' : 'bg-slate-50/80 dark:bg-slate-800/50'}">
+              <div class="flex items-center gap-2 min-w-0">
+                <span class="w-5 text-center font-black ${rank <= 3 ? 'text-emerald-600' : 'text-slate-400'}">#${rank}</span>
+                <div class="min-w-0">
+                  <div class="font-bold text-slate-800 dark:text-white truncate">${escapeHtmlSafe(maskChallengeUserName(u.name, u.uid))}${isMe ? ' (You)' : ''}</div>
+                  <div class="text-[10px] text-slate-400">${u.activeRefs} Active Refs • Team: $${u.teamUsd.toFixed(2)}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                ${bonusTag}
+              </div>
+            </div>`;
+          }).join('');
+        }
+      }
+
+      const weekKey = window.getChallengeBdWeekKey();
+      const myTeamCoins = (userData?.weeklyChallengeKey === weekKey) ? (Number(userData?.weeklyTeamEarnedCoins) || 0) : 0;
+      const myActiveRefs = (userData?.weeklyChallengeKey === weekKey) ? (Number(userData?.weeklyActiveReferrals) || 0) : 0;
+      const myTeamUsd = myTeamCoins / CHALLENGE_COINS_PER_USDT;
+      const myScore = (myActiveRefs * 10) + (myTeamUsd * 5);
+      const myIdx = currentUser ? list.findIndex(u => u.uid === currentUser.uid) : -1;
+      const myRank = myIdx >= 0 ? (myIdx + 1) : 0;
+
+      if (rankEl) rankEl.innerText = myRank > 0 ? `#${myRank}` : 'Unranked';
+      if (scoreEl) scoreEl.innerText = myScore > 0 ? myScore.toFixed(1) : '0';
+      if (hintEl) {
+        const myBonus = myRank > 0 ? window.getQualifiedWeeklyAffiliateBonus(myRank, myActiveRefs, myTeamCoins) : { pct: 0, label: '0%', usd: 0 };
+        if (myBonus.usd > 0) {
+          hintEl.innerHTML = `🔥 Rank #${myRank} • Team earned <strong>$${myTeamUsd.toFixed(2)}</strong> (${myActiveRefs} active refs) → Est. Bonus <strong class="text-emerald-600">${myBonus.label} ($${myBonus.usd.toFixed(2)} USDT)</strong>!`;
+        } else {
+          hintEl.innerHTML = `Team this week: <strong>$${myTeamUsd.toFixed(2)}</strong> (${myActiveRefs} active refs). Get active referrals completing real offers to unlock 1%–5% extra USDT!`;
+        }
+      }
+    }
+
+    window.ensureChallengeListenersStarted = function() {
+      const todayKey = window.getChallengeBdDateKey();
+      const weekKey = window.getChallengeBdWeekKey();
+      const combinedKey = `${todayKey}_${weekKey}`;
+
+      updateChallengeCountdowns();
+      if (!_challengeCountdownTimer) {
+        _challengeCountdownTimer = setInterval(updateChallengeCountdowns, 1000);
+      }
+
+      if (_challengeListenersStartedKey === combinedKey && _unsubDailyChallenge && _unsubWeeklyChallenge) {
+        renderDailyChallengeUI();
+        renderWeeklyAffiliateChallengeUI();
+        return;
+      }
+      if (_unsubDailyChallenge) { try { _unsubDailyChallenge(); } catch(e) {} }
+      if (_unsubWeeklyChallenge) { try { _unsubWeeklyChallenge(); } catch(e) {} }
+      _challengeListenersStartedKey = combinedKey;
+
+      const qDaily = query(collection(db, "users"), where("dailyEarnedDate", "==", todayKey));
+      _unsubDailyChallenge = onSnapshot(qDaily, (snap) => {
+        const rows = [];
+        snap.forEach(d => {
+          const u = d.data() || {};
+          if ((u.email || '').toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) return;
+          const coins = Number(u.dailyEarnedCoins) || 0;
+          if (coins <= 0) return;
+          rows.push({
+            uid: d.id,
+            name: u.name || 'Player',
+            photoURL: u.photoURL || '',
+            earnedCoins: coins,
+            earnedUsd: coins / CHALLENGE_COINS_PER_USDT
+          });
+        });
+        rows.sort((a, b) => b.earnedCoins - a.earnedCoins);
+        rows.forEach((r, i) => {
+          r.rank = i + 1;
+          r.prizeUsd = window.getQualifiedDailyPrizeUsd(r.rank, r.earnedUsd);
+          r.prizeCoins = Math.round(r.prizeUsd * CHALLENGE_COINS_PER_USDT);
+        });
+        window.liveDailyLeaderboard = rows;
+        renderDailyChallengeUI();
+        if (window.renderAdminChallengePreview) window.renderAdminChallengePreview();
+      }, (err) => {
+        console.warn("Daily challenge listener notice:", err);
+      });
+
+      const qWeekly = query(collection(db, "users"), where("weeklyChallengeKey", "==", weekKey));
+      _unsubWeeklyChallenge = onSnapshot(qWeekly, (snap) => {
+        const rows = [];
+        snap.forEach(d => {
+          const u = d.data() || {};
+          if ((u.email || '').toLowerCase() === MASTER_ADMIN_EMAIL.toLowerCase()) return;
+          const teamCoins = Number(u.weeklyTeamEarnedCoins) || 0;
+          const activeRefs = Number(u.weeklyActiveReferrals) || 0;
+          if (teamCoins <= 0 && activeRefs <= 0) return;
+          const teamUsd = teamCoins / CHALLENGE_COINS_PER_USDT;
+          const score = (activeRefs * 10) + (teamUsd * 5);
+          rows.push({
+            uid: d.id,
+            name: u.name || 'Affiliate',
+            photoURL: u.photoURL || '',
+            teamCoins,
+            teamUsd,
+            activeRefs,
+            score
+          });
+        });
+        rows.sort((a, b) => b.score - a.score);
+        rows.forEach((r, i) => {
+          r.rank = i + 1;
+          r.bonus = window.getQualifiedWeeklyAffiliateBonus(r.rank, r.activeRefs, r.teamCoins);
+        });
+        window.liveWeeklyAffLeaderboard = rows;
+        renderWeeklyAffiliateChallengeUI();
+        if (window.renderAdminChallengePreview) window.renderAdminChallengePreview();
+      }, (err) => {
+        console.warn("Weekly affiliate challenge listener notice:", err);
+      });
+    };
+
+    window.renderAdminChallengePreview = function() {
+      const dailyKeyEl = document.getElementById('admin-chal-daily-key');
+      const weeklyKeyEl = document.getElementById('admin-chal-weekly-key');
+      const dailySumEl = document.getElementById('admin-chal-daily-summary');
+      const weeklySumEl = document.getElementById('admin-chal-weekly-summary');
+      const dailyListEl = document.getElementById('admin-chal-daily-list');
+      const weeklyListEl = document.getElementById('admin-chal-weekly-list');
+      if (!dailyListEl && !weeklyListEl) return;
+
+      const todayKey = window.getChallengeBdDateKey();
+      const weekKey = window.getChallengeBdWeekKey();
+      if (dailyKeyEl) dailyKeyEl.innerText = todayKey;
+      if (weeklyKeyEl) weeklyKeyEl.innerText = weekKey;
+
+      const dailyWinners = (window.liveDailyLeaderboard || []).slice(0, 10).filter(u => u.prizeUsd > 0);
+      const dailyTotalUsd = dailyWinners.reduce((s, u) => s + u.prizeUsd, 0);
+      if (dailySumEl) dailySumEl.innerText = `${dailyWinners.length} কোয়ালিফাইড উইনার • মোট $${dailyTotalUsd.toFixed(2)} USDT`;
+      if (dailyListEl) {
+        if (dailyWinners.length === 0) {
+          dailyListEl.innerHTML = `<p class="text-slate-400 text-center py-3">আজকে এখনো কেউ মিনিমাম ($1.25) পূরণ করেনি।</p>`;
+        } else {
+          dailyListEl.innerHTML = dailyWinners.map(u => `
+            <div class="flex items-center justify-between px-2 py-1.5 rounded-lg bg-orange-50/60">
+              <span class="font-bold text-slate-800 truncate">#${u.rank} ${escapeHtmlSafe(u.name)} <span class="text-slate-400 font-normal">($${u.earnedUsd.toFixed(2)})</span></span>
+              <span class="font-black text-emerald-700 shrink-0">+$${u.prizeUsd.toFixed(2)} USDT</span>
+            </div>
+          `).join('');
+        }
+      }
+
+      const weeklyWinners = (window.liveWeeklyAffLeaderboard || []).slice(0, 10).filter(u => u.bonus && u.bonus.coins > 0);
+      const weeklyTotalUsd = weeklyWinners.reduce((s, u) => s + u.bonus.usd, 0);
+      if (weeklySumEl) weeklySumEl.innerText = `${weeklyWinners.length} কোয়ালিফাইড অ্যাফিলিয়েট • মোট $${weeklyTotalUsd.toFixed(2)} USDT`;
+      if (weeklyListEl) {
+        if (weeklyWinners.length === 0) {
+          weeklyListEl.innerHTML = `<p class="text-slate-400 text-center py-3">এই সপ্তাহে এখনো কোনো কোয়ালিফাইড অ্যাফিলিয়েট নেই।</p>`;
+        } else {
+          weeklyListEl.innerHTML = weeklyWinners.map(u => `
+            <div class="flex items-center justify-between px-2 py-1.5 rounded-lg bg-emerald-50/60">
+              <span class="font-bold text-slate-800 truncate">#${u.rank} ${escapeHtmlSafe(u.name)} <span class="text-slate-400 font-normal">(${u.activeRefs} ref, $${u.teamUsd.toFixed(2)})</span></span>
+              <span class="font-black text-emerald-700 shrink-0">${u.bonus.label} (+$${u.bonus.usd.toFixed(2)})</span>
+            </div>
+          `).join('');
+        }
+      }
+    };
+
+    window.refreshAdminChallengePreview = function() {
+      window.ensureChallengeListenersStarted();
+      window.renderAdminChallengePreview();
+    };
+
+    window.adminDistributeDailyChallenge = async function() {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const todayKey = window.getChallengeBdDateKey();
+      const winners = (window.liveDailyLeaderboard || []).slice(0, 10).filter(u => u.prizeCoins > 0);
+      if (winners.length === 0) {
+        alert("আজকের জন্য কোনো কোয়ালিফাইড ডেইলি চ্যালেঞ্জ উইনার নেই।");
+        return;
+      }
+      const totalUsd = winners.reduce((s, u) => s + u.prizeUsd, 0);
+      const payoutDocRef = doc(db, "challenge_payouts", `daily_${todayKey}`);
+      const existing = await getDoc(payoutDocRef);
+      if (existing.exists()) {
+        alert(`আজকের (${todayKey}) Daily Challenge রিওয়ার্ড ইতিমধ্যে বিতরণ করা হয়ে গেছে!`);
+        return;
+      }
+      if (!confirm(`আজকের (${todayKey}) ${winners.length} জন বিজয়ীকে মোট $${totalUsd.toFixed(2)} USDT সমমান কয়েন পাঠাতে চান?`)) return;
+
+      try {
+        for (const w of winners) {
+          await updateDoc(doc(db, "users", w.uid), {
+            coins: increment(w.prizeCoins),
+            challengeAwardsCount: increment(1),
+            challengeTotalWonUsd: increment(Number(w.prizeUsd.toFixed(2)))
+          });
+          await addDoc(collection(db, "notifications"), {
+            userId: w.uid,
+            title: `🏆 Daily Challenge #${w.rank} Winner!`,
+            message: `অভিনন্দন! Daily Challenge (${todayKey})-এ #${w.rank} হয়ে আপনি +$${w.prizeUsd.toFixed(2)} USDT (${w.prizeCoins.toLocaleString()} কয়েন) জিতেছেন!`,
+            type: "challenge",
+            read: false,
+            createdAt: serverTimestamp()
+          });
+        }
+        await setDoc(payoutDocRef, {
+          type: "daily",
+          periodKey: todayKey,
+          winnersCount: winners.length,
+          totalUsd: Number(totalUsd.toFixed(2)),
+          paidBy: currentUser.email,
+          paidAt: serverTimestamp()
+        });
+        playCoinChime();
+        alert(`✅ সফল! ${winners.length} জন Daily Challenge বিজয়ীকে মোট $${totalUsd.toFixed(2)} USDT পাঠানো হয়েছে।`);
+      } catch (err) {
+        alert("পেইআউট সমস্যা: " + (err.message || err));
+      }
+    };
+
+    window.adminDistributeWeeklyAffiliate = async function() {
+      if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
+      const weekKey = window.getChallengeBdWeekKey();
+      const winners = (window.liveWeeklyAffLeaderboard || []).slice(0, 10).filter(u => u.bonus && u.bonus.coins > 0);
+      if (winners.length === 0) {
+        alert("এই সপ্তাহের জন্য কোনো কোয়ালিফাইড অ্যাফিলিয়েট উইনার নেই।");
+        return;
+      }
+      const totalUsd = winners.reduce((s, u) => s + u.bonus.usd, 0);
+      const payoutDocRef = doc(db, "challenge_payouts", `weekly_${weekKey}`);
+      const existing = await getDoc(payoutDocRef);
+      if (existing.exists()) {
+        alert(`এই সপ্তাহের (${weekKey}) Weekly Affiliate রিওয়ার্ড ইতিমধ্যে বিতরণ করা হয়ে গেছে!`);
+        return;
+      }
+      if (!confirm(`এই সপ্তাহের (${weekKey}) ${winners.length} জন অ্যাফিলিয়েট বিজয়ীকে মোট $${totalUsd.toFixed(2)} USDT সমমান কয়েন পাঠাতে চান?`)) return;
+
+      try {
+        for (const w of winners) {
+          await updateDoc(doc(db, "users", w.uid), {
+            coins: increment(w.bonus.coins),
+            challengeAwardsCount: increment(1),
+            challengeTotalWonUsd: increment(Number(w.bonus.usd.toFixed(2)))
+          });
+          await addDoc(collection(db, "notifications"), {
+            userId: w.uid,
+            title: `🔥 Weekly Affiliate #${w.rank} Bonus!`,
+            message: `অভিনন্দন! Weekly Affiliate Challenge (${weekKey})-এ #${w.rank} হয়ে আপনার টিমের আয়ের ${w.bonus.label} (+$${w.bonus.usd.toFixed(2)} USDT) বোনাস যুক্ত হয়েছে!`,
+            type: "challenge",
+            read: false,
+            createdAt: serverTimestamp()
+          });
+        }
+        await setDoc(payoutDocRef, {
+          type: "weekly_affiliate",
+          periodKey: weekKey,
+          winnersCount: winners.length,
+          totalUsd: Number(totalUsd.toFixed(2)),
+          paidBy: currentUser.email,
+          paidAt: serverTimestamp()
+        });
+        playCoinChime();
+        alert(`✅ সফল! ${winners.length} জন Weekly Affiliate বিজয়ীকে মোট $${totalUsd.toFixed(2)} USDT পাঠানো হয়েছে।`);
+      } catch (err) {
+        alert("পেইআউট সমস্যা: " + (err.message || err));
+      }
+    };
+
+    // Challenge Interactive Handlers
     window.joinRjChallenge = function(type) {
       if (!currentUser) {
         window.openAuthModal('login');
@@ -6088,27 +6625,18 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       }
       playCoinChime();
       if (type === 'affiliate') {
-        const btn = document.getElementById('btn-join-affiliate-challenge');
-        if (btn) {
-          btn.innerText = '✓ Joined Affiliate Challenge — Refer Friends Now';
-          btn.className = 'w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm shadow-md transition cursor-pointer';
-        }
-        setTimeout(() => { window.desktopSwitchTab('affiliate'); }, 600);
+        setTimeout(() => { window.desktopSwitchTab('affiliate'); }, 250);
       } else {
-        const btn = document.getElementById('btn-join-daily-challenge');
-        if (btn) {
-          btn.innerText = '✓ Joined Daily Challenge — Start Earning';
-          btn.className = 'w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl text-sm shadow-md transition cursor-pointer';
-        }
-        setTimeout(() => { window.desktopSwitchTab('offers'); }, 600);
+        setTimeout(() => { window.desktopSwitchTab('offers'); }, 250);
       }
     };
 
     window.openRjChallengeStatsModal = function() {
-      const myCoins = userData?.coins || 0;
-      const myTaka = (myCoins / 10000).toFixed(1);
-      const myRefs = userData?.referralCount || 0;
-      window.showRjErrorToast(`Your Challenge Stats — Current Balance: ৳${myTaka} | Total Referrals: ${myRefs}`);
+      const todayKey = window.getChallengeBdDateKey();
+      const myTodayUsd = ((userData?.dailyEarnedDate === todayKey ? (Number(userData?.dailyEarnedCoins) || 0) : 0) / CHALLENGE_COINS_PER_USDT).toFixed(2);
+      const myAwards = Number(userData?.challengeAwardsCount) || 0;
+      const myWonUsd = (Number(userData?.challengeTotalWonUsd) || 0).toFixed(2);
+      window.showRjErrorToast(`Daily Real Earnings: $${myTodayUsd} USDT | Awards Won: ${myAwards} | Total Won: $${myWonUsd} USDT ($1 USDT = 1.2M Coins)`);
     };
 
     // Global State for Browsing Tasks & Admin Browsing Analytics
@@ -8602,16 +9130,26 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         await updateDoc(doc(db, "submissions", subId), { status: "Approved" });
 
         const uRef = doc(db, "users", userId);
+        const uSnapBefore = await getDoc(uRef);
+        const uDataBefore = uSnapBefore.exists() ? uSnapBefore.data() : {};
+        const todayBdKey = window.getChallengeBdDateKey ? window.getChallengeBdDateKey() : new Date(Date.now() + 6 * 3600 * 1000).toISOString().slice(0, 10);
+        const weekBdKey = window.getChallengeBdWeekKey ? window.getChallengeBdWeekKey() : '';
+        const nextDailyCoins = (uDataBefore.dailyEarnedDate === todayBdKey)
+          ? ((Number(uDataBefore.dailyEarnedCoins) || 0) + numericCoins)
+          : numericCoins;
+
         await updateDoc(uRef, {
           coins: increment(numericCoins),
-          completedApprovedTasks: increment(1)
+          completedApprovedTasks: increment(1),
+          dailyEarnedDate: todayBdKey,
+          dailyEarnedCoins: nextDailyCoins
         });
 
-        // Targeted Referral Unlock (1st Task -> Active + 10k bonus) & 10% Lifetime Task Commission
+        // Targeted Referral Unlock (1st Task -> Active + 10k bonus) & 10% Lifetime Task Commission + Weekly Affiliate Tracking
         try {
-          const uSnap = await getDoc(uRef);
+          const uSnap = uSnapBefore;
           if (uSnap.exists()) {
-            const uData = uSnap.data();
+            const uData = uDataBefore;
             if (uData.referredBy) {
               const refQ = query(collection(db, "users"), where("myInviteCode", "==", uData.referredBy));
               const refSnap = await getDocs(refQ);
@@ -8635,6 +9173,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                   if (totalReferrerCredit > 0) {
                     refUpdates.coins = increment(totalReferrerCredit);
                     refUpdates.referralCommissionEarned = increment(totalReferrerCredit);
+                  }
+                  if (weekBdKey && numericCoins > 0) {
+                    const rData = referrerDoc.data() || {};
+                    const sameWeek = rData.weeklyChallengeKey === weekBdKey;
+                    refUpdates.weeklyChallengeKey = weekBdKey;
+                    refUpdates.weeklyTeamEarnedCoins = sameWeek ? ((Number(rData.weeklyTeamEarnedCoins) || 0) + numericCoins) : numericCoins;
+                    refUpdates.weeklyActiveReferrals = sameWeek ? ((Number(rData.weeklyActiveReferrals) || 0) + (isFirstActivation ? 1 : 0)) : (isFirstActivation ? 1 : 0);
                   }
                   if (Object.keys(refUpdates).length > 0) {
                     await updateDoc(referrerRef, refUpdates);
@@ -8832,6 +9377,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
       if (!currentUser || currentUser.email.toLowerCase() !== MASTER_ADMIN_EMAIL.toLowerCase()) return;
       if (_adminAnalyticsStarted) return;
       _adminAnalyticsStarted = true;
+      if (window.ensureChallengeListenersStarted) window.ensureChallengeListenersStarted();
       
       // 1. Total Registered Users Listener
       onSnapshot(collection(db, "users"), (snap) => {
