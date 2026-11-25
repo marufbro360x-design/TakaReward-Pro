@@ -7970,6 +7970,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
     // In-App Notification Center (Feature 6)
     window.openNotificationModal = function() {
+      if (typeof window.refreshNotifTimes === "function") window.refreshNotifTimes();
       document.getElementById("notification-modal")?.classList.remove("hidden");
     };
 
@@ -8616,8 +8617,9 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         };
 
         window.refreshNotifTimes = renderMergedNotifications;
-        setInterval(() => {
-          const m = document.getElementById('notif-modal');
+        if (window._notifRefreshTimer) clearInterval(window._notifRefreshTimer);
+        window._notifRefreshTimer = setInterval(() => {
+          const m = document.getElementById('notification-modal');
           if (m && !m.classList.contains('hidden')) renderMergedNotifications();
         }, 30000);
 
