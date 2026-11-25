@@ -8549,6 +8549,21 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         let personalNotifs = [];
         let globalNotifs = [];
 
+        const formatNotifTimeLabel = (n) => {
+          const ts = getNotifTs(n);
+          if (!ts || ts <= 0) return n.time || "New";
+          const ageMs = Date.now() - ts;
+          if (ageMs >= 0 && ageMs < 60000) return "Just now";
+          try {
+            const d = new Date(ts);
+            const datePart = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+            const timePart = d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+            return `${datePart}, ${timePart}`;
+          } catch (e) {
+            return n.time || "New";
+          }
+        };
+
         const getNotifTs = (n) => {
           if (!n || !n.createdAt) return 0;
           if (typeof n.createdAt.toMillis === "function") return n.createdAt.toMillis();
@@ -8590,7 +8605,7 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
                 <div class="bg-emerald-50 border border-emerald-200 p-3 rounded-2xl text-xs space-y-1">
                   <div class="flex items-center justify-between font-bold text-emerald-800">
                     <span>${n.title || "🔔 নোটিফিকেশন"}</span>
-                    <span class="text-[10px] text-emerald-600">${n.time || "New"}</span>
+                    <span class="text-[10px] text-emerald-600">${formatNotifTimeLabel(n)}</span>
                   </div>
                   <p class="text-slate-600 text-[11px]">${n.message || ""}</p>
                 </div>
@@ -8599,6 +8614,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
             listEl.innerHTML = itemsHtml;
           }
         };
+
+        window.refreshNotifTimes = renderMergedNotifications;
+        setInterval(() => {
+          const m = document.getElementById('notif-modal');
+          if (m && !m.classList.contains('hidden')) renderMergedNotifications();
+        }, 30000);
 
         // Filtered queries comply strictly with hardened firestore.rules (no permission-denied for regular users)
         const qPersonal = query(collection(db, "notifications"), where("userId", "==", targetUid));
