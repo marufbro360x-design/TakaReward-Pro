@@ -5678,10 +5678,59 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         return chkAndroid && chkIos && chkDesktop;
       }
 
-      // 1. Prepare Games List: Offerwall.GG Games ONLY (TimeWall Games completely removed!)
-      const owGames = (window.offerwallGGState.games || []).filter(g => String(g.provider || '').toLowerCase() !== 'timewall').map(g => ({ ...g, provider: g.provider || 'offerwall.gg' }));
+      // 1. Prepare Games List: Offerwall.GG + Gaintwall Games (deduplicated & interleaved so both networks shine up front!)
+      const isGaintwallGameOffer = (o) => {
+        if (!o || o.isSurvey) return false;
+        if (o.isGame === true) return true;
+        const cats = Array.isArray(o.categories) ? o.categories.map(c => String(c).toLowerCase()) : [];
+        return cats.some(c => c.includes('game'));
+      };
 
-      let gamesList = [...owGames].filter(g => {
+      const rawOwGames = (window.offerwallGGState.games || [])
+        .filter(g => !['timewall', 'gaintwall'].includes(String(g.provider || '').toLowerCase()))
+        .map(g => ({ ...g, provider: g.provider || 'offerwall.gg', isGame: true }));
+
+      const rawGwGamesFromGames = (window.offerwallGGState.games || [])
+        .filter(g => String(g.provider || '').toLowerCase() === 'gaintwall')
+        .map(g => ({ ...g, provider: 'gaintwall', isGame: true }));
+
+      const rawGwGamesFromOffers = (window.offerwallGGState.gaintwallOffers || [])
+        .filter(isGaintwallGameOffer)
+        .map(g => ({ ...g, provider: 'gaintwall', isGame: true }));
+
+      // Deduplicate by normalized game name, keeping highest reward when same game exists in both Offerwall.GG & Gaintwall
+      const bestGameByName = new Map();
+      const registerGame = (g) => {
+        const key = String(g.name || g.title || '').toLowerCase().trim();
+        if (!key) return;
+        const existing = bestGameByName.get(key);
+        const curCoins = Number(g.rewardCoins) || ((Number(g.rewardTaka) || 0) * 10000);
+        const prevCoins = existing ? (Number(existing.rewardCoins) || ((Number(existing.rewardTaka) || 0) * 10000)) : -1;
+        if (!existing || curCoins > prevCoins) {
+          bestGameByName.set(key, g);
+        }
+      };
+      rawOwGames.forEach(registerGame);
+      rawGwGamesFromGames.forEach(registerGame);
+      rawGwGamesFromOffers.forEach(registerGame);
+
+      const owUniqueGames = [];
+      const gwUniqueGames = [];
+      bestGameByName.forEach(g => {
+        if (String(g.provider || '').toLowerCase() === 'gaintwall') gwUniqueGames.push(g);
+        else owUniqueGames.push(g);
+      });
+      gwUniqueGames.sort((a, b) => (Number(b.rewardCoins) || 0) - (Number(a.rewardCoins) || 0));
+
+      // Interleave Offerwall.GG & Gaintwall games so both appear right on the first screen
+      const mergedGamesInterleaved = [];
+      const maxLen = Math.max(owUniqueGames.length, gwUniqueGames.length);
+      for (let i = 0; i < maxLen; i++) {
+        if (i < owUniqueGames.length) mergedGamesInterleaved.push(owUniqueGames[i]);
+        if (i < gwUniqueGames.length) mergedGamesInterleaved.push(gwUniqueGames[i]);
+      }
+
+      let gamesList = mergedGamesInterleaved.filter(g => {
         if (!matchesDeviceFilter(g)) return false;
         if (searchQ && !String(g.name || '').toLowerCase().includes(searchQ)) return false;
         if (partnerFilter !== 'all' && String(g.provider || '').toLowerCase() !== partnerFilter) return false;
@@ -5728,11 +5777,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         isFirestoreTask: false
       }));
 
-      const gaintwallOffersList = (window.offerwallGGState.gaintwallOffers || []).map(go => ({
-        ...go,
-        provider: 'gaintwall',
-        isFirestoreTask: false
-      }));
+      const gaintwallOffersList = (window.offerwallGGState.gaintwallOffers || [])
+        .filter(go => !isGaintwallGameOffer(go))
+        .map(go => ({
+          ...go,
+          provider: 'gaintwall',
+          isFirestoreTask: false
+        }));
 
       const owOffersList = (window.offerwallGGState.offers || []).filter(o => String(o.provider || '').toLowerCase() !== 'timewall').map(o => ({
         ...o,
