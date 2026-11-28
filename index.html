@@ -5957,8 +5957,8 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         ? window.formatAppCurrencyFromCoins(totalCoinsSummary, { exactDecimals: 2 })
         : '';
       const summaryBannerHtml = (isTotalSummaryOnly && totalSummaryFormatted)
-        ? `<div class="bg-orange-50/90 dark:bg-orange-950/30 border border-orange-200/80 dark:border-orange-800/40 px-3.5 py-2.5 rounded-xl flex items-center justify-between gap-2 text-[11.5px] mb-1">
-            <span class="font-semibold text-orange-800 dark:text-orange-200">Total Multi-Step Reward (auto-credited per milestone)</span>
+        ? `<div class="bg-orange-50/90 dark:bg-orange-950/30 border border-orange-200/80 dark:border-orange-800/40 px-3.5 py-2.5 rounded-xl flex items-center justify-between gap-2 text-[11.5px] mb-1.5">
+            <span class="font-semibold text-orange-800 dark:text-orange-200">Total Reward · Auto-credited per milestone</span>
             <span class="font-black text-[#f97316] whitespace-nowrap shrink-0">Up to ${totalSummaryFormatted}</span>
           </div>`
         : '';
@@ -5967,9 +5967,19 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
         const c = Math.round(Number(g.rewardCoins || g.reward || 0));
         const tk = c > 0 ? (c / 10000) : (Number(g.rewardTaka) || 0);
         const effectiveCoins = c > 0 ? c : Math.round(tk * 10000);
+
+        if (isTotalSummaryOnly && effectiveCoins <= 0) {
+          return `
+            <div class="bg-[#f8fafc] dark:bg-slate-800/70 border border-slate-100 dark:border-slate-800 px-3.5 py-3 rounded-xl flex items-start gap-3 text-xs">
+              <span class="w-5 h-5 rounded-full bg-orange-500/15 text-[#f97316] font-extrabold text-[11px] flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+              <span class="font-medium text-slate-700 dark:text-slate-200 leading-snug break-words">${g.description || `Milestone ${idx + 1}`}</span>
+            </div>
+          `;
+        }
+
         const stepRewardStr = effectiveCoins > 0 && window.formatAppCurrencyFromCoins
           ? window.formatAppCurrencyFromCoins(effectiveCoins, { exactDecimals: 2 })
-          : (g.rewardFormatted && !/^(bonus|step)$/i.test(String(g.rewardFormatted).trim()) ? g.rewardFormatted : `Step ${idx + 1}`);
+          : 'Bonus';
 
         return `
           <div class="bg-[#f8fafc] dark:bg-slate-800/70 border border-slate-100 dark:border-slate-800 px-3.5 py-3 rounded-xl flex items-center justify-between gap-3 text-xs">
