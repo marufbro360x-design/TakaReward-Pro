@@ -5544,12 +5544,12 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
               : [...apiSignups, ...apiAll].filter(o => String(o.provider || "").toLowerCase() === "gaintwall");
             window.offerwallGGState.gaintwallOffers = apiGaintwallRaw.map(go => ({ ...go, provider: "gaintwall" }));
 
-            // Merge live Offerwall.GG offers (excluding Offerzy, Cointo & Gaintwall so they don't duplicate)
+            // Merge live non-game Offerwall.GG offers only (games stay strictly in the Games section)
             const seenOfferNames = new Set();
             const mergedOffers = [];
             const nonGameApiOffers = [...apiSignups, ...apiAll].filter(o => !o.isGame && !["offerzy", "cointo", "gaintwall"].includes(String(o.provider || "").toLowerCase()));
-            const gameApiOffers = [...apiSignups, ...apiAll].filter(o => o.isGame && !["offerzy", "cointo", "gaintwall"].includes(String(o.provider || "").toLowerCase()));
-            for (const o of [...nonGameApiOffers, ...window.DEFAULT_OFFERWALL_GG_OFFERS, ...gameApiOffers]) {
+            for (const o of [...nonGameApiOffers, ...window.DEFAULT_OFFERWALL_GG_OFFERS]) {
+              if (o.isGame) continue;
               const k = String(o.name || "").toLowerCase().trim();
               if (k && !seenOfferNames.has(k)) {
                 seenOfferNames.add(k);
@@ -5680,10 +5680,14 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       // 1. Prepare Games List: Offerwall.GG + Gaintwall Games (deduplicated & interleaved so both networks shine up front!)
       const isGaintwallGameOffer = (o) => {
-        if (!o || o.isSurvey) return false;
+        if (!o || o.isSurvey || o.isFirestoreTask) return false;
         if (o.isGame === true) return true;
         const cats = Array.isArray(o.categories) ? o.categories.map(c => String(c).toLowerCase()) : [];
-        return cats.some(c => c.includes('game'));
+        if (cats.some(c => c.includes('game') || c.includes('gaming') || c.includes('casino') || c.includes('puzzle') || c.includes('arcade'))) return true;
+        const goalsText = Array.isArray(o.goals) ? o.goals.map(g => String(g.description || g.name || g.title || '')).join(' ') : '';
+        const txt = `${o.name || ''} ${o.title || ''} ${o.description || ''} ${o.requirements || ''} ${goalsText}`.toLowerCase();
+        const kws = ['game', 'play ', 'level ', 'stage ', 'chapter ', 'castle', 'quest', 'arena', 'puzzle', 'solitaire', 'casino', 'slots', 'battle', 'rpg', 'clash', 'kingdom', 'empire', 'tycoon', 'merge', 'dice', 'bingo', 'poker', 'shooter', 'racing', 'farm', 'zombie', 'dragon', '드래곤', '콜 오브', '레벨', 'bubble', 'rocket', 'legends', 'adventure', 'heroes', 'mafia', 'monopoly', 'tower', 'defense', 'idle', 'simulator', 'survival', 'knight', 'monster', 'cleaner', 'forest', 'penguin', 'potion', 'mahjong', 'sudoku', 'raid', 'dungeon'];
+        return kws.some(kw => txt.includes(kw));
       };
 
       const rawOwGames = (window.offerwallGGState.games || [])
@@ -5765,17 +5769,21 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
 
       unattemptedFirestoreTasks.sort((a, b) => (b.isPinned ? 1 : 0) - (a.isPinned ? 1 : 0));
 
-      const cointoOffersList = (window.offerwallGGState.cointoOffers || window.DEFAULT_COINTO_OFFERS || []).map(co => ({
-        ...co,
-        provider: 'cointo',
-        isFirestoreTask: false
-      }));
+      const cointoOffersList = (window.offerwallGGState.cointoOffers || window.DEFAULT_COINTO_OFFERS || [])
+        .filter(co => !isGaintwallGameOffer(co))
+        .map(co => ({
+          ...co,
+          provider: 'cointo',
+          isFirestoreTask: false
+        }));
 
-      const offerzyOffersList = (window.offerwallGGState.offerzyOffers || []).map(ozo => ({
-        ...ozo,
-        provider: 'offerzy',
-        isFirestoreTask: false
-      }));
+      const offerzyOffersList = (window.offerwallGGState.offerzyOffers || [])
+        .filter(ozo => !isGaintwallGameOffer(ozo))
+        .map(ozo => ({
+          ...ozo,
+          provider: 'offerzy',
+          isFirestoreTask: false
+        }));
 
       const gaintwallOffersList = (window.offerwallGGState.gaintwallOffers || [])
         .filter(go => !isGaintwallGameOffer(go))
@@ -5785,11 +5793,13 @@ select.input{ appearance:none; background-image:url("data:image/svg+xml,%3Csvg x
           isFirestoreTask: false
         }));
 
-      const owOffersList = (window.offerwallGGState.offers || []).filter(o => String(o.provider || '').toLowerCase() !== 'timewall').map(o => ({
-        ...o,
-        provider: 'offerwall.gg',
-        isFirestoreTask: false
-      }));
+      const owOffersList = (window.offerwallGGState.offers || [])
+        .filter(o => !['timewall', 'gaintwall', 'cointo', 'offerzy'].includes(String(o.provider || '').toLowerCase()) && !isGaintwallGameOffer(o))
+        .map(o => ({
+          ...o,
+          provider: 'offerwall.gg',
+          isFirestoreTask: false
+        }));
 
       let combinedOffers = [...unattemptedFirestoreTasks, ...offerzyOffersList, ...gaintwallOffersList, ...cointoOffersList, ...owOffersList].filter(item => {
         if (!matchesDeviceFilter(item)) return false;
