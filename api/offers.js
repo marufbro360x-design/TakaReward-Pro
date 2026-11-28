@@ -170,6 +170,7 @@ function normalizeCointoOffer(offer, userId, idx = 0) {
     isGame: false,
     isSurvey: false,
     clickUrl,
+    stepsRewardMode: rawSteps.length > 1 && !hasPerStepPayout ? "total_summary" : "per_step",
     goals
   };
 
@@ -280,17 +281,19 @@ function normalizeGaintwallOffer(offer, userId, idx = 0) {
   ).trim();
 
   const rawSteps = Array.isArray(offer.steps) ? offer.steps : [];
+  const hasPerStepPayout = rawSteps.some(st => st && typeof st === "object" && (Number(st.payout || 0) > 0 || Number(st.reward || 0) > 0));
   const goals = rawSteps.length > 0
     ? rawSteps.map((st, i) => {
         if (typeof st === "string") {
-          const stepCoins = i === rawSteps.length - 1 ? rewardCoins : 0;
+          const isSingle = rawSteps.length === 1;
+          const stepCoins = isSingle ? rewardCoins : 0;
           return {
             stepNumber: i + 1,
             goalId: String(i + 1),
             description: st,
             rewardCoins: stepCoins,
             rewardTaka: Number((stepCoins / 10000).toFixed(2)),
-            rewardFormatted: stepCoins > 0 ? `${stepCoins.toLocaleString()} Coins` : "Step",
+            rewardFormatted: isSingle ? `${rewardCoins.toLocaleString()} Coins` : `Step ${i + 1}`,
             optional: false
           };
         }
@@ -369,74 +372,86 @@ function normalizeGaintwallOffer(offer, userId, idx = 0) {
   return normalizedObj;
 }
 
+// 60-second in-memory cache for raw Gaintwall offers to stay safely under Gaintwall's 60 req/min rate limit
+let _gaintwallRawCache = { ts: 0, list: [] };
+
 async function fetchGaintwallOffers(userId, country) {
   if (!GAINTWALL_API_KEY || (!GAINTWALL_API_SECRET && !GAINTWALL_POSTBACK_SECRET)) {
     return [];
   }
-  const fetchWithSecret = async (secretKey, queryObj) => {
-    if (!secretKey) return null;
-    const url = new URL(GAINTWALL_API_BASE);
-    url.searchParams.set("apiKey", GAINTWALL_API_KEY);
-    url.searchParams.set("apiSecret", secretKey);
-    url.searchParams.set("userId", userId || "guest");
-    url.searchParams.set("limit", "100");
-    Object.entries(queryObj).forEach(([k, v]) => {
-      if (v !== undefined && v !== null && v !== "") {
-        url.searchParams.set(k, String(v));
-      }
-    });
 
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 7000);
+  const now = Date.now();
+  let rawOffers = null;
+  if (_gaintwallRawCache.list.length > 0 && (now - _gaintwallRawCache.ts) < 60000) {
+    rawOffers = _gaintwallRawCache.list;
+  } else {
+    const fetchWithSecret = async (secretKey) => {
+      if (!secretKey) return null;
+      const url = new URL(GAINTWALL_API_BASE);
+      url.searchParams.set("apiKey", GAINTWALL_API_KEY);
+      url.searchParams.set("apiSecret", secretKey);
+      url.searchParams.set("limit", "100");
+
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 7000);
+      try {
+        const res = await fetch(url.toString(), {
+          method: "GET",
+          headers: {
+            "Accept": "application/json",
+            "User-Agent": "TakaRewardPro-Server/1.0"
+          },
+          signal: controller.signal
+        });
+        clearTimeout(timer);
+        if (!res.ok) return null;
+        const data = await res.json();
+        return Array.isArray(data?.data) ? data.data : (Array.isArray(data?.offers) ? data.offers : []);
+      } catch (err) {
+        clearTimeout(timer);
+        return null;
+      }
+    };
+
     try {
-      const res = await fetch(url.toString(), {
-        method: "GET",
-        headers: {
-          "Accept": "application/json",
-          "User-Agent": "TakaRewardPro-Server/1.0"
-        },
-        signal: controller.signal
-      });
-      clearTimeout(timer);
-      if (!res.ok) return null;
-      const data = await res.json();
-      return Array.isArray(data?.data) ? data.data : (Array.isArray(data?.offers) ? data.offers : []);
-    } catch (err) {
-      clearTimeout(timer);
-      return null;
-    }
-  };
-
-  const fetchFromGwUrl = async (queryObj) => {
-    let list = await fetchWithSecret(GAINTWALL_API_SECRET, queryObj);
-    if ((!list || list.length === 0) && GAINTWALL_POSTBACK_SECRET !== GAINTWALL_API_SECRET) {
-      const fallbackList = await fetchWithSecret(GAINTWALL_POSTBACK_SECRET, queryObj);
-      if (Array.isArray(fallbackList) && fallbackList.length > 0) {
-        list = fallbackList;
+      let list = await fetchWithSecret(GAINTWALL_API_SECRET);
+      if ((!list || list.length === 0) && GAINTWALL_POSTBACK_SECRET && GAINTWALL_POSTBACK_SECRET !== GAINTWALL_API_SECRET) {
+        const fallbackList = await fetchWithSecret(GAINTWALL_POSTBACK_SECRET);
+        if (Array.isArray(fallbackList) && fallbackList.length > 0) {
+          list = fallbackList;
+        }
       }
+      rawOffers = Array.isArray(list) ? list : [];
+      if (rawOffers.length > 0) {
+        _gaintwallRawCache = { ts: now, list: rawOffers };
+      }
+    } catch (err) {
+      console.warn("[Gaintwall Offers Fetch Notice]", err.message);
+      rawOffers = _gaintwallRawCache.list || [];
     }
-    return Array.isArray(list) ? list : [];
-  };
+  }
 
   try {
-    const [countryList, globalList] = await Promise.all([
-      country ? fetchFromGwUrl({ country }) : Promise.resolve([]),
-      fetchFromGwUrl({})
-    ]);
-    const combinedRaw = [...countryList, ...globalList];
+    const reqCountry = String(country || "").toUpperCase().trim();
     const seenIds = new Set();
     const normalizedList = [];
-    combinedRaw.forEach((rawOffer, idx) => {
+    rawOffers.forEach((rawOffer, idx) => {
       if (!rawOffer) return;
       const key = String(rawOffer.offer_id || rawOffer.id || rawOffer.name || idx);
       if (seenIds.has(key)) return;
       seenIds.add(key);
-      normalizedList.push(normalizeGaintwallOffer(rawOffer, userId, idx));
+      const norm = normalizeGaintwallOffer(rawOffer, userId, idx);
+      // Prioritize country-matching offers if country is known, while still allowing global offers
+      norm._countryMatch = !reqCountry || norm.countries.includes("*") || norm.countries.includes(reqCountry);
+      normalizedList.push(norm);
     });
-    normalizedList.sort((a, b) => (b.rewardCoins || 0) - (a.rewardCoins || 0));
-    return normalizedList;
+    normalizedList.sort((a, b) => {
+      if (a._countryMatch !== b._countryMatch) return a._countryMatch ? -1 : 1;
+      return (b.rewardCoins || 0) - (a.rewardCoins || 0);
+    });
+    return normalizedList.map(({ _countryMatch, ...rest }) => rest);
   } catch (err) {
-    console.warn("[Gaintwall Offers Fetch Notice]", err.message);
+    console.warn("[Gaintwall Offers Normalize Notice]", err.message);
     return [];
   }
 }
