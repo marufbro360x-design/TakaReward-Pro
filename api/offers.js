@@ -503,7 +503,7 @@ async function fetchTimeWallSurveys(queryParams = {}) {
   return [];
 }
 
-// Classify whether an offer is a Game
+// Classify whether an offer is a Game (checks categories, title, description, requirements & multi-step goals)
 function isGameOffer(offer) {
   const cats = Array.isArray(offer.categories)
     ? offer.categories.map(c => String(c).toLowerCase())
@@ -511,13 +511,20 @@ function isGameOffer(offer) {
   if (cats.some(c => c.includes("game") || c.includes("gaming") || c.includes("casino") || c.includes("puzzle") || c.includes("arcade"))) {
     return true;
   }
-  const text = `${offer.name || ""} ${offer.description || ""} ${offer.requirements || ""}`.toLowerCase();
+  const goalsText = Array.isArray(offer.goals)
+    ? offer.goals.map(g => `${g.description || g.name || g.title || ""}`).join(" ")
+    : "";
+  const text = `${offer.name || ""} ${offer.title || ""} ${offer.description || ""} ${offer.requirements || ""} ${goalsText}`.toLowerCase();
   const gameKeywords = [
-    "game", "play", "level", "puzzle", "solitaire", "casino", "slots", "whale.io",
-    "originals", "battle", "rpg", "clash", "kingdom", "tycoon", "merge", "dice",
-    "bingo", "poker", "fish", "shooter", "racing", "farm", "zombie", "dragon",
-    "bubble", "sort", "rocket", "legends", "adventure", "heroes", "mafia", "monopoly",
-    "tile", "match", "crazy aim", "roller", "pool", "abyss", "slime", "mochi", "unblock"
+    "game", "play", "level", "stage", "chapter", "castle", "quest", "arena",
+    "puzzle", "solitaire", "casino", "slots", "slot", "jackpot", "whale.io",
+    "originals", "battle", "rpg", "clash", "kingdom", "empire", "tycoon", "merge", "dice",
+    "bingo", "poker", "fish", "shooter", "racing", "farm", "zombie", "dragon", "드래곤", "콜 오브", "레벨",
+    "bubble", "sort", "rocket", "legends", "adventure", "heroes", "hero", "mafia", "monopoly",
+    "tile", "match", "crazy aim", "roller", "pool", "abyss", "slime", "mochi", "unblock",
+    "tower", "defense", "idle", "simulator", "survival", "knight", "monster", "cleaner",
+    "forest", "penguin", "arrow", "potion", "blast", "crush", "mahjong", "sudoku", "trivia",
+    "quiz", "raid", "boss", "wave", "tutorial", "dungeon", "warriors", "warrior"
   ];
   return gameKeywords.some(kw => text.includes(kw));
 }
@@ -752,14 +759,17 @@ async function handleOffersRequest(params, headers = {}) {
     activeGaintwallOffers = gaintwallOffers.filter(o => o.devices.includes(requestedDevice));
   }
 
-  // Separate into Games, Sign-ups/Offers (with Cointo & Gaintwall Offers included), and Surveys
+  // Separate cleanly into Games vs Non-Game Apps & Offers vs Surveys (no games in Apps & Offers)
   const gwGames = activeGaintwallOffers.filter(o => o.isGame && !o.isSurvey);
-  const games = [...gwGames, ...offerwallGGOffers.filter(o => o.isGame && !o.isSurvey)];
+  const cointoGames = activeCointoOffers.filter(o => o.isGame && !o.isSurvey);
+  const games = [...gwGames, ...cointoGames, ...offerwallGGOffers.filter(o => o.isGame && !o.isSurvey)];
+  const nonGameGaintwall = activeGaintwallOffers.filter(o => !o.isGame && !o.isSurvey);
+  const nonGameCointo = activeCointoOffers.filter(o => !o.isGame && !o.isSurvey);
   const nonGameOfferwallGG = offerwallGGOffers.filter(o => !o.isGame && !o.isSurvey);
   const signupsAndOffers = [
-    ...activeCointoOffers,
-    ...activeGaintwallOffers,
-    ...(nonGameOfferwallGG.length > 0 ? [...nonGameOfferwallGG, ...games] : offerwallGGOffers.filter(o => !o.isSurvey))
+    ...nonGameCointo,
+    ...nonGameGaintwall,
+    ...nonGameOfferwallGG
   ];
   const surveyOffers = allOffers.filter(o => o.isSurvey);
 
