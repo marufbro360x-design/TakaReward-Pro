@@ -1,14 +1,18 @@
 // Universal Serverless Auto-Postback Handler for Gaintwall (gaintwall.com)
 // File Location in GitHub Repo: api/gaintwall-postback.js
 // Live Postback URL to set in Gaintwall Edit Placement:
-// https://takarewardpro.com/api/gaintwall-postback?userId={user_id}&offerId={offer_id}&offerName={offer_name}&payout={payout}&reward={reward}&transactionId={transaction_id}&status={status}&ip={ip}&country={country}&sub1={aff_sub}&sub2={aff_sub2}&hash={hash}
+// https://www.takarewardpro.com/api/gaintwall-postback?userId={user_id}&offerId={offer_id}&offerName={offer_name}&payout={payout}&reward={reward}&transactionId={transaction_id}&status={status}&hash={hash}
 
 const crypto = require('crypto');
 
 const FIREBASE_PROJECT_ID = "takareward-bd";
-const GAINTWALL_API_KEY = process.env.GAINTWALL_API_KEY || "VaWkdoWdrn57UEbbm0Fdt2oCAJYXUbRn";
-const GAINTWALL_POSTBACK_SECRET = process.env.GAINTWALL_POSTBACK_SECRET || "";
-const GAINTWALL_API_SECRET = process.env.GAINTWALL_API_SECRET || "";
+const GAINTWALL_OFFERWALL_KEY = (process.env.GAINTWALL_OFFERWALL_KEY || "VaWkdoWdrn57UEbbm0Fdt2oCAJYXUbRn").trim();
+const GAINTWALL_API_KEY = (process.env.GAINTWALL_API_PLACEMENT_KEY || process.env.GAINTWALL_API_KEY || "").trim();
+// Support BOTH Offerwall placement secret and API placement secret simultaneously via Vercel Env Vars
+const GAINTWALL_POSTBACK_SECRET = (process.env.GAINTWALL_POSTBACK_SECRET || "").trim();
+const GAINTWALL_API_POSTBACK_SECRET = (process.env.GAINTWALL_API_POSTBACK_SECRET || "").trim();
+const GAINTWALL_API_SECRET = (process.env.GAINTWALL_API_SECRET || "").trim();
+const GAINTWALL_API_PLACEMENT_SECRET = (process.env.GAINTWALL_API_PLACEMENT_SECRET || "").trim();
 
 // Conversion Rate:
 // TakaReward Pro Standard: $1.00 USD = 600,000 Coins = ৳60 BDT (10,000 Coins = ৳1 BDT)
@@ -330,19 +334,26 @@ async function processGaintwallPostback(params) {
   const transId = rawTransId || `gw_${userId}_${Date.now()}`;
 
   // 1. Mandatory SHA256 Hash Verification: SHA256(user_id + offer_id + transaction_id + secret)
-  if (!GAINTWALL_POSTBACK_SECRET) {
-    throw new Error("Missing GAINTWALL_POSTBACK_SECRET in Environment Variables");
+  // Validates against both the Offerwall placement secret and the API Integration placement secret
+  const configuredSecrets = Array.from(new Set([
+    GAINTWALL_POSTBACK_SECRET,
+    GAINTWALL_API_POSTBACK_SECRET,
+    GAINTWALL_API_SECRET,
+    GAINTWALL_API_PLACEMENT_SECRET
+  ].filter(Boolean)));
+  if (configuredSecrets.length === 0) {
+    throw new Error("Missing GAINTWALL_POSTBACK_SECRET or GAINTWALL_API_POSTBACK_SECRET in Environment Variables");
   }
   if (!providedHash || providedHash.startsWith("{") || providedHash.startsWith("[")) {
     console.warn(`[Gaintwall Postback] Missing hash for userId=${userId}, transId=${rawTransId}`);
     return { status: 403, text: "Invalid hash signature" };
   }
-  const validHashes = [
-    sha256Hash(`${userId}${rawOfferIdForHash}${rawTransId}${GAINTWALL_POSTBACK_SECRET}`).toLowerCase(),
-    sha256Hash(`${userId}${rawOfferId}${rawTransId}${GAINTWALL_POSTBACK_SECRET}`).toLowerCase()
-  ];
-  if (GAINTWALL_API_SECRET) {
-    validHashes.push(sha256Hash(`${userId}${rawOfferIdForHash}${rawTransId}${GAINTWALL_API_SECRET}`).toLowerCase());
+  const validHashes = [];
+  for (const secret of configuredSecrets) {
+    validHashes.push(
+      sha256Hash(`${userId}${rawOfferIdForHash}${rawTransId}${secret}`).toLowerCase(),
+      sha256Hash(`${userId}${rawOfferId}${rawTransId}${secret}`).toLowerCase()
+    );
   }
   if (!validHashes.includes(providedHash)) {
     console.warn(`[Gaintwall Postback] Hash mismatch for userId=${userId}, transId=${rawTransId}`);
